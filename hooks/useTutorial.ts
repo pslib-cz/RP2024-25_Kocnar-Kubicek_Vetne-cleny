@@ -8,7 +8,6 @@ interface TutorialRuntimeNode{
 }
 
 export const useTutorial = () => {
-
   const [usedNodes, setUsedNodes] = React.useState<TutorialRuntimeNode[]>([
     {
       node: tutorialStart,

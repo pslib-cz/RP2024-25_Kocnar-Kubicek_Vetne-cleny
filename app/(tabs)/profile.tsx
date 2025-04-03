@@ -6,6 +6,19 @@ import ColorPicker from 'react-native-wheel-color-picker';
 import * as FileSystem from 'expo-file-system';
 import { Asset } from 'expo-asset';
 
+// Načtení SVG souboru jako text
+export const loadSvgAsset = async (assetModule) => {
+  try {
+    const asset = Asset.fromModule(assetModule);
+    await asset.downloadAsync();
+    const fileContent = await FileSystem.readAsStringAsync(asset.localUri);
+    return fileContent;
+  } catch (error) {
+    console.error('Error loading SVG:', error);
+    return null;
+  }
+};
+
 export default function ProfileEditScreen() {
   const [name, setName] = useState('Michal Rychlář');
   const [bodyColor, setBodyColor] = useState('#FF7733');
@@ -16,19 +29,6 @@ export default function ProfileEditScreen() {
   const [selectedRocketIndex, setSelectedRocketIndex] = useState(0);
   const [rocketSvgs, setRocketSvgs] = useState<string[]>([]);
   const [modifiedRocketSvgs, setModifiedRocketSvgs] = useState<string[]>([]);
-
-  // Načtení SVG souboru jako text
-  const loadSvgAsset = async (assetModule) => {
-    try {
-      const asset = Asset.fromModule(assetModule);
-      await asset.downloadAsync();
-      const fileContent = await FileSystem.readAsStringAsync(asset.localUri);
-      return fileContent;
-    } catch (error) {
-      console.error('Error loading SVG:', error);
-      return null;
-    }
-  };
 
   // Načtení všech raket při spuštění komponenty
   useEffect(() => {

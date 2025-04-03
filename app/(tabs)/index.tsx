@@ -1,33 +1,52 @@
-import { Image, StyleSheet, Platform } from 'react-native';
-
+import { Image, StyleSheet, Platform, ScrollView, View } from 'react-native';
 import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import BigassButton from '@/components/ui/BigassButton';
-import { ToastAndroid } from 'react-native';
-import { Text } from 'react-native';
+import { useRouter } from 'expo-router';
+import { SvgXml } from 'react-native-svg';
+import React from 'react';
+import { loadSvgAsset } from './profile';
 
 export default function HomeScreen()
 {
+  const router = useRouter();
+
+  const rocket1 = require('../../assets/images/rockets/rocket1.svg');
+
+  const [svg, setSvg] = React.useState<string | null>(null);
+
+  React.useEffect(() => {
+    const fetchSvg = async () => {
+      setSvg(await loadSvgAsset(rocket1));
+    };
+    fetchSvg();
+  }, []);
+
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <BigassButton title='⛷️ Procvičování' bgEmoji='⛷️' onPress={() => ToastAndroid.show("Proc", ToastAndroid.SHORT)}/>
-      <BigassButton title='🙀 Test' bgEmoji='🙀' onPress={() => ToastAndroid.show("test", ToastAndroid.SHORT)}/>
-      <BigassButton title='🏢 Tutoriál' bgEmoji='💀' onPress={() => ToastAndroid.show("tut", ToastAndroid.SHORT)}/>
+    <ScrollView contentContainerStyle={{ flexGrow: 1, padding: 16, gap: 16, alignItems: 'center' }}>
+
+      <View onTouchStart={() => {
+        router.push('/profile');
+      }}>
+        <SvgXml xml={svg} width={200} height={200} />
+        <ThemedText type="title">Míša</ThemedText>
+      </View>
+
+      <BigassButton title='⛷️ Procvičování' bgEmoji='⛷️' onPress={() => {
+      
+      }}/>
+      <BigassButton title='🙀 Test' bgEmoji='🙀' onPress={() => {
+
+      }}/>
+      <BigassButton title='🏢 Tutoriál' bgEmoji='💀' onPress={() => 
+      router.push('/tutorial')
+      }/>
+
       <ThemedText type="subtitle">Nejčastější chyby</ThemedText>
-    </ParallaxScrollView>
+    </ScrollView>
   );
 }
 
@@ -98,3 +117,4 @@ const styles = StyleSheet.create({
     position: 'absolute',
   },
 });
+
