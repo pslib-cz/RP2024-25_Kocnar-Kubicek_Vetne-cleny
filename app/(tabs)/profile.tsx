@@ -42,6 +42,9 @@ export default function ProfileEditScreen() {
         const rocket4 = require('../../assets/images/rockets/rocket4.svg');
         const rocket5 = require('../../assets/images/rockets/rocket5.svg');
 
+        console.log(rocket1, rocket2, rocket3, rocket4, rocket5);
+        
+
         // Načtení obsahu SVG souborů
         const svg1 = await loadSvgAsset(rocket1);
         const svg2 = await loadSvgAsset(rocket2);
@@ -113,7 +116,7 @@ export default function ProfileEditScreen() {
               style={[styles.colorOption, { backgroundColor: bodyColor }]}
               onPress={() => openColorPicker('body')}
             />
-            <Text style={styles.optionLabel}>Barva</Text>
+            <Text style={styles.optionLabel}>Barva rakety</Text>
           </View>
           
           {/* Rocket Shape Option */}
@@ -126,7 +129,7 @@ export default function ProfileEditScreen() {
                 <SvgXml xml={modifiedRocketSvgs[selectedRocketIndex]} width={40} height={40} />
               )}
             </TouchableOpacity>
-            <Text style={styles.optionLabel}>Tvar</Text>
+            <Text style={styles.optionLabel}>Tvar rakety</Text>
           </View>
           
           {/* Trail Color Option */}
@@ -135,7 +138,7 @@ export default function ProfileEditScreen() {
               style={[styles.colorOption, { backgroundColor: trailColor }]}
               onPress={() => openColorPicker('trail')}
             />
-            <Text style={styles.optionLabel}>Špička</Text>
+            <Text style={styles.optionLabel}>Barva trysek</Text>
           </View>
         </View>
         
@@ -222,13 +225,6 @@ export default function ProfileEditScreen() {
                 </TouchableOpacity>
               ))}
             </View>
-            
-            <TouchableOpacity 
-              style={[styles.confirmButton, { width: '100%', marginTop: 16 }]}
-              onPress={() => setRocketPickerVisible(false)}
-            >
-              <Text style={styles.buttonText}>Zavřít</Text>
-            </TouchableOpacity>
           </View>
         </View>
       </Modal>
