@@ -1,10 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, SafeAreaView, StatusBar, Modal } from 'react-native';
+import { StyleSheet, View, TextInput, TouchableOpacity, SafeAreaView, StatusBar, Modal } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { SvgXml } from 'react-native-svg';
 import ColorPicker from 'react-native-wheel-color-picker';
 import * as FileSystem from 'expo-file-system';
 import { Asset } from 'expo-asset';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { ThemedText } from '@/components/ThemedText';
+import { useRocket } from '@/contexts/RocketContext';
+
+// Storage key for username
+const USER_PROFILE_NAME = 'user_profile_name';
 
 // Načtení SVG souboru jako text
 export const loadSvgAsset = async (assetModule) => {
@@ -20,15 +26,26 @@ export const loadSvgAsset = async (assetModule) => {
 };
 
 export default function ProfileEditScreen() {
-  const [name, setName] = useState('Michal Rychlář');
-  const [bodyColor, setBodyColor] = useState('#FF7733');
-  const [trailColor, setTrailColor] = useState('#F7D795');
+  // Use context instead of local state for rocket properties
+  const { 
+    bodyColor, 
+    setBodyColor, 
+    trailColor, 
+    setTrailColor, 
+    selectedRocketIndex, 
+    setSelectedRocketIndex,
+    name,
+    setName
+  } = useRocket();
+  
   const [currentPickingFor, setCurrentPickingFor] = useState(null);
   const [colorPickerVisible, setColorPickerVisible] = useState(false);
   const [rocketPickerVisible, setRocketPickerVisible] = useState(false);
-  const [selectedRocketIndex, setSelectedRocketIndex] = useState(0);
   const [rocketSvgs, setRocketSvgs] = useState<string[]>([]);
   const [modifiedRocketSvgs, setModifiedRocketSvgs] = useState<string[]>([]);
+
+  // Load saved preferences when component mounts
+  // This is now handled by the RocketContext
 
   // Načtení všech raket při spuštění komponenty
   useEffect(() => {
@@ -69,10 +86,6 @@ export default function ProfileEditScreen() {
       const updatedSvgs = rocketSvgs.map(svg => {
         // Nahrazení barvy v atributech fill pro elementy s id="body" a id="trail"
         let modifiedSvg = svg.replaceAll("_body_", bodyColor).replaceAll("_trail_", trailColor);
-        //   .replace(/(<path[^>]*id="body"[^>]*fill=")[^"]*(")/g, `$1${bodyColor}$2`)
-        //   .replace(/(<path[^>]*id="trail"[^>]*fill=")[^"]*(")/g, `$1${trailColor}$2`);
-          
-        
         return modifiedSvg;
       });
       
@@ -101,13 +114,13 @@ export default function ProfileEditScreen() {
       <View style={styles.header}>
         <TouchableOpacity style={styles.backButton}>
           <Ionicons name="chevron-back" size={24} color="white" />
-          <Text style={styles.backText}>Zpět</Text>
+          <ThemedText style={styles.backText}>Zpět</ThemedText>
         </TouchableOpacity>
       </View>
       
       {/* Main Content */}
       <View style={styles.content}>
-        <Text style={styles.title}>Upravit profil</Text>
+        <ThemedText type="title" style={styles.title}>Upravit profil</ThemedText>
         
         {/* Avatar Selection Options */}
         <View style={styles.avatarOptions}>
@@ -117,7 +130,7 @@ export default function ProfileEditScreen() {
               style={[styles.colorOption, { backgroundColor: bodyColor }]}
               onPress={() => openColorPicker('body')}
             />
-            <Text style={styles.optionLabel}>Barva rakety</Text>
+            <ThemedText style={styles.optionLabel}>Barva rakety</ThemedText>
           </View>
           
           {/* Rocket Shape Option */}
@@ -127,10 +140,10 @@ export default function ProfileEditScreen() {
               onPress={() => setRocketPickerVisible(true)}
             >
               {modifiedRocketSvgs.length > 0 && selectedRocketIndex < modifiedRocketSvgs.length && (
-                <SvgXml xml={modifiedRocketSvgs[selectedRocketIndex]} width={40} height={40} />
+                <SvgXml xml={modifiedRocketSvgs[selectedRocketIndex]} width={70} height={70} />
               )}
             </TouchableOpacity>
-            <Text style={styles.optionLabel}>Tvar rakety</Text>
+            <ThemedText style={styles.optionLabel}>Tvar rakety</ThemedText>
           </View>
           
           {/* Trail Color Option */}
@@ -139,13 +152,13 @@ export default function ProfileEditScreen() {
               style={[styles.colorOption, { backgroundColor: trailColor }]}
               onPress={() => openColorPicker('trail')}
             />
-            <Text style={styles.optionLabel}>Barva trysek</Text>
+            <ThemedText style={styles.optionLabel}>Barva trysek</ThemedText>
           </View>
         </View>
         
         {/* Name Input */}
         <View style={styles.nameContainer}>
-          <Text style={styles.nameLabel}>Jméno</Text>
+          <ThemedText style={styles.nameLabel}>Jméno</ThemedText>
           <TextInput
             style={styles.nameInput}
             value={name}
@@ -164,9 +177,9 @@ export default function ProfileEditScreen() {
       >
         <View style={styles.modalOverlay}>
           <View style={styles.colorPickerContainer}>
-            <Text style={styles.colorPickerTitle}>
+            <ThemedText type="subtitle" style={styles.colorPickerTitle}>
               {currentPickingFor === 'body' ? 'Vyberte barvu rakety' : 'Vyberte barvu stopy'}
-            </Text>
+            </ThemedText>
             
             <View style={styles.colorPickerWrapper}>
               <ColorPicker
@@ -184,14 +197,14 @@ export default function ProfileEditScreen() {
                 style={styles.cancelButton}
                 onPress={() => setColorPickerVisible(false)}
               >
-                <Text style={styles.buttonText}>Zrušit</Text>
+                <ThemedText type="defaultSemiBold" style={styles.buttonText}>Zrušit</ThemedText>
               </TouchableOpacity>
               
               <TouchableOpacity 
                 style={styles.confirmButton}
                 onPress={() => setColorPickerVisible(false)}
               >
-                <Text style={styles.buttonText}>Potvrdit</Text>
+                <ThemedText type="defaultSemiBold" style={styles.buttonText}>Potvrdit</ThemedText>
               </TouchableOpacity>
             </View>
           </View>
@@ -207,7 +220,7 @@ export default function ProfileEditScreen() {
       >
         <View style={styles.modalOverlay}>
           <View style={styles.rocketPickerContainer}>
-            <Text style={styles.colorPickerTitle}>Vyberte raketu</Text>
+            <ThemedText type="subtitle" style={styles.colorPickerTitle}>Vyberte raketu</ThemedText>
             
             <View style={styles.rocketGrid}>
               {modifiedRocketSvgs.map((svg, index) => (
@@ -278,11 +291,12 @@ const styles = StyleSheet.create({
     height: 60,
     borderRadius: 30,
     marginBottom: 10,
+    marginTop: 30,
   },
   shapeOption: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
+    width: 120, // Increased from 60
+    height: 120, // Increased from 60
+    borderRadius: 60, // Adjusted to match the new size
     backgroundColor: '#121212',
     borderWidth: 2,
     borderColor: '#333',
