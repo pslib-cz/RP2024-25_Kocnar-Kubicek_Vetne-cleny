@@ -6,7 +6,6 @@ import TutorialButton from '@/components/ui/tutorial/TutorialButton';
 import { useTutorial } from '@/hooks/useTutorial';
 
 export default function Tutorial() {
-
   const {usedNodes, currentNode, AddNode} = useTutorial();
 
   return (
