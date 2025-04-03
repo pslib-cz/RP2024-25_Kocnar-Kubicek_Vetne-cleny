@@ -13,7 +13,7 @@ export default function Tutorial() {
     <SafeAreaView style={styles.container}>
       <StatusBar style="light" />
       
-      <View>
+      <View style={styles.view1}>
         <View style={styles.verticalLine} />
       
         <View style={styles.mascotContainer}>
@@ -145,7 +145,9 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingHorizontal: 20,
   },
-
+  view1: {
+    width: '100%',
+  }
 });
 
 
