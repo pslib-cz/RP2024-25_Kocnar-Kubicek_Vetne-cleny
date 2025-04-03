@@ -1,11 +1,11 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
 export default function BigassButton(
   {title, bgEmoji, onPress = () => {}} : {title: string, bgEmoji: string, onPress?: () => void}
 ) {
   return (
-    <View style={styles.container} onTouchStart={onPress}>
+    <TouchableOpacity style={styles.container} onPress={onPress}>
       <View style={styles.logoContainer}>
         <View style={styles.logoContent}>
           <Text style={styles.logoText}>{title}</Text>
@@ -14,7 +14,7 @@ export default function BigassButton(
           <Text style={styles.catEmoji}>{bgEmoji}</Text>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 }
 
