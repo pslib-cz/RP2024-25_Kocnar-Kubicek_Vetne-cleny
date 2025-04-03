@@ -6,6 +6,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import BigassButton from '@/components/ui/BigassButton';
 import { ToastAndroid } from 'react-native';
+import { Text } from 'react-native';
 
 export default function HomeScreen()
 {

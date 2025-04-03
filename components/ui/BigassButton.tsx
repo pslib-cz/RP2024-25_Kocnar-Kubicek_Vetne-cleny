@@ -47,15 +47,15 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   catBackground: {
-    position: 'absolute',
     right: 40,
     top: 70,
     opacity: 0.2,
+    position: 'absolute',
   },
   catEmoji: {
+    transform: [{rotate: '-30deg'}],
     fontSize: 140,
     color: '#4F55BC',
-    transform: [{ rotate: '-30deg' }],
     position: 'absolute',
     top: -20,
     right: -75,
