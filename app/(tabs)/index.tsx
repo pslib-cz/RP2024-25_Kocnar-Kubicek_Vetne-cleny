@@ -8,10 +8,13 @@ import { useRouter } from 'expo-router';
 import { SvgXml } from 'react-native-svg';
 import React from 'react';
 import { loadSvgAsset } from './profile';
+import { Rocket } from '@/components/Rocket';
+import { useRocket } from '@/contexts/RocketContext';
 
 export default function HomeScreen()
 {
   const router = useRouter();
+  const { name } = useRocket();
 
   const rocket1 = require('../../assets/images/rockets/rocket1.svg');
 
@@ -31,9 +34,10 @@ export default function HomeScreen()
       <View onTouchStart={() => {
         router.push('/profile');
       }}>
-        <SvgXml xml={svg} width={200} height={200} />
-        <ThemedText type="title">Míša</ThemedText>
+        <Rocket />
+        <ThemedText type="title">{name}</ThemedText>
       </View>
+
 
       <BigassButton title='⛷️ Procvičování' bgEmoji='⛷️' onPress={() => {
       

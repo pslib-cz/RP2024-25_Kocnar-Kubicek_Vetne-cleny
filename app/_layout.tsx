@@ -6,6 +6,8 @@ import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
 import { Text } from 'react-native';
+import { RocketProvider } from '@/contexts/RocketContext';
+
 
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { ThemedView } from '@/components/ThemedView';
@@ -32,6 +34,7 @@ export default function RootLayout() {
   }
 
   return (
+    <RocketProvider>
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
         {/* <ThemedView style={{ fontFamily: 'Outfit' }}> */}
             <Stack>
@@ -41,5 +44,6 @@ export default function RootLayout() {
             <StatusBar style="auto" />
         {/* </ThemedView> */}
     </ThemeProvider>
+    </RocketProvider>
   );
 }

@@ -5,7 +5,12 @@ import { SvgXml } from 'react-native-svg';
 import ColorPicker from 'react-native-wheel-color-picker';
 import * as FileSystem from 'expo-file-system';
 import { Asset } from 'expo-asset';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ThemedText } from '@/components/ThemedText';
+import { useRocket } from '@/contexts/RocketContext';
+
+// Storage key for username
+const USER_PROFILE_NAME = 'user_profile_name';
 
 // Načtení SVG souboru jako text
 export const loadSvgAsset = async (assetModule) => {
@@ -21,15 +26,26 @@ export const loadSvgAsset = async (assetModule) => {
 };
 
 export default function ProfileEditScreen() {
-  const [name, setName] = useState('Michal Rychlář');
-  const [bodyColor, setBodyColor] = useState('#FF7733');
-  const [trailColor, setTrailColor] = useState('#F7D795');
+  // Use context instead of local state for rocket properties
+  const { 
+    bodyColor, 
+    setBodyColor, 
+    trailColor, 
+    setTrailColor, 
+    selectedRocketIndex, 
+    setSelectedRocketIndex,
+    name,
+    setName
+  } = useRocket();
+  
   const [currentPickingFor, setCurrentPickingFor] = useState(null);
   const [colorPickerVisible, setColorPickerVisible] = useState(false);
   const [rocketPickerVisible, setRocketPickerVisible] = useState(false);
-  const [selectedRocketIndex, setSelectedRocketIndex] = useState(0);
   const [rocketSvgs, setRocketSvgs] = useState<string[]>([]);
   const [modifiedRocketSvgs, setModifiedRocketSvgs] = useState<string[]>([]);
+
+  // Load saved preferences when component mounts
+  // This is now handled by the RocketContext
 
   // Načtení všech raket při spuštění komponenty
   useEffect(() => {
@@ -70,10 +86,6 @@ export default function ProfileEditScreen() {
       const updatedSvgs = rocketSvgs.map(svg => {
         // Nahrazení barvy v atributech fill pro elementy s id="body" a id="trail"
         let modifiedSvg = svg.replaceAll("_body_", bodyColor).replaceAll("_trail_", trailColor);
-        //   .replace(/(<path[^>]*id="body"[^>]*fill=")[^"]*(")/g, `$1${bodyColor}$2`)
-        //   .replace(/(<path[^>]*id="trail"[^>]*fill=")[^"]*(")/g, `$1${trailColor}$2`);
-          
-        
         return modifiedSvg;
       });
       
