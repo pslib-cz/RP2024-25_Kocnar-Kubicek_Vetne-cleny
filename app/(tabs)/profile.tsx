@@ -14,8 +14,8 @@ export default function ProfileEditScreen() {
   const [colorPickerVisible, setColorPickerVisible] = useState(false);
   const [rocketPickerVisible, setRocketPickerVisible] = useState(false);
   const [selectedRocketIndex, setSelectedRocketIndex] = useState(0);
-  const [rocketSvgs, setRocketSvgs] = useState([]);
-  const [modifiedRocketSvgs, setModifiedRocketSvgs] = useState([]);
+  const [rocketSvgs, setRocketSvgs] = useState<string[]>([]);
+  const [modifiedRocketSvgs, setModifiedRocketSvgs] = useState<string[]>([]);
 
   // Načtení SVG souboru jako text
   const loadSvgAsset = async (assetModule) => {
@@ -68,9 +68,10 @@ export default function ProfileEditScreen() {
       // Modifikace SVG pro změnu barev
       const updatedSvgs = rocketSvgs.map(svg => {
         // Nahrazení barvy v atributech fill pro elementy s id="body" a id="trail"
-        let modifiedSvg = svg
-          .replace(/(<path[^>]*id="body"[^>]*fill=")[^"]*(")/g, `$1${bodyColor}$2`)
-          .replace(/(<path[^>]*id="trail"[^>]*fill=")[^"]*(")/g, `$1${trailColor}$2`);
+        let modifiedSvg = svg.replaceAll("_body_", bodyColor).replaceAll("_trail_", trailColor);
+        //   .replace(/(<path[^>]*id="body"[^>]*fill=")[^"]*(")/g, `$1${bodyColor}$2`)
+        //   .replace(/(<path[^>]*id="trail"[^>]*fill=")[^"]*(")/g, `$1${trailColor}$2`);
+          
         
         return modifiedSvg;
       });
