@@ -2,6 +2,7 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Svg, { Path, Circle, Rect } from 'react-native-svg';
+import { Rocket } from '@/components/Rocket';
 
 interface RocketProgressBarProps {
   progress: number; // Value from 0 to 1
@@ -30,32 +31,17 @@ const RocketProgressBar: React.FC<RocketProgressBarProps> = ({
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 0 }}
           style={[
-            styles.progressBar,
-            {
-              width: `${normalizedProgress * 100}%`,
-              height,
-              borderRadius: height / 2,
-            },
+          styles.progressBar,
+          {
+            width: `${normalizedProgress * 100}%`,
+            height,
+            borderRadius: height / 2,
+          },
           ]}
         />
         
-        {/* Rocket */}
-        <View style={[styles.rocketContainer, { left: rocketPosition }]}>
-          <Svg width={50} height={40} viewBox="0 0 50 40">
-            {/* Rocket body */}
-            <Rect x="15" y="12" width="20" height="16" rx="4" fill="#f9fafb" />
-            
-            {/* Rocket nose */}
-            <Path d="M35 20 L45 12 L35 28 Z" fill="#f9fafb" />
-            
-            {/* Window */}
-            <Circle cx="25" cy="20" r="5" fill="#047857" />
-            <Circle cx="25" cy="20" r="3" fill="#10b981" />
-            
-            {/* Fire */}
-            <Path d="M5 20 L15 12 L15 28 Z" fill="#ef4444" />
-            <Path d="M9 20 L15 15 L15 25 Z" fill="#f59e0b" />
-          </Svg>
+        <View style={{ transform: [{ rotate: '90deg' }, { translateX: -30 }, { translateY: -70 }, { scale: 0.75 }], position: 'absolute', top: 0, left: 0, }}>
+          <Rocket />
         </View>
       </View>
     </View>
