@@ -10,14 +10,14 @@ import { ThemedText } from '@/components/ThemedText';
 import { useRocket } from '@/contexts/RocketContext';
 
 // Storage key for username
-const USER_PROFILE_NAME = 'user_profile_name';
+const USER_PROFILE_NAME: string = 'user_profile_name';
 
 // Načtení SVG souboru jako text
-export const loadSvgAsset = async (assetModule) => {
+export const loadSvgAsset = async (assetModule: any): Promise<string | null> => {
   try {
     const asset = Asset.fromModule(assetModule);
     await asset.downloadAsync();
-    const fileContent = await FileSystem.readAsStringAsync(asset.localUri);
+    const fileContent = await FileSystem.readAsStringAsync(asset.localUri!);
     return fileContent;
   } catch (error) {
     console.error('Error loading SVG:', error);
@@ -25,7 +25,7 @@ export const loadSvgAsset = async (assetModule) => {
   }
 };
 
-export default function ProfileEditScreen() {
+export default function ProfileEditScreen(): JSX.Element {
   // Use context instead of local state for rocket properties
   const { 
     bodyColor, 
@@ -36,11 +36,20 @@ export default function ProfileEditScreen() {
     setSelectedRocketIndex,
     name,
     setName
+  }: {
+    bodyColor: string;
+    setBodyColor: (color: string) => void;
+    trailColor: string;
+    setTrailColor: (color: string) => void;
+    selectedRocketIndex: number;
+    setSelectedRocketIndex: (index: number) => void;
+    name: string;
+    setName: (name: string) => void;
   } = useRocket();
   
-  const [currentPickingFor, setCurrentPickingFor] = useState(null);
-  const [colorPickerVisible, setColorPickerVisible] = useState(false);
-  const [rocketPickerVisible, setRocketPickerVisible] = useState(false);
+  const [currentPickingFor, setCurrentPickingFor] = useState<'body' | 'trail' | null>(null);
+  const [colorPickerVisible, setColorPickerVisible] = useState<boolean>(false);
+  const [rocketPickerVisible, setRocketPickerVisible] = useState<boolean>(false);
   const [rocketSvgs, setRocketSvgs] = useState<string[]>([]);
   const [modifiedRocketSvgs, setModifiedRocketSvgs] = useState<string[]>([]);
 
@@ -93,12 +102,12 @@ export default function ProfileEditScreen() {
     }
   }, [rocketSvgs, bodyColor, trailColor]);
 
-  const openColorPicker = (type) => {
+  const openColorPicker = (type: 'body' | 'trail'): void => {
     setCurrentPickingFor(type);
     setColorPickerVisible(true);
   };
 
-  const onColorChangeComplete = (color) => {
+  const onColorChangeComplete = (color: string): void => {
     if (currentPickingFor === 'body') {
       setBodyColor(color);
     } else if (currentPickingFor === 'trail') {

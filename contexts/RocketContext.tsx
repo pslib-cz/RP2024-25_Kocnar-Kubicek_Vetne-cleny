@@ -1,9 +1,24 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const RocketContext = createContext(null);
+interface RocketContextType {
+  bodyColor: string;
+  setBodyColor: React.Dispatch<React.SetStateAction<string>>;
+  trailColor: string;
+  setTrailColor: React.Dispatch<React.SetStateAction<string>>;
+  selectedRocketIndex: number;
+  setSelectedRocketIndex: React.Dispatch<React.SetStateAction<number>>;
+  name: string;
+  setName: React.Dispatch<React.SetStateAction<string>>;
+}
 
-export const RocketProvider = ({ children }) => {
+const RocketContext = createContext<RocketContextType | null>(null);
+
+interface RocketProviderProps {
+  children: ReactNode;
+}
+
+export const RocketProvider = ({ children }: RocketProviderProps) => {
   const [bodyColor, setBodyColor] = useState('#FF7733');
   const [trailColor, setTrailColor] = useState('#F7D795');
   const [selectedRocketIndex, setSelectedRocketIndex] = useState(0);
@@ -65,4 +80,10 @@ export const RocketProvider = ({ children }) => {
   );
 };
 
-export const useRocket = () => useContext(RocketContext);
+export const useRocket = (): RocketContextType => {
+  const context = useContext(RocketContext);
+  if (!context) {
+    throw new Error('useRocket must be used within a RocketProvider');
+  }
+  return context;
+};
