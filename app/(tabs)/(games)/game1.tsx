@@ -17,6 +17,8 @@ const LanguageLearningScreen: React.FC = () => {
     {word: 'u otevřeného 4', type: 'PUČ 4'},
     {word: 'okna. 5', type: 'PKS 5'},
   ]
+  
+  const [gameIndex, setGameIndex] = useState(0); // id of the current game card
 
   const [phraseButtons, setPhraseButtons] = useState<WordButtonType[]>(    
     data.map((item, index) => ({
@@ -32,8 +34,6 @@ const LanguageLearningScreen: React.FC = () => {
     }))
   .sort(() => Math.random() - 0.5)
   );
-
-  const [gameIndex, setGameIndex] = useState(0);
 
   const onBottomButtonClicked = (bottomButton: WordButtonType) => {
     const updatedPhraseButtons = [...phraseButtons];
@@ -72,9 +72,7 @@ const LanguageLearningScreen: React.FC = () => {
         }
       </View>
 
-      {/* Bottom word options */}
-      <View style={styles.bottomContainer}>
-        <View style={styles.phraseContainer}>        
+      <View style={styles.phraseContainer}>
           {
             bottomButtons.map((button, index) => (
               <WordButton
@@ -86,7 +84,6 @@ const LanguageLearningScreen: React.FC = () => {
             ))
           }
         </View>
-      </View>
     </SafeAreaView>
   );
 };
@@ -98,6 +95,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 60,
     gap: 40,
+    justifyContent: 'space-between'
   },
   phraseContainer: {
     display: 'flex',
@@ -114,10 +112,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 8,
     marginHorizontal: 5,
-  },
-  bottomContainer: {
-    marginTop: 'auto',
-    marginBottom: 50,
   }
 });
 

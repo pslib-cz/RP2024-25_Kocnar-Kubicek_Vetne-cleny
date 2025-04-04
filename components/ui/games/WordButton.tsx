@@ -28,6 +28,7 @@ const WordButton: React.FC<WordButtonType> = ({ text, state, onClick }) => {
         stateStyles[state || ButtonState.default]
       ]}
       onPress={onClick}
+      disabled={state === ButtonState.disabled}
     >
       <Text style={styles.bottomButtonText}>{text}</Text>
     </TouchableOpacity>
