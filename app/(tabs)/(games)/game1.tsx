@@ -1,57 +1,59 @@
 import RocketProgressBar from '@/components/ui/games/ProgressBar';
+import WordButton, { ButtonState } from '@/components/ui/games/WordButton';
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView } from 'react-native';
-
-interface WordButton {
-  text: string;
-  selected?: boolean;
-  highlighted?: boolean;
-  onClick?: () => void;
-}
-
-const WordButton: React.FC<WordButton> = ({ text, selected, highlighted, onClick }) => {
-  return (
-    <TouchableOpacity
-      style={[
-        styles.bottomButton,
-        selected && styles.selectedBottomButton,
-        highlighted && styles.highlightedBottomButton,
-      ]}
-      onPress={onClick}
-    >
-      <Text style={styles.bottomButtonText}>{text}</Text>
-    </TouchableOpacity>
-  );
-}
+import { View, StyleSheet, SafeAreaView, ToastAndroid } from 'react-native';
 
 const LanguageLearningScreen: React.FC = () => {
-  const [phraseButtons, setPhraseButtons] = useState<WordButton[]>([
-    { text: 'pro radost', selected: true },
-    { text: 'sedával' },
-    { text: 'vždycky' },
-    { text: 'u otevřeného' },
-    { text: 'okna.' },
-  ]);
 
-  const [bottomButtons, setBottomButtons] = useState<WordButton[]>([
-    { text: 'PO', highlighted: true },
-    { text: 'PŮJ', selected: true },
-    { text: 'PŘ' },
-    { text: 'PUČ' },
-    { text: 'PKS' },
-    { text: 'PŮM.' },
-  ]);
+  interface WordButtonType {
+    text: string;
+    state?: ButtonState;
+  }
 
-  const togglePhraseSelection = (index: number) => {
-    const updatedButtons = [...phraseButtons];
-    updatedButtons[index].selected = !updatedButtons[index].selected;
-    setPhraseButtons(updatedButtons);
-  };
+  const data = [
+    {word: 'pro radost 1', type: 'PO 1'},
+    {word: 'sedával 2', type: 'PŮJ 2'},
+    {word: 'vždycky 3', type: 'PŘ 3'},
+    {word: 'u otevřeného 4', type: 'PUČ 4'},
+    {word: 'okna. 5', type: 'PKS 5'},
+  ]
 
-  const toggleBottomSelection = (index: number) => {
-    const updatedButtons = [...bottomButtons];
-    updatedButtons[index].selected = !updatedButtons[index].selected;
-    setBottomButtons(updatedButtons);
+  const [phraseButtons, setPhraseButtons] = useState<WordButtonType[]>(    
+    data.map((item, index) => ({
+      text: item.word,
+      state: index === 0 ? ButtonState.highlighted : ButtonState.default
+    }))
+  );
+
+  const [bottomButtons, setBottomButtons] = useState<WordButtonType[]>(
+    data.map((item) => ({
+      text: item.type,
+      state: ButtonState.default
+    }))
+  .sort(() => Math.random() - 0.5)
+  );
+
+  const [gameIndex, setGameIndex] = useState(0);
+
+  const onBottomButtonClicked = (bottomButton: WordButtonType) => {
+    const updatedPhraseButtons = [...phraseButtons];
+
+    if (bottomButton.text === data[gameIndex].type) {
+      bottomButton.state = ButtonState.disabled;
+      updatedPhraseButtons[gameIndex].state = ButtonState.disabled;
+
+      if (gameIndex < bottomButtons.length - 1) 
+        updatedPhraseButtons[gameIndex + 1].state = ButtonState.highlighted;
+
+      setGameIndex(gameIndex + 1);
+
+    }
+    else{
+      ToastAndroid.show('Incorrect!', ToastAndroid.SHORT);
+    }
+
+    setBottomButtons([...bottomButtons]); // make sure to update the state
+    setPhraseButtons(updatedPhraseButtons);
   };
 
   return (
@@ -64,9 +66,7 @@ const LanguageLearningScreen: React.FC = () => {
             <WordButton
               key={index}
               text={button.text}
-              selected={button.selected}
-              highlighted={button.highlighted}
-              onClick={() => togglePhraseSelection(index)}
+              state={button.state}
             />
           ))
         }
@@ -80,9 +80,8 @@ const LanguageLearningScreen: React.FC = () => {
               <WordButton
                 key={index}
                 text={button.text}
-                selected={button.selected}
-                highlighted={button.highlighted}
-                onClick={() => toggleBottomSelection(index)}
+                state={button.state}
+                onClick={() => onBottomButtonClicked(button)}
               />
             ))
           }
@@ -119,29 +118,7 @@ const styles = StyleSheet.create({
   bottomContainer: {
     marginTop: 'auto',
     marginBottom: 50,
-  },
-  bottomButton: {
-    backgroundColor: '#333',
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    marginHorizontal: 5,
-  },
-  selectedBottomButton: {
-    backgroundColor: '#1d3557',
-    borderColor: '#2575fc',
-    borderWidth: 1,
-  },
-  highlightedBottomButton: {
-    backgroundColor: 'transparent',
-    borderColor: '#e63946',
-    borderWidth: 1,
-  },
-  bottomButtonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
+  }
 });
 
 export default LanguageLearningScreen;
