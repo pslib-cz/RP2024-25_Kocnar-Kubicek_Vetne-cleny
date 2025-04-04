@@ -1,9 +1,9 @@
-import React from 'react';
-import { View, Text, SafeAreaView, StyleSheet } from 'react-native';
-import { StatusBar } from 'expo-status-bar';
 import QuestionRow from '@/components/ui/tutorial/QuestionRow';
 import TutorialButton from '@/components/ui/tutorial/TutorialButton';
 import { useTutorial } from '@/hooks/useTutorial';
+import { StatusBar } from 'expo-status-bar';
+import React from 'react';
+import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
 
 export default function Tutorial() {
   const {usedNodes, currentNode, AddNode} = useTutorial();

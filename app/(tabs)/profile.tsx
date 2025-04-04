@@ -1,13 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, TextInput, TouchableOpacity, SafeAreaView, StatusBar, Modal } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { SvgXml } from 'react-native-svg';
-import ColorPicker from 'react-native-wheel-color-picker';
-import * as FileSystem from 'expo-file-system';
-import { Asset } from 'expo-asset';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ThemedText } from '@/components/ThemedText';
 import { useRocket } from '@/contexts/RocketContext';
+import { Ionicons } from '@expo/vector-icons';
+import { Asset } from 'expo-asset';
+import * as FileSystem from 'expo-file-system';
+import React, { useEffect, useState } from 'react';
+import { Modal, SafeAreaView, StatusBar, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
+import { SvgXml } from 'react-native-svg';
+import ColorPicker from 'react-native-wheel-color-picker';
 
 // Storage key for username
 const USER_PROFILE_NAME: string = 'user_profile_name';

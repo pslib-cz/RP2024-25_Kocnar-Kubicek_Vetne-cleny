@@ -1,15 +1,14 @@
-import { Image, StyleSheet, Platform, ScrollView, View } from 'react-native';
 import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
+import { Rocket } from '@/components/Rocket';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import BigassButton from '@/components/ui/BigassButton';
-import { useRouter } from 'expo-router';
-import { SvgXml } from 'react-native-svg';
-import React from 'react';
-import { loadSvgAsset } from './profile';
-import { Rocket } from '@/components/Rocket';
 import { useRocket } from '@/contexts/RocketContext';
+import { useRouter } from 'expo-router';
+import React from 'react';
+import { Image, Platform, ScrollView, StyleSheet, View } from 'react-native';
+import { loadSvgAsset } from './profile';
 
 export default function HomeScreen()
 {

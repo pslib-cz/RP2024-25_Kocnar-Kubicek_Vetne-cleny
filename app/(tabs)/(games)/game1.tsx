@@ -1,7 +1,7 @@
 import RocketProgressBar from '@/components/ui/games/ProgressBar';
 import WordButton, { ButtonState } from '@/components/ui/games/WordButton';
 import React, { useState } from 'react';
-import { View, StyleSheet, SafeAreaView, ToastAndroid } from 'react-native';
+import { SafeAreaView, StyleSheet, ToastAndroid, View } from 'react-native';
 
 const LanguageLearningScreen: React.FC = () => {
 

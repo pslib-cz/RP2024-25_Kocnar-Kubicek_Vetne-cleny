@@ -1,6 +1,6 @@
 import BigassButton from '@/components/ui/BigassButton';
 import React from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 
 interface SpaceJourneyProps {
   currentLevel: string;

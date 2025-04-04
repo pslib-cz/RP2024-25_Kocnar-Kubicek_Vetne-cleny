@@ -3,7 +3,7 @@ import { LargeGameButton } from '@/components/ui/games/LargeGameButton';
 import RocketProgressBar from '@/components/ui/games/ProgressBar';
 import { WordSelectionOption } from '@/types/games/SelectionOption';
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, SafeAreaView, ToastAndroid } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, ToastAndroid, View } from 'react-native';
 
 const CzechWordSelectionQuiz: React.FC = () => {
   const [options, setOptions] = useState<WordSelectionOption[]>([
