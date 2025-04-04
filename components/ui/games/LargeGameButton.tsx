@@ -12,7 +12,7 @@ export const LargeGameButton = ({ text, selected, onPress }: { text: string; sel
 
 const styles = StyleSheet.create({
   option: {
-    width: '48%',
+    width: '47%',
     height: 120,
     borderRadius: 10,
     borderWidth: 1,

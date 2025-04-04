@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import Svg, { Path, Circle, Rect } from 'react-native-svg';
 import { Rocket } from '@/components/Rocket';
 
 interface RocketProgressBarProps {
@@ -20,7 +19,7 @@ const RocketProgressBar: React.FC<RocketProgressBarProps> = ({
   
   // Calculate position for the rocket
   const rocketPosition = Math.max(normalizedProgress * width - 25, 0);
-  
+
   return (
     <View style={[styles.container, { width, height }]}>
       {/* Dark background bar */}
@@ -40,7 +39,7 @@ const RocketProgressBar: React.FC<RocketProgressBarProps> = ({
           ]}
         />
         
-        <View style={{ transform: [{ rotate: '90deg' }, { translateX: -30 }, { translateY: -70 }, { scale: 0.75 }], position: 'absolute', top: 0, left: 0, }}>
+        <View style={{ transform: [{ rotate: '90deg' }, { translateX: -rocketPosition / 3 }, { translateY: -70 }, { scale: 0.75 }], position: 'absolute', top: 0, left: 0, }}>
           <Rocket />
         </View>
       </View>

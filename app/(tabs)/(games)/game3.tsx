@@ -1,31 +1,45 @@
+import ContinueButton from '@/components/ui/games/ContinueButton';
 import { LargeGameButton } from '@/components/ui/games/LargeGameButton';
 import RocketProgressBar from '@/components/ui/games/ProgressBar';
+import { WordSelectionOption } from '@/types/games/SelectionOption';
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, SafeAreaView } from 'react-native';
-
-interface WordOption {
-  id: string;
-  text: string;
-  selected: boolean;
-}
+import { View, Text, StyleSheet, SafeAreaView, ToastAndroid } from 'react-native';
 
 const CzechWordSelectionQuiz: React.FC = () => {
-  const [options, setOptions] = useState<WordOption[]>([
-    { id: '1', text: 'Ondra', selected: false },
-    { id: '2', text: 'nikdy', selected: false },
-    { id: '3', text: 'o všech', selected: false },
-    { id: '4', text: 'neřekl', selected: false },
+  const [options, setOptions] = useState<WordSelectionOption[]>([
+    { id: '1', text: 'Ondra 1', type: 'PO 1' },
+    { id: '2', text: 'nikdy 2', type: 'PO 2' },
+    { id: '3', text: 'o všech 3', type: 'PO 3' },
+    { id: '4', text: 'neřekl 4', type: 'PO 4' },
   ]);
 
-  const handleSelect = (id: string) => {
-    setOptions(
-      options.map(option => 
-        option.id === id 
-          ? { ...option, selected: !option.selected } 
-          : option
-      )
-    );
+  const [selectedOptions, setSelectedOptions] = useState<WordSelectionOption[]>([]);
+
+  const handleSelect = (id: WordSelectionOption) => {    
+    if (selectedOptions.includes(id)) {
+      setSelectedOptions(selectedOptions.filter(item => item !== id));
+    } else {
+      setSelectedOptions([...selectedOptions, id]);
+    }
   };
+
+  const handleContinue = () => {
+    if (IsValid()) {
+      ToastAndroid.show('Correct!', ToastAndroid.SHORT);
+    } else {
+      ToastAndroid.show('Incorrect!', ToastAndroid.SHORT);
+    }
+  }
+
+  const targetType = 'PO 1';
+
+  function IsValid() : boolean{    
+    for (const item of selectedOptions) {
+      if (item.type !== targetType)
+        return false;      
+    }    
+    return true;
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -33,44 +47,29 @@ const CzechWordSelectionQuiz: React.FC = () => {
       <RocketProgressBar progress={0.33} />
 
       <View style={styles.content}>
-        {/* Question */}
         <Text style={styles.questionText}>Které slovo ve větě je podmět?</Text>
         
-        {/* Example sentence */}
         <Text style={styles.exampleText}>
           Ondra mi nikdy o všech svých problémech neřekl.
         </Text>
-        
-        {/* Word options grid */}
+
         <View style={styles.grid}>
-          <View style={styles.row}>
-            <LargeGameButton
-              text={options[0].text}
-              selected={options[0].selected}
-              onPress={() => handleSelect('1')}
-            />
-            
-            <LargeGameButton
-              text={options[1].text}
-              selected={options[1].selected}
-              onPress={() => handleSelect('2')}
-            />
-          </View>
-          
-          <View style={styles.row}>
-            <LargeGameButton
-              text={options[2].text}
-              selected={options[2].selected}
-              onPress={() => handleSelect('3')}
-            />
-            
-            <LargeGameButton
-              text={options[3].text}
-              selected={options[3].selected}
-              onPress={() => handleSelect('4')}
-            />
-          </View>
+          {
+            options.map((option) => (
+              <LargeGameButton
+                key={option.id}
+                text={option.text}
+                selected={selectedOptions.includes(option)}
+                onPress={() => handleSelect(option)}
+              />
+            ))
+          }
         </View>
+
+        {
+          selectedOptions.length > 0 && 
+          <ContinueButton onClick={handleContinue}/>
+        }
       </View>
     </SafeAreaView>
   );
@@ -103,7 +102,11 @@ const styles = StyleSheet.create({
   },
   grid: {
     width: '100%',
-    marginTop: 20,
+    display: 'flex',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 20,
+    justifyContent: 'space-between',
   },
   row: {
     flexDirection: 'row',

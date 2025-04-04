@@ -1,17 +1,11 @@
 import ContinueButton from '@/components/ui/games/ContinueButton';
 import { LargeGameButton } from '@/components/ui/games/LargeGameButton';
 import RocketProgressBar from '@/components/ui/games/ProgressBar';
+import { WordSelectionOption } from '@/types/games/SelectionOption';
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, ToastAndroid } from 'react-native';
-
-interface SelectionOption {
-  id: string;
-  text: string;
-  type: string;
-}
+import { View, Text, StyleSheet, SafeAreaView, ToastAndroid } from 'react-native';
 
 const CzechSelectionGrid: React.FC = () => {
-
   const data = [
     {word: 'pro radost 1', type: 'PO 1'},
     {word: 'sedával 2', type: 'PŮJ 2'},
@@ -20,7 +14,9 @@ const CzechSelectionGrid: React.FC = () => {
     {word: 'okna. 5', type: 'PKS 5'},
   ];
 
-  const [options, setOptions] = useState<SelectionOption[]>(
+  const targetType = 'PO 1';
+
+  const [options, setOptions] = useState<WordSelectionOption[]>(
     data.map((item, index) => ({
       id: `${index + 1}`,
       text: item.word,
@@ -28,61 +24,55 @@ const CzechSelectionGrid: React.FC = () => {
     }))
   );
 
-  const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
+  const [selectedOptions, setSelectedOptions] = useState<WordSelectionOption[]>([]);
 
-  const handleSelect = (id: string) => {    
-    selectedOptions.includes(id) ?
-      setSelectedOptions(selectedOptions.filter(item => item !== id)) :
+  const handleSelect = (id: WordSelectionOption) => {    
+    if (selectedOptions.includes(id)) {
+      setSelectedOptions(selectedOptions.filter(item => item !== id));
+    } else {
       setSelectedOptions([...selectedOptions, id]);
+    }
   };
 
   const handleContinue = () => {
-    
-    ToastAndroid.show('This is not implemented yet lil bro', ToastAndroid.SHORT);
+    if (IsValid()) {
+      ToastAndroid.show('Correct!', ToastAndroid.SHORT);
+    } else {
+      ToastAndroid.show('Incorrect!', ToastAndroid.SHORT);
+    }
+  }
 
+  function IsValid() : boolean{    
+    for (const item of selectedOptions) {
+      if (item.type !== targetType)
+        return false;      
+    }    
+    return true;
   }
 
   return (
     <SafeAreaView style={styles.container}>
-
       <RocketProgressBar progress={0.33} />
 
       <View style={styles.content}>
-        <Text style={styles.title}>Vyber PUM</Text>
+        <Text style={styles.title}>Vyber {targetType}</Text>
         
         <View style={styles.grid}>
-          <View style={styles.row}>
-            <LargeGameButton
-              text={options[0].text}
-              selected={selectedOptions.includes('1')}
-              onPress={() => handleSelect('1')}
-            />
-
-            <LargeGameButton
-              text={options[1].text}
-              selected={selectedOptions.includes('2')}
-              onPress={() => handleSelect('2')}
-            />
-          </View>
-          
-          <View style={styles.row}>
-            <LargeGameButton
-              text={options[2].text}
-              selected={selectedOptions.includes('3')}
-              onPress={() => handleSelect('3')}
-            />
-
-            <LargeGameButton
-              text={options[3].text}
-              selected={selectedOptions.includes('4')}
-              onPress={() => handleSelect('4')}
-            />
-          </View>
+          {
+            options.map((option) => (
+              <LargeGameButton
+                key={option.id}
+                text={option.text}
+                selected={selectedOptions.includes(option)}
+                onPress={() => handleSelect(option)}
+              />
+            ))
+          }
         </View>
 
         {
           selectedOptions.length > 0 && 
-          <ContinueButton onClick={() => handleContinue}/>
+          <ContinueButton onClick={handleContinue}/>
         }
       </View>
     </SafeAreaView>
@@ -108,13 +98,12 @@ const styles = StyleSheet.create({
   },
   grid: {
     width: '100%',
-  },
-  row: {
+    display: 'flex',
     flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 20,
     justifyContent: 'space-between',
-    marginBottom: 15,
-  },
-
+  }
 });
 
 export default CzechSelectionGrid;

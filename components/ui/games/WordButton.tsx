@@ -1,8 +1,7 @@
-import RocketProgressBar from '@/components/ui/games/ProgressBar';
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView } from 'react-native';
+import React from 'react';
+import { Text, StyleSheet, TouchableOpacity } from 'react-native';
 
-interface WordButtonType {
+interface WordButtonProps {
   text: string;
   state?: ButtonState;
   onClick?: () => void;
@@ -14,7 +13,7 @@ export enum ButtonState{
   disabled
 }
 
-const WordButton: React.FC<WordButtonType> = ({ text, state, onClick }) => {  
+const WordButton: React.FC<WordButtonProps> = ({ text, state, onClick }) => {  
   const stateStyles = {
     [ButtonState.default]: styles.bottomButton,
     [ButtonState.highlighted]: styles.highlightedBottomButton,
@@ -44,11 +43,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 5,
     marginHorizontal: 5,
-  },
-  selectedBottomButton: {
-    backgroundColor: '#1d3557',
-    borderColor: '#2575fc',
-    borderWidth: 1,
   },
   highlightedBottomButton: {
     backgroundColor: 'transparent',
