@@ -1,6 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import { View, Text, Image, StyleSheet, ScrollView, Dimensions } from 'react-native';
 import Svg, { Line } from 'react-native-svg';
+import { Rocket } from './Rocket';
 
 // Import your data
 import planetNames from '@/data/planetnames.json';
@@ -121,6 +122,7 @@ const GalaxyView: React.FC<GalaxyViewProps> = ({ route }) => {
       <ScrollView 
         ref={scrollViewRef}
         style={styles.planetScroll}
+        showsVerticalScrollIndicator={false}
       >
         {/* Vertical timeline using SVG */}
         <View style={styles.timelineContainer}>
@@ -136,7 +138,7 @@ const GalaxyView: React.FC<GalaxyViewProps> = ({ route }) => {
             />
           </Svg>
         </View>
-        
+
         <View style={styles.planetsContainer}>
           {/* Display planets */}
           {Array.from({ length: planetsInGalaxy }).map((_, revIndex) => {
@@ -151,7 +153,10 @@ const GalaxyView: React.FC<GalaxyViewProps> = ({ route }) => {
               >
                 {/* Timeline index number positioned next to the planet */}
                 <View style={styles.timelineIndexContainer}>
-                  <Text style={styles.timelineNumber}>{planetsInGalaxy - revIndex}</Text>
+                  <Text style={[styles.timelineNumber, isActive && {color: "#eee"}]}>{planetsInGalaxy - revIndex}</Text>
+                  {isActive && (
+                    <Rocket width={50} height={50} style={styles.rocketIcon} />
+                  )}
                 </View>
                 
                 <View style={styles.planetContentContainer}>
@@ -209,6 +214,8 @@ const styles = StyleSheet.create({
     paddingBottom: 32,
     alignItems: 'center',
     justifyContent: 'center',
+    display: 'flex',
+    flexDirection: 'row-reverse'
   },
   timelineNumber: {
     color: '#888',
@@ -246,9 +253,8 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   activePlanetName: {
-    fontSize: 20,
+    fontSize: 28,
     fontWeight: 'bold',
-    color: '#ffcc00',
   },
   progressBarContainer: {
     padding: 16,
@@ -270,6 +276,18 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     marginTop: 8,
     fontSize: 14,
+  },
+  rocketContainer: {
+    position: 'absolute',
+    left: 0, 
+    zIndex: 2,
+  },
+  rocketIcon: {
+    marginTop: 5,
+    transform: [{ rotate: '30deg' }, { translateX: 35 }, { translateY: -20 }],
+    position: 'absolute',
+    top: 0,
+    left: 0,
   },
 });
 

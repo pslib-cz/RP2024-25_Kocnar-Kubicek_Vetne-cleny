@@ -37,7 +37,7 @@ const Arena2: React.FC = () => {
         {/* Header */}
         <View style={styles.header}>
             
-            <TouchableOpacity onPress={() => router.push('/profile')}>
+            <TouchableOpacity style={{maxWidth: "50%", overflow: "hidden"}} onPress={() => router.push('/profile')}>
               <NamedRocket/>
             </TouchableOpacity>
           <TouchableOpacity
@@ -89,7 +89,7 @@ const Arena2: React.FC = () => {
         )}
 
         {/* Planet List */}
-        <GalaxyView route={{params: {galaxyIndex: selectedGalaxy, activePlanetIndex: 0}}} />
+        <GalaxyView route={{params: {galaxyIndex: selectedGalaxy, activePlanetIndex: 5}}} />
       </View>
     </SafeAreaView>
   );

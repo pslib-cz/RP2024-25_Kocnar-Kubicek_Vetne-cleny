@@ -77,9 +77,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   headerTitle: {
+    textOverflow: 'ellipsis',
     fontSize: 18,
     color: '#ffffff',
-    fontFamily: 'Outfit'
+    fontFamily: 'Outfit',
+    overflow: 'hidden',
   },
 });
 
