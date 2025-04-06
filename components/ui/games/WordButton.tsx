@@ -10,26 +10,34 @@ interface WordButtonProps {
 export enum ButtonState{
   default,
   highlighted,
-  disabled
+  disabled,
+  correct
 }
 
 const WordButton: React.FC<WordButtonProps> = ({ text, state, onClick }) => {  
   const stateStyles = {
-    [ButtonState.default]: styles.bottomButton,
-    [ButtonState.highlighted]: styles.highlightedBottomButton,
-    [ButtonState.disabled]: styles.disabledBottomButton,
+    [ButtonState.default]: null,
+    [ButtonState.highlighted]: styles.highlightedButton,
+    [ButtonState.disabled]: styles.disabledButton,
+    [ButtonState.correct]: styles.correctButton,
   }
 
   return (
     <TouchableOpacity
       style={[
-        styles.bottomButton,
+        styles.button,
         stateStyles[state || ButtonState.default]
       ]}
       onPress={onClick}
       disabled={state === ButtonState.disabled}
     >
-      <Text style={styles.bottomButtonText}>{text}</Text>
+      <Text style={[
+        styles.buttonText,
+        state === ButtonState.disabled ? styles.disabledButtonText : null,
+      ]}
+      >
+        {text}
+      </Text>
     </TouchableOpacity>
   );
 }
@@ -37,26 +45,30 @@ const WordButton: React.FC<WordButtonProps> = ({ text, state, onClick }) => {
 export default WordButton;
 
 const styles = StyleSheet.create({
-  bottomButton: {    
-    backgroundColor: '#333',
+  button: {
+    borderColor: '#333',
+    borderWidth: 1,
     borderRadius: 5,
     paddingHorizontal: 10,
-    paddingVertical: 5,
-    marginHorizontal: 5,
+    paddingVertical: 8,
   },
-  highlightedBottomButton: {
+  highlightedButton: {
     backgroundColor: 'transparent',
-    borderColor: '#e63946',
-    borderWidth: 1,
+    borderColor: '#1155BB',
   },
-  bottomButtonText: {
+  disabledButton: {
+    // backgroundColor: '#333',
+  },
+  correctButton: {
+    // backgroundColor: '#2a9d8f',
+    borderColor: '#2a9d8f',
+  },
+  buttonText: {
     color: 'white',
-    fontSize: 16,
+    fontSize: 22,
     fontWeight: 'bold',
   },
-  disabledBottomButton: {
-    backgroundColor: '#999',
-    borderColor: '#444',
-    borderWidth: 1,
+  disabledButtonText: {
+    color: '#333',
   },
 });

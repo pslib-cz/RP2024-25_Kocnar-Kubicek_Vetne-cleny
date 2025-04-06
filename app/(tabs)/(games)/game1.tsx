@@ -40,7 +40,7 @@ const LanguageLearningScreen: React.FC = () => {
 
     if (bottomButton.text === data[gameIndex].type) {
       bottomButton.state = ButtonState.disabled;
-      updatedPhraseButtons[gameIndex].state = ButtonState.disabled;
+      updatedPhraseButtons[gameIndex].state = ButtonState.correct;
 
       if (gameIndex < bottomButtons.length - 1) 
         updatedPhraseButtons[gameIndex + 1].state = ButtonState.highlighted;
@@ -59,7 +59,6 @@ const LanguageLearningScreen: React.FC = () => {
   return (
     <SafeAreaView style={styles.container}>
       <RocketProgressBar progress={0.33} />
-
       <View style={styles.phraseContainer}>        
         {
           phraseButtons.map((button, index) => (
@@ -71,7 +70,6 @@ const LanguageLearningScreen: React.FC = () => {
           ))
         }
       </View>
-
       <View style={styles.phraseContainer}>
           {
             bottomButtons.map((button, index) => (
@@ -99,6 +97,7 @@ const styles = StyleSheet.create({
   },
   phraseContainer: {
     display: 'flex',
+    gap: 8,
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
