@@ -3,16 +3,24 @@ import { SvgXml } from 'react-native-svg';
 import { useRocket } from '@/contexts/RocketContext';
 import { useState, useEffect } from 'react';
 import { loadSvgAsset } from '@/app/(tabs)/profile';
-import { StyleProp, ViewStyle } from 'react-native';
+import { StyleProp, ViewStyle, View, Text, StyleSheet, TextStyle } from 'react-native';
 
 interface RocketProps {
   style?: StyleProp<ViewStyle>;
   width?: number;
   height?: number;
+  textStyle?: StyleProp<TextStyle>;
+  containerStyle?: StyleProp<ViewStyle>;
 }
 
-export const Rocket = ({ style, width = 100, height = 100 }: RocketProps) => {
-  const { bodyColor, trailColor, selectedRocketIndex } = useRocket();
+export const NamedRocket = ({ 
+  style, 
+  width = 50, 
+  height = 50, 
+  textStyle, 
+  containerStyle 
+}: RocketProps) => {
+  const { bodyColor, trailColor, selectedRocketIndex, name } = useRocket();
   const [rocketSvgs, setRocketSvgs] = useState<string[]>([]);
   const [modifiedRocketSvg, setModifiedRocketSvg] = useState<string | null>(null);
 
@@ -54,5 +62,24 @@ export const Rocket = ({ style, width = 100, height = 100 }: RocketProps) => {
 
   if (!modifiedRocketSvg) return null;
 
-  return <SvgXml xml={modifiedRocketSvg} width={width} height={height} style={style} />;
+return (
+    <View style={[styles.container, containerStyle]}>
+        <SvgXml xml={modifiedRocketSvg} width={width} height={height} style={[{transform: [{rotate: "45deg"}]}, style]} />
+        <Text style={[styles.headerTitle, textStyle]}>{name}</Text>
+    </View>
+);
+  
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  headerTitle: {
+    fontSize: 18,
+    color: '#ffffff',
+    fontFamily: 'Outfit'
+  },
+});
+

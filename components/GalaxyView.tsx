@@ -1,14 +1,16 @@
-import React from 'react';
-import { View, Text, Image, StyleSheet, ScrollView } from 'react-native';
+import React, { useRef, useEffect } from 'react';
+import { View, Text, Image, StyleSheet, ScrollView, Dimensions } from 'react-native';
+import Svg, { Line } from 'react-native-svg';
 
 // Import your data
 import planetNames from '@/data/planetnames.json';
 
-// Define the props type for the PlanetView component
-type PlanetViewProps = {
+// Define the props type for the GalaxyView component
+type GalaxyViewProps = {
   route: {
     params: {
       galaxyIndex: number;
+      activePlanetIndex?: number; // Optional parameter for active planet
     };
   };
 };
@@ -90,21 +92,49 @@ const getPlanetImage = (galaxyIndex: number, planetIndex: number) => {
   return planetImages[key] || planetImages['1_1'];
 };
 
-const PlanetView: React.FC<PlanetViewProps> = ({ route }) => {
-  const { galaxyIndex } = route.params;
+const GalaxyView: React.FC<GalaxyViewProps> = ({ route }) => {
+  const { galaxyIndex, activePlanetIndex } = route.params;
   const planetsInGalaxy = galaxyIndex === 0 ? 25 : 8;
-  console.log(planetsInGalaxy, galaxyIndex)
   
+  // Create ref for ScrollView
+  const scrollViewRef = useRef<ScrollView>(null);
+  
+  // Scroll to active planet when component mounts or activePlanetIndex changes
+  useEffect(() => {
+    if (activePlanetIndex !== undefined && scrollViewRef.current) {
+      // Use a longer delay to ensure rendering is complete
+      setTimeout(() => {
+        // Calculate approximate scroll position
+        // Each planet item takes about 225px vertical space (including margins)
+        const estimatedPosition = (planetsInGalaxy - activePlanetIndex - 1) * 230;
+        
+        scrollViewRef.current?.scrollTo({
+          y: estimatedPosition,
+          animated: false
+        });
+      }, 50);
+    }
+  }, [activePlanetIndex, planetsInGalaxy]);
+
   return (
     <View style={styles.container}>
-      <ScrollView style={styles.planetScroll}>
+      <ScrollView 
+        ref={scrollViewRef}
+        style={styles.planetScroll}
+      >
+        {/* Vertical timeline using SVG */}
         <View style={styles.timelineContainer}>
-          {/* Display vertical timeline with numbers */}
-          {Array.from({ length: planetsInGalaxy }).map((_, index) => (
-            <View key={`timeline-${index}`} style={styles.timelineItem}>
-              <Text style={styles.timelineNumber}>{ planetsInGalaxy - index }</Text>
-            </View>
-          ))}
+          <Svg height={10000} width={40} >
+            <Line
+              x1={20}
+              y1={0}
+              x2={20}
+              y2={10000}
+              stroke="#555"
+              strokeWidth={1.5}
+              strokeDasharray="20"
+            />
+          </Svg>
         </View>
         
         <View style={styles.planetsContainer}>
@@ -112,15 +142,34 @@ const PlanetView: React.FC<PlanetViewProps> = ({ route }) => {
           {Array.from({ length: planetsInGalaxy }).map((_, revIndex) => {
             const index = planetsInGalaxy - revIndex - 1; // Reverse index for display
             const planetName = planetNames[galaxyIndex][index] || `Planet ${index + 1}`;
+            const isActive = index === activePlanetIndex;
             
             return (
-              <View key={`planet-${index}`} style={styles.planetItem}>
-                <Text style={styles.planetName}>{galaxyIndex}</Text>
-                <Image
-                  source={getPlanetImage(galaxyIndex, index)}
-                  style={[styles.planetImage, { width: 120 + (index % 4) * 20, height: 120 + (index % 4) * 20 }]}
-                />
-                <Text style={styles.planetName}>{planetName}</Text>
+              <View 
+                key={`planet-${index}`} 
+                style={styles.planetItem}
+              >
+                {/* Timeline index number positioned next to the planet */}
+                <View style={styles.timelineIndexContainer}>
+                  <Text style={styles.timelineNumber}>{planetsInGalaxy - revIndex}</Text>
+                </View>
+                
+                <View style={styles.planetContentContainer}>
+                  <Image
+                    source={getPlanetImage(galaxyIndex, index)}
+                    style={[
+                      styles.planetImage, 
+                      { 
+                        width: index === planetsInGalaxy-1 ? 250 : ((120 + (index * 31547  % 4) * 20) * (isActive ? 1.5 : 1)), 
+                        height:  index === planetsInGalaxy-1 ? 250 : ((120 + (index * 31547  % 4) * 20) * (isActive ? 1.5 : 1)), 
+                      }
+                    ]}
+                  />
+                  <Text style={[
+                    styles.planetName,
+                    isActive && styles.activePlanetName
+                  ]}>{planetName}</Text>
+                </View>
               </View>
             );
           })}
@@ -141,37 +190,43 @@ const PlanetView: React.FC<PlanetViewProps> = ({ route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#121212',
   },
   planetScroll: {
     flex: 1,
   },
   timelineContainer: {
     position: 'absolute',
-    left: 10,
-    top: 0,
+    top: -1000,
+    left: 0,
     bottom: 0,
-    width: 30,
-    justifyContent: 'space-around',
+    zIndex: 1,
   },
-  timelineItem: {
+  timelineIndexContainer: {
+    position: 'absolute',
+    left: -40,
+    width: 40,
+    height: "100%",
+    paddingBottom: 32,
     alignItems: 'center',
     justifyContent: 'center',
-    height: 30,
   },
   timelineNumber: {
-    color: '#aaaaaa',
+    color: '#888',
     fontSize: 14,
   },
   planetsContainer: {
-    paddingLeft: 40,
+    paddingLeft: 70, // Increased to make room for timeline numbers
     paddingRight: 20,
     paddingVertical: 20,
   },
   planetItem: {
-    alignItems: 'center',
+    flexDirection: 'row',
     marginVertical: 30,
     position: 'relative',
+  },
+  planetContentContainer: {
+    flex: 1,
+    alignItems: 'center',
   },
   planetImage: {
     borderRadius: 50,
@@ -189,6 +244,11 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     marginTop: 8,
     fontSize: 14,
+  },
+  activePlanetName: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#ffcc00',
   },
   progressBarContainer: {
     padding: 16,
@@ -213,4 +273,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default PlanetView;
+export default GalaxyView;

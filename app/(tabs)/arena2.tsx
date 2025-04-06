@@ -1,8 +1,13 @@
 import React, { useState } from 'react';
-import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { Image } from 'expo-image';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { router } from 'expo-router';
 
 // Import PlanetView component
-import PlanetView from '@/app/components/PlanetView';
+import GalaxyView from '@/components/GalaxyView';
+import { NamedRocket } from '@/components/NamedRocket';
+import { ThemedText } from '@/components/ThemedText';
 
 // Galaxy names and planet counts
 const galaxies = [
@@ -14,97 +19,132 @@ const galaxies = [
 ];
 
 // Pre-load all galaxy images
-const galaxyImages = {
-  1: require('@/assets/images/uni/g/1.png'),
-  2: require('@/assets/images/uni/g/2.png'),
-  3: require('@/assets/images/uni/g/3.png'),
-  4: require('@/assets/images/uni/g/4.png'),
-  5: require('@/assets/images/uni/g/5.png'),
-};
+const galaxyImages = [
+  require('@/assets/images/uni/g/1.png'),
+  require('@/assets/images/uni/g/2.png'),
+  require('@/assets/images/uni/g/3.png'),
+  require('@/assets/images/uni/g/4.png'),
+  require('@/assets/images/uni/g/5.png'),
+];
 
 const Arena2: React.FC = () => {
-  const [selectedGalaxy, setSelectedGalaxy] = useState(0); // Default to the first galaxy
+  const [selectedGalaxy, setSelectedGalaxy] = useState(0);
+  const [showSelectModal, setShowSelectModal] = useState(false) // Default to the first galaxy
 
   return (
-    <View style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>Michal Rychtář</Text>
-      </View>
-
-      {/* Galaxy Selector */}
-      <ScrollView horizontal style={styles.galaxySelector} showsHorizontalScrollIndicator={false}>
-        {galaxies.map((galaxy, index) => (
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.container}>
+        {/* Header */}
+        <View style={styles.header}>
+            
+            <TouchableOpacity onPress={() => router.push('/profile')}>
+              <NamedRocket/>
+            </TouchableOpacity>
           <TouchableOpacity
-            key={`galaxy-${index}`}
-            style={[
-              styles.galaxyButton,
-              selectedGalaxy === index && styles.galaxyButtonSelected,
-            ]}
-            onPress={() => setSelectedGalaxy(index)}
-          >
-            <Image source={galaxyImages[index + 1]} style={styles.galaxyIcon} />
-            <Text
-              style={[
-                styles.galaxyButtonText,
-                selectedGalaxy === index && styles.galaxyButtonTextSelected,
-              ]}
-            >
-              {galaxy.name}
-            </Text>
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
+                style={[
+                  styles.galaxyButton
+                ]}
+                onPress={() => setShowSelectModal(!showSelectModal)}
+              >
+                <Image source={galaxyImages[selectedGalaxy]} style={styles.galaxyIcon} />
+                <ThemedText
+                  style={[
+                    styles.headerTitle,
+                  ]}
+                >
+                  {galaxies[selectedGalaxy].name}
+                </ThemedText>
+              </TouchableOpacity>
+        </View>
 
-      {/* Planet List */}
-      <ScrollView contentContainerStyle={styles.planetsContainer}>
-        {Array.from({ length: galaxies[selectedGalaxy].planetCount }).map((_, planetIndex) => (
-          <View key={`planet-${planetIndex}`} style={styles.planetItem}>
-            <PlanetView galaxyIndex={selectedGalaxy} planetIndex={planetIndex} />
-            <Text style={styles.planetName}>Planet {planetIndex + 1}</Text>
+        {/* Galaxy Selector - only show when modal is active */}
+        {showSelectModal && (
+          <View style={styles.galaxySelectorContainer}>
+            <View style={styles.galaxySelector}>
+              {galaxies.map((galaxy, index) => (
+                <TouchableOpacity
+                  key={`galaxy-${index}`}
+                  style={[
+                    styles.galaxyButton,
+                    selectedGalaxy === index && styles.galaxyButtonSelected,
+                  ]}
+                  onPress={() => {
+                    setSelectedGalaxy(index);
+                    setShowSelectModal(false);
+                  }}
+                >
+                  <Image source={galaxyImages[index]} style={styles.galaxyIcon} />
+                  <ThemedText
+                    style={[
+                      styles.headerTitle,
+                      selectedGalaxy === index && styles.galaxyButtonTextSelected,
+                    ]}
+                  >
+                    {galaxy.name}
+                  </ThemedText>
+                </TouchableOpacity>
+              ))}
+            </View>
           </View>
-        ))}
-      </ScrollView>
-    </View>
+        )}
+
+        {/* Planet List */}
+        <GalaxyView route={{params: {galaxyIndex: selectedGalaxy, activePlanetIndex: 0}}} />
+      </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#000',
+  },
   container: {
     flex: 1,
-    backgroundColor: '#121212',
+    backgroundColor: '#000',
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 16,
-    backgroundColor: '#171717',
+    padding: 8,
     borderBottomWidth: 1,
     borderBottomColor: '#333',
   },
   headerTitle: {
     fontSize: 18,
     color: '#ffffff',
-    fontWeight: 'bold',
+  },
+  galaxySelectorContainer: {
+    position: 'absolute',
+    top: 66,
+    right: 0,
+    zIndex: 1,
+    backgroundColor: '#000',
+    borderWidth: 1,
+    borderTopWidth: 0,
+    borderRightWidth: 0,
+    borderColor: '#333',
   },
   galaxySelector: {
-    flexDirection: 'row',
-    paddingVertical: 10,
-    backgroundColor: '#171717',
-    borderBottomWidth: 1,
-    borderBottomColor: '#333',
+    flexDirection: 'column',
+    padding: 8,
+    paddingTop: 0,
   },
   galaxyButton: {
     alignItems: 'center',
+    display: 'flex',
+    flexDirection: 'row-reverse',
     marginHorizontal: 10,
   },
   galaxyButtonSelected: {
+    display: "none",
     borderBottomWidth: 2,
     borderBottomColor: '#6200ee',
   },
   galaxyIcon: {
-    width: 40,
+    width: 64,
     height: 40,
     marginBottom: 5,
   },
