@@ -1,70 +1,69 @@
-{
-    "vsechny_cleny": [
-        "Cekmaron",
-        "Rachmora-8C",
-        "Zveranak",
-        "Drsnavax",
-        "Brzdalor 4R",
-        "Stinarka",
-        "Mekrala",
-        "Dravalix-K3",
-        "Treblenor",
-        "Zaskronia",
-        "Klapanik",
-        "Zlomira",
-        "Skloben",
-        "Oblinor Prime",
-        "Zadobor 3",
-        "Vlchoren-X",
-        "Trnavor-IX",
-        "Kradnor-6",
-        "Blokisar",
-        "Kropis-12",
-        "Tvaruna",
-        "Fronel",
-        "Mrazivik",
-        "Bzukeron 5X",
-        "Plosen V"
-      ]
-      ,
-    "hlavni_cleny": [
-        "Klanovik",
-        "Zavraton-4",
-        "Sklonir",
-        "Vyzdalor",
-        "Mirkadon-9",
-        "Jazvorka",
-        "Spalenor-2",
-        "Tmorax"
-    ],
-    "privlastky:": [
-        "Gralin-5",
-        "Velebrix-0",
-        "Zalmaran",
-        "Ryslan-13B",
-        "Korexion",
-        "Kovranon-11",
-        "Slepanov",
-        "Gropis-23"
-    ],
-    "prislovecna_urceni": [
-        "Zarbion",
-        "Kamirok-15",
-        "Plenor-5",
-        "Narvok",
-        "Kolbex-6",
-        "Seradyn",
-        "Vyslen-4",
-        "Briktor"
-    ],
-    "doplnky": [
-        "Sternon-2B",
-        "Tronvika",
-        "Oribis-7",
-        "Kvetalon",
-        "Lužnika-3",
-        "Frestor",
-        "Mordalis-12",
-        "Ferlix-11"
-    ]
-}
+[
+  [
+    "Cekmaron",
+    "Rachmora-8C",
+    "Zveranak",
+    "Drsnavax",
+    "Brzdalor 4R",
+    "Stinarka",
+    "Mekrala",
+    "Dravalix-K3",
+    "Treblenor",
+    "Zaskronia",
+    "Klapanik",
+    "Zlomira",
+    "Skloben",
+    "Oblinor Prime",
+    "Zadobor 3",
+    "Vlchoren-X",
+    "Trnavor-IX",
+    "Kradnor-6",
+    "Blokisar",
+    "Kropis-12",
+    "Tvaruna",
+    "Fronel",
+    "Mrazivik",
+    "Bzukeron 5X",
+    "Plosen V"
+  ],
+  [
+    "Klanovik",
+    "Zavraton-4",
+    "Sklonir",
+    "Vyzdalor",
+    "Mirkadon-9",
+    "Jazvorka",
+    "Spalenor-2",
+    "Tmorax"
+  ],
+  [
+    "Gralin-5",
+    "Velebrix-0",
+    "Zalmaran",
+    "Ryslan-13B",
+    "Korexion",
+    "Kovranon-11",
+    "Slepanov",
+    "Gropis-23"
+  ],
+  [
+    "Zarbion",
+    "Kamirok-15",
+    "Plenor-5",
+    "Narvok",
+    "Kolbex-6",
+    "Seradyn",
+    "Vyslen-4",
+    "Briktor"
+  ],
+  [
+    "Sternon-2B",
+    "Tronvika",
+    "Oribis-7",
+    "Kvetalon",
+    "Lužnika-3",
+    "Frestor",
+    "Mordalis-12",
+    "Ferlix-11"
+  ]
+]
