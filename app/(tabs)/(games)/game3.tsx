@@ -43,16 +43,12 @@ const CzechWordSelectionQuiz: React.FC = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-
       <RocketProgressBar progress={0.33} />
-
       <View style={styles.content}>
-        <Text style={styles.questionText}>Které slovo ve větě je podmět?</Text>
-        
+        <Text style={styles.questionText}>Které slovo ve větě je podmět?</Text>        
         <Text style={styles.exampleText}>
           Ondra mi nikdy o všech svých problémech neřekl.
         </Text>
-
         <View style={styles.grid}>
           {
             options.map((option) => (
@@ -65,7 +61,6 @@ const CzechWordSelectionQuiz: React.FC = () => {
             ))
           }
         </View>
-
         {
           selectedOptions.length > 0 && 
           <ContinueButton onClick={handleContinue}/>

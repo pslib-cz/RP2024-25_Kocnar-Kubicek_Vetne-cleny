@@ -55,8 +55,7 @@ const CzechSelectionGrid: React.FC = () => {
       <RocketProgressBar progress={0.33} />
 
       <View style={styles.content}>
-        <Text style={styles.title}>Vyber {targetType}</Text>
-        
+        <Text style={styles.title}>Vyber {targetType}</Text>        
         <View style={styles.grid}>
           {
             options.map((option) => (
@@ -69,7 +68,6 @@ const CzechSelectionGrid: React.FC = () => {
             ))
           }
         </View>
-
         {
           selectedOptions.length > 0 && 
           <ContinueButton onClick={handleContinue}/>
