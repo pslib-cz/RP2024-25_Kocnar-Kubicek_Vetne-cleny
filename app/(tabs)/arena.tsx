@@ -1,3 +1,5 @@
+import ArenaHeader from '@/components/ArenaHeader';
+import PlanetView from '@/components/PlanetView';
 import BigassButton from '@/components/ui/BigassButton';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
@@ -11,6 +13,8 @@ const SpaceJourney: React.FC<SpaceJourneyProps> = ({ currentLevel = 'Miercoles 3
   return (
     <View style={styles.container}>
       {/* Title */}
+      <ArenaHeader />
+
       <Text style={styles.title}>Cesta k další planetě</Text>
       
       {/* Progress bar with rocket */}
@@ -25,6 +29,7 @@ const SpaceJourney: React.FC<SpaceJourneyProps> = ({ currentLevel = 'Miercoles 3
       {/* Planet view */}
       <View style={styles.planetContainer}>
         <View style={styles.planet}>
+        <PlanetView galaxyIndex={1} activePlanetIndex={1} />
           {/* White dot */}
           <View style={[styles.marker, styles.whiteDot]} />
           
@@ -59,10 +64,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#000',
-    alignItems: 'center',
-    paddingTop: 40,
-    paddingHorizontal: 20,
-    paddingBottom: 20,
   },
   title: {
     color: '#fff',
@@ -107,12 +108,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   planet: {
-    width: 250,
-    height: 250,
-    borderRadius: 125,
-    backgroundColor: '#e63946',
     position: 'relative',
-    overflow: 'hidden',
   },
   marker: {
     position: 'absolute',
