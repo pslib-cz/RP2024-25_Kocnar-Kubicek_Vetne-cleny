@@ -1,17 +1,33 @@
 import ContinueButton from '@/components/ui/games/ContinueButton';
 import { LargeGameButton } from '@/components/ui/games/LargeGameButton';
 import RocketProgressBar from '@/components/ui/games/ProgressBar';
+import { ParseFile } from '@/hooks/useCSV';
 import { WordSelectionOption } from '@/types/games/SelectionOption';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { SafeAreaView, StyleSheet, Text, ToastAndroid, View } from 'react-native';
 
 const CzechWordSelectionQuiz: React.FC = () => {
-  const [options, setOptions] = useState<WordSelectionOption[]>([
-    { id: '1', text: 'Ondra 1', type: 'PO 1' },
-    { id: '2', text: 'nikdy 2', type: 'PO 2' },
-    { id: '3', text: 'o všech 3', type: 'PO 3' },
-    { id: '4', text: 'neřekl 4', type: 'PO 4' },
-  ]);
+
+  const [data, setData] = useState<WordSelectionOption[]>();
+
+  useEffect(() => {
+    ParseFile("data/List1.csv", (parsed) => {
+      setData(parsed);
+    },
+    (error) => {
+      console.error("Error parsing file:", error);
+    });
+  }, []);
+
+  const [options, setOptions] = useState<WordSelectionOption[]>();
+
+  useEffect(() => {
+    console.log("Data change:", data);
+
+    if (data) {
+      setOptions(data);
+    }
+  }, [data]);
 
   const [selectedOptions, setSelectedOptions] = useState<WordSelectionOption[]>([]);
 
@@ -51,9 +67,10 @@ const CzechWordSelectionQuiz: React.FC = () => {
         </Text>
         <View style={styles.grid}>
           {
-            options.map((option) => (
+            options &&
+            options.map((option, index) => (
               <LargeGameButton
-                key={option.id}
+                key={index}
                 text={option.text}
                 selected={selectedOptions.includes(option)}
                 onPress={() => handleSelect(option)}

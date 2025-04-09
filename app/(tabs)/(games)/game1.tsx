@@ -17,29 +17,12 @@ const LanguageLearningScreen: React.FC = () => {
 
   useEffect(() => {
     ParseFile("data/List1.csv", (parsed) => {
-      console.log("Parsed data:", parsed);
-      setData(parsed.map((item, index) => ({
-        id: String(index),
-        text: item[0],
-        type: item[1],
-      })));
+      setData(parsed);
     },
     (error) => {
       console.error("Error parsing file:", error);
     });
   }, []);
-
-  /*
-  const data = [
-    {word: 'pro radost 1', type: 'PO 1'},
-    {word: 'sedával 2', type: 'PŮJ 2'},
-    {word: 'vždycky 3', type: 'PŘ 3'},
-    {word: 'u otevřeného 4', type: 'PUČ 4'},
-    {word: 'okna. 5', type: 'PKS 5'},
-  ]
-  */
-
-  console.log("Data loaded:", data);
 
   const [gameIndex, setGameIndex] = useState(0); // id of the current game card
 
@@ -48,6 +31,8 @@ const LanguageLearningScreen: React.FC = () => {
   const [bottomButtons, setBottomButtons] = useState<WordButtonType[]>();
 
   useEffect(() => {
+    console.log("Data change:", data);
+
     if (data) {
       setPhraseButtons(
         data.map((item, index) => ({
@@ -67,6 +52,12 @@ const LanguageLearningScreen: React.FC = () => {
   }, [data]);
 
   const onBottomButtonClicked = (bottomButton: WordButtonType) => {
+
+    if (!phraseButtons || !data || !bottomButtons){
+      console.log("Phrase buttons or data or bottomButtons not initialized yet");
+      return;
+    }
+
     const updatedPhraseButtons = [...phraseButtons];
 
     if (bottomButton.text === data[gameIndex].type) {

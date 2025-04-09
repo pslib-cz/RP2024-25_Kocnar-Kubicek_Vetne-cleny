@@ -1,28 +1,38 @@
 import ContinueButton from '@/components/ui/games/ContinueButton';
 import { LargeGameButton } from '@/components/ui/games/LargeGameButton';
 import RocketProgressBar from '@/components/ui/games/ProgressBar';
+import { ParseFile } from '@/hooks/useCSV';
 import { WordSelectionOption } from '@/types/games/SelectionOption';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { SafeAreaView, StyleSheet, Text, ToastAndroid, View } from 'react-native';
 
 const CzechSelectionGrid: React.FC = () => {
-  const data = [
-    {word: 'pro radost 1', type: 'PO 1'},
-    {word: 'sedával 2', type: 'PŮJ 2'},
-    {word: 'vždycky 3', type: 'PUM 3'},
-    {word: 'u otevřeného 4', type: 'PUČ 4'},
-    {word: 'okna. 5', type: 'PKS 5'},
-  ];
+  const [data, setData] = useState<WordSelectionOption[]>();
 
-  const targetType = 'PO 1';
+  useEffect(() => {
+    ParseFile("data/List1.csv", (parsed) => {
+      setData(parsed);
+    },
+    (error) => {
+      console.error("Error parsing file:", error);
+    });
+  }, []);
 
-  const [options, setOptions] = useState<WordSelectionOption[]>(
-    data.map((item, index) => ({
-      id: `${index + 1}`,
-      text: item.word,
-      type: item.type,
-    }))
-  );
+  const [targetType, setTargetType] = useState<string>('... loading'); // Set the target type here
+
+  const [options, setOptions] = useState<WordSelectionOption[]>();
+
+  useEffect(() => {
+
+    if (!data) {
+      console.log("Data not initialized yet");
+      return;
+    }
+
+    setOptions(data)
+
+    setTargetType(data[Math.floor(Math.random() * data.length)].type);
+  }, [data]);
 
   const [selectedOptions, setSelectedOptions] = useState<WordSelectionOption[]>([]);
 
@@ -58,9 +68,10 @@ const CzechSelectionGrid: React.FC = () => {
         <Text style={styles.title}>Vyber {targetType}</Text>        
         <View style={styles.grid}>
           {
-            options.map((option) => (
+            options &&
+            options.map((option, index) => (
               <LargeGameButton
-                key={option.id}
+                key={index}
                 text={option.text}
                 selected={selectedOptions.includes(option)}
                 onPress={() => handleSelect(option)}

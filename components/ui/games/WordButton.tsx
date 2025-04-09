@@ -29,7 +29,7 @@ const WordButton: React.FC<WordButtonProps> = ({ text, state, onClick }) => {
         stateStyles[state || ButtonState.default]
       ]}
       onPress={onClick}
-      disabled={state === ButtonState.disabled}
+      disabled={state === ButtonState.disabled || !onClick}
     >
       <Text style={[
         styles.buttonText,
