@@ -28,9 +28,14 @@ export const useCSV = (url: string) => {
       }
 
       try {
-        const csvText = await FileSystem.readAsStringAsync(LOCAL_FILE_PATH);
-        const parsed = Papa.parse<Record<string, string>>(csvText, { header: true });
-        setData(parsed.data);
+        // const csvText = await FileSystem.readAsStringAsync(LOCAL_FILE_PATH);
+        // const parsed = Papa.parse<Record<string, string>>(csvText, { header: true });
+        // setData(parsed.data);
+
+        ParseFile(LOCAL_FILE_PATH, (parsed) => setData(parsed), (error) => {
+          console.error("❌ Chyba při čtení CSV:", error);
+          setData([]);
+        })
       } catch (error) {
         console.error("❌ Chyba při čtení CSV:", error);
         setData([]);
@@ -44,3 +49,30 @@ export const useCSV = (url: string) => {
 
   return { data, loading };
 };
+
+export function ParseFile(filePath: string, resolve: (data: Record<string, string>[]) => void, reject: (error: never) => void) {
+
+  // this does nto work in browser btw
+  FileSystem.getInfoAsync(filePath).then((fileInfo) => {
+    if (!fileInfo.exists) {
+      console.log("❌ Soubor neexistuje:", filePath);
+      return;
+    }
+  });
+
+  return new Promise(() => {
+    Papa.parse<Record<string, string>>(filePath, {
+      header: true,
+      complete: (results) => {
+        console.log(`✅ CSV ${filePath} načteno - `, results);
+        resolve(results.data);
+      },
+      error: (error : never) => {
+        reject(error);
+        console.log("❌ Chyba při čtení CSV:", error);
+      },
+      delimiter: ";",
+    });
+  });
+
+}
