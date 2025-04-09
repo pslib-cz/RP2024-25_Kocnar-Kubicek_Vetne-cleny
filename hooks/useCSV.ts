@@ -5,6 +5,8 @@ import Papa from "papaparse";
 import { Platform } from 'react-native';
 import { WordSelectionOption } from "@/types/games/SelectionOption";
 
+import { Asset } from "expo-asset";
+
 const LOCAL_FILE_PATH = `${FileSystem.documentDirectory}data.csv`;
 
 interface DataRow
@@ -35,10 +37,6 @@ export const useCSV = (url: string) => {
       }
 
       try {
-        // const csvText = await FileSystem.readAsStringAsync(LOCAL_FILE_PATH);
-        // const parsed = Papa.parse<Record<string, string>>(csvText, { header: true });
-        // setData(parsed.data);
-
         ParseFile(LOCAL_FILE_PATH, (parsed) => setData(parsed), (error) => {
           console.error("❌ Chyba při čtení CSV:", error);
           setData([]);
@@ -58,6 +56,9 @@ export const useCSV = (url: string) => {
 };
 
 export function ParseFile(filePath: string, resolve: (data: DataRow[]) => void, reject: (error: never) => void) {
+
+  if (!filePath)
+    throw new Error("❌ filePath is null or undefined");
 
   if (Platform.OS === 'web') {
     console.log("FUCK YOU, DO NOT USE WEB, Here you have some mock data, hf")
@@ -80,19 +81,24 @@ export function ParseFile(filePath: string, resolve: (data: DataRow[]) => void, 
     return;
   }
   
-  // this does nto work in browser btw
-  FileSystem.getInfoAsync(filePath).then((fileInfo) => {
-    if (!fileInfo.exists) {
-      console.log("❌ Soubor neexistuje:", filePath);
-      return;
-    }
-  });
+  return new Promise(async () => {
 
-  return new Promise(() => {
-    Papa.parse<Record<string, string>>(filePath, {
-      header: true,
+    const asset = Asset.fromURI(filePath);
+
+    console.log(asset);
+
+    const { localUri } = await Asset.fromModule(require('@/data/List1.csv')).downloadAsync();
+
+    console.log("localUri", localUri);
+
+    const csvString = await FileSystem.readAsStringAsync(localUri);
+
+    console.log("✅ CSV soubor načten:", csvString);
+
+    Papa.parse<string[]>(csvString, {
+      header: false,
       complete: (results) => {
-        console.log(`✅ CSV ${filePath} načteno - `, results);
+        console.log(`✅ CSV ${filePath} načteno - `, results.data);
         OnComplete(results.data);
       },
       error: (error : never) => {
@@ -100,13 +106,29 @@ export function ParseFile(filePath: string, resolve: (data: DataRow[]) => void, 
         reject(error);
       },
       delimiter: ";",
+      newline: "\r\n",
     });
 
-    function OnComplete(data : Record<string, string>[]) {
-      resolve(data.map((item) => ({
-        text: item.text,
-        type: item.type,
-      })));
+    function OnComplete(data : string[][]) {
+
+      const dataRows: DataRow[] = [];
+
+      data.forEach(row => {
+        const dataRow: DataRow = {
+          data: []
+        };
+
+        row.forEach((item, index) => {
+          if (index % 2 === 0) {
+            dataRow.data.push({ text: item, type: row[index + 1] });
+          }
+        });
+
+        dataRows.push(dataRow);
+        
+      });
+      
+      resolve(dataRows);
     }
   });
 

@@ -17,7 +17,7 @@ const LanguageLearningScreen: React.FC = () => {
 
   useEffect(() => {
     ParseFile("data/List1.csv", (parsed) => {
-      setData(parsed);
+      setData(parsed[0].data);
     },
     (error) => {
       console.error("Error parsing file:", error);
