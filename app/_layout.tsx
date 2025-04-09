@@ -6,7 +6,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
-
+import { GalaxyProvider } from '@/context/GalaxyContext';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
 
@@ -32,16 +32,16 @@ export default function RootLayout() {
   }
 
   return (
-    <RocketProvider>
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-        {/* <ThemedView style={{ fontFamily: 'Outfit' }}> */}
-            <Stack>
-                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-                <Stack.Screen name="+not-found" />
-            </Stack>
-            <StatusBar style="auto" />
-        {/* </ThemedView> */}
-    </ThemeProvider>
-    </RocketProvider>
+    <GalaxyProvider>
+      <RocketProvider>
+        <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+          <Stack>
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="+not-found" />
+          </Stack>
+          <StatusBar style="auto" />
+        </ThemeProvider>
+      </RocketProvider>
+    </GalaxyProvider>
   );
 }

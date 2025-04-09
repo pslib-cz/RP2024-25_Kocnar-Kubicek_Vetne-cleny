@@ -1,16 +1,15 @@
-import React, { useRef, useEffect } from 'react';
-import { View, Text, Image, StyleSheet, ScrollView, Dimensions } from 'react-native';
-import Svg, { Line } from 'react-native-svg';
-import { Rocket } from './Rocket';
+import React from 'react';
+import { View, Text, Image, StyleSheet } from 'react-native';
+import Svg, { Polygon } from 'react-native-svg';
 
 // Import your data
 import planetNames from '@/data/planetnames.json';
 
+// Import context
+import { useGalaxyContext } from '@/context/GalaxyContext';
+
 // Define the props type for the GalaxyView component
-type GalaxyViewProps = {
-    galaxyIndex: number;
-    activePlanetIndex: number; // Optional parameter for active planet
-};
+
 
 // Pre-load all planet images
 const planetImages: Record<string, any> = {
@@ -89,93 +88,145 @@ const getPlanetImage = (galaxyIndex: number, planetIndex: number) => {
   return planetImages[key] || planetImages['1_1'];
 };
 
-const PlanetView: React.FC<GalaxyViewProps> = ( params ) => {
-  const { galaxyIndex, activePlanetIndex } = params;
-  const planetsInGalaxy = galaxyIndex === 0 ? 25 : 8;
+// Seeded random generator
+const seededRandom = (seed: number) => {
+  let value = seed % 2147483647;
+  if (value <= 0) value += 2147483646;
+  return () => {
+    value = (value * 16807) % 2147483647;
+    return (value - 1) / 2147483646;
+  };
+};
+
+const generateRandomHexagons = (count: number, width: number, height: number, seed: number) => {
+  const random = seededRandom(seed);
+  const hexagons: string[] = [];
+  const radius = width / 2; // Assuming the planet is a circle with width as diameter
+  const centerX = width / 2;
+  const centerY = height / 2;
+  const hexagonSize = 20; // Size of the hexagon
+  const hexagonRadius = hexagonSize * Math.sqrt(3) / 2; // Approximate radius of the hexagon
+
+  // Add the first hexagon at the bottom
+  hexagons.push([
+    `${centerX},${height - hexagonSize}`,
+    `${centerX + hexagonRadius},${height - hexagonSize / 2}`,
+    `${centerX + hexagonRadius},${height + hexagonSize / 2}`,
+    `${centerX},${height + hexagonSize}`,
+    `${centerX - hexagonRadius},${height + hexagonSize / 2}`,
+    `${centerX - hexagonRadius},${height - hexagonSize / 2}`,
+  ].join(' '));
+
+  while (hexagons.length < count - 1) {
+    const x = random() * width;
+    const y = random() * height;
+
+    // Check if the hexagon center is within the circle
+    const distanceFromCenter = Math.sqrt((x - centerX) ** 2 + (y - centerY) ** 2);
+    if (distanceFromCenter + hexagonRadius > radius) continue;
+
+    // Check for overlap with existing hexagons
+    const overlaps = hexagons.some((points) => {
+      const [existingX, existingY] = points.split(',')[0].split(' ').map(Number);
+      const distance = Math.sqrt((x - existingX) ** 2 + (y - existingY) ** 2);
+      return distance < 2 * hexagonRadius; // Ensure no overlap
+    });
+
+    if (overlaps) continue;
+
+    const points = [
+      `${x},${y - hexagonSize}`,
+      `${x + hexagonRadius},${y - hexagonSize / 2}`,
+      `${x + hexagonRadius},${y + hexagonSize / 2}`,
+      `${x},${y + hexagonSize}`,
+      `${x - hexagonRadius},${y + hexagonSize / 2}`,
+      `${x - hexagonRadius},${y - hexagonSize / 2}`,
+    ].join(' ');
+
+    hexagons.push(points);
+  }
+
+  // Add the last hexagon at the top
+  hexagons.push([
+    `${centerX},${0 - hexagonSize}`,
+    `${centerX + hexagonRadius},${0 - hexagonSize / 2}`,
+    `${centerX + hexagonRadius},${0 + hexagonSize / 2}`,
+    `${centerX},${0 + hexagonSize}`,
+    `${centerX - hexagonRadius},${0 + hexagonSize / 2}`,
+    `${centerX - hexagonRadius},${0 - hexagonSize / 2}`,
+  ].join(' '));
+
+  return hexagons;
+};
+
+const PlanetView: React.FC = () => {
+  // Get activeLevelIndex from context
+  const { activeLevelIndex, selectedGalaxy, activePlanets } = useGalaxyContext();
+
+  const seed = selectedGalaxy * 100 + activePlanets[selectedGalaxy]; // Generate a unique seed for each planet
+  const hexagons = generateRandomHexagons(5, 250, 250, seed); // Ensure hexagons are within the circle
 
   return (
-    <View style={styles.container}>
+    <View style={styles.planetContentContainer}>
+      <Image
+        source={getPlanetImage(selectedGalaxy, activePlanets[selectedGalaxy])}
+        style={[
+          styles.planetImage,
+          {
+            width: 250,
+            height: 250,
+          },
+        ]}
+      />
+      <Svg style={styles.hexagonOverlay} width={250} height={250}>
+        {hexagons.map((points, index) => {
+          let fillColor;
+          if (index < activeLevelIndex[selectedGalaxy]) {
+            fillColor = '#00ff00'; // Brighter green for finished
+          } else if (index === activeLevelIndex[selectedGalaxy]) {
+            fillColor = '#ffff80'; // Brighter yellow for active
+          } else {
+            fillColor = '#b0b0b0'; // Brighter gray for unreached
+          }
 
-        <View style={styles.planetsContainer}>
-          {/* Display planets */}
+          const borderColor = index < activeLevelIndex[selectedGalaxy]
+            ? '#008000' // Darker green
+            : index === activeLevelIndex[selectedGalaxy]
+            ? '#cccc00' // Darker yellow
+            : '#808080'; // Darker gray
 
-              <View 
-                style={styles.planetItem}
-              >
-                
-                <View style={styles.planetContentContainer}>
-                  <Image
-                    source={getPlanetImage(galaxyIndex, activePlanetIndex)}
-                    style={[
-                      styles.planetImage, 
-                      { 
-                        width: 250, 
-                        height:  250, 
-                      }
-                    ]}
-                  />
-                  <Text style={[
-                    styles.planetName,
-                    styles.activePlanetName
-                  ]}>{planetNames[galaxyIndex][activePlanetIndex]}</Text>
-                </View>
-              </View>
-            );
-        </View>
-      
-      {/* Bottom progress bar */}
-      <View style={styles.progressBarContainer}>
-        <View style={styles.progressBar}>
-          <View style={styles.progressFill} />
-        </View>
-        <Text style={styles.progressLabel}>MIERCOLES 32</Text>
-      </View>
+          return (
+            <Polygon
+              key={index}
+              points={points}
+              fill={fillColor}
+              stroke={borderColor}
+              strokeWidth={2} // Add border width
+            />
+          );
+        })}
+      </Svg>
+      <Text
+        style={[
+          styles.planetName,
+          styles.activePlanetName,
+        ]}
+      >
+        {planetNames[selectedGalaxy][activeLevelIndex[selectedGalaxy]]}
+      </Text>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  planetScroll: {
-    flex: 1,
-  },
-  timelineContainer: {
-    position: 'absolute',
-    top: -1000,
-    left: 0,
-    bottom: 0,
-    zIndex: 1,
-  },
-  timelineIndexContainer: {
-    position: 'absolute',
-    left: -40,
-    width: 40,
-    height: "100%",
-    paddingBottom: 32,
-    alignItems: 'center',
-    justifyContent: 'center',
-    display: 'flex',
-    flexDirection: 'row-reverse'
-  },
-  timelineNumber: {
-    color: '#888',
-    fontSize: 14,
-  },
+
   planetsContainer: {
-    paddingLeft: 70, // Increased to make room for timeline numbers
-    paddingRight: 20,
-    paddingVertical: 20,
-  },
-  planetItem: {
-    flexDirection: 'row',
-    marginVertical: 30,
-    position: 'relative',
+    padding: 20,
   },
   planetContentContainer: {
     flex: 1,
     alignItems: 'center',
+    justifyContent: 'center', // Added to center the planet vertically
   },
   planetImage: {
     borderRadius: 50,
@@ -227,6 +278,11 @@ const styles = StyleSheet.create({
   rocketIcon: {
     marginTop: 5,
     transform: [{ rotate: '30deg' }, { translateX: 35 }, { translateY: -20 }],
+    position: 'absolute',
+    top: 0,
+    left: 0,
+  },
+  hexagonOverlay: {
     position: 'absolute',
     top: 0,
     left: 0,

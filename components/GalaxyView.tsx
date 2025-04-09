@@ -1,20 +1,11 @@
 import React, { useRef, useEffect } from 'react';
-import { View, Text, Image, StyleSheet, ScrollView, Dimensions } from 'react-native';
+import { View, Text, Image, StyleSheet, ScrollView } from 'react-native';
 import Svg, { Line } from 'react-native-svg';
 import { Rocket } from './Rocket';
+import { useGalaxyContext } from '@/context/GalaxyContext';
 
 // Import your data
 import planetNames from '@/data/planetnames.json';
-
-// Define the props type for the GalaxyView component
-type GalaxyViewProps = {
-  route: {
-    params: {
-      galaxyIndex: number;
-      activePlanetIndex?: number; // Optional parameter for active planet
-    };
-  };
-};
 
 // Pre-load all planet images
 const planetImages: Record<string, any> = {
@@ -93,26 +84,18 @@ const getPlanetImage = (galaxyIndex: number, planetIndex: number) => {
   return planetImages[key] || planetImages['1_1'];
 };
 
-const GalaxyView: React.FC<GalaxyViewProps> = ({ route }) => {
-  const { galaxyIndex, activePlanetIndex } = route.params;
-  const planetsInGalaxy = galaxyIndex === 0 ? 25 : 8;
-  
-  // Create ref for ScrollView
+const GalaxyView: React.FC = () => {
+  const { selectedGalaxy, activePlanets } = useGalaxyContext();
+  const activePlanetIndex = activePlanets[selectedGalaxy];
+  const planetsInGalaxy = selectedGalaxy === 0 ? 25 : 8;
+
   const scrollViewRef = useRef<ScrollView>(null);
-  
-  // Scroll to active planet when component mounts or activePlanetIndex changes
+
   useEffect(() => {
     if (activePlanetIndex !== undefined && scrollViewRef.current) {
-      // Use a longer delay to ensure rendering is complete
       setTimeout(() => {
-        // Calculate approximate scroll position
-        // Each planet item takes about 225px vertical space (including margins)
         const estimatedPosition = (planetsInGalaxy - activePlanetIndex - 1) * 230;
-        
-        scrollViewRef.current?.scrollTo({
-          y: estimatedPosition,
-          animated: false
-        });
+        scrollViewRef.current?.scrollTo({ y: estimatedPosition, animated: false });
       }, 50);
     }
   }, [activePlanetIndex, planetsInGalaxy]);
@@ -143,7 +126,7 @@ const GalaxyView: React.FC<GalaxyViewProps> = ({ route }) => {
           {/* Display planets */}
           {Array.from({ length: planetsInGalaxy }).map((_, revIndex) => {
             const index = planetsInGalaxy - revIndex - 1; // Reverse index for display
-            const planetName = planetNames[galaxyIndex][index] || `Planet ${index + 1}`;
+            const planetName = planetNames[selectedGalaxy][index] || `Planet ${index + 1}`;
             const isActive = index === activePlanetIndex;
             
             return (
@@ -161,7 +144,7 @@ const GalaxyView: React.FC<GalaxyViewProps> = ({ route }) => {
                 
                 <View style={styles.planetContentContainer}>
                   <Image
-                    source={getPlanetImage(galaxyIndex, index)}
+                    source={getPlanetImage(selectedGalaxy, index)}
                     style={[
                       styles.planetImage, 
                       { 

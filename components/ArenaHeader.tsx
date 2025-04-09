@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import { Image } from 'expo-image';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { router } from 'expo-router';
+import { useGalaxyContext } from '@/context/GalaxyContext';
 
 // Import PlanetView component
-import GalaxyView from '@/components/GalaxyView';
 import { NamedRocket } from '@/components/NamedRocket';
 import { ThemedText } from '@/components/ThemedText';
 
@@ -28,8 +27,13 @@ const galaxyImages = [
 ];
 
 const ArenaHeader: React.FC = () => {
-  const [selectedGalaxy, setSelectedGalaxy] = useState(0);
-  const [showSelectModal, setShowSelectModal] = useState(false) // Default to the first galaxy
+  const { selectedGalaxy, setSelectedGalaxy } = useGalaxyContext();
+  const [showSelectModal, setShowSelectModal] = useState(false);
+
+  const handleGalaxyChange = (galaxyIndex: number) => {
+    setSelectedGalaxy(galaxyIndex);
+    setShowSelectModal(false);
+  };
 
   return (
       <View style={styles.container}>
@@ -67,10 +71,7 @@ const ArenaHeader: React.FC = () => {
                     styles.galaxyButton,
                     selectedGalaxy === index && styles.galaxyButtonSelected,
                   ]}
-                  onPress={() => {
-                    setSelectedGalaxy(index);
-                    setShowSelectModal(false);
-                  }}
+                  onPress={() => handleGalaxyChange(index)}
                 >
                   <Image source={galaxyImages[index]} style={styles.galaxyIcon} />
                   <ThemedText
@@ -91,12 +92,7 @@ const ArenaHeader: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: '#000',
-  },
   container: {
-    flex: 1,
     backgroundColor: '#000',
   },
   header: {

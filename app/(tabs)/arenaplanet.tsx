@@ -1,66 +1,55 @@
 import ArenaHeader from '@/components/ArenaHeader';
 import PlanetView from '@/components/PlanetView';
 import BigassButton from '@/components/ui/BigassButton';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { useGalaxyContext } from '@/context/GalaxyContext';
+import { router } from 'expo-router';
 
-interface SpaceJourneyProps {
-  currentLevel: string;
-  nextTask: string;
-}
+const ArenaPlanet: React.FC = () => {
+  const { levelUp } = useGalaxyContext();
+  const nextTask = "Next Task";
 
-const SpaceJourney: React.FC<SpaceJourneyProps> = ({ currentLevel = 'Miercoles 32', nextTask = 'Další úloha' }) => {
   return (
-    <View style={styles.container}>
-      {/* Title */}
-      <ArenaHeader />
-
-      <Text style={styles.title}>Cesta k další planetě</Text>
-      
-      {/* Progress bar with rocket */}
-      <View style={styles.progressContainer}>
-        <View style={styles.rocketContainer}>
-          <View style={styles.rocket}>
-            <Text style={styles.rocketEmoji}>🚀</Text>
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.container}>
+        {/* Title */}
+        <ArenaHeader />
+        
+        {/* Progress bar with rocket */}
+        <View style={styles.progressContainer}>
+          <View style={styles.rocketContainer}>
+            <View style={styles.rocket}>
+              <Text style={styles.rocketEmoji}>🚀</Text>
+            </View>
           </View>
         </View>
-      </View>
-      
-      {/* Planet view */}
-      <View style={styles.planetContainer}>
-        <View style={styles.planet}>
-        <PlanetView galaxyIndex={1} activePlanetIndex={1} />
-          {/* White dot */}
-          <View style={[styles.marker, styles.whiteDot]} />
-          
-          {/* Yellow dot */}
-          <View style={[styles.marker, styles.yellowDot]} />
-          
-          {/* Green dots */}
-          <View style={[styles.marker, styles.greenDot1]} />
-          <View style={[styles.marker, styles.greenDot2]} />
-          
-          {/* Path lines */}
-          <View style={styles.pathLine1} />
-          <View style={styles.pathLine2} />
-          <View style={styles.pathLine3} />
-        </View>
         
-        {/* Level indicator */}
-        <Text style={styles.levelText}>{currentLevel}</Text>
+        {/* Planet view */}
+        <TouchableOpacity 
+          style={styles.planetContainer} 
+          onPress={() => router.push('/arenagalaxies')}
+        >
+          <PlanetView />
+        </TouchableOpacity>
+        
+        {/* Next task button */}
+        <BigassButton 
+          title={nextTask}
+          bgEmoji="🚀"
+          onPress={levelUp}
+        />
       </View>
-      
-      {/* Next task button */}
-      <BigassButton 
-        title={nextTask}
-        bgEmoji="🚀"
-        onPress={() => console.log('Next task pressed')}
-      />
-    </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#000',
+  },
   container: {
     flex: 1,
     backgroundColor: '#000',
@@ -105,10 +94,7 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
     alignItems: 'center',
-    justifyContent: 'center',
-  },
-  planet: {
-    position: 'relative',
+    justifyContent: 'center', // Ensure the planet is centered vertically
   },
   marker: {
     position: 'absolute',
@@ -183,4 +169,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SpaceJourney;
+export default ArenaPlanet;
