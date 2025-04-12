@@ -91,6 +91,8 @@ export function ParseFile(filePath: string, resolve: (data: DataRow[]) => void, 
 
     console.log("localUri", localUri);
 
+    if (!localUri) throw Error("File was not found")
+
     const csvString = await FileSystem.readAsStringAsync(localUri);
 
     console.log("✅ CSV soubor načten:", csvString);
@@ -106,7 +108,6 @@ export function ParseFile(filePath: string, resolve: (data: DataRow[]) => void, 
         reject(error);
       },
       delimiter: ";",
-      newline: "\r\n",
     });
 
     function OnComplete(data : string[][]) {
