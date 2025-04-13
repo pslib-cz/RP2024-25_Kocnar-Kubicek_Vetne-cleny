@@ -1,7 +1,8 @@
 import { ThemedText } from '@/components/ThemedText';
 import RocketProgressBar from '@/components/ui/games/ProgressBar';
 import WordButton, { ButtonState } from '@/components/ui/games/WordButton';
-import { ParseFile, useCSV } from '@/hooks/useCSV';
+import { Spreadsheets } from '@/data/DataNavigator';
+import { ParseFile } from '@/hooks/useCSV';
 import { WordSelectionOption } from '@/types/games/SelectionOption';
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView, StyleSheet, ToastAndroid, View } from 'react-native';
@@ -16,7 +17,7 @@ const LanguageLearningScreen: React.FC = () => {
   const [data, setData] = useState<WordSelectionOption[]>();
 
   useEffect(() => {
-    ParseFile("data/List1.csv", (parsed) => {
+    ParseFile(Spreadsheets.All1, (parsed) => {
       setData(parsed[0].data);
     },
     (error) => {
@@ -57,6 +58,9 @@ const LanguageLearningScreen: React.FC = () => {
       console.log("Phrase buttons or data or bottomButtons not initialized yet");
       return;
     }
+
+    if (gameIndex >= data.length)
+      throw Error("Game index is out of bounds");
 
     const updatedPhraseButtons = [...phraseButtons];
 

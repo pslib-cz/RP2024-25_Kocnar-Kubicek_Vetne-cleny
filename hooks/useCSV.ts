@@ -4,7 +4,6 @@ import * as Network from "expo-network";
 import Papa from "papaparse";
 import { Platform } from 'react-native';
 import { WordSelectionOption } from "@/types/games/SelectionOption";
-
 import { Asset } from "expo-asset";
 
 const LOCAL_FILE_PATH = `${FileSystem.documentDirectory}data.csv`;
@@ -55,15 +54,9 @@ export const useCSV = (url: string) => {
   return { data, loading };
 };
 
-export function ParseFile(filePath: string, resolve: (data: DataRow[]) => void, reject: (error: never) => void) {
-
-  if (!filePath)
-    throw new Error("❌ filePath is null or undefined");
-
+export function ParseFile(requireFile: any, resolve: (data: DataRow[]) => void, reject: (error: never) => void) {
   if (Platform.OS === 'web') {
     console.log("FUCK YOU, DO NOT USE WEB, Here you have some mock data, hf")
-
-    // generate something
     const mockData: DataRow[] = [
       {
         data:
@@ -77,41 +70,29 @@ export function ParseFile(filePath: string, resolve: (data: DataRow[]) => void, 
       }
     ];
     resolve(mockData);
-
     return;
   }
   
   return new Promise(async () => {
-
-    const asset = Asset.fromURI(filePath);
-
-    console.log(asset);
-
-    const { localUri } = await Asset.fromModule(require('@/data/List1.csv')).downloadAsync();
-
-    console.log("localUri", localUri);
-
+    const { localUri } = await Asset.fromModule(requireFile).downloadAsync();
     if (!localUri) throw Error("File was not found")
 
     const csvString = await FileSystem.readAsStringAsync(localUri);
-
     console.log("✅ CSV soubor načten:", csvString);
 
     Papa.parse<string[]>(csvString, {
       header: false,
       complete: (results) => {
-        console.log(`✅ CSV ${filePath} načteno - `, results.data);
+        console.log(`✅ CSV ${requireFile} načteno - `, results.data);
         OnComplete(results.data);
       },
       error: (error : never) => {
         console.log("❌ Chyba při čtení CSV:", error);
         reject(error);
-      },
-      delimiter: ";",
+      }
     });
 
     function OnComplete(data : string[][]) {
-
       const dataRows: DataRow[] = [];
 
       data.forEach(row => {
@@ -120,17 +101,16 @@ export function ParseFile(filePath: string, resolve: (data: DataRow[]) => void, 
         };
 
         row.forEach((item, index) => {
+          if (item === "") return;
+
           if (index % 2 === 0) {
             dataRow.data.push({ text: item, type: row[index + 1] });
           }
         });
 
-        dataRows.push(dataRow);
-        
-      });
-      
+        dataRows.push(dataRow);        
+      });      
       resolve(dataRows);
     }
   });
-
 }
