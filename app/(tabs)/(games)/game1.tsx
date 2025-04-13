@@ -1,11 +1,11 @@
 import { ThemedText } from '@/components/ThemedText';
 import RocketProgressBar from '@/components/ui/games/ProgressBar';
 import WordButton, { ButtonState } from '@/components/ui/games/WordButton';
-import { Spreadsheets } from '@/data/DataNavigator';
-import { ParseFile } from '@/hooks/useCSV';
+import { Spreadsheets } from '@/utils/DataNavigator';
 import { WordSelectionOption } from '@/types/games/SelectionOption';
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView, StyleSheet, ToastAndroid, View } from 'react-native';
+import { ParseFileToDataRows } from '@/utils/fileParser';
 
 const LanguageLearningScreen: React.FC = () => {
 
@@ -17,7 +17,7 @@ const LanguageLearningScreen: React.FC = () => {
   const [data, setData] = useState<WordSelectionOption[]>();
 
   useEffect(() => {
-    ParseFile(Spreadsheets.All1, (parsed) => {
+    ParseFileToDataRows(Spreadsheets.All1, (parsed) => {
       setData(parsed[0].data);
     },
     (error) => {
@@ -122,7 +122,6 @@ const LanguageLearningScreen: React.FC = () => {
           <ThemedText>Loading...</ThemedText>
         </View>
       }
-
     </SafeAreaView>
   );
 };

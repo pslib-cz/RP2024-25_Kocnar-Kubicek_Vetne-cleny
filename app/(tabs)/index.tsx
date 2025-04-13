@@ -45,7 +45,7 @@ export default function HomeScreen()
 
       }}/>
       <BigassButton title='🏢 Tutoriál' bgEmoji='💀' onPress={() => 
-      router.push('/tutorial')
+        router.push('/tutorial')
       }/>
 
       <ThemedText type="subtitle">Nejčastější chyby</ThemedText>

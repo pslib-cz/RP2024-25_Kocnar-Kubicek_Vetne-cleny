@@ -1,17 +1,17 @@
 import ContinueButton from '@/components/ui/games/ContinueButton';
 import { LargeGameButton } from '@/components/ui/games/LargeGameButton';
 import RocketProgressBar from '@/components/ui/games/ProgressBar';
-import { Spreadsheets } from '@/data/DataNavigator';
-import { ParseFile } from '@/hooks/useCSV';
+import { Spreadsheets } from '@/utils/DataNavigator';
 import { WordSelectionOption } from '@/types/games/SelectionOption';
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView, StyleSheet, Text, ToastAndroid, View } from 'react-native';
+import { ParseFileToDataRows } from '@/utils/fileParser';
 
 const CzechSelectionGrid: React.FC = () => {
   const [data, setData] = useState<WordSelectionOption[]>();
 
   useEffect(() => {
-    ParseFile(Spreadsheets.All1, (parsed) => {
+    ParseFileToDataRows(Spreadsheets.Privlastek, (parsed) => {
       setData(parsed[0].data);
     },
     (error) => {

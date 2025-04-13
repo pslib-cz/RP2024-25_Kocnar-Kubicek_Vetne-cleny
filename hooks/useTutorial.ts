@@ -1,6 +1,6 @@
-import { TutorialNode } from "@/data/tutorial";
 import React from "react";
-import tutorialStart from '@/data/tutorial'
+import tutorialStart from '@/data/tutorialTree'
+import { TutorialNode } from "@/types/tutorialNode";
 
 interface TutorialRuntimeNode{
   node: TutorialNode;
