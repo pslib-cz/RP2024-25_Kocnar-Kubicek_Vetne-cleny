@@ -12,7 +12,7 @@ const CzechSelectionGrid: React.FC = () => {
 
   useEffect(() => {
     ParseFileToDataRows(Spreadsheets.Privlastek, (parsed) => {
-      setData(parsed[0].data);
+      setData(parsed[0][0].data);
     },
     (error) => {
       console.error("Error parsing file:", error);

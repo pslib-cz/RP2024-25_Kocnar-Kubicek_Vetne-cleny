@@ -18,7 +18,7 @@ const LanguageLearningScreen: React.FC = () => {
 
   useEffect(() => {
     ParseFileToDataRows(Spreadsheets.All1, (parsed) => {
-      setData(parsed[0].data);
+      setData(parsed[0][0].data);
     },
     (error) => {
       console.error("Error parsing file:", error);
