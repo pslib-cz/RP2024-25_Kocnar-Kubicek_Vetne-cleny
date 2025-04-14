@@ -4,29 +4,14 @@ import Papa from "papaparse";
 import { Platform } from 'react-native';
 import * as FileSystem from "expo-file-system";
 
-const mockData: DataRow[][] = [[
-  {
-    data:
-      [
-        { text: "Hello 1", type: "greeting 1" },
-        { text: "World 2", type: "noun 2" },
-        { text: "Run 3", type: "verb 3" },
-        { text: "Quickly 4", type: "adverb 4" },
-        { text: "Beautiful 5", type: "adjective 5" },
-      ]
-  }
-]];
-
-export function ParseFileToDataRows(
+export function ParseFileToDataRows_ColumnValues(
   requireFile: any,
+  arrayData: string[][], // array of headers that should be grouped
   resolve: (data: DataRow[][]) => void,
   reject: (error: never) => void
 ) {
-  if (Platform.OS === 'web') {
-    console.log("FUCK YOU, DO NOT USE WEB, Here you have some mock data, hf")
-    resolve(mockData);
-    return;
-  }
+  if (Platform.OS === 'web')
+    throw Error("Files cannot be loaded on the web")
 
   return new Promise(async () => {
     const { localUri } = await Asset.fromModule(requireFile).downloadAsync();
@@ -36,9 +21,30 @@ export function ParseFileToDataRows(
     console.log("✅ CSV soubor načten:", csvString);
 
     // Array data are temporary, for debug only
-    ParseData_ColumnValues(csvString, [["pks", "po", "pks_1"], ["po_1", "pkn"]], reject, resolve)
+    ParseData_ColumnValues(csvString, arrayData, reject, resolve)
   });
 }
+
+export function ParseFileToDataRows_RowValues(
+  requireFile: any,
+  resolve: (data: DataRow[]) => void,
+  reject: (error: never) => void
+) {
+  if (Platform.OS === 'web')
+    throw Error("Files cannot be loaded on the web")
+
+  return new Promise(async () => {
+    const { localUri } = await Asset.fromModule(requireFile).downloadAsync();
+    if (!localUri) throw Error("File was not found")
+
+    const csvString = await FileSystem.readAsStringAsync(localUri);
+    console.log("✅ CSV soubor načten:", csvString);
+
+    // Array data are temporary, for debug only
+    ParseData_SentenceRow(csvString, reject, resolve)
+  });
+}
+
 
 //
 // Parsing for tables where each sentence has its own row and the table contains no headers
@@ -123,8 +129,6 @@ function ParseData_ColumnValues(
 
     console.log("Parsed data: ", parsedData)
 
-    //const dataRows: DataRow[] = new Array(arrayData.length).fill({ data: [] });
-
     // Transform parsedData into DataRow[] based on arrayData
     const dataRows: DataRow[][] = arrayData.map((headerGroup) => {
       return data.map((row) => {
@@ -132,7 +136,7 @@ function ParseData_ColumnValues(
           data: headerGroup.map((header) => ({
             text: row[header] || "", // Use the value from the row for the header
             type: header, // Use the header as the type
-          })).filter((item) => item.text !== ""),
+          })).filter(item => item.text !== ""),
         };
         return dataRow;
       });
@@ -145,6 +149,6 @@ function ParseData_ColumnValues(
       }
     }
 
-    //resolve(dataRows);
+    resolve(dataRows);
   }
 }

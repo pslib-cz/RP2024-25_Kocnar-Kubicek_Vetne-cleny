@@ -1,11 +1,10 @@
 import { ThemedText } from '@/components/ThemedText';
 import RocketProgressBar from '@/components/ui/games/ProgressBar';
 import WordButton, { ButtonState } from '@/components/ui/games/WordButton';
-import { Spreadsheets } from '@/utils/DataNavigator';
+import { GetData_All1, Spreadsheets } from '@/utils/DataNavigator';
 import { WordSelectionOption } from '@/types/games/SelectionOption';
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView, StyleSheet, ToastAndroid, View } from 'react-native';
-import { ParseFileToDataRows } from '@/utils/fileParser';
 
 const LanguageLearningScreen: React.FC = () => {
 
@@ -17,12 +16,7 @@ const LanguageLearningScreen: React.FC = () => {
   const [data, setData] = useState<WordSelectionOption[]>();
 
   useEffect(() => {
-    ParseFileToDataRows(Spreadsheets.All1, (parsed) => {
-      setData(parsed[0][0].data);
-    },
-    (error) => {
-      console.error("Error parsing file:", error);
-    });
+    GetData_All1(setData);
   }, []);
 
   const [gameIndex, setGameIndex] = useState(0); // id of the current game card

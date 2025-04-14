@@ -1,22 +1,16 @@
 import ContinueButton from '@/components/ui/games/ContinueButton';
 import { LargeGameButton } from '@/components/ui/games/LargeGameButton';
 import RocketProgressBar from '@/components/ui/games/ProgressBar';
-import { Spreadsheets } from '@/utils/DataNavigator';
+import { GetData_All2, Spreadsheets } from '@/utils/DataNavigator';
 import { WordSelectionOption } from '@/types/games/SelectionOption';
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView, StyleSheet, Text, ToastAndroid, View } from 'react-native';
-import { ParseFileToDataRows } from '@/utils/fileParser';
 
 const CzechSelectionGrid: React.FC = () => {
   const [data, setData] = useState<WordSelectionOption[]>();
 
   useEffect(() => {
-    ParseFileToDataRows(Spreadsheets.Privlastek, (parsed) => {
-      setData(parsed[0][0].data);
-    },
-    (error) => {
-      console.error("Error parsing file:", error);
-    });
+    GetData_All2(setData);
   }, []);
 
   const [targetType, setTargetType] = useState<string>('... loading'); // Set the target type here
