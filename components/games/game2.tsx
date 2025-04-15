@@ -1,26 +1,30 @@
 import ContinueButton from '@/components/ui/games/ContinueButton';
 import { LargeGameButton } from '@/components/ui/games/LargeGameButton';
 import RocketProgressBar from '@/components/ui/games/ProgressBar';
-import { GetData_Pks, GetData_PrislovecneUrceni, Spreadsheets } from '@/utils/DataNavigator';
+import { GetData_All2, Spreadsheets } from '@/utils/DataNavigator';
 import { WordSelectionOption } from '@/types/games/SelectionOption';
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView, StyleSheet, Text, ToastAndroid, View } from 'react-native';
 
-export const Game3: React.FC = () => {
+export function Game2UI(multiSelect : boolean) {
   const [data, setData] = useState<WordSelectionOption[]>();
 
   useEffect(() => {
-    GetData_Pks(setData);
+    GetData_All2(setData);
   }, []);
 
+  const [targetType, setTargetType] = useState<string>('... loading'); // Set the target type here
   const [options, setOptions] = useState<WordSelectionOption[]>();
 
   useEffect(() => {
-    console.log("Data change:", data);
-
-    if (data) {
-      setOptions(data);
+    if (!data) {
+      console.log("Data not initialized yet");
+      return;
     }
+
+    setOptions(data)
+
+    setTargetType(data[Math.floor(Math.random() * data.length)].type);
   }, [data]);
 
   const [selectedOptions, setSelectedOptions] = useState<WordSelectionOption[]>([]);
@@ -41,8 +45,6 @@ export const Game3: React.FC = () => {
     }
   }
 
-  const targetType = 'po';
-
   function IsValid() : boolean{    
     for (const item of selectedOptions) {
       if (item.type !== targetType)
@@ -54,11 +56,9 @@ export const Game3: React.FC = () => {
   return (
     <SafeAreaView style={styles.container}>
       <RocketProgressBar progress={0.33} />
+
       <View style={styles.content}>
-        <Text style={styles.questionText}>Které slovo ve větě je podmět?</Text>        
-        <Text style={styles.exampleText}>
-          Ondra mi nikdy o všech svých problémech neřekl.
-        </Text>
+        <Text style={styles.title}>Vyber {targetType}</Text>        
         <View style={styles.grid}>
           {
             options &&
@@ -92,19 +92,11 @@ const styles = StyleSheet.create({
     paddingTop: 60,
     alignItems: 'center',
   },
-  questionText: {
+  title: {
     color: '#fff',
-    fontSize: 22,
+    fontSize: 24,
     fontWeight: 'bold',
-    textAlign: 'center',
-    marginBottom: 10,
-  },
-  exampleText: {
-    color: 'rgba(255, 255, 255, 0.6)',
-    fontSize: 16,
-    textAlign: 'center',
     marginBottom: 40,
-    paddingHorizontal: 20,
   },
   grid: {
     width: '100%',
@@ -113,31 +105,5 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     gap: 20,
     justifyContent: 'space-between',
-  },
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 15,
-  },
-  option: {
-    width: '48%',
-    height: 100,
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: '#333',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(30, 30, 30, 0.4)',
-  },
-  selectedOption: {
-    borderColor: '#6266f1',
-    backgroundColor: 'rgba(98, 102, 241, 0.1)',
-  },
-  optionText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: '500',
-  },
+  }
 });
-
-export default Game3;
