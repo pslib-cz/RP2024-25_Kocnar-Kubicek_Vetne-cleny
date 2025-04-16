@@ -50,7 +50,11 @@ export function GameOneUI(inverted : boolean) {
 
     const updatedPhraseButtons = [...phraseButtons];
 
-    if (bottomButton.text === data[gameIndex].type) {
+    const isValid = !inverted ? 
+      data[gameIndex].type === bottomButton.text :
+      data[gameIndex].text === bottomButton.text;
+
+    if (isValid) {
       bottomButton.state = ButtonState.disabled;
       updatedPhraseButtons[gameIndex].state = ButtonState.correct;
 
