@@ -7,9 +7,10 @@ import { useGalaxyContext } from '@/context/GalaxyContext';
 // Import PlanetView component
 import { NamedRocket } from '@/components/NamedRocket';
 import { ThemedText } from '@/components/ThemedText';
+import { Galaxy } from '@/types/Galaxy';
 
 // Galaxy names and planet counts
-const galaxies = [
+const galaxies : Galaxy[] = [
   { name: "Všechny členy", planetCount: 25 },
   { name: "Hlavní členy", planetCount: 8 },
   { name: "Přívlastky", planetCount: 8 },

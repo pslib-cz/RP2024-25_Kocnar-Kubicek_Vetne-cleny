@@ -1,7 +1,7 @@
 import ContinueButton from '@/components/ui/games/ContinueButton';
 import { LargeGameButton } from '@/components/ui/games/LargeGameButton';
 import RocketProgressBar from '@/components/ui/games/ProgressBar';
-import { GetData_Pks, GetData_PrislovecneUrceni, Spreadsheets } from '@/utils/DataNavigator';
+import { GetData_Pks } from '@/utils/DataNavigator';
 import { WordSelectionOption } from '@/types/games/SelectionOption';
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView, StyleSheet, Text, ToastAndroid, View } from 'react-native';

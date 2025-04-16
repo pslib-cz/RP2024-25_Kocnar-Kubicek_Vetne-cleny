@@ -1,3 +1,4 @@
+import { useGalaxyContext } from "@/context/GalaxyContext";
 import { ParseFileToDataRows_ColumnValues, ParseFileToDataRows_RowValues } from "./fileParser";
 
 export const Spreadsheets = {
@@ -6,6 +7,12 @@ export const Spreadsheets = {
   Privlastek: require("@/data/sheets/Privlastek.csv"),
   All2: require("@/data/sheets/All2.csv"),
 };
+
+export function GetDataBasedOnContext(
+  setData: any
+) {
+  // add input prop - enum like behavior and return apropriate data
+}
 
 export function GetData_All1(
   setData : any

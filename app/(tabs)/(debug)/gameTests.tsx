@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import ArenaHeader from '@/components/ArenaHeader';
 
 const games = [
   { id: '(games)/game1', name: 'Game 1' },
@@ -22,6 +23,7 @@ const GameTests: React.FC = () => {
 
   return (
     <View style={styles.container}>
+      <ArenaHeader/>
       <Text style={styles.title}>Select a Game to Test</Text>
       <FlatList
         data={games}

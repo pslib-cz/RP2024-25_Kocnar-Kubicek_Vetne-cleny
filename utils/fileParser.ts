@@ -45,7 +45,6 @@ export function ParseFileToDataRows_RowValues(
   });
 }
 
-
 //
 // Parsing for tables where each sentence has its own row and the table contains no headers
 // example: Pes, PO, je, PŘ

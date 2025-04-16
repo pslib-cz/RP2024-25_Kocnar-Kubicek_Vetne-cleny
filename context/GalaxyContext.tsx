@@ -81,8 +81,8 @@ export const GalaxyProvider: React.FC<{ children: ReactNode }> = ({ children }) 
 
 export const useGalaxyContext = () => {
   const context = useContext(GalaxyContext);
-  if (!context) {
+  if (!context)
     throw new Error('useGalaxyContext must be used within a GalaxyProvider');
-  }
+  
   return context;
 };
