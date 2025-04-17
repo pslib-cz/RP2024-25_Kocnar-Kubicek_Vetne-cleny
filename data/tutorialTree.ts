@@ -1,14 +1,4 @@
-
-export interface TutorialNode {
-  // is the leaf node - threrefore there is 'no' next nor 'yes' node
-  isResult: boolean;
-  
-  title: string;
-  description: string;
-
-  yesNode: TutorialNode | null;
-  noNode: TutorialNode | null;
-}
+import { TutorialNode } from "@/types/tutorialNode";
 
 // leaf nodes
 const privlastek: TutorialNode = {
