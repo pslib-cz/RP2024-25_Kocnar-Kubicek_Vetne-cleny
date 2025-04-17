@@ -2,14 +2,18 @@ import React from 'react';
 import { View, StyleSheet, SafeAreaView } from 'react-native';
 import GalaxyView from '@/components/GalaxyView';
 import ArenaHeader from '@/components/ArenaHeader';
+import { useRouter } from 'expo-router';
 
 const ArenaGalaxies: React.FC = () => {
+  const router = useRouter(); // Initialize navigation
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
         {/* Header */}
-        <ArenaHeader />
+        <ArenaHeader 
+          onBackPress={() => router.replace("/arenaplanet")} // Pass back button handler
+        />
 
         {/* Galaxy View */}
         <GalaxyView />

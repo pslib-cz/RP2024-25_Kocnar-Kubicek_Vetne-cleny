@@ -98,6 +98,17 @@ const seededRandom = (seed: number) => {
   };
 };
 
+const generateHexagonPoints = (centerX: number, centerY: number, hexagonSize: number, hexagonRadius: number) => {
+  return [
+    `${centerX},${centerY - hexagonSize}`,
+    `${centerX + hexagonRadius},${centerY - hexagonSize / 2}`,
+    `${centerX + hexagonRadius},${centerY + hexagonSize / 2}`,
+    `${centerX},${centerY + hexagonSize}`,
+    `${centerX - hexagonRadius},${centerY + hexagonSize / 2}`,
+    `${centerX - hexagonRadius},${centerY - hexagonSize / 2}`,
+  ].join(' ');
+};
+
 const generateRandomHexagons = (count: number, width: number, height: number, seed: number) => {
   const random = seededRandom(seed);
   const hexagons: string[] = [];
@@ -108,14 +119,7 @@ const generateRandomHexagons = (count: number, width: number, height: number, se
   const hexagonRadius = hexagonSize * Math.sqrt(3) / 2; // Approximate radius of the hexagon
 
   // Add the first hexagon at the bottom
-  hexagons.push([
-    `${centerX},${height - hexagonSize}`,
-    `${centerX + hexagonRadius},${height - hexagonSize / 2}`,
-    `${centerX + hexagonRadius},${height + hexagonSize / 2}`,
-    `${centerX},${height + hexagonSize}`,
-    `${centerX - hexagonRadius},${height + hexagonSize / 2}`,
-    `${centerX - hexagonRadius},${height - hexagonSize / 2}`,
-  ].join(' '));
+  hexagons.push(generateHexagonPoints(centerX, height, hexagonSize, hexagonRadius));
 
   while (hexagons.length < count - 1) {
     const x = random() * width;
@@ -134,27 +138,11 @@ const generateRandomHexagons = (count: number, width: number, height: number, se
 
     if (overlaps) continue;
 
-    const points = [
-      `${x},${y - hexagonSize}`,
-      `${x + hexagonRadius},${y - hexagonSize / 2}`,
-      `${x + hexagonRadius},${y + hexagonSize / 2}`,
-      `${x},${y + hexagonSize}`,
-      `${x - hexagonRadius},${y + hexagonSize / 2}`,
-      `${x - hexagonRadius},${y - hexagonSize / 2}`,
-    ].join(' ');
-
-    hexagons.push(points);
+    hexagons.push(generateHexagonPoints(x, y, hexagonSize, hexagonRadius));
   }
 
   // Add the last hexagon at the top
-  hexagons.push([
-    `${centerX},${0 - hexagonSize}`,
-    `${centerX + hexagonRadius},${0 - hexagonSize / 2}`,
-    `${centerX + hexagonRadius},${0 + hexagonSize / 2}`,
-    `${centerX},${0 + hexagonSize}`,
-    `${centerX - hexagonRadius},${0 + hexagonSize / 2}`,
-    `${centerX - hexagonRadius},${0 - hexagonSize / 2}`,
-  ].join(' '));
+  hexagons.push(generateHexagonPoints(centerX, 0, hexagonSize, hexagonRadius));
 
   return hexagons;
 };
@@ -163,7 +151,7 @@ const PlanetView: React.FC = () => {
   // Get activeLevelIndex from context
   const { activeLevelIndex, selectedGalaxy, activePlanets } = useGalaxyContext();
 
-  const seed = selectedGalaxy * 100 + activePlanets[selectedGalaxy]; // Generate a unique seed for each planet
+  const seed = selectedGalaxy * 100 + activePlanets[selectedGalaxy] + 13; // Generate a unique seed for each planet
   const hexagons = generateRandomHexagons(5, 250, 250, seed); // Ensure hexagons are within the circle
 
   return (
@@ -212,7 +200,7 @@ const PlanetView: React.FC = () => {
           styles.activePlanetName,
         ]}
       >
-        {planetNames[selectedGalaxy][activeLevelIndex[selectedGalaxy]]}
+        {planetNames[selectedGalaxy][activePlanets[selectedGalaxy]]}
       </Text>
     </View>
   );

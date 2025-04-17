@@ -3,6 +3,7 @@ import { View, Text, Image, StyleSheet, ScrollView } from 'react-native';
 import Svg, { Line } from 'react-native-svg';
 import { Rocket } from './Rocket';
 import { useGalaxyContext } from '@/context/GalaxyContext';
+import { useRouter } from 'expo-router';
 
 // Import your data
 import planetNames from '@/data/planetnames.json';
@@ -86,6 +87,7 @@ const getPlanetImage = (galaxyIndex: number, planetIndex: number) => {
 
 const GalaxyView: React.FC = () => {
   const { selectedGalaxy, activePlanets } = useGalaxyContext();
+  const router = useRouter(); // Initialize router
   const activePlanetIndex = activePlanets[selectedGalaxy];
   const planetsInGalaxy = selectedGalaxy === 0 ? 25 : 8;
 
@@ -105,7 +107,7 @@ const GalaxyView: React.FC = () => {
       <ScrollView 
         ref={scrollViewRef}
         style={styles.planetScroll}
-        showsVerticalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}// Redirect on touch
       >
         {/* Vertical timeline using SVG */}
         <View style={styles.timelineContainer}>
