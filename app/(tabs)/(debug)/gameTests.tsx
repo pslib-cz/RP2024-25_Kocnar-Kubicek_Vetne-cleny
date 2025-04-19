@@ -4,11 +4,11 @@ import { useNavigation } from '@react-navigation/native';
 import ArenaHeader from '@/components/ArenaHeader';
 
 const games = [
-  { id: '(games)/game1', name: 'Game 1' },
-  { id: '(games)/game1Inverted', name: 'Game 1 inverted' },
-  { id: '(games)/game2', name : 'Game 2'},
-  { id: '(games)/game2Multi', name : 'Game 2 Multi'},
-  { id: '(games)/game3', name : 'Game 3'},
+  { id: 'games/game1', name: 'Game 1' },
+  { id: 'games/game1Inverted', name: 'Game 1 inverted' },
+  { id: 'games/game2', name : 'Game 2'},
+  { id: 'games/game2Multi', name : 'Game 2 Multi'},
+  { id: 'games/game3', name : 'Game 3'},
   // Add more games here
 ];
 

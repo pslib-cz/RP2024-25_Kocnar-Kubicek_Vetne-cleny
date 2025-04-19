@@ -10,6 +10,8 @@ interface RocketContextType {
   setSelectedRocketIndex: React.Dispatch<React.SetStateAction<number>>;
   name: string;
   setName: React.Dispatch<React.SetStateAction<string>>;
+  teacherMode: boolean;
+  setTeacherMode: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const RocketContext = createContext<RocketContextType | null>(null);
@@ -23,6 +25,7 @@ export const RocketProvider = ({ children }: RocketProviderProps) => {
   const [trailColor, setTrailColor] = useState('#F7D795');
   const [selectedRocketIndex, setSelectedRocketIndex] = useState(0);
   const [name, setName] = useState('User');
+  const [teacherMode, setTeacherMode] = useState(false);
 
   // Load preferences from AsyncStorage
   useEffect(() => {
@@ -73,6 +76,8 @@ export const RocketProvider = ({ children }: RocketProviderProps) => {
         setSelectedRocketIndex,
         name,
         setName,
+        teacherMode,
+        setTeacherMode,
       }}
     >
       {children}

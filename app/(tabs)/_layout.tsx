@@ -7,9 +7,11 @@ import { IconSymbol } from '@/components/ui/IconSymbol';
 import TabBarBackground from '@/components/ui/TabBarBackground';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { useRocket } from '@/contexts/RocketContext';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
+  const { teacherMode } = useRocket();
 
   return (
     <Tabs
@@ -34,13 +36,6 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="explore"
-        options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
-        }}
-      />
-      <Tabs.Screen
         name="tutorial"
         options={{
           title: 'Tutorial',
@@ -51,16 +46,25 @@ export default function TabLayout() {
         name="profile"
         options={{
           title: 'Profile',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="person.crop.circle" color={color} />,
         }}
       />
       <Tabs.Screen
         name="(debug)/gameTests"
         options={{
           title: 'game menu (debug)',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="wrench.and.screwdriver" color={color} />,
         }}
       />
+      {teacherMode && (
+        <Tabs.Screen
+          name="teacher"
+          options={{
+            title: 'Teacher',
+            tabBarIcon: ({ color }) => <IconSymbol size={28} name="graduationcap.fill" color={color} />,
+          }}
+        />
+      )}
     </Tabs>
   );
 }

@@ -4,12 +4,10 @@ import { Ionicons } from '@expo/vector-icons';
 import { Asset } from 'expo-asset';
 import * as FileSystem from 'expo-file-system';
 import React, { useEffect, useState } from 'react';
-import { Modal, SafeAreaView, StatusBar, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
+import { Modal, SafeAreaView, StatusBar, StyleSheet, TextInput, TouchableOpacity, View, Switch } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import ColorPicker from 'react-native-wheel-color-picker';
 
-// Storage key for username
-const USER_PROFILE_NAME: string = 'user_profile_name';
 
 // Načtení SVG souboru jako text
 export const loadSvgAsset = async (assetModule: any): Promise<string | null> => {
@@ -34,7 +32,9 @@ export default function ProfileEditScreen(): JSX.Element {
     selectedRocketIndex, 
     setSelectedRocketIndex,
     name,
-    setName
+    setName,
+    teacherMode,
+    setTeacherMode
   }: {
     bodyColor: string;
     setBodyColor: (color: string) => void;
@@ -44,6 +44,8 @@ export default function ProfileEditScreen(): JSX.Element {
     setSelectedRocketIndex: (index: number) => void;
     name: string;
     setName: (name: string) => void;
+    teacherMode: boolean;
+    setTeacherMode: (enabled: boolean) => void;
   } = useRocket();
   
   const [currentPickingFor, setCurrentPickingFor] = useState<'body' | 'trail' | null>(null);
@@ -172,6 +174,17 @@ export default function ProfileEditScreen(): JSX.Element {
             value={name}
             onChangeText={setName}
             placeholderTextColor="#666"
+          />
+        </View>
+
+        {/* Teacher Mode Toggle */}
+        <View style={styles.teacherModeContainer}>
+          <ThemedText style={styles.teacherModeLabel}>Učitelský režim</ThemedText>
+          <Switch
+            value={teacherMode}
+            onValueChange={setTeacherMode}
+            thumbColor={teacherMode ? '#fff' : '#bbb'}
+            trackColor={{ false: '#333', true: '#4A5BD2' }}
           />
         </View>
       </View>
@@ -330,6 +343,17 @@ const styles = StyleSheet.create({
     color: 'white',
     padding: 12,
     borderRadius: 8,
+    fontSize: 16,
+  },
+  teacherModeContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginTop: 20,
+    width: '100%',
+  },
+  teacherModeLabel: {
+    color: 'white',
     fontSize: 16,
   },
   modalOverlay: {
