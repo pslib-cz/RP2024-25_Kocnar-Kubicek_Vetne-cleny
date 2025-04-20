@@ -4,6 +4,8 @@ import QRCode from 'react-native-qrcode-svg';
 import { ThemedText } from '@/components/ThemedText';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Slider from '@react-native-community/slider';
+import { useMultiplayerGameContext } from '@/contexts/MultiplayerGameContext';
+import { useRouter } from 'expo-router';
 
 const galaxyImages = [
   require('@/assets/images/uni/g/1.png'),
@@ -14,21 +16,32 @@ const galaxyImages = [
 ];
 
 export default function CreateGameScreen() {
-  const [gameCode, setGameCode] = useState('123456');
   const [difficulty, setDifficulty] = useState(50);
-  const [galaxy, setGalaxy] = useState('Všechny'); // Set default galaxy to 'Všechny'
-  const [questionTypes, setQuestionTypes] = useState({ type1: true, type2: true, type3: true });
-  const [showGameCode, setShowGameCode] = useState(false);
+  const [galaxy, setGalaxy] = useState(0); // Use an index for the galaxy
+  const [questionTypes, setQuestionTypes] = useState(0); // Use a number for question types
+  const [showCode, setShowCode] = useState(false);
+  const { createGame, code } = useMultiplayerGameContext();
+  const router = useRouter();
 
-  type QuestionTypeKey = keyof typeof questionTypes;
-
-  const toggleQuestionType = (type: QuestionTypeKey) => {
-    setQuestionTypes((prev) => ({ ...prev, [type]: !prev[type] }));
+  const toggleQuestionType = (typeIndex: number) => {
+    setQuestionTypes((prev) => prev ^ (1 << typeIndex)); // Toggle the bit at the given index
   };
 
-  const handleStartExam = () => {
-    if (difficulty && galaxy) {
-      setShowGameCode(true);
+  const handleStartExam = async () => {
+    if (difficulty && galaxy >= 0) {
+      const config = {
+        difficulty,
+        galaxy, // Pass the galaxy index directly
+        questionTypes, // Pass the bitmask directly
+      };
+
+      try {
+        await createGame(config);
+        router.push(`/exams/share?code=${code}`); // Redirect to ShareGame route with the game code
+      } catch (error) {
+        alert('Failed to create game. Please try again.');
+        console.error('Error creating game:', error);
+      }
     } else {
       alert('Please select difficulty and galaxy before starting the exam.');
     }
@@ -75,14 +88,14 @@ export default function CreateGameScreen() {
                   key={galaxyOption}
                   style={[
                     styles.optionButton,
-                    galaxy === galaxyOption && styles.selectedButton,
+                    galaxy === index && styles.selectedButton,
                   ]}
-                  onPress={() => setGalaxy(galaxyOption)}
+                  onPress={() => setGalaxy(index)}
                 >
                   <Image source={galaxyImages[index]} style={styles.galaxyIcon} />
                   <ThemedText
                     style={
-                      galaxy === galaxyOption
+                      galaxy === index
                         ? styles.selectedButtonText // Removed bold styling for selected button
                         : styles.buttonText
                     }
@@ -98,12 +111,12 @@ export default function CreateGameScreen() {
         {/* Question Types */}
         <View style={styles.section}>
           <ThemedText style={styles.label}>Typy otázek:</ThemedText>
-          {Object.keys(questionTypes).map((type) => (
+          {['type1', 'type2', 'type3'].map((type, index) => (
             <View key={type} style={styles.switchRow}>
               <ThemedText style={styles.switchLabel}>{type}</ThemedText>
               <Switch
-                value={questionTypes[type as QuestionTypeKey]}
-                onValueChange={() => toggleQuestionType(type as QuestionTypeKey)}
+                value={(questionTypes & (1 << index)) !== 0} // Check if the bit is set
+                onValueChange={() => toggleQuestionType(index)}
                 trackColor={{ false: '#767577', true: '#4A5BD2' }}
               />
             </View>
@@ -116,11 +129,11 @@ export default function CreateGameScreen() {
         </TouchableOpacity>
 
         {/* Game Code and QR Code */}
-        {showGameCode && (
+        {showCode && (
           <View style={styles.section}>
             <ThemedText style={styles.label}>Kód hry:</ThemedText>
-            <Text style={styles.gameCode}>{gameCode}</Text>
-            <QRCode value={gameCode} size={150} />
+            <Text style={styles.code}>{code}</Text>
+            <QRCode value={code.toString()} size={150} />
           </View>
         )}
       </ScrollView>
@@ -148,7 +161,7 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
   },
-  gameCode: {
+  code: {
     color: 'white',
     fontSize: 20,
     textAlign: 'center',
