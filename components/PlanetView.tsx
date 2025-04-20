@@ -6,7 +6,7 @@ import Svg, { Polygon } from 'react-native-svg';
 import planetNames from '@/data/planetnames.json';
 
 // Import context
-import { useGalaxyContext } from '@/context/GalaxyContext';
+import { useGalaxyContext } from '@/contexts/GalaxyContext';
 
 // Define the props type for the GalaxyView component
 

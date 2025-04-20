@@ -26,7 +26,7 @@ export default function HomeScreen()
       
       }}/>
       <BigassButton title='🙀 Test' bgEmoji='🙀' onPress={() => {
-
+        router.push('../exams');
       }}/>
       <BigassButton title='🏢 Tutoriál' bgEmoji='💀' onPress={() => 
         router.push('/tutorial')

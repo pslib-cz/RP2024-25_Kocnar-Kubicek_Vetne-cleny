@@ -35,11 +35,13 @@ export const RocketProvider = ({ children }: RocketProviderProps) => {
         const savedTrailColor = await AsyncStorage.getItem('user_profile_trail_color');
         const savedRocketIndex = await AsyncStorage.getItem('user_profile_rocket_index');
         const savedName = await AsyncStorage.getItem('user_profile_name');
+        const savedTeacherMode = await AsyncStorage.getItem('user_profile_teacher_mode');
 
         if (savedBodyColor) setBodyColor(savedBodyColor);
         if (savedTrailColor) setTrailColor(savedTrailColor);
         if (savedRocketIndex) setSelectedRocketIndex(parseInt(savedRocketIndex, 10));
         if (savedName) setName(savedName);
+        if (savedTeacherMode) setTeacherMode(savedTeacherMode === 'true');
       } catch (error) {
         console.error('Error loading rocket preferences:', error);
       }
@@ -55,6 +57,7 @@ export const RocketProvider = ({ children }: RocketProviderProps) => {
       await AsyncStorage.setItem('user_profile_trail_color', trailColor);
       await AsyncStorage.setItem('user_profile_rocket_index', selectedRocketIndex.toString());
       await AsyncStorage.setItem('user_profile_name', name);
+      await AsyncStorage.setItem('user_profile_teacher_mode', teacherMode.toString());
     } catch (error) {
       console.error('Error saving rocket preferences:', error);
     }
@@ -63,7 +66,7 @@ export const RocketProvider = ({ children }: RocketProviderProps) => {
   // Save preferences whenever they change
   useEffect(() => {
     savePreferences();
-  }, [bodyColor, trailColor, selectedRocketIndex, name]);
+  }, [bodyColor, trailColor, selectedRocketIndex, name, teacherMode]);
 
   return (
     <RocketContext.Provider

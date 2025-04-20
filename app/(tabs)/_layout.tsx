@@ -11,7 +11,6 @@ import { useRocket } from '@/contexts/RocketContext';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
-  const { teacherMode } = useRocket();
 
   return (
     <Tabs
@@ -20,6 +19,7 @@ export default function TabLayout() {
         headerShown: false,
         tabBarButton: HapticTab,
         tabBarBackground: TabBarBackground,
+        
         tabBarStyle: Platform.select({
           ios: {
             // Use a transparent background on iOS to show the blur effect
@@ -56,15 +56,13 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="wrench.and.screwdriver" color={color} />,
         }}
       />
-      {teacherMode && (
-        <Tabs.Screen
-          name="teacher"
-          options={{
-            title: 'Teacher',
-            tabBarIcon: ({ color }) => <IconSymbol size={28} name="graduationcap.fill" color={color} />,
-          }}
-        />
-      )}
+      <Tabs.Screen
+        name="exams"
+        options={{
+          title: 'Test (Exam)',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="doc.text" color={color} />,
+        }}
+      />
     </Tabs>
   );
 }

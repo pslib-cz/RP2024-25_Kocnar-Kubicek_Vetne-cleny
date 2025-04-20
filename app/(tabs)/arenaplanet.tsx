@@ -4,7 +4,7 @@ import BigassButton from '@/components/ui/BigassButton';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
-import { useGalaxyContext } from '@/context/GalaxyContext';
+import { useGalaxyContext } from '@/contexts/GalaxyContext';
 import { router } from 'expo-router';
 
 const ArenaPlanet: React.FC = () => {

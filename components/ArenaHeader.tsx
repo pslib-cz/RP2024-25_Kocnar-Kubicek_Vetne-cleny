@@ -3,7 +3,7 @@ import { Image } from 'expo-image';
 import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { Ionicons } from '@expo/vector-icons'; // Import Ionicons for the arrow
 import { router } from 'expo-router';
-import { useGalaxyContext } from '@/context/GalaxyContext';
+import { useGalaxyContext } from '@/contexts/GalaxyContext';
 
 // Import PlanetView component
 import { NamedRocket } from '@/components/NamedRocket';

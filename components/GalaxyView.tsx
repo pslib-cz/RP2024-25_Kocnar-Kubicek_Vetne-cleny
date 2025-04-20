@@ -2,7 +2,7 @@ import React, { useRef, useEffect } from 'react';
 import { View, Text, Image, StyleSheet, ScrollView } from 'react-native';
 import Svg, { Line } from 'react-native-svg';
 import { Rocket } from './Rocket';
-import { useGalaxyContext } from '@/context/GalaxyContext';
+import { useGalaxyContext } from '@/contexts/GalaxyContext';
 import { useRouter } from 'expo-router';
 
 // Import your data

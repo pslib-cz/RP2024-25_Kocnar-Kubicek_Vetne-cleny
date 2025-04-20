@@ -13,7 +13,7 @@ const galaxyImages = [
   require('@/assets/images/uni/g/5.png'),
 ];
 
-export default function TeacherScreen() {
+export default function CreateGameScreen() {
   const [gameCode, setGameCode] = useState('123456');
   const [difficulty, setDifficulty] = useState(50);
   const [galaxy, setGalaxy] = useState('Všechny'); // Set default galaxy to 'Všechny'

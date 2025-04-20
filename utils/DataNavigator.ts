@@ -1,4 +1,4 @@
-import { useGalaxyContext } from "@/context/GalaxyContext";
+import { useGalaxyContext } from "@/contexts/GalaxyContext";
 import { ParseFileToDataRows_ColumnValues, ParseFileToDataRows_RowValues } from "./fileParser";
 
 export const Spreadsheets = {
