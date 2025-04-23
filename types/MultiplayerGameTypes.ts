@@ -8,8 +8,8 @@ export interface Player {
 }
 
 export interface GameConfig {
-  difficulty: number;
-  galaxy: number;
+  difficulty: number; // (0 - 100) question difficulty
+  galaxy: number; // (0-4) galaxy index - Hlavní, Přísl, Přívlastek a Doplňek
   seed?: string;
   questionTypes: number;
 }
@@ -25,4 +25,5 @@ export interface MultiplayerGameContextData {
   setPlayers: (player: Player[]) => void;
   joinGame: (gameCode: string, rocket: Player) => Promise<void>;
   createGame: (config: GameConfig) => Promise<void>;
+  moveToNextLevel: () => void
 }

@@ -1,22 +1,22 @@
 import React, { createContext, useContext, useState, version } from 'react';
 import { Player, GameConfig, MultiplayerGameContextData } from '../types/MultiplayerGameTypes';
 import { useAPI } from '../hooks/useAPI';
-
+import { useNavigation } from 'expo-router';
 
 const MultiplayerGameContext = createContext<MultiplayerGameContextData | undefined>(undefined);
 
 export const MultiplayerGameProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const [code, setCode] = useState('');
-    const [isHost, setIsHost] = useState(false);
-    const [config, setConfig] = useState<GameConfig>({
-        difficulty: 0,
-        galaxy: 0,
-        seed: '',
-        questionTypes: 10,
-    });
-    const [players, setPlayers] = useState<Player[]>([]);
+  const [code, setCode] = useState('');
+  const [isHost, setIsHost] = useState(false);
+  const [config, setConfig] = useState<GameConfig>({
+    difficulty: 0,
+    galaxy: 0,
+    seed: '',
+    questionTypes: 10,
+  });
+  const [players, setPlayers] = useState<Player[]>([]);
 
-    const API = useAPI();
+  const API = useAPI();
 
   const joinGame = async (code: string, user: Player) => {
     const payload = {
@@ -41,7 +41,7 @@ export const MultiplayerGameProvider: React.FC<{ children: React.ReactNode }> = 
   const createGame = async (config: GameConfig) => {
     const payload = {
       ...config,
-      version : "1.0.0", // Example version, replace with actual version if needed
+      version: "1.0.0", // Example version, replace with actual version if needed
     };
 
     try {
@@ -57,6 +57,17 @@ export const MultiplayerGameProvider: React.FC<{ children: React.ReactNode }> = 
     }
   };
 
+  const navigation = useNavigation();
+
+  const moveToNextLevel = async () => {
+
+    // generate next level based on seed and question types - no api call, just navigate to next level
+   
+    console.log("navigating");
+
+    navigation.navigate('games/game1' as never); // Navigate to the selected game
+  }
+
   return (
     <MultiplayerGameContext.Provider
       value={{
@@ -70,6 +81,7 @@ export const MultiplayerGameProvider: React.FC<{ children: React.ReactNode }> = 
         setIsHost,
         joinGame,
         createGame,
+        moveToNextLevel
       }}
     >
       {children}

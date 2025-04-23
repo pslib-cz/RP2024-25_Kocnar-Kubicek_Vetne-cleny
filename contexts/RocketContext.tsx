@@ -1,3 +1,8 @@
+
+// 
+// This context is used to manage the rocket preferences
+//
+
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 

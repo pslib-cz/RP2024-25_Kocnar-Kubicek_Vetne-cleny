@@ -1,3 +1,7 @@
+//
+// This context is used to manage the state of the galaxy selection and its related data.
+//
+
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 

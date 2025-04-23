@@ -1,25 +1,56 @@
 import { ThemedText } from '@/components/ThemedText';
 import RocketProgressBar from '@/components/ui/games/ProgressBar';
 import WordButton, { ButtonState } from '@/components/ui/games/WordButton';
-import { GetData_All1, GetDataBasedOnContext } from '@/utils/DataNavigator';
+import { GetData_All1 } from '@/utils/DataNavigator';
 import { WordSelectionOption } from '@/types/games/SelectionOption';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { SafeAreaView, StyleSheet, ToastAndroid, View } from 'react-native';
 import { WordButtonType } from '@/types/games/WordButtonType';
+import GoodJobOverlay from '../FeedbackOverlay';
+import { GameState } from '@/types/gameState';
+import { useMultiplayerGameContext } from '@/contexts/MultiplayerGameContext';
+import { useFocusEffect } from 'expo-router';
 
-export function GameOneUI(inverted : boolean) {
+// TODO: implement custom max error count
+
+export function GameOneUI(inverted: boolean) {
   const [data, setData] = useState<WordSelectionOption[]>();
+  const [state, setState] = useState<GameState>(GameState.pending);
+  const { moveToNextLevel } = useMultiplayerGameContext();
 
+  // Function to initialize or reset the game
+  const resetGame = useCallback(() => {
+    console.log("-------------- RESETTING --------------");
+
+    GetData_All1(setData);
+    setGameIndex(0);
+    setState(GameState.pending);
+  }, [])
+
+  useFocusEffect(
+    useCallback(() => {
+      console.log("Tab focused - resetting game");
+      resetGame();
+
+      // Optional: Clean up function for when the screen loses focus
+      return () => {
+        console.log("Tab unfocused");
+      };
+    }, [resetGame])
+  );
+
+  /*
   useEffect(() => {
     GetData_All1(setData);
   }, []);
+  */
 
   const [gameIndex, setGameIndex] = useState(0); // id of the current game card
   const [phraseButtons, setPhraseButtons] = useState<WordButtonType[]>();
   const [bottomButtons, setBottomButtons] = useState<WordButtonType[]>();
 
   useEffect(() => {
-    console.log("Data change:", data);
+    console.log("Data change");
 
     if (data) {
       setPhraseButtons(
@@ -34,13 +65,13 @@ export function GameOneUI(inverted : boolean) {
           text: !inverted ? item.type : item.text,
           state: ButtonState.default
         }))
-        .sort(() => Math.random() - 0.5)
+          .sort(() => Math.random() - 0.5)
       )
     }
   }, [data]);
 
   const onBottomButtonClicked = (bottomButton: WordButtonType) => {
-    if (!phraseButtons || !data || !bottomButtons){
+    if (!phraseButtons || !data || !bottomButtons) {
       console.log("Phrase buttons or data or bottomButtons not initialized yet");
       return;
     }
@@ -50,7 +81,7 @@ export function GameOneUI(inverted : boolean) {
 
     const updatedPhraseButtons = [...phraseButtons];
 
-    const isValid = !inverted ? 
+    const isValid = !inverted ?
       data[gameIndex].type === bottomButton.text :
       data[gameIndex].text === bottomButton.text;
 
@@ -58,13 +89,20 @@ export function GameOneUI(inverted : boolean) {
       bottomButton.state = ButtonState.disabled;
       updatedPhraseButtons[gameIndex].state = ButtonState.correct;
 
-      if (gameIndex < bottomButtons.length - 1) 
+      if (gameIndex < bottomButtons.length - 1)
         updatedPhraseButtons[gameIndex + 1].state = ButtonState.highlighted;
+
+      if (gameIndex == data.length - 1) {
+        ToastAndroid.show('Finished!', ToastAndroid.SHORT);
+        setState(GameState.correct)
+      }
 
       setGameIndex(gameIndex + 1);
     }
-    else{
+    else {
       ToastAndroid.show('Incorrect!', ToastAndroid.SHORT);
+
+      setState(GameState.incorrect)
     }
 
     setBottomButtons([...bottomButtons]); // make sure to update the state
@@ -73,43 +111,51 @@ export function GameOneUI(inverted : boolean) {
 
   return (
     <SafeAreaView style={styles.container}>
+      <GoodJobOverlay
+        state={state}
+        onContinue={() => {
+          console.log("moving to the next level, hopefully anyway");
+          moveToNextLevel();
+          resetGame();
+        }}
+      />
       <RocketProgressBar progress={0.33} />
       {
-        phraseButtons ?      
-        <View style={styles.phraseContainer}>        
-          {
-            phraseButtons.map((button, index) => (
-              <WordButton
-                key={index}
-                text={button.text}
-                state={button.state}
-              />
-            ))
-          }
-        </View>
-        :
-        <View style={styles.phraseContainer}>
-          <ThemedText>Loading...</ThemedText>
-        </View>
+        phraseButtons ?
+          <View style={styles.phraseContainer}>
+            {
+              phraseButtons.map((button, index) => (
+                <WordButton
+                  key={index}
+                  text={button.text}
+                  state={button.state}
+                />
+              ))
+            }
+          </View>
+          :
+          <View style={styles.phraseContainer}>
+            <ThemedText>Loading...</ThemedText>
+          </View>
       }
       {
-        bottomButtons ? 
-        <View style={styles.phraseContainer}>
-          {
-            bottomButtons.map((button, index) => (
-              <WordButton
-                key={index}
-                text={button.text}
-                state={button.state}
-                onClick={() => onBottomButtonClicked(button)}
-              />
-            ))
-          }
-        </View>
-        :
-        <View style={styles.phraseContainer}>
-          <ThemedText>Loading...</ThemedText>
-        </View>
+        bottomButtons ?
+          <View style={styles.phraseContainer}>
+            {
+              bottomButtons.map((button, index) => (
+                <WordButton
+                  key={index}
+                  text={button.text}
+                  state={button.state}
+                  onClick={() => onBottomButtonClicked(button)}
+                />
+              ))
+            }
+          </View>
+          :
+          <View style={styles.phraseContainer}>
+            <ThemedText>Loading...</ThemedText>
+          </View>
       }
     </SafeAreaView>
   );
