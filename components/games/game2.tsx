@@ -1,17 +1,13 @@
 import ContinueButton from '@/components/ui/games/ContinueButton';
 import { LargeGameButton } from '@/components/ui/games/LargeGameButton';
 import RocketProgressBar from '@/components/ui/games/ProgressBar';
-import { GetData_All2, Spreadsheets } from '@/hooks/useData';
+import { useData } from '@/hooks/useData';
 import { WordSelectionOption } from '@/types/games/SelectionOption';
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView, StyleSheet, Text, ToastAndroid, View } from 'react-native';
 
 export function Game2UI(multiSelect : boolean) {
-  const [data, setData] = useState<WordSelectionOption[]>();
-
-  useEffect(() => {
-    GetData_All2(setData);
-  }, []);
+  const data = useData(); // Fetch data from the spreadsheet
 
   const [targetType, setTargetType] = useState<string>('... loading'); // Set the target type here
   const [options, setOptions] = useState<WordSelectionOption[]>();

@@ -11,10 +11,10 @@ export const useData: (difficulty?: number, range?: number) => WordSelectionOpti
   const set: string[][] = sets[selectedGalaxy];
 
   const memoizedData = useMemo(() => {
-    if (!difficulty) difficulty = activePlanets[selectedGalaxy] / (selectedGalaxy === 0 ? 24 : 7); // 0 - 1
+    const effectiveDifficulty = difficulty ?? (activePlanets[selectedGalaxy] / (selectedGalaxy === 0 ? 24 : 7)); // 0 - 1
 
-    const minDiff = Math.max(0, difficulty - range) * set.length;
-    const maxDiff = Math.min(1, difficulty + range) * set.length;
+    const minDiff = Math.max(0, effectiveDifficulty - range) * set.length;
+    const maxDiff = Math.min(1, effectiveDifficulty + range) * set.length;
 
     const resultSet = set.slice(Math.floor(minDiff), Math.ceil(maxDiff));
 

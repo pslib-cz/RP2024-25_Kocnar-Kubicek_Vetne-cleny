@@ -1,8 +1,7 @@
 import { ThemedText } from '@/components/ThemedText';
 import RocketProgressBar from '@/components/ui/games/ProgressBar';
 import WordButton, { ButtonState } from '@/components/ui/games/WordButton';
-import { GetData_All1 } from '@/hooks/useData';
-import { WordSelectionOption } from '@/types/games/SelectionOption';
+import { useData } from '@/hooks/useData';
 import React, { useCallback, useEffect, useState } from 'react';
 import { SafeAreaView, StyleSheet, ToastAndroid, View } from 'react-native';
 import { WordButtonType } from '@/types/games/WordButtonType';
@@ -14,15 +13,13 @@ import { useFocusEffect } from 'expo-router';
 // TODO: implement custom max error count
 
 export function GameOneUI(inverted: boolean) {
-  const [data, setData] = useState<WordSelectionOption[]>();
+  const data = useData()
   const [state, setState] = useState<GameState>(GameState.pending);
   const { moveToNextLevel } = useMultiplayerGameContext();
 
   // Function to initialize or reset the game
   const resetGame = useCallback(() => {
     console.log("-------------- RESETTING --------------");
-
-    GetData_All1(setData);
     setGameIndex(0);
     setState(GameState.pending);
   }, [])
@@ -68,7 +65,7 @@ export function GameOneUI(inverted: boolean) {
           .sort(() => Math.random() - 0.5)
       )
     }
-  }, [data]);
+  }, [data, inverted]);
 
   const onBottomButtonClicked = (bottomButton: WordButtonType) => {
     if (!phraseButtons || !data || !bottomButtons) {
@@ -92,7 +89,7 @@ export function GameOneUI(inverted: boolean) {
       if (gameIndex < bottomButtons.length - 1)
         updatedPhraseButtons[gameIndex + 1].state = ButtonState.highlighted;
 
-      if (gameIndex == data.length - 1) {
+      if (gameIndex === data.length - 1) {
         ToastAndroid.show('Finished!', ToastAndroid.SHORT);
         setState(GameState.correct)
       }
