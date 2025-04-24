@@ -1,24 +1,32 @@
 import { useGalaxyContext } from "@/contexts/GalaxyContext";
-import { ParseFileToDataRows_ColumnValues, ParseFileToDataRows_RowValues } from "./filePa+rser";
+import { WordSelectionOption } from "@/types/games/SelectionOption";
+import { useMemo } from "react";
 
 const version = "v1"
-export const Spreadsheets = [
-  require(`@/data/sheets/${version}/All.csv`),
-  require(`@/data/sheets/${version}/All.csv`),
-  require(`@/data/sheets/${version}/Privlastek.csv`),
-  require(`@/data/sheets/${version}Doplnek.csv`),
-  require(`@/data/sheets/${version}/Prisl.csv`),
-];
 
-export function GetDataBasedOnContext(
-  setData: any
-) {
-  // add input prop - enum like behavior and return apropriate data
-}
+const sets = require(`../data/sheets/${version}/sets.json`);
 
-export function GetDataByGalaxy(galaxyIndex: number) {
-  
-}
+export const useData: (difficulty?: number, range?: number) => WordSelectionOption[] = (difficulty, range = 0.2) => {
+  const { selectedGalaxy, activePlanets } = useGalaxyContext();
+  const set: string[][] = sets[selectedGalaxy];
+
+  const memoizedData = useMemo(() => {
+    if (!difficulty) difficulty = activePlanets[selectedGalaxy] / (selectedGalaxy === 0 ? 24 : 7); // 0 - 1
+
+    const minDiff = Math.max(0, difficulty - range) * set.length;
+    const maxDiff = Math.min(1, difficulty + range) * set.length;
+
+    const resultSet = set.slice(Math.floor(minDiff), Math.ceil(maxDiff));
+
+    console.log("minDiff", minDiff, "maxDiff", maxDiff, "resultSet", resultSet);
+
+    return resultSet.map((item) => { return { type: item[1], text: item[0] } });
+  }, [difficulty, range, selectedGalaxy, activePlanets, set]);
+
+  return memoizedData;
+};
+
+
 
 // export function GetData_All (
 //   setData : any

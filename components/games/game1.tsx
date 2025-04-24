@@ -1,7 +1,7 @@
 import { ThemedText } from '@/components/ThemedText';
 import RocketProgressBar from '@/components/ui/games/ProgressBar';
 import WordButton, { ButtonState } from '@/components/ui/games/WordButton';
-import { GetData_All1 } from '@/utils/DataNavigator';
+import { GetData_All1 } from '@/hooks/useData';
 import { WordSelectionOption } from '@/types/games/SelectionOption';
 import React, { useCallback, useEffect, useState } from 'react';
 import { SafeAreaView, StyleSheet, ToastAndroid, View } from 'react-native';

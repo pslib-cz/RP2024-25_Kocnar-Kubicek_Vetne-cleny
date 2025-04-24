@@ -1,23 +1,16 @@
 import ContinueButton from '@/components/ui/games/ContinueButton';
 import { LargeGameButton } from '@/components/ui/games/LargeGameButton';
 import RocketProgressBar from '@/components/ui/games/ProgressBar';
-import { GetData_Pks } from '@/utils/DataNavigator';
+import { useData } from '@/hooks/useData';
 import { WordSelectionOption } from '@/types/games/SelectionOption';
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView, StyleSheet, Text, ToastAndroid, View } from 'react-native';
 
 export const Game3: React.FC = () => {
-  const [data, setData] = useState<WordSelectionOption[]>();
-
-  useEffect(() => {
-    GetData_Pks(setData);
-  }, []);
-
+  const data = useData();
   const [options, setOptions] = useState<WordSelectionOption[]>();
 
   useEffect(() => {
-    console.log("Data change:", data);
-
     if (data) {
       setOptions(data);
     }
