@@ -10,7 +10,7 @@ export interface Player {
 export interface GameConfig {
   difficulty: number; // (0 - 100) question difficulty
   galaxy: number; // (0-4) galaxy index - Hlavní, Přísl, Přívlastek a Doplňek
-  seed?: string;
+  seed?: number;
   questionTypes: number;
 }
 

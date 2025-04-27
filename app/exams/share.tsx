@@ -20,12 +20,12 @@ export default function ShareGameScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Share Your Game</Text>
-      <Text style={styles.codeLabel}>Game Code:</Text>
+      <Text style={styles.title}>Sdílej hru</Text>
+      <Text style={styles.codeLabel}>Kód hry:</Text>
       <Text style={styles.code}>{code}</Text>
       <QRCode value={code.toString()} size={200} />
       <TouchableOpacity style={styles.cancelButton} /*onPress={handleCancel}*/>
-        <Text style={styles.cancelButtonText}>Cancel</Text>
+        <Text style={styles.cancelButtonText}>Zrušit</Text>
       </TouchableOpacity>
     </View>
   );

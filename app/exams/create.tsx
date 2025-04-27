@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Switch, ScrollView, Image } from 'react-native';
-import QRCode from 'react-native-qrcode-svg';
+import { View, StyleSheet, TouchableOpacity, Switch, ScrollView, Image } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Slider from '@react-native-community/slider';
@@ -19,7 +18,6 @@ export default function CreateGameScreen() {
   const [difficulty, setDifficulty] = useState(50);
   const [galaxy, setGalaxy] = useState(0); // Use an index for the galaxy
   const [questionTypes, setQuestionTypes] = useState(0); // Use a number for question types
-  const [showCode, setShowCode] = useState(false);
   const { createGame, code } = useMultiplayerGameContext();
   const router = useRouter();
 
@@ -127,15 +125,6 @@ export default function CreateGameScreen() {
         <TouchableOpacity style={styles.startButton} onPress={handleStartExam}>
           <ThemedText style={styles.startButtonText}>Vytvořit test</ThemedText>
         </TouchableOpacity>
-
-        {/* Game Code and QR Code */}
-        {showCode && (
-          <View style={styles.section}>
-            <ThemedText style={styles.label}>Kód hry:</ThemedText>
-            <Text style={styles.code}>{code}</Text>
-            <QRCode value={code.toString()} size={150} />
-          </View>
-        )}
       </ScrollView>
     </SafeAreaView>
   );

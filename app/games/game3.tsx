@@ -52,13 +52,13 @@ export const Game3: React.FC = () => {
         <Text style={styles.exampleText}>
           Ondra mi nikdy o všech svých problémech neřekl.
         </Text>
-        <View style={styles.grid}>
+        <View style={[styles.grid, { marginBottom: 40 }]}>
           {
             options &&
-            options.map((option, index) => (
+            ["Ondra", "mi", "nikdy", "o svých", "problémech", "neřekl"].map((option, index) => (
               <LargeGameButton
                 key={index}
-                text={option.text}
+                text={option}
                 selected={selectedOptions.includes(option)}
                 onPress={() => handleSelect(option)}
               />

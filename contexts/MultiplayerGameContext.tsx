@@ -11,7 +11,7 @@ export const MultiplayerGameProvider: React.FC<{ children: React.ReactNode }> = 
   const [config, setConfig] = useState<GameConfig>({
     difficulty: 0,
     galaxy: 0,
-    seed: '',
+    seed: 0,
     questionTypes: 10,
   });
   const [players, setPlayers] = useState<Player[]>([]);

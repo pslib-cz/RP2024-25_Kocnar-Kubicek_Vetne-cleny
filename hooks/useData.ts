@@ -18,7 +18,8 @@ export const useData: (difficulty?: number, range?: number) => WordSelectionOpti
 
     const resultSet = set.slice(Math.floor(minDiff), Math.ceil(maxDiff));
 
-    console.log("minDiff", minDiff, "maxDiff", maxDiff, "resultSet", resultSet);
+    console.log("minDiff", minDiff, "maxDiff", maxDiff, "initSetLength", set.length, "resultSetLength", resultSet.length);
+    console.log("effectiveDifficulty", effectiveDifficulty, "difficulty", difficulty, "range", range, "selectedGalaxy", selectedGalaxy, "activePlanets", activePlanets[selectedGalaxy]);
 
     return resultSet.map((item) => { return { type: item[1], text: item[0] } });
   }, [difficulty, range, selectedGalaxy, activePlanets, set]);

@@ -9,7 +9,7 @@ import { router } from 'expo-router';
 
 const ArenaPlanet: React.FC = () => {
   const { levelUp } = useGalaxyContext();
-  const nextTask = "Next Task";
+  const nextTask = "Další cvičení";
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -17,14 +17,7 @@ const ArenaPlanet: React.FC = () => {
         {/* Title */}
         <ArenaHeader />
         
-        {/* Progress bar with rocket */}
-        <View style={styles.progressContainer}>
-          <View style={styles.rocketContainer}>
-            <View style={styles.rocket}>
-              <Text style={styles.rocketEmoji}>🚀</Text>
-            </View>
-          </View>
-        </View>
+
         
         {/* Planet view */}
         <TouchableOpacity 
@@ -95,6 +88,7 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center', // Ensure the planet is centered vertically
+    marginTop: 0,
   },
   marker: {
     position: 'absolute',

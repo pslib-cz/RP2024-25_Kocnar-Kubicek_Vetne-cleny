@@ -4,7 +4,7 @@ import { Question, GameContextData } from '../types/GameTypes';
 const GameContext = createContext<GameContextData | undefined>(undefined);
 
 export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [seed, setSeed] = useState('');
+  const [seed, setSeed] = useState(50);
   const [questions, setQuestions] = useState<Question[]>([]);
   const [userAnswers, setUserAnswers] = useState<Record<string, string>>({});
   const [activeQuestionIndex, setActiveQuestionIndex] = useState(0);

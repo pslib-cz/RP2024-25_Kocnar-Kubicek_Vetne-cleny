@@ -7,11 +7,11 @@ export interface Question {
 }
 
 export interface GameContextData {
-  seed: string;
+  seed: number;
   questions: Question[];
   userAnswers: Record<string, string>; // Maps question ID to user's answer
   activeQuestionIndex: number;
-  setSeed: (seed: string) => void;
+  setSeed: (seed: number) => void;
   setQuestions: (questions: Question[]) => void;
   setUserAnswer: (questionId: string, answer: string) => void;
   setActiveQuestionIndex: (index: number) => void;
