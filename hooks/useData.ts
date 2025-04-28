@@ -1,10 +1,46 @@
 import { useGalaxyContext } from "@/contexts/GalaxyContext";
 import { WordSelectionOption } from "@/types/games/SelectionOption";
+import { WordType } from "@/types/WordTypes";
 import { useMemo } from "react";
 
 const version = "v1"
 
-const sets = require(`../data/sheets/${version}/sets.json`);
+const sets: string[][][] = require(`../data/sheets/${version}/sets.json`);
+const typeSets: Record<string, string[]> = require(`../data/sheets/${version}/types.json`);
+
+const availableTypes = Object.keys(typeSets);
+
+export const useWordsByType = (
+  count: number,
+  types: WordType | WordType[],
+  blacklist: string[] = [],
+  seed: number = Math.random()
+): WordSelectionOption[] => {
+  return useMemo(() => {
+    // Convert single type to array
+    const typeArray = Array.isArray(types) ? types : [types];
+    
+    // Get all words from requested types
+    let allWords: WordSelectionOption[] = [];
+    typeArray.forEach(type => {
+      const typeWords = typeSets[type.toLowerCase()] || [];
+      allWords = [...allWords, ...typeWords.map((word: string) => ({ type, text: word }))];
+    });
+
+    // Remove blacklisted words
+    allWords = allWords.filter(word => !blacklist.includes(word.text));
+
+    // Use seed to shuffle array
+    const shuffled = [...allWords];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor((seed * (i + 1)) % (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+
+    // Return requested count
+    return shuffled.slice(0, count);
+  }, [count, types, blacklist, seed]);
+};
 
 export const useData: (difficulty?: number, range?: number) => WordSelectionOption[] = (difficulty, range = 0.2) => {
   const { selectedGalaxy, activePlanets } = useGalaxyContext();
@@ -26,6 +62,8 @@ export const useData: (difficulty?: number, range?: number) => WordSelectionOpti
 
   return memoizedData;
 };
+
+
 
 
 

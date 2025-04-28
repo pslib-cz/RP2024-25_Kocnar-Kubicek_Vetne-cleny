@@ -17,9 +17,15 @@ const spreadsheets = [
 ];
 
 const outputJsonPath = path.resolve(__dirname, `../data/sheets/${version}/sets.json`);
+const typesJsonPath = path.resolve(__dirname, `../data/sheets/${version}/types.json`);
+
+function cleanWord(word) {
+  return word.replace(/\.+$/, ''); // Remove trailing dots
+}
 
 async function parseCsvToJson(files) {
   const mergedData = [];
+  const typesIndex = {};
 
   for (const file of files) {
     const filePath = path.resolve(__dirname, file);
@@ -33,6 +39,15 @@ async function parseCsvToJson(files) {
           result.push([value]);
         } else if (result.length > 0) {
           result[result.length - 1].push(value);
+          // Add word to types index
+          const type = value.toLowerCase();
+          const word = cleanWord(result[result.length - 1][0]); // Clean the word before storing
+          if (!typesIndex[type]) {
+            typesIndex[type] = [];
+          }
+          if (!typesIndex[type].includes(word)) { // Avoid duplicates
+            typesIndex[type].push(word);
+          }
         }
         return result;
       }, []);
@@ -40,8 +55,13 @@ async function parseCsvToJson(files) {
     mergedData.push(data);
   }
 
+  // Write sets JSON
   fs.writeFileSync(outputJsonPath, JSON.stringify(mergedData));
   console.log(`Merged JSON written to ${outputJsonPath}`);
+
+  // Write types JSON
+  fs.writeFileSync(typesJsonPath, JSON.stringify(typesIndex));
+  console.log(`Types JSON written to ${typesJsonPath}`);
 }
 
 function getRowDifficulty(row) {
