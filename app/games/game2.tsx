@@ -1,4 +1,3 @@
-import { GameOneUI } from "@/components/games/game1"
 import { Game2UI } from "@/components/games/game2";
 
 export const Game2: React.FC = () => {

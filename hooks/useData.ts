@@ -42,11 +42,11 @@ export const useWordsByType = (
   }, [count, types, blacklist, seed]);
 };
 
-export const useData: (difficulty?: number, range?: number) => WordSelectionOption[] = (difficulty, range = 0.2) => {
+export const useData: (difficulty?: number, range?: number) => WordSelectionOption[][] = (difficulty, range = 0.2) => {
   const { selectedGalaxy, activePlanets } = useGalaxyContext();
   const set: string[][] = sets[selectedGalaxy];
 
-  const memoizedData = useMemo(() => {
+  const memoizedData : WordSelectionOption[][]  = useMemo(() => {
     const effectiveDifficulty = difficulty ?? (activePlanets[selectedGalaxy] / (selectedGalaxy === 0 ? 24 : 7)); // 0 - 1
 
     const minDiff = Math.max(0, effectiveDifficulty - range) * set.length;
@@ -57,7 +57,9 @@ export const useData: (difficulty?: number, range?: number) => WordSelectionOpti
     console.log("minDiff", minDiff, "maxDiff", maxDiff, "initSetLength", set.length, "resultSetLength", resultSet.length);
     console.log("effectiveDifficulty", effectiveDifficulty, "difficulty", difficulty, "range", range, "selectedGalaxy", selectedGalaxy, "activePlanets", activePlanets[selectedGalaxy]);
 
-    return resultSet.map((item) => { return { type: item[1], text: item[0] } });
+    return resultSet.map(group => 
+      group.map(item => ({ type: item[1], text: item[0] }))
+    );
   }, [difficulty, range, selectedGalaxy, activePlanets, set]);
 
   return memoizedData;

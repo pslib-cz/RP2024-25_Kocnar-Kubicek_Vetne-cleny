@@ -1,7 +1,7 @@
-import { GameOneUI } from "@/components/games/game1"
+import { Game1Type, GameOneUI } from "@/components/games/game1"
 
 export const Game1: React.FC = () => {
-  return GameOneUI(false)
+  return GameOneUI(Game1Type.normal)
 }
 
 export default Game1;

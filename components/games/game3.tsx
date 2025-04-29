@@ -6,21 +6,14 @@ import { WordSelectionOption } from '@/types/games/SelectionOption';
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView, StyleSheet, Text, ToastAndroid, View } from 'react-native';
 
-export function Game2UI(multiSelect : boolean) {
+export function Game3UI(sentece : boolean) {
   const data = useData()[0]
-
-  const [targetType, setTargetType] = useState<string>('... loading'); // Set the target type here
   const [options, setOptions] = useState<WordSelectionOption[]>();
 
   useEffect(() => {
-    if (!data) {
-      console.log("Data not initialized yet");
-      return;
+    if (data) {
+      setOptions(data);
     }
-
-    setOptions(data)
-
-    setTargetType(data[Math.floor(Math.random() * data.length)].type);
   }, [data]);
 
   const [selectedOptions, setSelectedOptions] = useState<WordSelectionOption[]>([]);
@@ -41,6 +34,8 @@ export function Game2UI(multiSelect : boolean) {
     }
   }
 
+  const targetType = 'po';
+
   function IsValid() : boolean{    
     for (const item of selectedOptions) {
       if (item.type !== targetType)
@@ -52,10 +47,15 @@ export function Game2UI(multiSelect : boolean) {
   return (
     <SafeAreaView style={styles.container}>
       <RocketProgressBar progress={0.33} />
-
       <View style={styles.content}>
-        <Text style={styles.title}>Vyber {targetType}</Text>        
-        <View style={styles.grid}>
+        <Text style={styles.questionText}>Které slovo {sentece ? "ve větě " : ""}je {targetType}?</Text>        
+        {
+          sentece &&
+          <Text style={styles.exampleText}>
+            {data.map((item) => item.text).join(" ")}
+          </Text>
+        }
+        <View style={[styles.grid, { marginBottom: 40 }]}>
           {
             options &&
             options.map((option, index) => (
@@ -88,11 +88,19 @@ const styles = StyleSheet.create({
     paddingTop: 60,
     alignItems: 'center',
   },
-  title: {
+  questionText: {
     color: '#fff',
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 10,
+  },
+  exampleText: {
+    color: 'rgba(255, 255, 255, 0.6)',
+    fontSize: 16,
+    textAlign: 'center',
     marginBottom: 40,
+    paddingHorizontal: 20,
   },
   grid: {
     width: '100%',
@@ -101,5 +109,29 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     gap: 20,
     justifyContent: 'space-between',
-  }
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 15,
+  },
+  option: {
+    width: '48%',
+    height: 100,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#333',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(30, 30, 30, 0.4)',
+  },
+  selectedOption: {
+    borderColor: '#6266f1',
+    backgroundColor: 'rgba(98, 102, 241, 0.1)',
+  },
+  optionText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: '500',
+  },
 });

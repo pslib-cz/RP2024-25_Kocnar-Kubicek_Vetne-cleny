@@ -12,8 +12,24 @@ import { useFocusEffect } from 'expo-router';
 
 // TODO: implement custom max error count
 
-export function GameOneUI(inverted: boolean) {
-  const data = useData()
+export const enum Game1Type {
+  normal = 0,
+  inverted = 1,
+  allTypes = 2
+}
+
+const allTypeTypes : string[] = [
+  "po",
+  "př",
+  "a další"
+]
+
+export function GameOneUI(type: Game1Type) {
+
+  const inverted = type == Game1Type.inverted;
+  const allTypes = type == Game1Type.allTypes;
+
+  const data = useData()[0]
   const [state, setState] = useState<GameState>(GameState.pending);
   const { moveToNextLevel } = useMultiplayerGameContext();
 
@@ -36,12 +52,6 @@ export function GameOneUI(inverted: boolean) {
     }, [resetGame])
   );
 
-  /*
-  useEffect(() => {
-    GetData_All1(setData);
-  }, []);
-  */
-
   const [gameIndex, setGameIndex] = useState(0); // id of the current game card
   const [phraseButtons, setPhraseButtons] = useState<WordButtonType[]>();
   const [bottomButtons, setBottomButtons] = useState<WordButtonType[]>();
@@ -56,6 +66,16 @@ export function GameOneUI(inverted: boolean) {
           state: index === 0 ? ButtonState.highlighted : ButtonState.default
         }))
       );
+
+      if (allTypes) {
+        setBottomButtons(
+          allTypeTypes.map((i) => ({
+            text: i,
+            state: ButtonState.default
+          }))
+        )
+        return;
+      }
 
       setBottomButtons(
         data.map((item) => ({
@@ -102,7 +122,8 @@ export function GameOneUI(inverted: boolean) {
       setState(GameState.incorrect)
     }
 
-    setBottomButtons([...bottomButtons]); // make sure to update the state
+    if (!allTypes)
+      setBottomButtons([...bottomButtons]); // make sure to update the state
     setPhraseButtons(updatedPhraseButtons);
   };
 

@@ -6,9 +6,11 @@ import ArenaHeader from '@/components/ArenaHeader';
 const games = [
   { id: 'games/game1', name: 'Game 1' },
   { id: 'games/game1Inverted', name: 'Game 1 inverted' },
+  { id: 'games/game1AllTypes', name: "Game 1 all types"},
   { id: 'games/game2', name : 'Game 2'},
   { id: 'games/game2Multi', name : 'Game 2 Multi'},
   { id: 'games/game3', name : 'Game 3'},
+  { id: 'games/game3_v2', name : 'Game 3 but no sentence'},
   // Add more games here
 ];
 
