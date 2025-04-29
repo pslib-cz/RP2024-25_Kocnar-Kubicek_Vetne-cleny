@@ -9,6 +9,7 @@ import GoodJobOverlay from '../FeedbackOverlay';
 import { GameState } from '@/types/gameState';
 import { useMultiplayerGameContext } from '@/contexts/MultiplayerGameContext';
 import { useFocusEffect } from 'expo-router';
+import { useGameContext } from '@/contexts/GameContext';
 
 // TODO: implement custom max error count
 
@@ -25,13 +26,11 @@ const allTypeTypes : string[] = [
 ]
 
 export function GameOneUI(type: Game1Type) {
-
   const inverted = type == Game1Type.inverted;
   const allTypes = type == Game1Type.allTypes;
 
-  const data = useData()[0]
   const [state, setState] = useState<GameState>(GameState.pending);
-  const { moveToNextLevel } = useMultiplayerGameContext();
+  const { moveToNextLevel, data } = useGameContext();
 
   // Function to initialize or reset the game
   const resetGame = useCallback(() => {

@@ -1,3 +1,5 @@
+import { WordSelectionOption } from "./games/SelectionOption";
+
 // Types related to the GameContext
 export interface Question {
   id: string;
@@ -15,4 +17,7 @@ export interface GameContextData {
   setQuestions: (questions: Question[]) => void;
   setUserAnswer: (questionId: string, answer: string) => void;
   setActiveQuestionIndex: (index: number) => void;
+
+  moveToNextLevel: () => void,
+  data : WordSelectionOption[],
 }

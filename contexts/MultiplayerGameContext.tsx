@@ -2,6 +2,8 @@ import React, { createContext, useContext, useState, version } from 'react';
 import { Player, GameConfig, MultiplayerGameContextData } from '../types/MultiplayerGameTypes';
 import { useAPI } from '../hooks/useAPI';
 import { useNavigation } from 'expo-router';
+import { useData } from '@/hooks/useData';
+import { WordSelectionOption } from '@/types/games/SelectionOption';
 
 const MultiplayerGameContext = createContext<MultiplayerGameContextData | undefined>(undefined);
 
@@ -57,16 +59,6 @@ export const MultiplayerGameProvider: React.FC<{ children: React.ReactNode }> = 
     }
   };
 
-  const navigation = useNavigation();
-
-  const moveToNextLevel = async () => {
-
-    // generate next level based on seed and question types - no api call, just navigate to next level
-   
-    console.log("navigating");
-
-    navigation.navigate('games/game1' as never); // Navigate to the selected game
-  }
 
   return (
     <MultiplayerGameContext.Provider
@@ -80,8 +72,7 @@ export const MultiplayerGameProvider: React.FC<{ children: React.ReactNode }> = 
         isHost,
         setIsHost,
         joinGame,
-        createGame,
-        moveToNextLevel
+        createGame
       }}
     >
       {children}

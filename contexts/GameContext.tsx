@@ -1,5 +1,8 @@
 import React, { createContext, useContext, useState } from 'react';
 import { Question, GameContextData } from '../types/GameTypes';
+import { useNavigation } from 'expo-router';
+import { WordSelectionOption } from '@/types/games/SelectionOption';
+import { useData } from '@/hooks/useData';
 
 const GameContext = createContext<GameContextData | undefined>(undefined);
 
@@ -13,6 +16,25 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUserAnswers((prev) => ({ ...prev, [questionId]: answer }));
   };
 
+  const navigation = useNavigation();
+
+  const allData : WordSelectionOption[][] = useData();
+
+  // this initialization is temporary and hopefully will be updated
+  const [data, setData] = useState<WordSelectionOption[]>(allData[0])
+
+  const moveToNextLevel = async () => {
+
+    const randomIndex = Math.floor(Math.random() * allData.length);
+    setData(allData[randomIndex]);
+
+    // generate next level based on seed and question types - no api call, just navigate to next level
+   
+    console.log("navigating");
+
+    navigation.navigate('games/game1' as never); // Navigate to the selected game
+  }
+
   return (
     <GameContext.Provider
       value={{
@@ -24,6 +46,8 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setQuestions,
         setUserAnswer,
         setActiveQuestionIndex,
+        moveToNextLevel,
+        data,
       }}
     >
       {children}

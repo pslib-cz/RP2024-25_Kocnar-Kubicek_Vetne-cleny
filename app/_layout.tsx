@@ -10,6 +10,7 @@ import { GalaxyProvider } from '@/contexts/GalaxyContext';
 import { MultiplayerGameProvider } from '@/contexts/MultiplayerGameContext';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { GameProvider } from '@/contexts/GameContext';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -35,15 +36,17 @@ export default function RootLayout() {
   return (
     <GalaxyProvider>
       <RocketProvider>
-        <MultiplayerGameProvider>
-          <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-            <Stack screenOptions={{ headerShown: false }}>
-              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-              <Stack.Screen name="+not-found" />
-            </Stack>
-            <StatusBar style="auto" />
-          </ThemeProvider>
-        </MultiplayerGameProvider>
+        <GameProvider>
+          <MultiplayerGameProvider>
+            <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+              <Stack screenOptions={{ headerShown: false }}>
+                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                <Stack.Screen name="+not-found" />
+              </Stack>
+              <StatusBar style="auto" />
+            </ThemeProvider>
+          </MultiplayerGameProvider>
+        </GameProvider>
       </RocketProvider>
     </GalaxyProvider>
   );
