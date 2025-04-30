@@ -1,13 +1,13 @@
 import ContinueButton from '@/components/ui/games/ContinueButton';
 import { LargeGameButton } from '@/components/ui/games/LargeGameButton';
-import RocketProgressBar from '@/components/ui/games/ProgressBar';
-import { useData } from '@/hooks/useData';
 import { WordSelectionOption } from '@/types/games/SelectionOption';
 import React, { useEffect, useState } from 'react';
-import { SafeAreaView, StyleSheet, Text, ToastAndroid, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
+import { GameLayout } from './gameLayout';
+import { useGameContext } from '@/contexts/GameContext';
 
 export function Game2UI(multiSelect : boolean) {
-  const data = useData()[0]
+  const { data, onFinished } = useGameContext();
 
   const [targetType, setTargetType] = useState<string>('... loading'); // Set the target type here
   const [options, setOptions] = useState<WordSelectionOption[]>();
@@ -34,11 +34,7 @@ export function Game2UI(multiSelect : boolean) {
   };
 
   const handleContinue = () => {
-    if (IsValid()) {
-      ToastAndroid.show('Correct!', ToastAndroid.SHORT);
-    } else {
-      ToastAndroid.show('Incorrect!', ToastAndroid.SHORT);
-    }
+    onFinished(IsValid())
   }
 
   function IsValid() : boolean{    
@@ -50,9 +46,9 @@ export function Game2UI(multiSelect : boolean) {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
-      <RocketProgressBar progress={0.33} />
-
+    <GameLayout
+      resetGame={() => {}}
+    >
       <View style={styles.content}>
         <Text style={styles.title}>Vyber {targetType}</Text>        
         <View style={styles.grid}>
@@ -73,18 +69,13 @@ export function Game2UI(multiSelect : boolean) {
           <ContinueButton onClick={handleContinue}/>
         }
       </View>
-    </SafeAreaView>
+    </GameLayout>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#000',
-  },
   content: {
     flex: 1,
-    paddingHorizontal: 20,
     paddingTop: 60,
     alignItems: 'center',
   },

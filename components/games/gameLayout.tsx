@@ -9,7 +9,6 @@ import RocketProgressBar from "../ui/games/ProgressBar";
 import { FeedbackOverlay } from "../FeedbackOverlay";
 import { ReactNode } from "react";
 import { StyleSheet } from 'react-native';
-import { GameState } from "@/types/gameState";
 import { useGameContext } from "@/contexts/GameContext";
 
 interface GameLayoutProps {
@@ -18,7 +17,6 @@ interface GameLayoutProps {
 }
 
 export const GameLayout: React.FC<GameLayoutProps> = ({ children, resetGame }) => {
-
   const { state } = useGameContext();
 
   return (

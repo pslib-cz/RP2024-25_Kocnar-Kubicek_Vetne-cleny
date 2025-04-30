@@ -1,13 +1,14 @@
 import ContinueButton from '@/components/ui/games/ContinueButton';
 import { LargeGameButton } from '@/components/ui/games/LargeGameButton';
-import RocketProgressBar from '@/components/ui/games/ProgressBar';
 import { useData } from '@/hooks/useData';
 import { WordSelectionOption } from '@/types/games/SelectionOption';
 import React, { useEffect, useState } from 'react';
-import { SafeAreaView, StyleSheet, Text, ToastAndroid, View } from 'react-native';
+import { StyleSheet, Text, ToastAndroid, View } from 'react-native';
+import { GameLayout } from './gameLayout';
+import { useGameContext } from '@/contexts/GameContext';
 
 export function Game3UI(sentece : boolean) {
-  const data = useData()[0]
+  const { data, onFinished } = useGameContext();
   const [options, setOptions] = useState<WordSelectionOption[]>();
 
   useEffect(() => {
@@ -27,11 +28,7 @@ export function Game3UI(sentece : boolean) {
   };
 
   const handleContinue = () => {
-    if (IsValid()) {
-      ToastAndroid.show('Correct!', ToastAndroid.SHORT);
-    } else {
-      ToastAndroid.show('Incorrect!', ToastAndroid.SHORT);
-    }
+    onFinished(IsValid())
   }
 
   const targetType = 'po';
@@ -45,8 +42,9 @@ export function Game3UI(sentece : boolean) {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
-      <RocketProgressBar progress={0.33} />
+    <GameLayout
+      resetGame={() => {}}
+    >
       <View style={styles.content}>
         <Text style={styles.questionText}>Které slovo {sentece ? "ve větě " : ""}je {targetType}?</Text>        
         {
@@ -73,18 +71,13 @@ export function Game3UI(sentece : boolean) {
           <ContinueButton onClick={handleContinue}/>
         }
       </View>
-    </SafeAreaView>
+    </GameLayout>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#000',
-  },
   content: {
     flex: 1,
-    paddingHorizontal: 20,
     paddingTop: 60,
     alignItems: 'center',
   },

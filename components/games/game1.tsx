@@ -1,9 +1,8 @@
 import { ThemedText } from '@/components/ThemedText';
 import WordButton, { ButtonState } from '@/components/ui/games/WordButton';
 import React, { useCallback, useEffect, useState } from 'react';
-import { StyleSheet, ToastAndroid, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { WordButtonType } from '@/types/games/WordButtonType';
-import { GameState } from '@/types/gameState';
 import { useFocusEffect } from 'expo-router';
 import { useGameContext } from '@/contexts/GameContext';
 import { GameLayout } from './gameLayout';
@@ -36,7 +35,6 @@ export function GameOneUI(type: Game1Type) {
   const resetGame = useCallback(() => {
     console.log("-------------- RESETTING Game1 --------------");
     setGameIndex(0);
-    //setState(GameState.pending);
   }, [])
 
   useFocusEffect(
@@ -103,18 +101,13 @@ export function GameOneUI(type: Game1Type) {
       if (gameIndex < bottomButtons.length - 1)
         updatedPhraseButtons[gameIndex + 1].state = ButtonState.highlighted;
 
-      if (gameIndex === data.length - 1) {
-        ToastAndroid.show('Finished!', ToastAndroid.SHORT);
+      if (gameIndex === data.length - 1)
         onFinished(true)
-      }
 
       setGameIndex(gameIndex + 1);
     }
-    else {
-      ToastAndroid.show('Incorrect!', ToastAndroid.SHORT);
-
+    else
       onFinished(false)
-    }
 
     if (!allTypes)
       setBottomButtons([...bottomButtons]); // make sure to update the state
