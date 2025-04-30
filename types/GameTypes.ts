@@ -1,4 +1,6 @@
+import { GameRoutes } from "@/constants/gameRoutes";
 import { WordSelectionOption } from "./games/SelectionOption";
+import { GameState } from "./gameState";
 
 // Types related to the GameContext
 export interface Question {
@@ -20,4 +22,9 @@ export interface GameContextData {
 
   moveToNextLevel: () => void,
   data : WordSelectionOption[],
+
+  loadLevel : (game : GameRoutes) => void,
+  onFinished : (correct : boolean) => void,
+
+  state : GameState
 }

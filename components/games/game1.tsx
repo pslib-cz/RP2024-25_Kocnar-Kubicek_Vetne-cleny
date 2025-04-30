@@ -1,15 +1,12 @@
 import { ThemedText } from '@/components/ThemedText';
-import RocketProgressBar from '@/components/ui/games/ProgressBar';
 import WordButton, { ButtonState } from '@/components/ui/games/WordButton';
-import { useData } from '@/hooks/useData';
 import React, { useCallback, useEffect, useState } from 'react';
-import { SafeAreaView, StyleSheet, ToastAndroid, View } from 'react-native';
+import { StyleSheet, ToastAndroid, View } from 'react-native';
 import { WordButtonType } from '@/types/games/WordButtonType';
-import GoodJobOverlay from '../FeedbackOverlay';
 import { GameState } from '@/types/gameState';
-import { useMultiplayerGameContext } from '@/contexts/MultiplayerGameContext';
 import { useFocusEffect } from 'expo-router';
 import { useGameContext } from '@/contexts/GameContext';
+import { GameLayout } from './gameLayout';
 
 // TODO: implement custom max error count
 
@@ -29,14 +26,17 @@ export function GameOneUI(type: Game1Type) {
   const inverted = type == Game1Type.inverted;
   const allTypes = type == Game1Type.allTypes;
 
-  const [state, setState] = useState<GameState>(GameState.pending);
-  const { moveToNextLevel, data } = useGameContext();
+  const { data, onFinished } = useGameContext();
+
+  const [gameIndex, setGameIndex] = useState(0); // id of the current game card
+  const [phraseButtons, setPhraseButtons] = useState<WordButtonType[]>();
+  const [bottomButtons, setBottomButtons] = useState<WordButtonType[]>();
 
   // Function to initialize or reset the game
   const resetGame = useCallback(() => {
-    console.log("-------------- RESETTING --------------");
+    console.log("-------------- RESETTING Game1 --------------");
     setGameIndex(0);
-    setState(GameState.pending);
+    //setState(GameState.pending);
   }, [])
 
   useFocusEffect(
@@ -44,19 +44,14 @@ export function GameOneUI(type: Game1Type) {
       console.log("Tab focused - resetting game");
       resetGame();
 
-      // Optional: Clean up function for when the screen loses focus
       return () => {
         console.log("Tab unfocused");
       };
     }, [resetGame])
   );
 
-  const [gameIndex, setGameIndex] = useState(0); // id of the current game card
-  const [phraseButtons, setPhraseButtons] = useState<WordButtonType[]>();
-  const [bottomButtons, setBottomButtons] = useState<WordButtonType[]>();
-
   useEffect(() => {
-    console.log("Data change");
+    console.log("Game1 Data were changed");
 
     if (data) {
       setPhraseButtons(
@@ -110,7 +105,7 @@ export function GameOneUI(type: Game1Type) {
 
       if (gameIndex === data.length - 1) {
         ToastAndroid.show('Finished!', ToastAndroid.SHORT);
-        setState(GameState.correct)
+        onFinished(true)
       }
 
       setGameIndex(gameIndex + 1);
@@ -118,7 +113,7 @@ export function GameOneUI(type: Game1Type) {
     else {
       ToastAndroid.show('Incorrect!', ToastAndroid.SHORT);
 
-      setState(GameState.incorrect)
+      onFinished(false)
     }
 
     if (!allTypes)
@@ -127,16 +122,9 @@ export function GameOneUI(type: Game1Type) {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <GoodJobOverlay
-        state={state}
-        onContinue={() => {
-          console.log("moving to the next level, hopefully anyway");
-          moveToNextLevel();
-          resetGame();
-        }}
-      />
-      <RocketProgressBar progress={0.33} />
+    <GameLayout
+      resetGame={resetGame}
+    >
       {
         phraseButtons ?
           <View style={styles.phraseContainer}>
@@ -174,19 +162,11 @@ export function GameOneUI(type: Game1Type) {
             <ThemedText>Loading...</ThemedText>
           </View>
       }
-    </SafeAreaView>
+    </GameLayout>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#000',
-    paddingHorizontal: 20,
-    paddingVertical: 60,
-    gap: 40,
-    justifyContent: 'space-between'
-  },
   phraseContainer: {
     display: 'flex',
     gap: 8,

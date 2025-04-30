@@ -2,18 +2,18 @@ import React, { useEffect, useRef } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Animated, Dimensions } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { GameState } from '@/types/gameState';
+import { useGameContext } from '@/contexts/GameContext';
 
 interface OverlayProps {
   state: GameState;
-  onContinue: () => void;
-  message?: string;
-  iconName?: keyof typeof Ionicons.glyphMap;
+  resetGame: () => void;
 }
 
-const FeedbackOverlay: React.FC<OverlayProps> = ({ 
+export const FeedbackOverlay: React.FC<OverlayProps> = ({ 
   state, 
-  onContinue
+  resetGame,
 }) => { 
+  const { moveToNextLevel } = useGameContext();
 
   const isCorrect = state == GameState.correct;
 
@@ -82,7 +82,10 @@ const FeedbackOverlay: React.FC<OverlayProps> = ({
         
         <TouchableOpacity 
           style={[styles.continueButton, { backgroundColor: themeColor }]} 
-          onPress={onContinue}
+          onPress={() =>{
+            resetGame();
+            moveToNextLevel();
+          }}
           activeOpacity={0.8}
         >
           <Text style={styles.buttonText}>CONTINUE</Text>
@@ -172,5 +175,3 @@ const styles = StyleSheet.create({
     backgroundColor: '#555',
   },
 });
-
-export default FeedbackOverlay;

@@ -1,26 +1,23 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import ArenaHeader from '@/components/ArenaHeader';
+import { GameRoutes } from '@/constants/gameRoutes';
+import { useGameContext } from '@/contexts/GameContext';
 
-const games = [
-  { id: 'games/game1', name: 'Game 1' },
-  { id: 'games/game1Inverted', name: 'Game 1 inverted' },
-  { id: 'games/game1AllTypes', name: "Game 1 all types"},
-  { id: 'games/game2', name : 'Game 2'},
-  { id: 'games/game2Multi', name : 'Game 2 Multi'},
-  { id: 'games/game3', name : 'Game 3'},
-  { id: 'games/game3_v2', name : 'Game 3 but no sentence'},
-  // Add more games here
-];
+const games = Object.entries(GameRoutes).map(([key, value]) => ({
+  id: value,
+  name: key.replace(/_/g, ' '),
+}));
 
 const GameTests: React.FC = () => {
-  const navigation = useNavigation();
+
+  const { loadLevel } = useGameContext();  
 
   //console.log(navigation.getState())
 
-  const handleGameSelect = (gameId: string) => {
-    navigation.navigate(gameId as never); // Navigate to the selected game
+  const handleGameSelect = (gameId: GameRoutes) => {
+    loadLevel(gameId)
   };
 
   return (

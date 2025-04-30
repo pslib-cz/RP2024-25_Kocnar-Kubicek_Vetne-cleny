@@ -3,6 +3,8 @@ import { Question, GameContextData } from '../types/GameTypes';
 import { useNavigation } from 'expo-router';
 import { WordSelectionOption } from '@/types/games/SelectionOption';
 import { useData } from '@/hooks/useData';
+import { GameState } from '@/types/gameState';
+import { GameRoutes } from '@/constants/gameRoutes';
 
 const GameContext = createContext<GameContextData | undefined>(undefined);
 
@@ -23,17 +25,32 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // this initialization is temporary and hopefully will be updated
   const [data, setData] = useState<WordSelectionOption[]>(allData[0])
 
-  const moveToNextLevel = async () => {
+  const loadLevel = async (game : GameRoutes) => {
 
     const randomIndex = Math.floor(Math.random() * allData.length);
     setData(allData[randomIndex]);
 
-    // generate next level based on seed and question types - no api call, just navigate to next level
-   
+    setGameState(GameState.pending)
+
     console.log("navigating");
 
-    navigation.navigate('games/game1' as never); // Navigate to the selected game
+    navigation.navigate(game as never)
   }
+
+  const moveToNextLevel = async () => {
+
+    // some logic to choose desired level
+
+    loadLevel(GameRoutes.GAME1)
+  }  
+
+  const onFinished = (correct : boolean) => {
+
+    setGameState(correct ? GameState.correct : GameState.incorrect)
+
+  }
+
+  const [state, setGameState] = useState<GameState>(GameState.pending); 
 
   return (
     <GameContext.Provider
@@ -48,6 +65,9 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setActiveQuestionIndex,
         moveToNextLevel,
         data,
+        loadLevel,
+        onFinished,
+        state
       }}
     >
       {children}
