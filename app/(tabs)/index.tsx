@@ -1,6 +1,7 @@
 import { Rocket } from '@/components/Rocket';
 import { ThemedText } from '@/components/ThemedText';
 import BigassButton from '@/components/ui/BigassButton';
+import { useGameContext } from '@/contexts/GameContext';
 import { useMultiplayerGameContext } from '@/contexts/MultiplayerGameContext';
 import { useRocket } from '@/contexts/RocketContext';
 import { useRouter } from 'expo-router';
@@ -12,7 +13,7 @@ export default function HomeScreen()
   const router = useRouter();
   const { name } = useRocket();
 
-  const { moveToNextLevel } = useMultiplayerGameContext()
+  const { moveToNextLevel } = useGameContext()
 
   return (
     <ScrollView contentContainerStyle={{ flexGrow: 1, padding: 16, gap: 16, alignItems: 'center' }}>
