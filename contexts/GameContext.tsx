@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState } from 'react';
-import { Question, GameContextData } from '../types/GameTypes';
+import { GameContextData, GameData } from '../types/GameTypes';
 import { useNavigation } from 'expo-router';
 import { WordSelectionOption } from '@/types/games/SelectionOption';
 import { useData } from '@/hooks/useData';
@@ -10,13 +10,6 @@ const GameContext = createContext<GameContextData | undefined>(undefined);
 
 export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [seed, setSeed] = useState(50);
-  const [questions, setQuestions] = useState<Question[]>([]);
-  const [userAnswers, setUserAnswers] = useState<Record<string, string>>({});
-  const [activeQuestionIndex, setActiveQuestionIndex] = useState(0);
-
-  const setUserAnswer = (questionId: string, answer: string) => {
-    setUserAnswers((prev) => ({ ...prev, [questionId]: answer }));
-  };
 
   const navigation = useNavigation();
 
@@ -24,6 +17,17 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // this initialization is temporary and hopefully will be updated
   const [data, setData] = useState<WordSelectionOption[]>(allData[0])
+
+  const [gameData, setGameData] = useState<GameData>({totalQuestion : 10, questionsRemaining : 10});
+
+  const newGame = (qCount : number) => {
+
+    setSeed(Math.floor(Math.random() * 1000)); // Random seed for the game
+    
+    setGameData({totalQuestion : qCount, questionsRemaining : qCount});
+
+    moveToNextLevel()
+  }
 
   const loadLevel = async (game : GameRoutes) => {
 
@@ -41,7 +45,15 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     // some logic to choose desired level
 
+    setGameData((prev) => ({...prev, questionsRemaining : prev.questionsRemaining - 1}))
+
     loadLevel(GameRoutes.GAME1)
+
+    if (gameData.questionsRemaining <= 0) {
+      console.log("Game finished")
+      
+      navigation.navigate(GameRoutes.RESULTS as never)
+    }
   }  
 
   const onFinished = (correct : boolean) => {
@@ -56,18 +68,14 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     <GameContext.Provider
       value={{
         seed,
-        questions,
-        userAnswers,
-        activeQuestionIndex,
         setSeed,
-        setQuestions,
-        setUserAnswer,
-        setActiveQuestionIndex,
         moveToNextLevel,
         data,
         loadLevel,
         onFinished,
-        state
+        state,
+        newGame,
+        gameData,
       }}
     >
       {children}
