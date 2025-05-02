@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState } from 'react';
 import { GameContextData, GameData } from '../types/GameTypes';
-import { useNavigation } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { WordSelectionOption } from '@/types/games/SelectionOption';
 import { useData } from '@/hooks/useData';
 import { GameState } from '@/types/gameState';
@@ -11,7 +11,7 @@ const GameContext = createContext<GameContextData | undefined>(undefined);
 export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [seed, setSeed] = useState(50);
 
-  const navigation = useNavigation();
+  const navigation = useRouter();
 
   const allData : WordSelectionOption[][] = useData();
 

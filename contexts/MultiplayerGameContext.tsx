@@ -1,9 +1,6 @@
-import React, { createContext, useContext, useState, version } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 import { Player, GameConfig, MultiplayerGameContextData } from '../types/MultiplayerGameTypes';
 import { useAPI } from '../hooks/useAPI';
-import { useNavigation } from 'expo-router';
-import { useData } from '@/hooks/useData';
-import { WordSelectionOption } from '@/types/games/SelectionOption';
 
 const MultiplayerGameContext = createContext<MultiplayerGameContextData | undefined>(undefined);
 
