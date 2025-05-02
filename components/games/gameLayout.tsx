@@ -17,7 +17,7 @@ interface GameLayoutProps {
 }
 
 export const GameLayout: React.FC<GameLayoutProps> = ({ children, resetGame }) => {
-  const { state } = useGameContext();
+  const { state, gameData } = useGameContext();
 
   return (
     <SafeAreaView style={styles.container}>
@@ -25,7 +25,7 @@ export const GameLayout: React.FC<GameLayoutProps> = ({ children, resetGame }) =
         state={state}
         resetGame={resetGame}
       />
-      <RocketProgressBar progress={0.33} />
+      <RocketProgressBar progress={1 - (gameData.questionsRemaining + 1) / gameData.totalQuestion} />
       {children}
     </SafeAreaView>
   );

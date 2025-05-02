@@ -22,8 +22,8 @@ const allTypeTypes : string[] = [
 ]
 
 export function GameOneUI(type: Game1Type) {
-  const inverted = type == Game1Type.inverted;
-  const allTypes = type == Game1Type.allTypes;
+  const inverted = type === Game1Type.inverted;
+  const allTypes = type === Game1Type.allTypes;
 
   const { data, onFinished } = useGameContext();
 
@@ -77,7 +77,7 @@ export function GameOneUI(type: Game1Type) {
           .sort(() => Math.random() - 0.5)
       )
     }
-  }, [data, inverted]);
+  }, [allTypes, data, inverted]);
 
   const onBottomButtonClicked = (bottomButton: WordButtonType) => {
     if (!phraseButtons || !data || !bottomButtons) {
