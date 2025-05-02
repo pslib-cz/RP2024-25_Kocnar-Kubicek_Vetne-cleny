@@ -11,6 +11,7 @@ import { MultiplayerGameProvider } from '@/contexts/MultiplayerGameContext';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { GameProvider } from '@/contexts/GameContext';
+import React from 'react';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();

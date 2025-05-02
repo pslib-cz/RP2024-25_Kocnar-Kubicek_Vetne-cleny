@@ -22,7 +22,7 @@ export const loadSvgAsset = async (assetModule: any): Promise<string | null> => 
   }
 };
 
-export default function ProfileEditScreen(): JSX.Element {
+export default function ProfileEditScreen(): React.ReactElement {
   // Use context instead of local state for rocket properties
   const { 
     bodyColor, 

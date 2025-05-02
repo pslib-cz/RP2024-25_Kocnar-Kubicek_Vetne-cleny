@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useRouter } from 'expo-router';
 import ArenaHeader from '@/components/ArenaHeader';
 import { GameRoutes } from '@/constants/gameRoutes';
 import { useGameContext } from '@/contexts/GameContext';
