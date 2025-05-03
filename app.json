@@ -9,14 +9,18 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "cz.pslib.vetnecleny",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.vetnecleny.app"
+      "package": "cz.pslib.vetnecleny"
     },
     "web": {
       "bundler": "metro",
@@ -40,7 +44,11 @@
       "typedRoutes": true
     },
     "extra": {
-      "CSV_URL": ""
+      "CSV_URL": "",
+      "router": {},
+      "eas": {
+        "projectId": "564c7e57-4a83-470f-bf71-cac24e431bf4"
+      }
     }
   }
 }
