@@ -1,27 +1,44 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useMultiplayerGameContext } from '@/contexts/MultiplayerGameContext';
 import { useRocket } from '@/contexts/RocketContext';
 
 export default function JoinGameScreen() {
   const [code, setCode] = useState('');
-  const { joinGame, code: contextCode, players, config } = useMultiplayerGameContext();
+  const { joinGame, code: contextCode, config, leaveGame } = useMultiplayerGameContext();
   const router = useRouter();
   const rocket = useRocket();
+  const params = useLocalSearchParams();
 
-  const handleJoinGame = async () => {
+  useEffect(() => {
+    // If there's a code in the URL params, set it and attempt to join
+    if (params.code && !contextCode) {
+      setCode(params.code as string);
+      handleJoinGame(params.code as string);
+    }
+  }, [params.code]);
+
+  const handleJoinGame = async (gameCode?: string) => {
     try {
-      const gameDetails = await joinGame(code, {
-        name: rocket.name,
-        bodyColor: rocket.bodyColor,
-        trailColor: rocket.trailColor,
-        selectedRocketIndex: rocket.selectedRocketIndex,
-        id: Math.random().toString(36).substring(2, 15), // Generate a random ID for the player
-      });
+      const codeToUse = gameCode || code;
+      if (!codeToUse) return;
+
+      await joinGame(codeToUse);
     } catch (error) {
       alert('Failed to join game. Please check the code and try again.');
       console.error('Error joining game:', error);
+    }
+  };
+
+  const handleCancel = async () => {
+    try {
+      await leaveGame();
+      setCode('');
+      router.push('/exams');
+    } catch (error) {
+      console.error('Error leaving game:', error);
+      alert('Failed to leave game. Please try again.');
     }
   };
 
@@ -38,7 +55,7 @@ export default function JoinGameScreen() {
             onChangeText={setCode}
             keyboardType="numeric"
           />
-          <TouchableOpacity style={styles.joinButton} onPress={handleJoinGame}>
+          <TouchableOpacity style={styles.joinButton} onPress={() => handleJoinGame()}>
             <Text style={styles.joinButtonText}>Join Game</Text>
           </TouchableOpacity>
         </>
@@ -46,10 +63,10 @@ export default function JoinGameScreen() {
         <View style={styles.gameInfoContainer}>
           <Text style={styles.title}>Game Details</Text>
           <Text style={styles.infoText}>Game Code: {contextCode}</Text>
-          {/* <Text style={styles.infoText}>Players: {players.map(player => player.name).join(', ')}</Text> */}
-          <Text style={styles.infoText}>Difficulty: {config.difficulty}</Text>
+          <Text style={styles.infoText}>Your ID: {rocket.userId}</Text>
+          <Text style={styles.infoText}>Difficulty: {config.difficulty}%</Text>
           <Text style={styles.infoText}>Galaxy: {config.galaxy}</Text>
-          <TouchableOpacity style={styles.backButton} onPress={() => router.push('/exams')}>
+          <TouchableOpacity style={styles.backButton} onPress={handleCancel}>
             <Text style={styles.backButtonText}>Leave</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.startButton} /*onPress={() => router.push(`/games/...`)}*/>

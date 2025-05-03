@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState } from 'react';
 import { Player, GameConfig, MultiplayerGameContextData } from '../types/MultiplayerGameTypes';
 import { useAPI } from '../hooks/useAPI';
+import { useRocket } from './RocketContext';
 
 const MultiplayerGameContext = createContext<MultiplayerGameContextData | undefined>(undefined);
 
@@ -15,47 +16,76 @@ export const MultiplayerGameProvider: React.FC<{ children: React.ReactNode }> = 
   });
   const [players, setPlayers] = useState<Player[]>([]);
 
-  const API = useAPI();
+  const rocket = useRocket();
+  const API = useAPI({
+    secretKey: rocket.secretKey,
+    userId: rocket.userId,
+    name: rocket.name,
+    bodyColor: rocket.bodyColor,
+    trailColor: rocket.trailColor,
+    selectedRocketIndex: rocket.selectedRocketIndex,
+  });
 
-  const joinGame = async (code: string, user: Player) => {
-    const payload = {
-      code,
-      user,
-      version: "1.0.0", // Example version, replace with actual version if needed
-    };
+  const resetGameState = () => {
+    setCode('');
+    setIsHost(false);
+    setConfig({
+      difficulty: 0,
+      galaxy: 0,
+      seed: 0,
+      questionTypes: 10,
+    });
+    setPlayers([]);
+  };
 
+  const joinGame = async (code: string) => {
     try {
-      const response = await API.post('/join-game', payload);
+      const response = await API.joinGame(parseInt(code, 10));
       console.log('Game joined successfully:', response);
 
       // Update context with game details
       setCode(code);
-      setPlayers(response.players); // Assuming response contains players
-      setConfig(response.game); // Assuming response contains game config
+      setConfig({
+        difficulty: response.game.difficulty,
+        galaxy: response.game.galaxy,
+        seed: parseInt(response.game.seed, 10),
+        questionTypes: response.game.questiontypes,
+      });
     } catch (error) {
       console.error('Failed to join game:', error);
+      throw error;
     }
   };
 
   const createGame = async (config: GameConfig) => {
-    const payload = {
-      ...config,
-      version: "1.0.0", // Example version, replace with actual version if needed
-    };
-
     try {
-      const response = await API.post('/create-game', payload);
-      // Handle response (e.g., update state with game data)
+      const response = await API.createGame(
+        config.difficulty,
+        config.galaxy,
+        config.questionTypes
+      );
+      
       console.log('Game created successfully:', response);
-      setCode(response.code); // Assuming the response contains a code
-      setIsHost(true); // Set the host status to true
+      setCode(response.code.toString());
+      setIsHost(true);
       setConfig(config);
-      setPlayers([]); // Assuming the response contains the player's rocket data
     } catch (error) {
       console.error('Failed to create game:', error);
+      throw error;
     }
   };
 
+  const leaveGame = async () => {
+    if (!code) return;
+
+    try {
+      // No need to call API for leaving, just reset the state
+      resetGameState();
+    } catch (error) {
+      console.error('Failed to leave game:', error);
+      throw error;
+    }
+  };
 
   return (
     <MultiplayerGameContext.Provider
@@ -69,7 +99,8 @@ export const MultiplayerGameProvider: React.FC<{ children: React.ReactNode }> = 
         isHost,
         setIsHost,
         joinGame,
-        createGame
+        createGame,
+        leaveGame
       }}
     >
       {children}

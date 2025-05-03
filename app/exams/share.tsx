@@ -3,28 +3,32 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
 import { useRouter } from 'expo-router';
 import { useMultiplayerGameContext } from '@/contexts/MultiplayerGameContext';
+import { useRocket } from '@/contexts/RocketContext';
 
 export default function ShareGameScreen() {
   const router = useRouter();
-  const { code } = useMultiplayerGameContext();
+  const { code, leaveGame } = useMultiplayerGameContext();
+  const rocket = useRocket();
+  const shareLink = `vetnecleny://exams/join?code=${code}`;
 
-//   const handleCancel = async () => {
-//     try {
-//       await cancelGame();
-//       router.push('/exams/create'); // Redirect back to CreateGame
-//     } catch (error) {
-//       alert('Failed to cancel the game. Please try again.');
-//       console.error('Error cancelling game:', error);
-//     }
-//   };
+  const handleCancel = async () => {
+    try {
+      await leaveGame();
+      router.push('/exams/create');
+    } catch (error) {
+      alert('Failed to cancel the game. Please try again.');
+      console.error('Error cancelling game:', error);
+    }
+  };
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Sdílej hru</Text>
       <Text style={styles.codeLabel}>Kód hry:</Text>
       <Text style={styles.code}>{code}</Text>
-      <QRCode value={code.toString()} size={200} />
-      <TouchableOpacity style={styles.cancelButton} /*onPress={handleCancel}*/>
+      <Text style={styles.infoText}>Your ID: {rocket.userId}</Text>
+      <QRCode value={shareLink} size={200} />
+      <TouchableOpacity style={styles.cancelButton} onPress={handleCancel}>
         <Text style={styles.cancelButtonText}>Zrušit</Text>
       </TouchableOpacity>
     </View>
@@ -55,6 +59,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: 'white',
     marginBottom: 20,
+  },
+  infoText: {
+    fontSize: 16,
+    color: 'white',
+    marginBottom: 10,
   },
   cancelButton: {
     marginTop: 20,

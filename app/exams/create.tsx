@@ -16,26 +16,25 @@ const galaxyImages = [
 
 export default function CreateGameScreen() {
   const [difficulty, setDifficulty] = useState(50);
-  const [galaxy, setGalaxy] = useState(0); // Use an index for the galaxy
-  const [questionTypes, setQuestionTypes] = useState(0); // Use a number for question types
+  const [galaxy, setGalaxy] = useState(0);
+  const [questionTypes, setQuestionTypes] = useState(0);
   const { createGame, code } = useMultiplayerGameContext();
   const router = useRouter();
 
   const toggleQuestionType = (typeIndex: number) => {
-    setQuestionTypes((prev) => prev ^ (1 << typeIndex)); // Toggle the bit at the given index
+    setQuestionTypes((prev) => prev ^ (1 << typeIndex));
   };
 
   const handleStartExam = async () => {
     if (difficulty && galaxy >= 0) {
-      const config = {
-        difficulty,
-        galaxy, // Pass the galaxy index directly
-        questionTypes, // Pass the bitmask directly
-      };
-
       try {
-        await createGame(config);
-        router.push(`/exams/share?code=${code}`); // Redirect to ShareGame route with the game code
+        await createGame({
+          difficulty,
+          galaxy,
+          questionTypes,
+          seed: Math.floor(Math.random() * 1000000), // Generate a random seed
+        });
+        router.push(`/exams/share?code=${code}`);
       } catch (error) {
         alert('Failed to create game. Please try again.');
         console.error('Error creating game:', error);
@@ -46,7 +45,7 @@ export default function CreateGameScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container} >
+    <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer} showsVerticalScrollIndicator={false}>
         <ThemedText type="title" style={styles.title}>Vytvořit test</ThemedText>
 
@@ -60,7 +59,7 @@ export default function CreateGameScreen() {
             style={styles.slider}
             minimumValue={0}
             maximumValue={100}
-            step={5} // Updated to snap by fives
+            step={5}
             value={difficulty}
             onValueChange={(value) => setDifficulty(value)}
             minimumTrackTintColor="#4A5BD2"
@@ -94,7 +93,7 @@ export default function CreateGameScreen() {
                   <ThemedText
                     style={
                       galaxy === index
-                        ? styles.selectedButtonText // Removed bold styling for selected button
+                        ? styles.selectedButtonText
                         : styles.buttonText
                     }
                   >
@@ -113,7 +112,7 @@ export default function CreateGameScreen() {
             <View key={type} style={styles.switchRow}>
               <ThemedText style={styles.switchLabel}>{type}</ThemedText>
               <Switch
-                value={(questionTypes & (1 << index)) !== 0} // Check if the bit is set
+                value={(questionTypes & (1 << index)) !== 0}
                 onValueChange={() => toggleQuestionType(index)}
                 trackColor={{ false: '#767577', true: '#4A5BD2' }}
               />
