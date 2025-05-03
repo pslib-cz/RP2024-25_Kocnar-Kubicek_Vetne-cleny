@@ -5,7 +5,6 @@ import { FontAwesome } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 
 const PracticeCompleteScreen = () => {
-
   const navigation = useRouter();
 
   return (
@@ -55,7 +54,7 @@ const PracticeCompleteScreen = () => {
         </View>
       </View>
 
-      <TouchableOpacity 
+      <TouchableOpacity
         style={styles.continueButton}
         onPress={() => navigation.navigate('/' as never)}
       >

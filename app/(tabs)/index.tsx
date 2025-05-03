@@ -16,22 +16,13 @@ export default function HomeScreen()
 
   return (
     <ScrollView contentContainerStyle={{ flexGrow: 1, padding: 16, gap: 16, alignItems: 'center' }}>
-
       <View onTouchStart={() => {
         router.push('/profile');
       }}>
         <Rocket />
         <ThemedText type="title">{name}</ThemedText>
       </View>
-
-
-      <BigassButton title='⛷️ Procvičování' bgEmoji='⛷️' onPress={() => {
-        
-        console.warn("Not implemented yet - seed and other stuff should be generated here")
-
-        newGame(2)
-
-      }}/>
+      <BigassButton title='⛷️ Procvičování' bgEmoji='⛷️' onPress={() => newGame(2)}/>
       <BigassButton title='🙀 Test' bgEmoji='🙀' onPress={() => {
         router.push('../exams');
       }}/>

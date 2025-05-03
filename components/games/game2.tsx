@@ -6,7 +6,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { GameLayout } from './gameLayout';
 import { useGameContext } from '@/contexts/GameContext';
 
-export function Game2UI(multiSelect : boolean) {
+export function Game2UI(multiSelect: boolean) {
   const { data, onFinished } = useGameContext();
 
   const [targetType, setTargetType] = useState<string>('... loading'); // Set the target type here
@@ -25,7 +25,7 @@ export function Game2UI(multiSelect : boolean) {
 
   const [selectedOptions, setSelectedOptions] = useState<WordSelectionOption[]>([]);
 
-  const handleSelect = (id: WordSelectionOption) => {    
+  const handleSelect = (id: WordSelectionOption) => {
     if (selectedOptions.includes(id)) {
       setSelectedOptions(selectedOptions.filter(item => item !== id));
     } else {
@@ -37,20 +37,20 @@ export function Game2UI(multiSelect : boolean) {
     onFinished(IsValid())
   }
 
-  function IsValid() : boolean{    
+  function IsValid(): boolean {
     for (const item of selectedOptions) {
       if (item.type !== targetType)
-        return false;      
-    }    
+        return false;
+    }
     return true;
   }
 
   return (
     <GameLayout
-      resetGame={() => {}}
+      resetGame={() => { }}
     >
       <View style={styles.content}>
-        <Text style={styles.title}>Vyber {targetType}</Text>        
+        <Text style={styles.title}>Vyber {targetType}</Text>
         <View style={styles.grid}>
           {
             options &&
@@ -65,8 +65,8 @@ export function Game2UI(multiSelect : boolean) {
           }
         </View>
         {
-          selectedOptions.length > 0 && 
-          <ContinueButton onClick={handleContinue}/>
+          selectedOptions.length > 0 &&
+          <ContinueButton onClick={handleContinue} />
         }
       </View>
     </GameLayout>

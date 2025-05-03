@@ -1,7 +1,7 @@
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 
-const ContinueButton = ({onClick} : {onClick: () => void}) => {
+const ContinueButton = ({ onClick }: { onClick: () => void }) => {
   return (
     <TouchableOpacity style={styles.button} onPress={onClick}>
       <Text style={styles.buttonText}>POTVRDIT</Text>

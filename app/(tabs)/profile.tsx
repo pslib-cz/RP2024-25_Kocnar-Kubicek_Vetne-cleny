@@ -8,7 +8,6 @@ import { Modal, SafeAreaView, StatusBar, StyleSheet, TextInput, TouchableOpacity
 import { SvgXml } from 'react-native-svg';
 import ColorPicker from 'react-native-wheel-color-picker';
 
-
 // Načtení SVG souboru jako text
 export const loadSvgAsset = async (assetModule: any): Promise<string | null> => {
   try {
@@ -24,12 +23,12 @@ export const loadSvgAsset = async (assetModule: any): Promise<string | null> => 
 
 export default function ProfileEditScreen(): React.ReactElement {
   // Use context instead of local state for rocket properties
-  const { 
-    bodyColor, 
-    setBodyColor, 
-    trailColor, 
-    setTrailColor, 
-    selectedRocketIndex, 
+  const {
+    bodyColor,
+    setBodyColor,
+    trailColor,
+    setTrailColor,
+    selectedRocketIndex,
     setSelectedRocketIndex,
     name,
     setName,
@@ -47,7 +46,7 @@ export default function ProfileEditScreen(): React.ReactElement {
     teacherMode: boolean;
     setTeacherMode: (enabled: boolean) => void;
   } = useRocket();
-  
+
   const [currentPickingFor, setCurrentPickingFor] = useState<'body' | 'trail' | null>(null);
   const [colorPickerVisible, setColorPickerVisible] = useState<boolean>(false);
   const [rocketPickerVisible, setRocketPickerVisible] = useState<boolean>(false);
@@ -70,7 +69,7 @@ export default function ProfileEditScreen(): React.ReactElement {
         const rocket5 = require('../../assets/images/rockets/rocket5.svg');
 
         console.log(rocket1, rocket2, rocket3, rocket4, rocket5);
-        
+
 
         // Načtení obsahu SVG souborů
         const svg1 = await loadSvgAsset(rocket1);
@@ -98,7 +97,7 @@ export default function ProfileEditScreen(): React.ReactElement {
         let modifiedSvg = svg.replaceAll("_body_", bodyColor).replaceAll("_trail_", trailColor);
         return modifiedSvg;
       });
-      
+
       setModifiedRocketSvgs(updatedSvgs);
     }
   }, [rocketSvgs, bodyColor, trailColor]);
@@ -119,7 +118,7 @@ export default function ProfileEditScreen(): React.ReactElement {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" />
-      
+
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity style={styles.backButton}>
@@ -127,25 +126,25 @@ export default function ProfileEditScreen(): React.ReactElement {
           <ThemedText style={styles.backText}>Zpět</ThemedText>
         </TouchableOpacity>
       </View>
-      
+
       {/* Main Content */}
       <View style={styles.content}>
         <ThemedText type="title" style={styles.title}>Upravit profil</ThemedText>
-        
+
         {/* Avatar Selection Options */}
         <View style={styles.avatarOptions}>
           {/* Body Color Option */}
           <View style={styles.optionContainer}>
-            <TouchableOpacity 
+            <TouchableOpacity
               style={[styles.colorOption, { backgroundColor: bodyColor }]}
               onPress={() => openColorPicker('body')}
             />
             <ThemedText style={styles.optionLabel}>Barva rakety</ThemedText>
           </View>
-          
+
           {/* Rocket Shape Option */}
           <View style={styles.optionContainer}>
-            <TouchableOpacity 
+            <TouchableOpacity
               style={styles.shapeOption}
               onPress={() => setRocketPickerVisible(true)}
             >
@@ -155,17 +154,17 @@ export default function ProfileEditScreen(): React.ReactElement {
             </TouchableOpacity>
             <ThemedText style={styles.optionLabel}>Tvar rakety</ThemedText>
           </View>
-          
+
           {/* Trail Color Option */}
           <View style={styles.optionContainer}>
-            <TouchableOpacity 
+            <TouchableOpacity
               style={[styles.colorOption, { backgroundColor: trailColor }]}
               onPress={() => openColorPicker('trail')}
             />
             <ThemedText style={styles.optionLabel}>Barva trysek</ThemedText>
           </View>
         </View>
-        
+
         {/* Name Input */}
         <View style={styles.nameContainer}>
           <ThemedText style={styles.nameLabel}>Jméno</ThemedText>
@@ -188,7 +187,7 @@ export default function ProfileEditScreen(): React.ReactElement {
           />
         </View>
       </View>
-      
+
       {/* Color Picker Modal */}
       <Modal
         visible={colorPickerVisible}
@@ -201,7 +200,7 @@ export default function ProfileEditScreen(): React.ReactElement {
             <ThemedText type="subtitle" style={styles.colorPickerTitle}>
               {currentPickingFor === 'body' ? 'Vyberte barvu rakety' : 'Vyberte barvu stopy'}
             </ThemedText>
-            
+
             <View style={styles.colorPickerWrapper}>
               <ColorPicker
                 color={currentPickingFor === 'body' ? bodyColor : trailColor}
@@ -212,16 +211,16 @@ export default function ProfileEditScreen(): React.ReactElement {
                 row={false}
               />
             </View>
-            
+
             <View style={styles.buttonRow}>
-              <TouchableOpacity 
+              <TouchableOpacity
                 style={styles.cancelButton}
                 onPress={() => setColorPickerVisible(false)}
               >
                 <ThemedText type="defaultSemiBold" style={styles.buttonText}>Zrušit</ThemedText>
               </TouchableOpacity>
-              
-              <TouchableOpacity 
+
+              <TouchableOpacity
                 style={styles.confirmButton}
                 onPress={() => setColorPickerVisible(false)}
               >
@@ -231,7 +230,7 @@ export default function ProfileEditScreen(): React.ReactElement {
           </View>
         </View>
       </Modal>
-      
+
       {/* Rocket Picker Modal */}
       <Modal
         visible={rocketPickerVisible}
@@ -242,7 +241,7 @@ export default function ProfileEditScreen(): React.ReactElement {
         <View style={styles.modalOverlay}>
           <View style={styles.rocketPickerContainer}>
             <ThemedText type="subtitle" style={styles.colorPickerTitle}>Vyberte raketu</ThemedText>
-            
+
             <View style={styles.rocketGrid}>
               {modifiedRocketSvgs.map((svg, index) => (
                 <TouchableOpacity

@@ -16,19 +16,16 @@ const ArenaPlanet: React.FC = () => {
       <View style={styles.container}>
         {/* Title */}
         <ArenaHeader />
-        
-
-        
         {/* Planet view */}
-        <TouchableOpacity 
-          style={styles.planetContainer} 
+        <TouchableOpacity
+          style={styles.planetContainer}
           onPress={() => router.push('/arenagalaxies')}
         >
           <PlanetView />
         </TouchableOpacity>
-        
+
         {/* Next task button */}
-        <BigassButton 
+        <BigassButton
           title={nextTask}
           bgEmoji="🚀"
           onPress={levelUp}

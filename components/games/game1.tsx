@@ -15,7 +15,7 @@ export const enum Game1Type {
   allTypes = 2
 }
 
-const allTypeTypes : string[] = [
+const allTypeTypes: string[] = [
   "po",
   "př",
   "a další"

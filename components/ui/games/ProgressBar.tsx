@@ -26,17 +26,17 @@ const RocketProgressBar: React.FC<RocketProgressBarProps> = ({
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 0 }}
           style={[
-          styles.progressBar,
-          {
-            width: `${normalizedProgress * 100}%`,
-            height,
-            borderRadius: height / 2,
-          },
+            styles.progressBar,
+            {
+              width: `${normalizedProgress * 100}%`,
+              height,
+              borderRadius: height / 2,
+            },
           ]}
         />
-        
+
         <View style={[styles.rocketContainer, { width: `${normalizedProgress * 100}%`, height }]}>
-          <View style={styles.rocket}/>
+          <View style={styles.rocket} />
           <Rocket style={styles.rocket} />
         </View>
       </View>
@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 0,
   },
-  rocketContainer: { 
+  rocketContainer: {
     width: '100%',
   },
   rocket: {

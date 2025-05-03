@@ -6,15 +6,15 @@ import React from 'react';
 import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
 
 export default function Tutorial() {
-  const {usedNodes, currentNode, AddNode} = useTutorial();
+  const { usedNodes, currentNode, AddNode } = useTutorial();
 
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="light" />
-      
+
       <View style={styles.view1}>
         <View style={styles.verticalLine} />
-      
+
         <View style={styles.mascotContainer}>
           <View style={styles.mascot}>
             <Text style={styles.mascotText}>👀</Text>
@@ -40,12 +40,12 @@ export default function Tutorial() {
           <Text style={styles.subHeading}>{currentNode.node.description}</Text>
         </View>
       </View>
-            
+
       {
         !currentNode.node.isResult &&
         <View style={styles.buttonContainer}>
           <TutorialButton title="ANO" filled={true} onPress={() => {
-            
+
             if (currentNode && currentNode.node.yesNode)
               AddNode(currentNode.node.yesNode, true);
 
@@ -55,10 +55,9 @@ export default function Tutorial() {
             if (currentNode && currentNode.node.noNode)
               AddNode(currentNode.node.noNode, true);
 
-          }} />        
+          }} />
         </View>
       }
-
     </SafeAreaView>
   );
 }
@@ -70,7 +69,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 20,
-    paddingVertical: 40    
+    paddingVertical: 40
   },
   verticalLine: {
     position: 'absolute',

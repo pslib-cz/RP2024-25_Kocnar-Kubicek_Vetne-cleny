@@ -7,7 +7,7 @@ import { StyleSheet, Text, ToastAndroid, View } from 'react-native';
 import { GameLayout } from './gameLayout';
 import { useGameContext } from '@/contexts/GameContext';
 
-export function Game3UI(sentece : boolean) {
+export function Game3UI(sentece: boolean) {
   const { data, onFinished } = useGameContext();
   const [options, setOptions] = useState<WordSelectionOption[]>();
 
@@ -19,7 +19,7 @@ export function Game3UI(sentece : boolean) {
 
   const [selectedOptions, setSelectedOptions] = useState<WordSelectionOption[]>([]);
 
-  const handleSelect = (id: WordSelectionOption) => {    
+  const handleSelect = (id: WordSelectionOption) => {
     if (selectedOptions.includes(id)) {
       setSelectedOptions(selectedOptions.filter(item => item !== id));
     } else {
@@ -33,20 +33,20 @@ export function Game3UI(sentece : boolean) {
 
   const targetType = 'po';
 
-  function IsValid() : boolean{    
+  function IsValid(): boolean {
     for (const item of selectedOptions) {
       if (item.type !== targetType)
-        return false;      
-    }    
+        return false;
+    }
     return true;
   }
 
   return (
     <GameLayout
-      resetGame={() => {}}
+      resetGame={() => { }}
     >
       <View style={styles.content}>
-        <Text style={styles.questionText}>Které slovo {sentece ? "ve větě " : ""}je {targetType}?</Text>        
+        <Text style={styles.questionText}>Které slovo {sentece ? "ve větě " : ""}je {targetType}?</Text>
         {
           sentece &&
           <Text style={styles.exampleText}>
@@ -67,8 +67,8 @@ export function Game3UI(sentece : boolean) {
           }
         </View>
         {
-          selectedOptions.length > 0 && 
-          <ContinueButton onClick={handleContinue}/>
+          selectedOptions.length > 0 &&
+          <ContinueButton onClick={handleContinue} />
         }
       </View>
     </GameLayout>

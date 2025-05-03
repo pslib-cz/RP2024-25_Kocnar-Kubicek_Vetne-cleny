@@ -7,14 +7,14 @@ interface WordButtonProps {
   onClick?: () => void;
 }
 
-export enum ButtonState{
+export enum ButtonState {
   default,
   highlighted,
   disabled,
   correct
 }
 
-const WordButton: React.FC<WordButtonProps> = ({ text, state, onClick }) => {  
+const WordButton: React.FC<WordButtonProps> = ({ text, state, onClick }) => {
   const stateStyles = {
     [ButtonState.default]: null,
     [ButtonState.highlighted]: styles.highlightedButton,

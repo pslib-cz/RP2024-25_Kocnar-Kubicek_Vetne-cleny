@@ -1,3 +1,4 @@
+import React from "react";
 import { TouchableOpacity, StyleSheet, Text } from "react-native";
 
 export const LargeGameButton = ({ text, selected, onPress }: { text: string; selected: boolean; onPress: () => void }) => (

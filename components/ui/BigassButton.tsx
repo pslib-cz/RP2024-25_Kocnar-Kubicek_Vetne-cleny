@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
 export default function BigassButton(
-  {title, bgEmoji, onPress = () => {}} : {title: string, bgEmoji: string, onPress?: () => void}
+  { title, bgEmoji, onPress = () => { } }: { title: string, bgEmoji: string, onPress?: () => void }
 ) {
   return (
     <TouchableOpacity style={styles.container} onPress={onPress}>
@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
   },
   catEmoji: {
-    transform: [{rotate: '-30deg'}],
+    transform: [{ rotate: '-30deg' }],
     fontSize: 140,
     color: '#4F55BC',
     position: 'absolute',
