@@ -7,7 +7,7 @@
 import { SafeAreaView } from "react-native-safe-area-context";
 import RocketProgressBar from "../ui/games/ProgressBar";
 import { FeedbackOverlay } from "../FeedbackOverlay";
-import { ReactNode } from "react";
+import React, { ReactNode } from "react";
 import { StyleSheet } from 'react-native';
 import { useGameContext } from "@/contexts/GameContext";
 

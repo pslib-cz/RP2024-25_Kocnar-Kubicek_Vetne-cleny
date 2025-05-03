@@ -42,7 +42,6 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }
 
   const moveToNextLevel = async () => {
-
     // some logic to choose desired level
 
     setGameData((prev) => ({...prev, questionsRemaining : prev.questionsRemaining - 1}))

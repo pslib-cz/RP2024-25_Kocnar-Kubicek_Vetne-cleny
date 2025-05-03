@@ -11,19 +11,15 @@ interface RocketProgressBarProps {
 
 const RocketProgressBar: React.FC<RocketProgressBarProps> = ({
   progress = 0.33,
-  width = 350,
   height = 40,
 }) => {
   // Constrain progress between 0 and 1
   const normalizedProgress = Math.min(Math.max(progress, 0), 1);
-  
-  // Calculate position for the rocket
-  const rocketPosition = Math.max(normalizedProgress * width - 25, 0);
 
   return (
-    <View style={[styles.container, { width, height }]}>
+    <View style={[styles.container, { height }]}>
       {/* Dark background bar */}
-      <View style={[styles.backgroundBar, { width, height, borderRadius: height / 2 }]}>
+      <View style={[styles.backgroundBar, { height, borderRadius: height / 2 }]}>
         {/* Colored progress gradient */}
         <LinearGradient
           colors={['#4c1d95', '#6d28d9', '#7c3aed']}
@@ -39,8 +35,9 @@ const RocketProgressBar: React.FC<RocketProgressBarProps> = ({
           ]}
         />
         
-        <View style={{ transform: [{ rotate: '90deg' }, { translateX: -rocketPosition / 3 }, { translateY: -70 }, { scale: 0.75 }], position: 'absolute', top: 0, left: 0, }}>
-          <Rocket />
+        <View style={[styles.rocketContainer, { width: `${normalizedProgress * 100}%`, height }]}>
+          <View style={styles.rocket}/>
+          <Rocket style={styles.rocket} />
         </View>
       </View>
     </View>
@@ -51,22 +48,25 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
     alignItems: 'center',
+    width: '100%',
   },
   backgroundBar: {
     backgroundColor: '#111827',
     overflow: 'hidden',
     position: 'relative',
+    width: '100%',
   },
   progressBar: {
     position: 'absolute',
     left: 0,
   },
-  rocketContainer: {
+  rocketContainer: { 
+    width: '100%',
+  },
+  rocket: {
     position: 'absolute',
-    top: 0,
-    height: '100%',
-    justifyContent: 'center',
-    zIndex: 10,
+    right: '0%',
+    // I don't see the rocket in the browser, so I will finish it later
   },
 });
 

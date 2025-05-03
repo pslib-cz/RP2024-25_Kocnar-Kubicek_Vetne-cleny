@@ -29,7 +29,7 @@ export default function HomeScreen()
         
         console.warn("Not implemented yet - seed and other stuff should be generated here")
 
-        newGame(3)
+        newGame(2)
 
       }}/>
       <BigassButton title='🙀 Test' bgEmoji='🙀' onPress={() => {
