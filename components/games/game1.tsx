@@ -166,6 +166,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
+    alignItems: 'center',
     marginBottom: 40,
   },
   phraseButton: {

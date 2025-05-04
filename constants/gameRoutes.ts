@@ -6,7 +6,5 @@ export enum GameRoutes{
   GAME2 = 'games/game2',
   GAME2_MULTI = 'games/game2Multi',
   GAME3 = 'games/game3',
-  GAME3_V2 = 'games/game3_v2',
-
-  RESULTS = 'games/resultScreen',
+  GAME3_V2 = 'games/game3_v2'
 }

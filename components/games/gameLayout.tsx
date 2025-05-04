@@ -1,9 +1,3 @@
-
-//
-// TODO
-// Gamelayout that contains basic game data (such as data, game state)
-// and basic components such as FeedbackOverlay
-
 import { SafeAreaView } from "react-native-safe-area-context";
 import RocketProgressBar from "../ui/games/ProgressBar";
 import { FeedbackOverlay } from "../FeedbackOverlay";

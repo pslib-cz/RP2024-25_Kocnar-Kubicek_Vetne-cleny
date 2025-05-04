@@ -76,7 +76,6 @@ export function Game2UI(multiSelect: boolean) {
 const styles = StyleSheet.create({
   content: {
     flex: 1,
-    paddingTop: 60,
     alignItems: 'center',
   },
   title: {
@@ -90,6 +89,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     flexWrap: 'wrap',
+    alignItems: 'center',
     gap: 20,
     justifyContent: 'space-between',
   }

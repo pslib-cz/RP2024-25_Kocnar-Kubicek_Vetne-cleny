@@ -1,9 +1,8 @@
 import ContinueButton from '@/components/ui/games/ContinueButton';
 import { LargeGameButton } from '@/components/ui/games/LargeGameButton';
-import { useData } from '@/hooks/useData';
 import { WordSelectionOption } from '@/types/games/SelectionOption';
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, ToastAndroid, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { GameLayout } from './gameLayout';
 import { useGameContext } from '@/contexts/GameContext';
 
@@ -78,7 +77,6 @@ export function Game3UI(sentece: boolean) {
 const styles = StyleSheet.create({
   content: {
     flex: 1,
-    paddingTop: 60,
     alignItems: 'center',
   },
   questionText: {
@@ -102,6 +100,7 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     gap: 20,
     justifyContent: 'space-between',
+    alignItems: 'center',
   },
   row: {
     flexDirection: 'row',

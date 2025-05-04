@@ -21,16 +21,16 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [gameData, setGameData] = useState<GameData>({totalQuestion : 10, questionsRemaining : 10});
 
   const newGame = (qCount : number) => {
+    const newSeed = Math.floor(Math.random() * 1000); // Random seed for the game
 
-    setSeed(Math.floor(Math.random() * 1000)); // Random seed for the game
+    setSeed(newSeed); // Random seed for the game
     
     setGameData({totalQuestion : qCount, questionsRemaining : qCount});
 
-    moveToNextLevel()
+    moveToNextLevelWithValues(newSeed, qCount); // so the state update is not an issue
   }
 
   const loadLevel = async (game : GameRoutes) => {
-
     const randomIndex = Math.floor(Math.random() * allData.length);
     setData(allData[randomIndex]);
 
@@ -41,24 +41,29 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     navigation.navigate(game as never)
   }
 
-  const moveToNextLevel = async () => {
-    // some logic to choose desired level
-
-    setGameData((prev) => ({...prev, questionsRemaining : prev.questionsRemaining - 1}))
-
-    loadLevel(GameRoutes.GAME1)
-
-    if (gameData.questionsRemaining <= 0) {
-      console.log("Game finished")
-      
-      navigation.navigate(GameRoutes.RESULTS as never)
+  const moveToNextLevelWithValues = (currentSeed: number, remainingQuestions: number) => {
+    setGameData((prev) => ({...prev, questionsRemaining : remainingQuestions - 1}));
+  
+    const levels = Object.values(GameRoutes);
+    const randomLevelIndex = (currentSeed + remainingQuestions) % levels.length;
+    const randomLevel = levels[randomLevelIndex];
+  
+    console.log("randomLevel", randomLevel, "seed", currentSeed, "questionsRemaining", remainingQuestions);
+  
+    loadLevel(randomLevel);
+  
+    if (remainingQuestions <= 0) {
+      console.log("Game finished");
+      navigation.navigate('games/resultScreen' as never);
     }
+  }
+
+  const moveToNextLevel = async () => {
+    moveToNextLevelWithValues(seed, gameData.questionsRemaining);
   }  
 
   const onFinished = (correct : boolean) => {
-
     setGameState(correct ? GameState.correct : GameState.incorrect)
-
   }
 
   const [state, setGameState] = useState<GameState>(GameState.pending); 
