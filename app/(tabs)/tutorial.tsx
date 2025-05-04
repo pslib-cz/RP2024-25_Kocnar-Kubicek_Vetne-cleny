@@ -28,7 +28,7 @@ export default function Tutorial() {
               <QuestionRow
                 key={index}
                 question={node.node.title}
-                answer={node.node.isResult ? "ANO" : "NE"}
+                answer={node.yes ? "ANO" : "NE"}
               />
             ))
           }
@@ -44,18 +44,8 @@ export default function Tutorial() {
       {
         !currentNode.node.isResult &&
         <View style={styles.buttonContainer}>
-          <TutorialButton title="ANO" filled={true} onPress={() => {
-
-            if (currentNode && currentNode.node.yesNode)
-              AddNode(currentNode.node.yesNode, true);
-
-          }} />
-          <TutorialButton title="NE" filled={false} onPress={() => {
-
-            if (currentNode && currentNode.node.noNode)
-              AddNode(currentNode.node.noNode, true);
-
-          }} />
+          <TutorialButton title="ANO" filled={true} onPress={() => AddNode(currentNode, true)} />
+          <TutorialButton title="NE" filled={false} onPress={() => AddNode(currentNode, false)} />
         </View>
       }
     </SafeAreaView>

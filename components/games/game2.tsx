@@ -50,37 +50,33 @@ export function Game2UI(multiSelect: boolean) {
     <GameLayout
       resetGame={() => { }}
     >
-      <View style={styles.content}>
-        <Text style={styles.title}>Vyber {targetType}</Text>
-        <ThemedText style={{ fontSize: 20, textAlign: 'center' }}>Game 2</ThemedText>
-        <ScrollView style={{ width: '100%' }}>
-          <View style={styles.grid}>
-            {
-              options &&
-              options.map((option, index) => (
-                <LargeGameButton
-                  key={index}
-                  text={option.text}
-                  selected={selectedOptions.includes(option)}
-                  onPress={() => handleSelect(option)}
-                />
-              ))
-            }
-          </View>
-        </ScrollView>
-        {
-          selectedOptions.length > 0 &&
-          <ContinueButton onClick={handleContinue} />
-        }
-      </View>
+      {/* <View style={styles.content}> */}
+      <Text style={styles.title}>Vyber {targetType}</Text>
+      <ScrollView style={{ width: '100%' }}>
+        <View style={styles.grid}>
+          {
+            options &&
+            options.map((option, index) => (
+              <LargeGameButton
+                key={index}
+                text={option.text}
+                selected={selectedOptions.includes(option)}
+                onPress={() => handleSelect(option)}
+              />
+            ))
+          }
+        </View>
+      </ScrollView>
+      <ContinueButton onClick={handleContinue} enabled={selectedOptions.length > 0} />
+      {/* </View> */}
     </GameLayout>
   );
 };
 
 const styles = StyleSheet.create({
   content: {
-    flex: 1,
-    alignItems: 'center',
+    // flex: 1,
+    // alignItems: 'center',
   },
   title: {
     color: '#fff',

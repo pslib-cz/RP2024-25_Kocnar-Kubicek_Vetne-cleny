@@ -118,7 +118,6 @@ export function GameOneUI(type: Game1Type) {
     <GameLayout
       resetGame={resetGame}
     >
-      <ThemedText style={{ fontSize: 20, textAlign: 'center' }}>Game 1</ThemedText>
       {
         phraseButtons ?
           <View style={styles.phraseContainer}>

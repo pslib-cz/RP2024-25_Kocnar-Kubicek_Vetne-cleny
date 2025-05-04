@@ -30,8 +30,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#000',
     paddingHorizontal: 20,
-    paddingVertical: 60,
+    paddingVertical: 24,
     gap: 40,
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    alignItems: 'center',
   }
 });

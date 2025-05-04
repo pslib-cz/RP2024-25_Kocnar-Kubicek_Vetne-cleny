@@ -45,15 +45,16 @@ export function Game3UI(sentece: boolean) {
     <GameLayout
       resetGame={() => { }}
     >
-      <View style={styles.content}>
+      {/* <View style={styles.content}> */}
+      <View>
         <Text style={styles.questionText}>Které slovo {sentece ? "ve větě " : ""}je {targetType}?</Text>
-        <ThemedText style={{ fontSize: 20, textAlign: 'center' }}>Game 3</ThemedText>
         {
           sentece &&
           <Text style={styles.exampleText}>
             {data.map((item) => item.text).join(" ")}
           </Text>
         }
+      </View>
         <ScrollView style={{ width: '100%' }}>
           <View style={[styles.grid, { marginBottom: 40 }]}>
             {
@@ -69,11 +70,8 @@ export function Game3UI(sentece: boolean) {
             }
           </View>
         </ScrollView>
-        {
-          selectedOptions.length > 0 &&
-          <ContinueButton onClick={handleContinue} />
-        }
-      </View>
+        <ContinueButton onClick={handleContinue} enabled={selectedOptions.length > 0} />
+      {/* </View> */}
     </GameLayout>
   );
 };
