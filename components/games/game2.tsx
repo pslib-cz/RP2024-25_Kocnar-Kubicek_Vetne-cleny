@@ -2,9 +2,10 @@ import ContinueButton from '@/components/ui/games/ContinueButton';
 import { LargeGameButton } from '@/components/ui/games/LargeGameButton';
 import { WordSelectionOption } from '@/types/games/SelectionOption';
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { GameLayout } from './gameLayout';
 import { useGameContext } from '@/contexts/GameContext';
+import { ThemedText } from '../ThemedText';
 
 export function Game2UI(multiSelect: boolean) {
   const { data, onFinished } = useGameContext();
@@ -51,19 +52,22 @@ export function Game2UI(multiSelect: boolean) {
     >
       <View style={styles.content}>
         <Text style={styles.title}>Vyber {targetType}</Text>
-        <View style={styles.grid}>
-          {
-            options &&
-            options.map((option, index) => (
-              <LargeGameButton
-                key={index}
-                text={option.text}
-                selected={selectedOptions.includes(option)}
-                onPress={() => handleSelect(option)}
-              />
-            ))
-          }
-        </View>
+        <ThemedText style={{ fontSize: 20, textAlign: 'center' }}>Game 2</ThemedText>
+        <ScrollView style={{ width: '100%' }}>
+          <View style={styles.grid}>
+            {
+              options &&
+              options.map((option, index) => (
+                <LargeGameButton
+                  key={index}
+                  text={option.text}
+                  selected={selectedOptions.includes(option)}
+                  onPress={() => handleSelect(option)}
+                />
+              ))
+            }
+          </View>
+        </ScrollView>
         {
           selectedOptions.length > 0 &&
           <ContinueButton onClick={handleContinue} />
