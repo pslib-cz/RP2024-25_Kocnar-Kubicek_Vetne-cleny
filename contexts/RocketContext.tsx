@@ -131,6 +131,13 @@ export const RocketProvider = ({ children }: RocketProviderProps) => {
 
   // Save preferences to AsyncStorage and sync with server
   const savePreferences = async () => {
+    console.log('Saving preferences', {
+      bodyColor,
+      trailColor,
+      selectedRocketIndex,
+      name,
+      teacherMode
+    });
     try {
       await AsyncStorage.setItem('user_profile_body_color', bodyColor);
       await AsyncStorage.setItem('user_profile_trail_color', trailColor);
@@ -147,18 +154,10 @@ export const RocketProvider = ({ children }: RocketProviderProps) => {
 
   // Save preferences whenever they change
   useEffect(() => {
-    // Skip the initial load
-    if (userId === '') return;
-    
+    if (!isPlayerCreated) return;
+    if (!userId) return;
     savePreferences();
   }, [bodyColor, trailColor, selectedRocketIndex, name, teacherMode]);
-
-  // Sync with server when player is created
-  useEffect(() => {
-    if (isPlayerCreated) {
-      syncWithServer();
-    }
-  }, [isPlayerCreated]);
 
   return (
     <RocketContext.Provider

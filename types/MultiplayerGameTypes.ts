@@ -23,7 +23,7 @@ export interface MultiplayerGameContextData {
   setCode: (code: string) => void;
   setConfig: (config: GameConfig) => void;
   setPlayers: (player: Player[]) => void;
-  joinGame: (gameCode: string, rocket: Player) => Promise<void>;
+  joinGame: (gameCode: string) => Promise<void>;
   createGame: (config: GameConfig) => Promise<void>;
   leaveGame: () => Promise<void>;
 }
