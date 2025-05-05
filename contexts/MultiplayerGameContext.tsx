@@ -15,6 +15,7 @@ export const MultiplayerGameProvider: React.FC<{ children: React.ReactNode }> = 
     questionTypes: 10,
   });
   const [players, setPlayers] = useState<Player[]>([]);
+  const [author, setAuthor] = useState<Player | null>(null);
 
   const rocket = useRocket();
   const API = useAPI({
@@ -36,6 +37,7 @@ export const MultiplayerGameProvider: React.FC<{ children: React.ReactNode }> = 
       questionTypes: 10,
     });
     setPlayers([]);
+    setAuthor(null);
   };
 
   const joinGame = async (code: string) => {
@@ -51,6 +53,10 @@ export const MultiplayerGameProvider: React.FC<{ children: React.ReactNode }> = 
         seed: parseInt(response.game.seed, 10),
         questionTypes: response.game.questiontypes,
       });
+      
+      // Set author and players
+      setAuthor(response.author);
+      setPlayers(response.players || []);
     } catch (error) {
       console.error('Failed to join game:', error);
       throw error;
@@ -69,6 +75,15 @@ export const MultiplayerGameProvider: React.FC<{ children: React.ReactNode }> = 
       setCode(response.code.toString());
       setIsHost(true);
       setConfig(config);
+      
+      // When creating a game, the current user is the author
+      setAuthor({
+        id: rocket.userId,
+        name: rocket.name,
+        bodyColor: rocket.bodyColor,
+        trailColor: rocket.trailColor,
+        selectedRocketIndex: rocket.selectedRocketIndex,
+      });
     } catch (error) {
       console.error('Failed to create game:', error);
       throw error;
@@ -93,9 +108,11 @@ export const MultiplayerGameProvider: React.FC<{ children: React.ReactNode }> = 
         code,
         config,
         players,
+        author,
         setCode,
         setConfig,
         setPlayers,
+        setAuthor,
         isHost,
         setIsHost,
         joinGame,

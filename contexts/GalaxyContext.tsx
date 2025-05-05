@@ -16,7 +16,13 @@ type GalaxyContextType = {
 
 const GalaxyContext = createContext<GalaxyContextType | undefined>(undefined);
 
-export const GalaxyProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+interface GalaxyProviderProps {
+  children: ReactNode;
+}
+
+export const GalaxyProvider: React.FC<GalaxyProviderProps> = ({ 
+  children
+}) => {
   const [selectedGalaxy, setSelectedGalaxy] = useState(0);
   const [activePlanets, setActivePlanets] = useState<number[]>([0, 0, 0, 0, 0]);
   const [activeLevelIndex, setActiveLevelIndex] = useState<number[]>([0, 0, 0, 0, 0]);

@@ -34,17 +34,6 @@ export default function ProfileEditScreen(): React.ReactElement {
     setName,
     teacherMode,
     setTeacherMode
-  }: {
-    bodyColor: string;
-    setBodyColor: (color: string) => void;
-    trailColor: string;
-    setTrailColor: (color: string) => void;
-    selectedRocketIndex: number;
-    setSelectedRocketIndex: (index: number) => void;
-    name: string;
-    setName: (name: string) => void;
-    teacherMode: boolean;
-    setTeacherMode: (enabled: boolean) => void;
   } = useRocket();
 
   const [currentPickingFor, setCurrentPickingFor] = useState<'body' | 'trail' | null>(null);
@@ -170,8 +159,8 @@ export default function ProfileEditScreen(): React.ReactElement {
           <ThemedText style={styles.nameLabel}>Jméno</ThemedText>
           <TextInput
             style={styles.nameInput}
-            value={name}
-            onChangeText={setName}
+            defaultValue={name}
+            onChangeText={(text) => setName(text.trim())}
             placeholderTextColor="#666"
           />
         </View>

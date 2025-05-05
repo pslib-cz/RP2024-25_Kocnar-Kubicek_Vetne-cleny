@@ -56,15 +56,27 @@ export interface GameJoinRequest {
   version: string;
 }
 
+export interface PlayerData {
+  id: string;
+  name: string;
+  bodyColor: string;
+  trailColor: string;
+  selectedRocketIndex: number;
+}
+
+export interface GameData {
+  difficulty: number;
+  galaxy: number;
+  questiontypes: number;
+  seed: string;
+  version: string;
+}
+
 export interface GameJoinResponse {
+  author: PlayerData;
+  game: GameData;
   playerId: string;
-  game: {
-    difficulty: number;
-    galaxy: number;
-    questiontypes: number;
-    version: string;
-    seed: string;
-  };
+  players: PlayerData[];
 }
 
 // Session Management Types

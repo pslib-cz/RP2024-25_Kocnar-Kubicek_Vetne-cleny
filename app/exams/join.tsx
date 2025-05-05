@@ -1,13 +1,38 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, SafeAreaView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, SafeAreaView, ScrollView, Keyboard, TouchableWithoutFeedback, FlatList } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useMultiplayerGameContext } from '@/contexts/MultiplayerGameContext';
 import { useRocket } from '@/contexts/RocketContext';
-import BigassButton from '@/components/ui/BigassButton';
+import PlayfulButton from '@/components/ui/PlayfulButton';
+import { Image } from 'expo-image';
+import { Ionicons } from '@expo/vector-icons';
+import { NamedRocket } from '@/components/NamedRocket';
+import { PlayerRocket } from '@/components/PlayerRocket';
+
+// Import Galaxy names
+import { Galaxy } from '@/types/Galaxy';
+
+// Galaxy names to map from index
+const galaxies: Galaxy[] = [
+  { name: "Všechny členy", planetCount: 25 },
+  { name: "Hlavní členy", planetCount: 8 },
+  { name: "Přívlastky", planetCount: 8 },
+  { name: "Přísl. určení", planetCount: 8 },
+  { name: "Doplňky", planetCount: 8 },
+];
+
+// Pre-load all galaxy images
+const galaxyImages = [
+  require('@/assets/images/uni/g/1.png'),
+  require('@/assets/images/uni/g/2.png'),
+  require('@/assets/images/uni/g/3.png'),
+  require('@/assets/images/uni/g/4.png'),
+  require('@/assets/images/uni/g/5.png'),
+];
 
 export default function JoinGameScreen() {
   const [code, setCode] = useState('');
-  const { joinGame, code: contextCode, config, leaveGame } = useMultiplayerGameContext();
+  const { joinGame, code: contextCode, config, leaveGame, author, players } = useMultiplayerGameContext();
   const router = useRouter();
   const rocket = useRocket();
   const params = useLocalSearchParams();
@@ -21,11 +46,12 @@ export default function JoinGameScreen() {
 
   const handleJoinGame = async (gameCode?: string) => {
     try {
+      Keyboard.dismiss(); // Dismiss keyboard when joining game
       const codeToUse = gameCode || code;
       if (!codeToUse) return;
       await joinGame(codeToUse);
     } catch (error) {
-      alert('Failed to join game. Please check the code and try again.');
+      alert('Nepodařilo se připojit ke hře. Zkontrolujte prosím kód a zkuste to znovu.');
       console.error('Error joining game:', error);
     }
   };
@@ -37,65 +63,135 @@ export default function JoinGameScreen() {
       router.push('/exams');
     } catch (error) {
       console.error('Error leaving game:', error);
-      alert('Failed to leave game. Please try again.');
+      alert('Nepodařilo se opustit hru. Zkuste to prosím znovu.');
     }
   };
 
+  const dismissKeyboard = () => {
+    Keyboard.dismiss();
+  };
+
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <View style={styles.container}>
-        {!contextCode ? (
-          <View style={styles.joinContainer}>
-            <Text style={styles.title}>Join a Game</Text>
-            <View style={styles.inputContainer}>
-              <TextInput
-                style={styles.input}
-                placeholder="Enter Game Code"
-                placeholderTextColor="#888"
-                value={code}
-                onChangeText={setCode}
-                keyboardType="numeric"
+    <TouchableWithoutFeedback onPress={dismissKeyboard}>
+      <SafeAreaView style={styles.safeArea}>
+        <View style={styles.container}>
+          {!contextCode ? (
+            <View style={styles.joinContainer}>
+              <Text style={styles.title}>Připojit se ke hře</Text>
+              
+              {/* User info section */}
+              <View style={styles.playerInfoContainer}>
+                <NamedRocket 
+                  width={60} 
+                  height={60} 
+                  containerStyle={styles.namedRocketContainer}
+                  textStyle={styles.playerName}
+                />
+              </View>
+              
+              <View style={styles.inputContainer}>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Zadejte kód hry"
+                  placeholderTextColor="#888"
+                  value={code}
+                  onChangeText={setCode}
+                  keyboardType="numeric"
+                  returnKeyType="done"
+                  onSubmitEditing={dismissKeyboard}
+                  blurOnSubmit={true}
+                />
+              </View>
+              <PlayfulButton
+                title="Připojit se"
+                icon={<Ionicons name="game-controller" size={24} color="white" />}
+                onPress={() => handleJoinGame()}
+                variant="primary"
               />
             </View>
-            <BigassButton
-              title="Join Game"
-              bgEmoji="🎮"
-              onPress={() => handleJoinGame()}
-            />
-          </View>
-        ) : (
-          <View style={styles.gameInfoContainer}>
-            <Text style={styles.title}>Game Details</Text>
-            <View style={styles.infoCard}>
-              <View style={styles.infoRow}>
-                <Text style={styles.infoLabel}>Game Code:</Text>
-                <Text style={styles.infoValue}>{contextCode}</Text>
+          ) : (
+            <ScrollView contentContainerStyle={styles.scrollContent}>
+              <View style={styles.gameInfoContainer}>
+                <Text style={styles.title}>Detaily hry</Text>
+                
+                {/* User info section */}
+                <View style={styles.playerInfoCard}>
+                  <Text style={styles.playerInfoTitle}>Tvoje raketa</Text>
+                  <NamedRocket 
+                    width={70} 
+                    height={70} 
+                    containerStyle={styles.namedRocketContainer}
+                    textStyle={styles.playerName}
+                  />
+                </View>
+                
+                {/* Game author section */}
+                {author && (
+                  <View style={styles.playerInfoCard}>
+                    <Text style={styles.playerInfoTitle}>Autor hry</Text>
+                    <PlayerRocket 
+                      player={author}
+                      width={70} 
+                      height={70}
+                    />
+                  </View>
+                )}
+                
+                {/* Players section */}
+                {players && players.length > 0 && (
+                  <View style={styles.playerInfoCard}>
+                    <Text style={styles.playerInfoTitle}>Účastníci ({players.length})</Text>
+                    <View style={styles.playersList}>
+                      {players.map(player => (
+                        <PlayerRocket 
+                          key={player.id}
+                          player={player}
+                          width={60} 
+                          height={60}
+                          containerStyle={styles.playerItem}
+                        />
+                      ))}
+                    </View>
+                  </View>
+                )}
+                
+                <View style={styles.infoCard}>
+                  <View style={styles.infoRow}>
+                    <Text style={styles.infoLabel}>Kód hry:</Text>
+                    <Text style={styles.infoValue}>{contextCode}</Text>
+                  </View>
+                  <View style={styles.infoRow}>
+                    <Text style={styles.infoLabel}>Obtížnost:</Text>
+                    <Text style={styles.infoValue}>{config.difficulty}%</Text>
+                  </View>
+                  <View style={styles.infoRow}>
+                    <Text style={styles.infoLabel}>Galaxie:</Text>
+                    <View style={styles.galaxyInfo}>
+                      <Image source={galaxyImages[config.galaxy]} style={styles.galaxyIcon} />
+                      <Text style={styles.infoValue}>{galaxies[config.galaxy].name}</Text>
+                    </View>
+                  </View>
+                </View>
+                <View style={styles.buttonContainer}>
+                  <PlayfulButton
+                    title="Opustit hru"
+                    icon={<Ionicons name="exit-outline" size={24} color="white" />}
+                    onPress={handleCancel}
+                    variant="danger"
+                  />
+                  <PlayfulButton
+                    title="Začít hru"
+                    icon={<Ionicons name="rocket" size={24} color="white" />}
+                    onPress={() => router.push('/arenagalaxies')}
+                    variant="success"
+                  />
+                </View>
               </View>
-              <View style={styles.infoRow}>
-                <Text style={styles.infoLabel}>Difficulty:</Text>
-                <Text style={styles.infoValue}>{config.difficulty}%</Text>
-              </View>
-              <View style={styles.infoRow}>
-                <Text style={styles.infoLabel}>Galaxy:</Text>
-                <Text style={styles.infoValue}>{config.galaxy}</Text>
-              </View>
-            </View>
-            <View style={styles.buttonContainer}>
-              <BigassButton
-                title="Leave Game"
-                bgEmoji="🚪"
-                onPress={handleCancel}
-              />
-              <BigassButton
-                title="Start Game"
-                bgEmoji="🚀"
-                onPress={() => router.push('/arenagalaxies')}
-              />
-            </View>
-          </View>
-        )}
-      </View>
-    </SafeAreaView>
+            </ScrollView>
+          )}
+        </View>
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 }
 
@@ -108,6 +204,10 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#000',
     padding: 20,
+  },
+  scrollContent: {
+    flexGrow: 1,
+    justifyContent: 'center',
   },
   joinContainer: {
     flex: 1,
@@ -138,10 +238,10 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(74, 91, 210, 0.1)',
   },
   gameInfoContainer: {
-    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
     gap: 30,
+    paddingVertical: 20,
   },
   infoCard: {
     width: '90%',
@@ -150,6 +250,7 @@ const styles = StyleSheet.create({
     padding: 20,
     borderWidth: 2,
     borderColor: '#4A5BD2',
+    marginBottom: 20,
   },
   infoRow: {
     flexDirection: 'row',
@@ -162,14 +263,73 @@ const styles = StyleSheet.create({
   infoLabel: {
     color: '#888',
     fontSize: 16,
+    flex: 1,
   },
   infoValue: {
     color: 'white',
     fontSize: 18,
     fontWeight: 'bold',
+    flex: 2,
+    textAlign: 'right',
   },
   buttonContainer: {
     width: '100%',
     gap: 15,
+    marginTop: 10,
   },
+  galaxyInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 2,
+    justifyContent: 'flex-end',
+  },
+  galaxyIcon: {
+    width: 64,
+    height: 40,
+    marginRight: 10,
+  },
+  playerInfoContainer: {
+    backgroundColor: 'rgba(74, 91, 210, 0.1)',
+    borderRadius: 16,
+    padding: 15,
+    alignItems: 'center',
+    width: '90%',
+    borderWidth: 2,
+    borderColor: '#4A5BD2',
+  },
+  playerInfoCard: {
+    width: '90%',
+    backgroundColor: 'rgba(74, 91, 210, 0.1)',
+    borderRadius: 16,
+    padding: 20,
+    borderWidth: 2,
+    borderColor: '#4A5BD2',
+    marginBottom: 10,
+    alignItems: 'center',
+  },
+  playerInfoTitle: {
+    color: '#888',
+    fontSize: 16,
+    marginBottom: 15,
+    textAlign: 'center',
+  },
+  namedRocketContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 10,
+  },
+  playerName: {
+    color: 'white',
+    fontSize: 22,
+    fontWeight: 'bold',
+    marginLeft: 15,
+  },
+  playersList: {
+    width: '100%',
+    gap: 10,
+  },
+  playerItem: {
+    width: '100%',
+    marginBottom: 8,
+  }
 });

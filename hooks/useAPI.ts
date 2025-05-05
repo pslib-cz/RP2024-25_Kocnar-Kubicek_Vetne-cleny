@@ -22,7 +22,7 @@ const API_URL = process.env.EXPO_PUBLIC_API_URL || '';
 const API_BACKUP_URL = process.env.EXPO_PUBLIC_API_BACKUP_URL || '';
 const CLIENT_VERSION = '1.0.0'; // TODO: Get this from app config
 
-const NO_AUTH_ENDPOINTS = ['/health', '/players/create'];
+const NO_AUTH_ENDPOINTS = ['/health', '/players/create', '/players/upsert'];
 
 const handleAPIError = async (response: Response): Promise<never> => {
   const errorData = await response.json() as APIErrorResponse;
@@ -156,6 +156,39 @@ export const useAPI = (userData?: Partial<APIUserData>) => {
     return post<PlayerCreateResponse>('/players/create', payload);
   };
 
+  const upsertPlayer = async (levels: number[] = [0,0,0,0,0]): Promise<PlayerInfo> => {
+    const payload = {
+      name,
+      bodyColor,
+      trailColor,
+      selectedRocketIndex,
+      levels,
+      clientVersion: CLIENT_VERSION,
+    };
+    
+    const options: RequestInit = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-User-ID': userId,
+        'X-User-Secret': secretKey,
+      },
+      body: JSON.stringify(payload),
+    };
+    
+    // Use direct fetch to ensure headers are properly set
+    try {
+      const response = await fetch(`${API_URL}/players/upsert`, options);
+      if (!response.ok) {
+        return handleAPIError(response);
+      }
+      return await response.json();
+    } catch (error) {
+      console.error('Error in upsertPlayer:', error);
+      throw error;
+    }
+  };
+
   const getPlayerInfo = async (): Promise<PlayerInfo> => {
     return get<PlayerInfo>(`/players/${userId}`);
   };
@@ -225,6 +258,7 @@ export const useAPI = (userData?: Partial<APIUserData>) => {
     get, 
     patch,
     createPlayer,
+    upsertPlayer,
     getPlayerInfo,
     syncPlayerConfig,
     createGame,

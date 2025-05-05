@@ -6,6 +6,7 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Crypto from 'expo-crypto';
 import { useAPI } from '@/hooks/useAPI';
+import { useGalaxyContext } from './GalaxyContext';
 
 interface RocketContextType {
   bodyColor: string;
@@ -20,7 +21,7 @@ interface RocketContextType {
   setTeacherMode: React.Dispatch<React.SetStateAction<boolean>>;
   userId: string;
   secretKey: string;
-  isPlayerCreated: boolean;
+  syncPlayerData: () => Promise<void>;
 }
 
 const RocketContext = createContext<RocketContextType | null>(null);
@@ -37,7 +38,9 @@ export const RocketProvider = ({ children }: RocketProviderProps) => {
   const [teacherMode, setTeacherMode] = useState(false);
   const [userId, setUserId] = useState<string>('');
   const [secretKey, setSecretKey] = useState<string>('');
-  const [isPlayerCreated, setIsPlayerCreated] = useState(false);
+  
+  const { activePlanets } = useGalaxyContext();
+  
   const api = useAPI({
     secretKey,
     userId,
@@ -49,23 +52,27 @@ export const RocketProvider = ({ children }: RocketProviderProps) => {
 
   // Sync player config with server
   const syncWithServer = async () => {
-    if (!isPlayerCreated) return;
+    if (!userId || !secretKey) return;
     
     try {
-      await api.syncPlayerConfig();
-      console.log('Player config synced with server');
+      await api.upsertPlayer(activePlanets);
+      console.log('Player config synced with server using upsert');
     } catch (error) {
       console.error('Error syncing player config:', error);
     }
   };
 
-  // Load preferences from AsyncStorage and create player if needed
+  // Public method to sync player data that can be called externally
+  const syncPlayerData = async () => {
+    await syncWithServer();
+  };
+
+  // Load preferences from AsyncStorage
   useEffect(() => {
     const loadPreferences = async () => {
       try {
         const savedUserId = await AsyncStorage.getItem('user_profile_id');
         const savedSecretKey = await AsyncStorage.getItem('user_profile_secret_key');
-        const savedIsPlayerCreated = await AsyncStorage.getItem('user_profile_created');
         
         if (savedUserId) {
           setUserId(savedUserId);
@@ -88,10 +95,6 @@ export const RocketProvider = ({ children }: RocketProviderProps) => {
           setSecretKey(newSecretKey);
         }
 
-        if (savedIsPlayerCreated === 'true') {
-          setIsPlayerCreated(true);
-        }
-
         const savedBodyColor = await AsyncStorage.getItem('user_profile_body_color');
         const savedTrailColor = await AsyncStorage.getItem('user_profile_trail_color');
         const savedRocketIndex = await AsyncStorage.getItem('user_profile_rocket_index');
@@ -103,31 +106,12 @@ export const RocketProvider = ({ children }: RocketProviderProps) => {
         if (savedRocketIndex) setSelectedRocketIndex(parseInt(savedRocketIndex, 10));
         if (savedName) setName(savedName);
         if (savedTeacherMode) setTeacherMode(savedTeacherMode === 'true');
-
-        // Try to create player account if we have both userId and secretKey and haven't created it yet
-        if (userId && secretKey && !isPlayerCreated) {
-          try {
-            await api.createPlayer();
-            await AsyncStorage.setItem('user_profile_created', 'true');
-            setIsPlayerCreated(true);
-            console.log('Player account created successfully');
-          } catch (error) {
-            // If player already exists, mark as created
-            if (error instanceof Error && error.message.includes('already exists')) {
-              await AsyncStorage.setItem('user_profile_created', 'true');
-              setIsPlayerCreated(true);
-              console.log('Player account already exists');
-            } else {
-              console.error('Error creating player account:', error);
-            }
-          }
-        }
       } catch (error) {
         console.error('Error loading rocket preferences:', error);
       }
     };
     loadPreferences();
-  }, [userId, secretKey, isPlayerCreated]);
+  }, []);
 
   // Save preferences to AsyncStorage and sync with server
   const savePreferences = async () => {
@@ -144,20 +128,25 @@ export const RocketProvider = ({ children }: RocketProviderProps) => {
       await AsyncStorage.setItem('user_profile_rocket_index', selectedRocketIndex.toString());
       await AsyncStorage.setItem('user_profile_name', name);
       await AsyncStorage.setItem('user_profile_teacher_mode', teacherMode.toString());
-
-      // Sync with server if player is created
-      await syncWithServer();
     } catch (error) {
       console.error('Error saving rocket preferences:', error);
     }
   };
 
-  // Save preferences whenever they change
+  // Save preferences whenever they change, but don't sync with server
   useEffect(() => {
-    if (!isPlayerCreated) return;
     if (!userId) return;
     savePreferences();
   }, [bodyColor, trailColor, selectedRocketIndex, name, teacherMode]);
+
+  // Only sync when levels or user preferences change (except during initial load)
+  useEffect(() => {
+    // Skip if no user data yet
+    if (!userId || !secretKey) return;
+    
+    // Sync with server
+    syncWithServer();
+  }, [activePlanets, userId, secretKey, bodyColor, trailColor, selectedRocketIndex, name]);
 
   return (
     <RocketContext.Provider
@@ -174,7 +163,7 @@ export const RocketProvider = ({ children }: RocketProviderProps) => {
         setTeacherMode,
         userId,
         secretKey,
-        isPlayerCreated,
+        syncPlayerData,
       }}
     >
       {children}
