@@ -5,13 +5,14 @@ import React, { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { GameLayout } from './gameLayout';
 import { useGameContext } from '@/contexts/GameContext';
-import { ThemedText } from '../ThemedText';
 
 export function Game2UI(multiSelect: boolean) {
   const { data, onFinished } = useGameContext();
 
   const [targetType, setTargetType] = useState<string>('... loading'); // Set the target type here
   const [options, setOptions] = useState<WordSelectionOption[]>();
+
+  const [selectedOptions, setSelectedOptions] = useState<WordSelectionOption[]>([]);
 
   useEffect(() => {
     if (!data) {
@@ -23,8 +24,6 @@ export function Game2UI(multiSelect: boolean) {
 
     setTargetType(data[Math.floor(Math.random() * data.length)].type);
   }, [data]);
-
-  const [selectedOptions, setSelectedOptions] = useState<WordSelectionOption[]>([]);
 
   const handleSelect = (id: WordSelectionOption) => {
     if (selectedOptions.includes(id)) {

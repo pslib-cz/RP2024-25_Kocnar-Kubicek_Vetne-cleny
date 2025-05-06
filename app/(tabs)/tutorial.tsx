@@ -15,11 +15,11 @@ export default function Tutorial() {
       <View style={styles.view1}>
         <View style={styles.verticalLine} />
 
-        <View style={styles.mascotContainer}>
+        {/* <View style={styles.mascotContainer}>
           <View style={styles.mascot}>
             <Text style={styles.mascotText}>👀</Text>
           </View>
-        </View>
+        </View> */}
 
         {/* Questions section */}
         <View style={styles.questionSection}>
