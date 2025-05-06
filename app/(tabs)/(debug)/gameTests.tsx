@@ -1,10 +1,10 @@
 import React, { useContext } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
 import ArenaHeader from '@/components/ArenaHeader';
-import { GameRoutes } from '@/constants/gameRoutes';
+import { GameRoute } from '@/constants/gameRoute';
 import { useGameContext } from '@/contexts/GameContext';
 
-const games = Object.entries(GameRoutes).map(([key, value]) => ({
+const games = Object.entries(GameRoute).map(([key, value]) => ({
   id: value,
   name: key.replace(/_/g, ' '),
 }));
@@ -15,7 +15,7 @@ const GameTests: React.FC = () => {
 
   //console.log(navigation.getState())
 
-  const handleGameSelect = (gameId: GameRoutes) => {
+  const handleGameSelect = (gameId: GameRoute) => {
     loadLevel(gameId)
   };
 

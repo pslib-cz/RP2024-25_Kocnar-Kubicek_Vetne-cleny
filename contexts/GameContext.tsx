@@ -4,36 +4,50 @@ import { useRouter } from 'expo-router';
 import { WordSelectionOption } from '@/types/games/SelectionOption';
 import { useData } from '@/hooks/useData';
 import { GameState } from '@/types/gameState';
-import { GameRoutes } from '@/constants/gameRoutes';
+import { GameRoute } from '@/constants/gameRoute';
 
 const GameContext = createContext<GameContextData | undefined>(undefined);
 
+interface GameLevel {
+  game: GameRoute,
+  WordSelectionOption: WordSelectionOption[],
+  result: string
+}
+
 export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [seed, setSeed] = useState(50);
-
   const navigation = useRouter();
-
   const allData : WordSelectionOption[][] = useData();
 
-  // this initialization is temporary and hopefully will be updated
-  const [data, setData] = useState<WordSelectionOption[]>(allData[0])
+  const [seed, setSeed] = useState(50);
 
+  const [data, setData] = useState<WordSelectionOption[]>(allData[0])
   const [gameData, setGameData] = useState<GameData>({totalQuestion : 10, questionsRemaining : 10});
+
+  const [generatedGameData, setGeneratedGameData] = useState<GameLevel[]>([]);
 
   const newGame = (qCount : number) => {
     const newSeed = Math.floor(Math.random() * 1000); // Random seed for the game
 
     setSeed(newSeed); // Random seed for the game
     
-    setGameData({totalQuestion : qCount, questionsRemaining : qCount});
+    const gameData_ : GameData = {totalQuestion : qCount, questionsRemaining : qCount}
 
-    moveToNextLevelWithValues(newSeed, qCount); // so the state update is not an issue
+    setGameData(gameData_);
+
+    // generate new generatedGameData based on seed
+    const newGeneratedGameData = [];
+    for (let i = 0; i < qCount; i++) {
+      const game = Object.values(GameRoute)[(newSeed + i) % Object.values(GameRoute).length];
+
+      const randomIndex = Math.floor(Math.random() * allData.length);
+      newGeneratedGameData.push({ game, WordSelectionOption: allData[randomIndex], result: "" });
+    }
+    setGeneratedGameData(newGeneratedGameData);
+
+    moveToNextLevelWithValues(qCount, newGeneratedGameData, gameData_); // so the state update is not an issue
   }
 
-  const loadLevel = async (game : GameRoutes) => {
-    const randomIndex = Math.floor(Math.random() * allData.length);
-    setData(allData[randomIndex]);
-
+  const loadLevel = async (game : GameRoute) => {
     setGameState(GameState.pending)
 
     console.log("navigating");
@@ -41,32 +55,44 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     navigation.navigate(game as never)
   }
 
-  const moveToNextLevelWithValues = (currentSeed: number, remainingQuestions: number) => {
+  const moveToNextLevelWithValues = (remainingQuestions: number, levels : GameLevel[], gameData: GameData) => {
     setGameData((prev) => ({...prev, questionsRemaining : remainingQuestions - 1}));
+
+    console.log(levels);
+
+    const level = levels[gameData.totalQuestion - remainingQuestions];
   
-    const levels = Object.values(GameRoutes);
-    const randomLevelIndex = (currentSeed + remainingQuestions) % levels.length;
-    const randomLevel = levels[randomLevelIndex];
-  
-    console.log("randomLevel", randomLevel, "seed", currentSeed, "questionsRemaining", remainingQuestions);
-  
-    loadLevel(randomLevel);
-  
+    console.log("level", level, "level", gameData.totalQuestion - remainingQuestions, "remainingQuestions", remainingQuestions);
+
     if (remainingQuestions <= 0) {
       console.log("Game finished");
       navigation.navigate('games/resultScreen' as never);
     }
+    else{
+      setData(level.WordSelectionOption);
+      loadLevel(level.game);
+    }    
+
   }
 
   const moveToNextLevel = async () => {
-    moveToNextLevelWithValues(seed, gameData.questionsRemaining);
+    moveToNextLevelWithValues(gameData.questionsRemaining, generatedGameData, gameData);
   }  
 
   const onFinished = (correct : boolean) => {
     setGameState(correct ? GameState.correct : GameState.incorrect)
+
+    const level = generatedGameData[gameData.totalQuestion - gameData.questionsRemaining];
+
+    const updatedLevels = [...generatedGameData];
+    updatedLevels[gameData.totalQuestion - gameData.questionsRemaining] = {
+      ...level,
+      result: correct ? "correct" : "incorrect",
+    };
+    setGeneratedGameData(updatedLevels);
   }
 
-  const [state, setGameState] = useState<GameState>(GameState.pending); 
+  const [state, setGameState] = useState<GameState>(GameState.pending);
 
   return (
     <GameContext.Provider

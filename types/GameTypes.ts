@@ -1,4 +1,4 @@
-import { GameRoutes } from "@/constants/gameRoutes";
+import { GameRoute } from "@/constants/gameRoute";
 import { WordSelectionOption } from "./games/SelectionOption";
 import { GameState } from "./gameState";
 
@@ -14,7 +14,7 @@ export interface GameContextData {
   moveToNextLevel: () => void,
   data : WordSelectionOption[],
 
-  loadLevel : (game : GameRoutes) => void,
+  loadLevel : (game : GameRoute) => void,
   onFinished : (correct : boolean) => void,
 
   state : GameState
