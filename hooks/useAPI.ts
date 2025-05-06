@@ -105,6 +105,35 @@ const DEFAULT_USER_DATA: APIUserData = {
   selectedRocketIndex: 0,
 };
 
+interface AuthoredGame {
+  id: string;
+  code: number;
+  difficulty: number;
+  galaxy: number;
+  questiontypes: number;
+  version: string;
+  seed: string;
+  active: boolean;
+  expirationTime: string;
+  createdAt: string;
+  sessions: Array<{
+    id: string;
+    playerId: string;
+    score: number;
+    correctAnswers: number;
+    completed: boolean;
+    startedAt: string;
+    endedAt: string;
+    player: {
+      id: string;
+      name: string;
+      bodyColor: string;
+      trailColor: string;
+      selectedRocketIndex: number;
+    };
+  }>;
+}
+
 export const useAPI = (userData?: Partial<APIUserData>) => {
   const data = { ...DEFAULT_USER_DATA, ...userData };
   const { secretKey, userId, name, bodyColor, trailColor, selectedRocketIndex } = data;
@@ -253,6 +282,10 @@ export const useAPI = (userData?: Partial<APIUserData>) => {
     return get<HealthResponse>('/health');
   };
 
+  const getAuthoredGames = async (): Promise<AuthoredGame[]> => {
+    return get<AuthoredGame[]>('/players/me/authored-games');
+  };
+
   return { 
     post, 
     get, 
@@ -267,5 +300,6 @@ export const useAPI = (userData?: Partial<APIUserData>) => {
     startSession,
     updateSession,
     checkHealth,
+    getAuthoredGames,
   };
 };
