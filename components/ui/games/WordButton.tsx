@@ -1,3 +1,5 @@
+import { getWordTypeColor } from '@/constants/WordTypes';
+import { WordButtonType } from '@/types/games/WordButtonType';
 import React from 'react';
 import { Text, StyleSheet, TouchableOpacity } from 'react-native';
 
@@ -5,6 +7,7 @@ interface WordButtonProps {
   text: string;
   state?: ButtonState;
   onClick?: () => void;
+  type?: string;
 }
 
 export enum ButtonState {
@@ -14,7 +17,7 @@ export enum ButtonState {
   correct
 }
 
-const WordButton: React.FC<WordButtonProps> = ({ text, state, onClick }) => {
+const WordButton: React.FC<WordButtonProps> = ({ text, state, onClick, type }) => {
   const stateStyles = {
     [ButtonState.default]: null,
     [ButtonState.highlighted]: styles.highlightedButton,
@@ -26,7 +29,8 @@ const WordButton: React.FC<WordButtonProps> = ({ text, state, onClick }) => {
     <TouchableOpacity
       style={[
         styles.button,
-        stateStyles[state || ButtonState.default]
+        stateStyles[state || ButtonState.default],
+        { backgroundColor: type && getWordTypeColor(type) || 'transparent' },
       ]}
       onPress={onClick}
       disabled={state === ButtonState.disabled || !onClick}
@@ -58,6 +62,7 @@ const styles = StyleSheet.create({
   },
   disabledButton: {
     // backgroundColor: '#333',
+    opacity: 0.25,
   },
   correctButton: {
     // backgroundColor: '#2a9d8f',
