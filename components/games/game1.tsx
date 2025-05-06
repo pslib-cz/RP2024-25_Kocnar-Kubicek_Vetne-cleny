@@ -6,6 +6,7 @@ import { WordButtonType } from '@/types/games/WordButtonType';
 import { useFocusEffect } from 'expo-router';
 import { useGameContext } from '@/contexts/GameContext';
 import { GameLayout } from './gameLayout';
+import { WordTypes } from '@/constants/WordTypes';
 
 // TODO: implement custom max error count
 
@@ -14,12 +15,6 @@ export const enum Game1Type {
   inverted = 1,
   allTypes = 2
 }
-
-const allTypeTypes: string[] = [
-  "po",
-  "př",
-  "a další"
-]
 
 export function GameOneUI(type: Game1Type) {
   const inverted = type === Game1Type.inverted;
@@ -55,14 +50,16 @@ export function GameOneUI(type: Game1Type) {
       setPhraseButtons(
         data.map((item, index) => ({
           text: !inverted ? item.text : item.type,
+          type: !inverted ? undefined : item.type,
           state: index === 0 ? ButtonState.highlighted : ButtonState.default
         }))
       );
 
       if (allTypes) {
         setBottomButtons(
-          allTypeTypes.map((i) => ({
-            text: i,
+          WordTypes.map((i) => ({
+            text: i.abbr,
+            type: i.abbr,
             state: ButtonState.default
           }))
         )
@@ -72,6 +69,7 @@ export function GameOneUI(type: Game1Type) {
       setBottomButtons(
         data.map((item) => ({
           text: !inverted ? item.type : item.text,
+          type: !inverted ? item.type : undefined,
           state: ButtonState.default
         }))
           .sort(() => Math.random() - 0.5)
@@ -127,6 +125,7 @@ export function GameOneUI(type: Game1Type) {
                   key={index}
                   text={button.text}
                   state={button.state}
+                  type={button.type}
                 />
               ))
             }
@@ -136,7 +135,7 @@ export function GameOneUI(type: Game1Type) {
             <ThemedText>Loading...</ThemedText>
           </View>
       }
-      {
+      {        
         bottomButtons ?
           <View style={styles.phraseContainer}>
             {
@@ -146,6 +145,7 @@ export function GameOneUI(type: Game1Type) {
                   text={button.text}
                   state={button.state}
                   onClick={() => onBottomButtonClicked(button)}
+                  type={button.type}
                 />
               ))
             }

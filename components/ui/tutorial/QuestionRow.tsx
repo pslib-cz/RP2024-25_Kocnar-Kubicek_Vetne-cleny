@@ -10,11 +10,9 @@ const QuestionRow = ({question, answer} : {question : string, answer : string}) 
       <View style={styles1.indicatorContainer}>
         <View style={styles1.dot} />
       </View>
-      
-      {/* Question and answer */}
       <View style={styles1.contentContainer}>
         <Text style={styles1.questionText}>{question}</Text>
-        <Text style={answerStyle}>{answer}</Text>
+        <Text style={[answerStyle]}>{answer}</Text>
       </View>
     </View>
   );
@@ -26,7 +24,7 @@ const styles1 = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 12,
+    // marginBottom: 12,
     paddingLeft: 4,
   },
   indicatorContainer: {
@@ -49,6 +47,8 @@ const styles1 = StyleSheet.create({
     backgroundColor: '#333',
   },
   contentContainer: {
+    flexWrap: 'wrap',
+    flexShrink: 1,
     flexDirection: 'row',
     alignItems: 'center',
     paddingLeft: 10,
