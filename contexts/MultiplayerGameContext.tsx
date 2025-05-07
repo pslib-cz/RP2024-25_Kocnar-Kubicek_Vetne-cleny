@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState } from 'react';
 import { Player, GameConfig, MultiplayerGameContextData } from '../types/MultiplayerGameTypes';
 import { useAPI } from '../hooks/useAPI';
 import { useRocket } from './RocketContext';
+import { SessionUpdateRequest } from '@/types/api';
 
 const MultiplayerGameContext = createContext<MultiplayerGameContextData | undefined>(undefined);
 
@@ -39,6 +40,32 @@ export const MultiplayerGameProvider: React.FC<{ children: React.ReactNode }> = 
     setPlayers([]);
     setAuthor(null);
   };
+
+  const tryStartSession = async () => {
+
+    console.log('Starting session...');
+
+    if(!code){
+      console.error('No game code provided');
+      return;
+    }
+
+    API.startSession(code)
+
+  }
+
+  const tryUpdateSession = async (data : SessionUpdateRequest) => {
+
+    console.log('Updating session...');
+
+    if(!code){
+      console.error('No game code provided');
+      return;
+    }
+
+    API.updateSession(code, data)
+
+  }
 
   const joinGame = async (code: string) => {
     try {
@@ -117,7 +144,9 @@ export const MultiplayerGameProvider: React.FC<{ children: React.ReactNode }> = 
         setIsHost,
         joinGame,
         createGame,
-        leaveGame
+        leaveGame,
+        tryStartSession,
+        tryUpdateSession,
       }}
     >
       {children}

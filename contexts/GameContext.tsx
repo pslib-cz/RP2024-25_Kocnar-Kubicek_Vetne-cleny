@@ -5,6 +5,7 @@ import { WordSelectionOption } from '@/types/games/SelectionOption';
 import { useData } from '@/hooks/useData';
 import { GameState } from '@/types/gameState';
 import { GameRoute } from '@/constants/gameRoute';
+import { useMultiplayerGameContext } from './MultiplayerGameContext';
 
 const GameContext = createContext<GameContextData | undefined>(undefined);
 
@@ -15,6 +16,9 @@ interface GameLevel {
 }
 
 export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+
+  const { tryStartSession, tryUpdateSession } = useMultiplayerGameContext();
+
   const navigation = useRouter();
   const allData : WordSelectionOption[][] = useData();
 
@@ -24,6 +28,8 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [gameData, setGameData] = useState<GameData>({totalQuestion : 10, questionsRemaining : 10});
 
   const [generatedGameData, setGeneratedGameData] = useState<GameLevel[]>([]);
+
+  const [state, setGameState] = useState<GameState>(GameState.pending);
 
   const newGame = (qCount : number) => {
     const newSeed = Math.floor(Math.random() * 1000); // Random seed for the game
@@ -45,6 +51,8 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setGeneratedGameData(newGeneratedGameData);
 
     moveToNextLevelWithValues(qCount, newGeneratedGameData, gameData_); // so the state update is not an issue
+
+    tryStartSession();
   }
 
   const loadLevel = async (game : GameRoute) => {
@@ -71,8 +79,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     else{
       setData(level.WordSelectionOption);
       loadLevel(level.game);
-    }    
-
+    }
   }
 
   const moveToNextLevel = async () => {
@@ -90,9 +97,15 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
       result: correct ? "correct" : "incorrect",
     };
     setGeneratedGameData(updatedLevels);
-  }
 
-  const [state, setGameState] = useState<GameState>(GameState.pending);
+    const dataUpdate = {
+      score: correct ? 1 : 0,
+      correctAnswers: correct ? 1 : 0,
+      completed: gameData.questionsRemaining === 1,
+    };
+
+    tryUpdateSession(dataUpdate);
+  }
 
   return (
     <GameContext.Provider

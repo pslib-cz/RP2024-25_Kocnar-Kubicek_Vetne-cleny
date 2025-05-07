@@ -7,6 +7,18 @@ import { useRouter } from 'expo-router';
 const PracticeCompleteScreen = () => {
   const navigation = useRouter();
 
+  const ResultStuff = ({text, value} : {text : string, value : string}) => {
+    return(
+      <View style={[styles.statBox, { backgroundColor: '#BD93F9' }]}>
+        <View style={styles.iconContainer}>
+          <FontAwesome name="bolt" size={24} color="white" />
+        </View>
+        <Text style={styles.statLabel}>{text}</Text>
+        <Text style={styles.statValue}>{value}</Text>
+      </View>
+    )
+  }
+
   return (
     <LinearGradient colors={['#282A36', '#44475A']} style={styles.container}>
       <View style={styles.illustrationContainer}>
@@ -29,29 +41,8 @@ const PracticeCompleteScreen = () => {
       <Text style={styles.title}>Practice complete!</Text>
 
       <View style={styles.statsContainer}>
-        <View style={[styles.statBox, { backgroundColor: '#BD93F9' }]}>
-          <View style={styles.iconContainer}>
-            <FontAwesome name="bolt" size={24} color="white" />
-          </View>
-          <Text style={styles.statLabel}>TOTAL XP</Text>
-          <Text style={styles.statValue}>20</Text>
-        </View>
-
-        <View style={[styles.statBox, { backgroundColor: '#8BE9FD' }]}>
-          <View style={styles.iconContainer}>
-            <FontAwesome name="clock-o" size={24} color="white" />
-          </View>
-          <Text style={styles.statLabel}>BLAZING</Text>
-          <Text style={styles.statValue}>1:05</Text>
-        </View>
-
-        <View style={[styles.statBox, { backgroundColor: '#50FA7B' }]}>
-          <View style={styles.iconContainer}>
-            <FontAwesome name="check-circle" size={24} color="white" />
-          </View>
-          <Text style={styles.statLabel}>AMAZING</Text>
-          <Text style={styles.statValue}>100%</Text>
-        </View>
+        <ResultStuff text="BLAZING" value="1:05" />
+        <ResultStuff text="AMAZING" value="100%" />
       </View>
 
       <TouchableOpacity
@@ -171,7 +162,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 15,
     borderRadius: 10,
-    width: '30%',
   },
   iconContainer: {
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
@@ -189,6 +179,7 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 20,
     fontWeight: 'bold',
+    flexGrow: 1,
   },
   continueButton: {
     backgroundColor: '#6272A4',

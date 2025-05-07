@@ -1,3 +1,5 @@
+import { SessionUpdateRequest } from "./api";
+
 // Types related to the MultiplayerGameContext
 export interface Player {
   id: string;
@@ -28,4 +30,6 @@ export interface MultiplayerGameContextData {
   joinGame: (gameCode: string) => Promise<void>;
   createGame: (config: GameConfig) => Promise<void>;
   leaveGame: () => Promise<void>;
+  tryStartSession: () => Promise<void>;
+  tryUpdateSession: (data : SessionUpdateRequest) => Promise<void>;
 }
