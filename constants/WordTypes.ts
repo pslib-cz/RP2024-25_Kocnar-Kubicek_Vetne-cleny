@@ -1,4 +1,3 @@
-
 interface WordType{
   name: string;
   abbr: string;
@@ -9,52 +8,52 @@ export const WordTypes: WordType[] = [
   {
     name: 'podstatné jméno',
     abbr: 'po',
-    color: '#2a9d8f'
+    color: '#4A90E2'  // Soft blue
   },
   {
     name: 'přídavné jméno',
     abbr: 'př',
-    color: '#e9c46a'
+    color: '#50C878'  // Emerald green
   },
   {
     name: 'přívlastek shodný',
     abbr: 'pks',
-    color: '#f4a261'
+    color: '#FF9F43'  // Warm orange
   },
   {
     name: 'přívlastek neshodný',
     abbr: 'pkn',
-    color: '#e76f51'
+    color: '#FF4B4B'  // Coral red
   },
   {
     name: 'předmět',
     abbr: 'pt',
-    color: '#264653'
+    color: '#6C5CE7'  // Soft purple
   },
   {
     name: 'příslovečné určení místa',
     abbr: 'pum',
-    color: '#2a9d8f'
+    color: '#00B894'  // Mint green
   },
   {
     name: 'příslovečné určení způsobu',
     abbr: 'puz',
-    color: '#e9c46a'
+    color: '#A29BFE'  // Lavender
   },
   {
     name: 'příslovečné určení času',
     abbr: 'puč',
-    color: '#f4a261'
+    color: '#FF4675'  // Soft pink
   },
   {
     name: 'příslovečné určení míry',
     abbr: 'pumíry',
-    color: '#e76f51'
+    color: '#81ECEC'  // Turquoise
   },
   {
     name: 'příslovečné určení příčiny',
     abbr: 'pup',
-    color: '#264653'
+    color: '#B2BEC3'  // Cool gray
   }
 ]
 
