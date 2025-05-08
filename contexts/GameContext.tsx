@@ -32,16 +32,13 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
   });
 
   const [generatedGameData, setGeneratedGameData] = useState<GameLevel[]>([]);
-
   const [state, setGameState] = useState<GameState>(GameState.pending);
 
   const newGame = (qCount : number) => {
     const newSeed = Math.floor(Math.random() * 1000); // Random seed for the game
-
     setSeed(newSeed); // Random seed for the game
     
     const gameData_ : GameData = {totalQuestion : qCount, questionsRemaining : qCount, startTime: Date.now()};
-
     setGameData(gameData_);
 
     // generate new generatedGameData based on seed
@@ -114,9 +111,8 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }
 
   const getDuration = () => {
-    if (gameData.startTime && gameData.endTime) {
+    if (gameData.startTime && gameData.endTime)
       return Math.floor((gameData.endTime - gameData.startTime) / 1000);
-    }
     return 0;
   };
 
@@ -148,8 +144,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
 export const useGameContext = () => {
   const context = useContext(GameContext);
-  if (!context) {
+  if (!context)
     throw new Error('useGameContext must be used within a GameProvider');
-  }
   return context;
 };

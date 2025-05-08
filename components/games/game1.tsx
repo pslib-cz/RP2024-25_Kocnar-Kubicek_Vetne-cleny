@@ -93,7 +93,9 @@ export function GameOneUI(type: Game1Type) {
       data[gameIndex].text === bottomButton.text;
 
     if (isValid) {
-      bottomButton.state = ButtonState.disabled;
+      if (!allTypes)
+        bottomButton.state = ButtonState.disabled;
+      
       updatedPhraseButtons[gameIndex].state = ButtonState.correct;
 
       if (gameIndex < bottomButtons.length - 1)
@@ -107,8 +109,7 @@ export function GameOneUI(type: Game1Type) {
     else
       onFinished(false)
 
-    if (!allTypes)
-      setBottomButtons([...bottomButtons]); // make sure to update the state
+    setBottomButtons([...bottomButtons]);
     setPhraseButtons(updatedPhraseButtons);
   };
 
