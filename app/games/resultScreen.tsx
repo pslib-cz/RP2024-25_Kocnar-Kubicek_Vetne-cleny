@@ -1,15 +1,17 @@
 import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
 import { FontAwesome } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
+import { useGameContext } from '@/contexts/GameContext';
 
 const PracticeCompleteScreen = () => {
   const navigation = useRouter();
 
-  const ResultStuff = ({text, value} : {text : string, value : string}) => {
+  const { getDuration, getSuccessRate } = useGameContext();
+
+  const ResultStuff = ({text, value, color} : {text : string, value : string, color : string}) => {
     return(
-      <View style={[styles.statBox, { backgroundColor: '#BD93F9' }]}>
+      <View style={[styles.statBox, { backgroundColor: color }]}>
         <View style={styles.iconContainer}>
           <FontAwesome name="bolt" size={24} color="white" />
         </View>
@@ -20,7 +22,7 @@ const PracticeCompleteScreen = () => {
   }
 
   return (
-    <LinearGradient colors={['#282A36', '#44475A']} style={styles.container}>
+    <View style={styles.container}>
       <View style={styles.illustrationContainer}>
         {/* Replace with your actual image/animation component */}
         <View style={styles.character}>
@@ -41,8 +43,8 @@ const PracticeCompleteScreen = () => {
       <Text style={styles.title}>Practice complete!</Text>
 
       <View style={styles.statsContainer}>
-        <ResultStuff text="BLAZING" value="1:05" />
-        <ResultStuff text="AMAZING" value="100%" />
+        <ResultStuff text="Time" value={`${getDuration()}s`} color="#FF5555" />
+        <ResultStuff text="Success rate" value={`${getSuccessRate()}%`} color="#50FA7B" />
       </View>
 
       <TouchableOpacity
@@ -51,7 +53,7 @@ const PracticeCompleteScreen = () => {
       >
         <Text style={styles.continueButtonText}>CONTINUE</Text>
       </TouchableOpacity>
-    </LinearGradient>
+    </View>
   );
 };
 
@@ -157,11 +159,14 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     width: '90%',
     marginBottom: 40,
+    gap: 10,
   },
   statBox: {
     alignItems: 'center',
     padding: 15,
     borderRadius: 10,
+    flexGrow: 1,
+    flexBasis: 1,
   },
   iconContainer: {
     backgroundColor: 'rgba(255, 255, 255, 0.2)',

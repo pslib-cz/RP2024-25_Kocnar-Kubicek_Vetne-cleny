@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
   },
   logoContainer: {
     width: 350,
-    height: 200,
+    height: 175,
     backgroundColor: '#2A3192',
     borderRadius: 20,
     justifyContent: 'center',

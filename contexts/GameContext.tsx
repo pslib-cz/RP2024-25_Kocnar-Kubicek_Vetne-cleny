@@ -16,7 +16,6 @@ interface GameLevel {
 }
 
 export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-
   const { tryStartSession, tryUpdateSession } = useMultiplayerGameContext();
 
   const navigation = useRouter();
@@ -25,7 +24,12 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [seed, setSeed] = useState(50);
 
   const [data, setData] = useState<WordSelectionOption[]>(allData[0])
-  const [gameData, setGameData] = useState<GameData>({totalQuestion : 10, questionsRemaining : 10});
+  const [gameData, setGameData] = useState<GameData>({
+    totalQuestion : 10, 
+    questionsRemaining : 10,
+    startTime: undefined,
+    endTime: undefined,
+  });
 
   const [generatedGameData, setGeneratedGameData] = useState<GameLevel[]>([]);
 
@@ -36,7 +40,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     setSeed(newSeed); // Random seed for the game
     
-    const gameData_ : GameData = {totalQuestion : qCount, questionsRemaining : qCount}
+    const gameData_ : GameData = {totalQuestion : qCount, questionsRemaining : qCount, startTime: Date.now()};
 
     setGameData(gameData_);
 
@@ -73,6 +77,8 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     console.log("level", level, "level", gameData.totalQuestion - remainingQuestions, "remainingQuestions", remainingQuestions);
 
     if (remainingQuestions <= 0) {
+      setGameData((prev) => ({...prev, endTime: Date.now()}));
+
       console.log("Game finished");
       navigation.navigate('games/resultScreen' as never);
     }
@@ -107,6 +113,18 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     tryUpdateSession(dataUpdate);
   }
 
+  const getDuration = () => {
+    if (gameData.startTime && gameData.endTime) {
+      return Math.floor((gameData.endTime - gameData.startTime) / 1000);
+    }
+    return 0;
+  };
+
+  const getSuccessRate = () => {
+    const correctAnswers = generatedGameData.filter(level => level.result === "correct").length;
+    return (correctAnswers / generatedGameData.length) * 100;
+  }
+
   return (
     <GameContext.Provider
       value={{
@@ -119,6 +137,8 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
         state,
         newGame,
         gameData,
+        getDuration,
+        getSuccessRate
       }}
     >
       {children}

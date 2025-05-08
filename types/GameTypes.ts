@@ -5,6 +5,8 @@ import { GameState } from "./gameState";
 export interface GameData {
   totalQuestion: number;
   questionsRemaining: number;
+  startTime?: number;
+  endTime?: number;
 }
 
 export interface GameContextData {
@@ -22,4 +24,7 @@ export interface GameContextData {
   newGame : (qCount : number) => void,
 
   gameData : GameData,
+
+  getDuration : () => number,
+  getSuccessRate : () => number,
 }

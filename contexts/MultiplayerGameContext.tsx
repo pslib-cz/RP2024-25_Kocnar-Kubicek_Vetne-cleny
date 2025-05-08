@@ -46,7 +46,7 @@ export const MultiplayerGameProvider: React.FC<{ children: React.ReactNode }> = 
     console.log('Starting session...');
 
     if(!code){
-      console.error('No game code provided');
+      console.log('No game code provided');
       return;
     }
 
@@ -59,12 +59,11 @@ export const MultiplayerGameProvider: React.FC<{ children: React.ReactNode }> = 
     console.log('Updating session...');
 
     if(!code){
-      console.error('No game code provided');
+      console.log('No game code provided');
       return;
     }
 
     API.updateSession(code, data)
-
   }
 
   const joinGame = async (code: string) => {
