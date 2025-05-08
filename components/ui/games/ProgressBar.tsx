@@ -18,9 +18,7 @@ const RocketProgressBar: React.FC<RocketProgressBarProps> = ({
 
   return (
     <View style={[styles.container, { height }]}>
-      {/* Dark background bar */}
       <View style={[styles.backgroundBar, { height, borderRadius: height / 2 }]}>
-        {/* Colored progress gradient */}
         <LinearGradient
           colors={['#4c1d95', '#6d28d9', '#7c3aed']}
           start={{ x: 0, y: 0 }}
@@ -52,7 +50,7 @@ const styles = StyleSheet.create({
   },
   backgroundBar: {
     backgroundColor: '#111827',
-    overflow: 'hidden',
+    // overflow: 'hidden',
     position: 'relative',
     width: '100%',
   },
@@ -65,8 +63,9 @@ const styles = StyleSheet.create({
   },
   rocket: {
     position: 'absolute',
-    right: '0%',
-    // I don't see the rocket in the browser, so I will finish it later
+    right: '-50%',
+    top: '-75%',
+    transform: [{ rotate: '90deg' }],    
   },
 });
 
