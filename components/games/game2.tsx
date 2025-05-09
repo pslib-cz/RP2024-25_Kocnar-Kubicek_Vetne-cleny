@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 40,
+    // marginBottom: 40,
   },
   grid: {
     width: '100%',

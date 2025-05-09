@@ -9,14 +9,11 @@ interface TutorialRuntimeNode{
 }
 
 export const useTutorial = () => {
-  const [usedNodes, setUsedNodes] = React.useState<TutorialRuntimeNode[]>([
-    {
-      node: tutorialStart,
-      yes: false,
-    }
-  ]);
-
-  let currentNode : TutorialRuntimeNode = usedNodes[usedNodes.length - 1];
+  const [usedNodes, setUsedNodes] = React.useState<TutorialRuntimeNode[]>([]);
+  const [currentNode, setCurrentNode] = React.useState<TutorialRuntimeNode>({
+    node: tutorialStart,
+    yes: false,
+  });
 
   function AddNode(currentInputNode: TutorialRuntimeNode, yes: boolean) {
     const nextNode: TutorialNode | null = yes ? currentInputNode.node.yesNode : currentInputNode.node.noNode;
@@ -28,9 +25,9 @@ export const useTutorial = () => {
       yes: yes,
     } 
 
-    setUsedNodes((prev) => [...prev, newNode]);
+    setUsedNodes((prev) => [...prev, { node: currentNode.node, yes }]);
 
-    currentNode = newNode;
+    setCurrentNode(newNode);
   }
 
   return {usedNodes, currentNode, AddNode};

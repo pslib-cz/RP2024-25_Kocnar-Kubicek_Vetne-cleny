@@ -51,7 +51,6 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    // justifyContent: 'space-between',
     gap: 8,
     flexShrink: 1
   },
@@ -60,7 +59,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#000',
     paddingHorizontal: 20,
     paddingVertical: 24,
-    gap: 40,
+    gap: 32,
     justifyContent: 'space-between',
     alignItems: 'center',
   },

@@ -5,7 +5,6 @@ import React, { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { GameLayout } from './gameLayout';
 import { useGameContext } from '@/contexts/GameContext';
-import { ThemedText } from '../ThemedText';
 
 export function Game3UI(sentece: boolean) {
   const { data, onFinished } = useGameContext();
@@ -92,7 +91,6 @@ const styles = StyleSheet.create({
     color: 'rgba(255, 255, 255, 0.6)',
     fontSize: 16,
     textAlign: 'center',
-    marginBottom: 40,
     paddingHorizontal: 20,
   },
   grid: {
@@ -100,7 +98,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 20,
+    gap: 16,
     justifyContent: 'space-between',
     alignItems: 'center',
   },

@@ -11,43 +11,34 @@ export default function Tutorial() {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="light" />
+      <View style={styles.verticalLine} />
 
-      <View style={styles.view1}>
-        <View style={styles.verticalLine} />
-
-        {/* <View style={styles.mascotContainer}>
-          <View style={styles.mascot}>
-            <Text style={styles.mascotText}>👀</Text>
-          </View>
-        </View> */}
-
-        {/* Questions section */}
-        <View style={styles.questionSection}>
-          {
-            usedNodes.map((node, index) => (
-              <QuestionRow
-                key={index}
-                question={node.node.title}
-                answer={node.yes ? "ANO" : "NE"}
-              />
-            ))
-          }
-        </View>
-
-        {/* Main content */}
-        <View style={styles.mainContent}>
-          <Text style={styles.mainHeading}>{currentNode.node.title}</Text>
-          <Text style={styles.subHeading}>{currentNode.node.description}</Text>
-        </View>
+      <View style={styles.questionSection}>
+        {
+          usedNodes.map((node, index) => (
+            <QuestionRow
+              key={index}
+              question={node.node.title}
+              answer={node.yes ? "ANO" : "NE"}
+            />
+          ))
+        }
       </View>
 
+      <View style={styles.mainContent}>
+        <Text style={styles.mainHeading}>{currentNode.node.title}</Text>
+        <Text style={styles.subHeading}>{currentNode.node.description}</Text>
+      </View>
+
+      <View style={styles.buttonContainer}>
       {
         !currentNode.node.isResult &&
-        <View style={styles.buttonContainer}>
+        <>
           <TutorialButton title="ANO" filled={true} onPress={() => AddNode(currentNode, true)} />
           <TutorialButton title="NE" filled={false} onPress={() => AddNode(currentNode, false)} />
-        </View>
+        </>
       }
+      </View>      
     </SafeAreaView>
   );
 }
@@ -55,9 +46,8 @@ export default function Tutorial() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor: '#000',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     paddingHorizontal: 20,
     paddingVertical: 40
   },
@@ -86,10 +76,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   questionSection: {
-    // alignSelf: 'flex-start',
-    // marginLeft: 40,
-    marginBottom: 40,
+    marginVertical: 40,
     width: '100%',
+    flexGrow: 5,
   },
   questionRow: {
     flexDirection: 'row',
@@ -114,6 +103,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 80,
     marginHorizontal: 40,
+    flexGrow: 1,
   },
   mainHeading: {
     color: '#FFF',
@@ -132,6 +122,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: '100%',
     paddingHorizontal: 20,
+    marginVertical: 40,
   },
   view1: {
     width: '100%',
