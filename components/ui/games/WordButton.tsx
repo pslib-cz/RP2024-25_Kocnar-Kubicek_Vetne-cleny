@@ -8,6 +8,7 @@ interface WordButtonProps {
   state?: ButtonState;
   onClick?: () => void;
   type?: string;
+  drawType?: boolean;
 }
 
 export enum ButtonState {
@@ -17,7 +18,7 @@ export enum ButtonState {
   correct
 }
 
-const WordButton: React.FC<WordButtonProps> = ({ text, state, onClick, type }) => {
+const WordButton: React.FC<WordButtonProps> = ({ text, state, onClick, type, drawType }) => {
   const stateStyles = {
     [ButtonState.default]: null,
     [ButtonState.highlighted]: styles.highlightedButton,
@@ -30,7 +31,7 @@ const WordButton: React.FC<WordButtonProps> = ({ text, state, onClick, type }) =
       style={[
         styles.button,
         stateStyles[state || ButtonState.default],
-        { backgroundColor: type && getWordTypeColor(type) || 'transparent' },
+        { backgroundColor: type && drawType && getWordTypeColor(type) || 'transparent' },
       ]}
       onPress={onClick}
       disabled={state === ButtonState.disabled || !onClick}

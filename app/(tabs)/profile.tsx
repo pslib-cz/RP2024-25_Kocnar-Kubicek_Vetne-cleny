@@ -57,8 +57,7 @@ export default function ProfileEditScreen(): React.ReactElement {
         const rocket4 = require('../../assets/images/rockets/rocket4.svg');
         const rocket5 = require('../../assets/images/rockets/rocket5.svg');
 
-        console.log(rocket1, rocket2, rocket3, rocket4, rocket5);
-
+        //console.log(rocket1, rocket2, rocket3, rocket4, rocket5);
 
         // Načtení obsahu SVG souborů
         const svg1 = await loadSvgAsset(rocket1);

@@ -44,13 +44,14 @@ export function GameOneUI(type: Game1Type) {
   );
 
   useEffect(() => {
-    console.log("Game1 Data were changed");
+    //console.log("Game1 Data were changed");
 
     if (data) {
       setPhraseButtons(
         data.map((item, index) => ({
           text: !inverted ? item.text : item.type,
-          type: !inverted ? undefined : item.type,
+          type: item.type,
+          drawType: inverted,
           state: index === 0 ? ButtonState.highlighted : ButtonState.default
         }))
       );
@@ -60,6 +61,7 @@ export function GameOneUI(type: Game1Type) {
           WordTypes.map((i) => ({
             text: i.abbr,
             type: i.abbr,
+            drawType: true,
             state: ButtonState.default
           }))
         )
@@ -69,7 +71,8 @@ export function GameOneUI(type: Game1Type) {
       setBottomButtons(
         data.map((item) => ({
           text: !inverted ? item.type : item.text,
-          type: !inverted ? item.type : undefined,
+          type: item.type,
+          drawType: !inverted,
           state: ButtonState.default
         }))
           .sort(() => Math.random() - 0.5)
@@ -79,7 +82,7 @@ export function GameOneUI(type: Game1Type) {
 
   const onBottomButtonClicked = (bottomButton: WordButtonType) => {
     if (!phraseButtons || !data || !bottomButtons) {
-      console.log("Phrase buttons or data or bottomButtons not initialized yet");
+      console.warn("Phrase buttons or data or bottomButtons not initialized yet");
       return;
     }
 
@@ -88,9 +91,13 @@ export function GameOneUI(type: Game1Type) {
 
     const updatedPhraseButtons = [...phraseButtons];
 
-    const isValid = !inverted ?
-      data[gameIndex].type === bottomButton.text :
-      data[gameIndex].text === bottomButton.text;
+    // const isValid = !inverted ?
+    //   data[gameIndex].type === bottomButton.type :
+    //   data[gameIndex].type === bottomButton.type;
+
+    const isValid = data[gameIndex].type === bottomButton.type;
+    
+    //console.log("isValid", isValid, "gameIndex", gameIndex, "bottomButton.type", bottomButton.type, "data[gameIndex].type", data[gameIndex].type);
 
     if (isValid) {
       if (!allTypes)
@@ -127,6 +134,7 @@ export function GameOneUI(type: Game1Type) {
                   text={button.text}
                   state={button.state}
                   type={button.type}
+                  drawType={button.drawType}
                 />
               ))
             }
@@ -147,6 +155,7 @@ export function GameOneUI(type: Game1Type) {
                   state={button.state}
                   onClick={() => onBottomButtonClicked(button)}
                   type={button.type}
+                  drawType={button.drawType}
                 />
               ))
             }
