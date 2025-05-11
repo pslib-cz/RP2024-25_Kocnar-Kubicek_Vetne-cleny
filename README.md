@@ -1,22 +1,75 @@
--=-=-=-=-=-=-=-=-=-=-=- TOTO JSEM NEPSAL JABTW -=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+# Větná Dráha: Educational Galaxy App
 
-###### 3.4. 12:00 Středoevropský letní čas GMT+2:00
-- Finalizace d'sájnu ve figmouši
+## Project Overview
+**Větná Dráha** is an interactive educational app designed to help users learn and practice Czech grammar, specifically sentence elements, through engaging galaxy-themed games and exercises. The app features planets, galaxies, and a progression system to motivate learning, all wrapped in a visually appealing, gamified interface.
 
-###### 4.4. 18:00 Středoevropský letní čas GMT+2:00 
-- jdeme kuchtit aplikaci
 
-###### 6.4. 12:00 Středoevropský letní čas GMT+2:00 
-- dokončení technické stránky nebo tak něco
 
-###### 9.4 12:00 Středoevropský letní čas GMT+2:00 
-- dokončení vizuálu aplikace
+## Features
+- 🚀 Galaxy and planet progression system
+- 🪐 Unique planet and sun visuals
+- 🧩 Interactive grammar exercises
+- 📈 Progress tracking
+- 🎮 Game modes and tutorials
+- 👤 User profile management
+- 🧑‍🏫 Teacher mode for classroom management
+- 🌐 Online multiplayer games
+- 📝 Custom exam creation and management
 
-###### 10.4. 12:00 Středoevropský letní čas GMT+2:00 
-- započetí alpha testingu
 
-###### 13.4. 11:00 Středoevropský letní čas GMT+2:00 
-- opravení chyb a stuff
+## Tech Stack
+- **React Native + Expo** as the main app framework
+- **TypeScript**
+- **NativeWind** for styling
+- **Expo Router** for navigation
+- **Bun** as the preferred package manager
 
-###### 2.5. 12:00 Středoevropský letní čas GMT+2:00 
-- poklepání na beta testing
+
+## Folder Structure
+```
+assets/           # Images, fonts, and other static assets
+components/       # Reusable UI and game components
+hooks/            # Custom React hooks
+contexts/         # React context providers
+app/              # Expo Router app structure
+  _layout.tsx
+  index.tsx
+constants/        # App-wide constants
+scripts/          # Utility scripts
+ types/           # TypeScript types
+data/             # Data files (e.g., planet names)
+```
+
+## Setup & Development
+1. **Install dependencies:**
+   ```sh
+   bun install
+   ```
+2. **Start the Expo Go development server:**
+   ```sh
+   bunx expo start
+   ```
+   or (when not on the same network)
+      ```sh
+   bunx expo tunnel
+   ```
+3. **Run on device or emulator** via your preferred simulator.
+
+## Time Plan (Milestones)
+|--------------------------------------------------|
+| Date         | Milestone                         |
+|--------------|-----------------------------------|
+| 3.4.         | ✅ Finalize design in Figma       |
+| 4.4.         | ✅ Start app development          |
+| 9.4.         | ✅ Complete technical foundation  |
+| 14.5.        | 🔜 Finalize app features          |
+| 14.5.        | ✅ Begin testing                  |
+| 16.5.        | Upload the app to the stores      |
+| 19.5.        | Finalization                      |
+|--------------------------------------------------|
+
+---
+
+**This project is a "school-year-final" project (ročníková práce).**
+
+Full technical and user documentation is available in the provided DOCX files.
