@@ -1,11 +1,13 @@
 import React, { createContext, useContext, useState } from 'react';
 import { GameContextData, GameData } from '../types/GameTypes';
-import { useRouter } from 'expo-router';
+import { usePathname, useRouter } from 'expo-router';
 import { WordSelectionOption } from '@/types/games/SelectionOption';
 import { useData } from '@/hooks/useData';
 import { GameState } from '@/types/gameState';
 import { GameRoute } from '@/constants/gameRoute';
 import { useMultiplayerGameContext } from './MultiplayerGameContext';
+import { WordButtonType } from '@/types/games/WordButtonType';
+import { useLevelContext } from './levelContext';
 
 const GameContext = createContext<GameContextData | undefined>(undefined);
 
@@ -17,8 +19,11 @@ interface GameLevel {
 
 export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { tryStartSession, tryUpdateSession } = useMultiplayerGameContext();
+  const { resetLevelData } = useLevelContext();
 
   const navigation = useRouter();
+  const pathname = usePathname();
+
   const allData : WordSelectionOption[][] = useData();
 
   const [seed, setSeed] = useState(50);
@@ -33,6 +38,8 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const [generatedGameData, setGeneratedGameData] = useState<GameLevel[]>([]);
   const [state, setGameState] = useState<GameState>(GameState.pending);
+
+  const [gameType, setGameType] = useState<GameRoute>(GameRoute.GAME1);
 
   const newGame = (qCount : number) => {
     const newSeed = Math.floor(Math.random() * 1000000); // Random seed for the game
@@ -59,17 +66,24 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const loadLevel = async (game : GameRoute) => {
     setGameState(GameState.pending)
 
-    console.log("navigating");
+    console.log("gameRoute", pathname);
 
-    navigation.navigate(game as never)
+    if (!pathname.includes("game")) {      
+      navigation.push("games/game" as never);
+
+      console.log("navigating");
+
+      return;
+    }
+
+    //navigation.navigate(game as never)
+    setGameType(game);
   }
 
-  const [gameIndex, setGameIndex] = useState(0);
-
   const moveToNextLevelWithValues = (remainingQuestions: number, levels : GameLevel[], gameData: GameData) => {
-
-    setGameIndex(0)
     setGameData((prev) => ({...prev, questionsRemaining : remainingQuestions - 1}));
+
+    resetLevelData();
 
     console.log(levels);
 
@@ -139,8 +153,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
         gameData,
         getDuration,
         getSuccessRate,
-        gameIndex, 
-        setGameIndex
+        gameType
       }}
     >
       {children}
