@@ -12,8 +12,10 @@ export interface Player {
 export interface GameConfig {
   difficulty: number; // (0 - 100) question difficulty
   galaxy: number; // (0-4) galaxy index - Hlavní, Přísl, Přívlastek a Doplňek
-  seed?: number;
-  questionTypes: number;
+  questiontypes: number;
+  expirationTime: Date; // Game expiration time
+  seeded: boolean; // Whether to generate a seed for the game
+  questionCount: number; // Number of questions in the game
 }
 
 export interface MultiplayerGameContextData {
