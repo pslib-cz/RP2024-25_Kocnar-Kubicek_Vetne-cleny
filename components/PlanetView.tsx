@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
-import Svg, { Polygon } from 'react-native-svg';
+import Svg, { Polygon, Polyline } from 'react-native-svg';
+import { Image as RNImage } from 'react-native';
 
 // Import your data
 import planetNames from '@/data/planetnames.json';
@@ -98,76 +99,146 @@ const seededRandom = (seed: number) => {
   };
 };
 
-const generateHexagonPoints = (centerX: number, centerY: number, hexagonSize: number, hexagonRadius: number) => {
+const HEXAGON_COUNT = 5;
+const PLANET_SIZE = 250;
+const HEXAGON_SIZE = 36; // slightly larger for clarity
+const HEXAGON_RADIUS = HEXAGON_SIZE * Math.sqrt(3) / 2;
+
+// Generate random, non-overlapping hexagon centers within the planet
+const getRandomHexagonCenters = (
+  count: number,
+  width: number,
+  height: number,
+  seed: number
+) => {
+  const random = seededRandom(seed);
+  const radius = width / 2;
+  const centerX = width / 2;
+  const centerY = height / 2;
+  const minDist = HEXAGON_SIZE * 1.2;
+  const maxDistFromCenter = radius - HEXAGON_SIZE * 0.7;
+  const centers: { x: number; y: number }[] = [];
+
+  let attempts = 0;
+  while (centers.length < count && attempts < 200) {
+    attempts++;
+    // Random angle and distance from center
+    const angle = random() * 2 * Math.PI;
+    const dist = (random() * 0.7 + 0.15) * maxDistFromCenter; // keep away from edge and center
+    const x = centerX + Math.cos(angle) * dist;
+    const y = centerY + Math.sin(angle) * dist;
+
+    // Check if inside the planet
+    const fromCenter = Math.sqrt((x - centerX) ** 2 + (y - centerY) ** 2);
+    if (fromCenter + HEXAGON_SIZE / 2 > radius) continue;
+
+    // Check for overlap
+    if (
+      centers.some(
+        (c) => Math.sqrt((x - c.x) ** 2 + (y - c.y) ** 2) < minDist
+      )
+    )
+      continue;
+
+    centers.push({ x, y });
+  }
+
+  // If not enough, fallback to vertical path for remaining
+  while (centers.length < count) {
+    const y = HEXAGON_SIZE / 2 +
+      (height - HEXAGON_SIZE) * (centers.length / (count - 1));
+    centers.push({ x: centerX, y });
+  }
+
+  return centers;
+};
+
+const generateHexagonPoints = (centerX: number, centerY: number, size: number) => {
+  const r = size * Math.sqrt(3) / 2;
   return [
-    `${centerX},${centerY - hexagonSize}`,
-    `${centerX + hexagonRadius},${centerY - hexagonSize / 2}`,
-    `${centerX + hexagonRadius},${centerY + hexagonSize / 2}`,
-    `${centerX},${centerY + hexagonSize}`,
-    `${centerX - hexagonRadius},${centerY + hexagonSize / 2}`,
-    `${centerX - hexagonRadius},${centerY - hexagonSize / 2}`,
+    `${centerX},${centerY - size}`,
+    `${centerX + r},${centerY - size / 2}`,
+    `${centerX + r},${centerY + size / 2}`,
+    `${centerX},${centerY + size}`,
+    `${centerX - r},${centerY + size / 2}`,
+    `${centerX - r},${centerY - size / 2}`,
   ].join(' ');
 };
 
-const generateRandomHexagons = (count: number, width: number, height: number, seed: number) => {
-  const random = seededRandom(seed);
-  const hexagons: string[] = [];
-  const radius = width / 2; // Assuming the planet is a circle with width as diameter
-  const centerX = width / 2;
-  const centerY = height / 2;
-  const hexagonSize = 20; // Size of the hexagon
-  const hexagonRadius = hexagonSize * Math.sqrt(3) / 2; // Approximate radius of the hexagon
-
-  // Add the first hexagon at the bottom
-  hexagons.push(generateHexagonPoints(centerX, height, hexagonSize, hexagonRadius));
-
-  while (hexagons.length < count - 1) {
-    const x = random() * width;
-    const y = random() * height;
-
-    // Check if the hexagon center is within the circle
-    const distanceFromCenter = Math.sqrt((x - centerX) ** 2 + (y - centerY) ** 2);
-    if (distanceFromCenter + hexagonRadius > radius) continue;
-
-    // Check for overlap with existing hexagons
-    const overlaps = hexagons.some((points) => {
-      const [existingX, existingY] = points.split(',')[0].split(' ').map(Number);
-      const distance = Math.sqrt((x - existingX) ** 2 + (y - existingY) ** 2);
-      return distance < 2 * hexagonRadius; // Ensure no overlap
-    });
-
-    if (overlaps) continue;
-
-    hexagons.push(generateHexagonPoints(x, y, hexagonSize, hexagonRadius));
+// Remove getPlanetType, use image dimensions instead
+const getPlanetDisplaySize = (type: string) => {
+  switch (type) {
+    case 'ring': return 380;
+    case 'sun': return 500;
+    case 'hole': return 340;
+    default: return 260;
   }
-
-  // Add the last hexagon at the top
-  hexagons.push(generateHexagonPoints(centerX, 0, hexagonSize, hexagonRadius));
-
-  return hexagons;
 };
 
 const PlanetView: React.FC = () => {
   // Get activeLevelIndex from context
   const { activeLevelIndex, selectedGalaxy, activePlanets } = useGalaxyContext();
 
-  const seed = selectedGalaxy * 100 + activePlanets[selectedGalaxy] + 13; // Generate a unique seed for each planet
-  const hexagons = generateRandomHexagons(5, 250, 250, seed); // Ensure hexagons are within the circle
+  // Use a unique seed for each planet
+  const seed = selectedGalaxy * 100 + activePlanets[selectedGalaxy] + 13;
+  
+  // Get image source and dimensions
+  const planetIndex = activePlanets[selectedGalaxy];
+  const imageSource = getPlanetImage(selectedGalaxy, planetIndex);
+  const { width, height } = RNImage.resolveAssetSource(imageSource);
+  
+  // Determine planet type from image size
+  let planetType = 'normal';
+  if (width === 1500 && height === 1500) {
+      planetType = 'ring';
+    } else if (width === 1000 && height === 1000) {
+        if (planetIndex%10 === 9) {
+            planetType = 'sun';
+    } else {
+        planetType = 'hole';
+    }
+} else if (width === 500 && height === 500) {
+    planetType = 'normal';
+  }
+  const displaySize = getPlanetDisplaySize(planetType);
+  
+  // Defensive: check planetNames[selectedGalaxy]
+  const hexagonCenters = getRandomHexagonCenters(HEXAGON_COUNT, displaySize, displaySize, seed);
+  
+  const planetList = planetNames[selectedGalaxy];
+  if (!planetList) {
+    return (
+      <View style={styles.planetContentContainer}>
+        <Text style={{ color: 'red', fontSize: 18 }}>Data for this galaxy is missing.</Text>
+      </View>
+    );
+  }
+  const totalPlanets = planetList.length;
 
   return (
     <View style={styles.planetContentContainer}>
       <Image
-        source={getPlanetImage(selectedGalaxy, activePlanets[selectedGalaxy])}
+        source={imageSource}
         style={[
           styles.planetImage,
           {
-            width: 250,
-            height: 250,
+            width: displaySize,
+            height: displaySize,
           },
         ]}
+        resizeMode="contain"
       />
-      <Svg style={styles.hexagonOverlay} width={250} height={250}>
-        {hexagons.map((points, index) => {
+      <Svg style={styles.hexagonOverlay} width={displaySize} height={displaySize}>
+        {/* Draw the path connecting the hexagons */}
+        <Polyline
+          points={hexagonCenters.map(({ x, y }) => `${x},${y}`).join(' ')}
+          fill="none"
+          stroke="#fff8"
+          strokeWidth={5}
+          strokeLinejoin="round"
+          strokeLinecap="round"
+        />
+        {hexagonCenters.map(({ x, y }, index) => {
           let fillColor;
           if (index < activeLevelIndex[selectedGalaxy]) {
             fillColor = '#00ff00'; // Brighter green for finished
@@ -184,13 +255,23 @@ const PlanetView: React.FC = () => {
             : '#808080'; // Darker gray
 
           return (
-            <Polygon
-              key={index}
-              points={points}
-              fill={fillColor}
-              stroke={borderColor}
-              strokeWidth={2} // Add border width
-            />
+            <React.Fragment key={index}>
+              {/* Simulate glow for the active hexagon by drawing a larger, semi-transparent hexagon underneath */}
+              {index === activeLevelIndex[selectedGalaxy] && (
+                <Polygon
+                  points={generateHexagonPoints(x, y, HEXAGON_SIZE * 0.7)}
+                  fill={'#ffff80aa'} // semi-transparent yellow
+                  stroke={'#cccc00aa'}
+                  strokeWidth={6}
+                />
+              )}
+              <Polygon
+                points={generateHexagonPoints(x, y, HEXAGON_SIZE / 2)}
+                fill={fillColor}
+                stroke={borderColor}
+                strokeWidth={3}
+              />
+            </React.Fragment>
           );
         })}
       </Svg>
@@ -200,7 +281,7 @@ const PlanetView: React.FC = () => {
           styles.activePlanetName,
         ]}
       >
-        {planetNames[selectedGalaxy][activePlanets[selectedGalaxy]]}
+        {planetList[planetIndex]}
       </Text>
     </View>
   );
@@ -215,6 +296,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center', // Added to center the planet vertically
+    marginTop: 40, // 
   },
   planetImage: {
     borderRadius: 50,
