@@ -7,6 +7,7 @@ interface WordButtonProps {
   text: string;
   state?: ButtonState;
   onClick?: () => void;
+  onLongPress?: () => void;
   type?: string;
   drawType?: boolean;
 }
@@ -18,7 +19,7 @@ export enum ButtonState {
   correct
 }
 
-const WordButton: React.FC<WordButtonProps> = ({ text, state, onClick, type, drawType }) => {
+const WordButton: React.FC<WordButtonProps> = ({ text, state, onClick, onLongPress, type, drawType }) => {
   const stateStyles = {
     [ButtonState.default]: null,
     [ButtonState.highlighted]: styles.highlightedButton,
@@ -34,6 +35,7 @@ const WordButton: React.FC<WordButtonProps> = ({ text, state, onClick, type, dra
         { backgroundColor: type && drawType && getWordTypeColor(type) || 'transparent' },
       ]}
       onPress={onClick}
+      onLongPress={onLongPress}
       disabled={state === ButtonState.disabled || !onClick}
     >
       <Text style={[

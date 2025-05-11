@@ -165,14 +165,6 @@ const GalaxyView: React.FC = () => {
           })}
         </View>
       </ScrollView>
-      
-      {/* Bottom progress bar */}
-      <View style={styles.progressBarContainer}>
-        <View style={styles.progressBar}>
-          <View style={styles.progressFill} />
-        </View>
-        <Text style={styles.progressLabel}>MIERCOLES 32</Text>
-      </View>
     </View>
   );
 };

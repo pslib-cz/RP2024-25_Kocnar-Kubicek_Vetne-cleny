@@ -22,7 +22,7 @@ export function useRemoteConfig() {
             const remoteConfig: RemoteConfig = await response.json();
             setConfig(remoteConfig);
             await AsyncStorage.setItem(ASYNC_STORAGE_KEY, JSON.stringify(remoteConfig));
-            console.log('[useRemoteConfig] Remote config loaded', remoteConfig);
+            console.log('[useRemoteConfig] USING REMOTE CONFIG', remoteConfig);
             setLoading(false);
             return;
           } else {
@@ -34,10 +34,10 @@ export function useRemoteConfig() {
         // If offline or fetch fails, try to load from AsyncStorage
         const stored = await AsyncStorage.getItem(ASYNC_STORAGE_KEY);
         if (stored) {
-          console.log('[useRemoteConfig] Loaded config from AsyncStorage');
           setConfig(JSON.parse(stored));
+          console.log('[useRemoteConfig] USING SAVED CONFIG', config);
         } else {
-          console.log('[useRemoteConfig] No config in AsyncStorage. Using local config.');
+          console.log('[useRemoteConfig] USING LOCAL CONFIG', localConfig);
           setConfig(localConfig);
         }
       } catch (e) {

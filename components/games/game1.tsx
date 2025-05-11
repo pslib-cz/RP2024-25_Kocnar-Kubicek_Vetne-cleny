@@ -1,12 +1,13 @@
 import { ThemedText } from '@/components/ThemedText';
 import WordButton, { ButtonState } from '@/components/ui/games/WordButton';
 import React, { useCallback, useEffect, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Alert } from 'react-native';
 import { WordButtonType } from '@/types/games/WordButtonType';
 import { useFocusEffect } from 'expo-router';
 import { useGameContext } from '@/contexts/GameContext';
 import { GameLayout } from './gameLayout';
 import { WordTypes } from '@/constants/WordTypes';
+import { Tooltip } from '@/components/ui/games/Tooltip';
 
 // TODO: implement custom max error count
 
@@ -24,6 +25,7 @@ export function GameOneUI(type: Game1Type) {
 
   const [phraseButtons, setPhraseButtons] = useState<WordButtonType[]>();
   const [bottomButtons, setBottomButtons] = useState<WordButtonType[]>();
+  const [tooltip, setTooltip] = useState<{visible: boolean, message: string, index: number | null}>({visible: false, message: '', index: null});
 
   // Function to initialize or reset the game
   // const resetGame = useCallback(() => {
@@ -111,6 +113,23 @@ export function GameOneUI(type: Game1Type) {
     setPhraseButtons(updatedPhraseButtons);
   };
 
+  // Helper to get full definition by abbr
+  const getDefinition = (abbr: string) => {
+    const found = WordTypes.find((w) => w.abbr === abbr);
+    return found ? found.name : abbr;
+  };
+
+  // Helper to check if a string is a word type abbreviation
+  const isWordTypeAbbr = (abbr: string) => WordTypes.some(w => w.abbr === abbr);
+
+  // Show tooltip for abbreviation
+  const handleShowTooltip = (abbr: string, index: number) => {
+    setTooltip({ visible: true, message: getDefinition(abbr), index });
+  };
+  const handleHideTooltip = () => {
+    setTooltip({ visible: false, message: '', index: null });
+  };
+
   return (
     <GameLayout>
       <View></View>
@@ -118,15 +137,36 @@ export function GameOneUI(type: Game1Type) {
         phraseButtons ?
           <View style={styles.phraseContainer}>
             {
-              phraseButtons.map((button, index) => (
-                <WordButton
-                  key={index}
-                  text={button.text}
-                  state={button.state}
-                  type={button.type}
-                  drawType={button.drawType}
-                />
-              ))
+              phraseButtons.map((button, index) => {
+                if (inverted && isWordTypeAbbr(button.text)) {
+                  return (
+                    <Tooltip
+                      key={index}
+                      visible={tooltip.visible && tooltip.index === index}
+                      message={tooltip.message}
+                      onRequestClose={handleHideTooltip}
+                    >
+                      <WordButton
+                        text={button.text}
+                        state={button.state}
+                        type={button.type}
+                        drawType={button.drawType}
+                        onLongPress={() => handleShowTooltip(button.text, index)}
+                        onClick={handleHideTooltip}
+                      />
+                    </Tooltip>
+                  );
+                }
+                return (
+                  <WordButton
+                    key={index}
+                    text={button.text}
+                    state={button.state}
+                    type={button.type}
+                    drawType={button.drawType}
+                  />
+                );
+              })
             }
           </View>
           :
@@ -138,16 +178,37 @@ export function GameOneUI(type: Game1Type) {
         bottomButtons ?
           <View style={styles.phraseContainer}>
             {
-              bottomButtons.map((button, index) => (
-                <WordButton
-                  key={index}
-                  text={button.text}
-                  state={button.state}
-                  onClick={() => onBottomButtonClicked(button)}
-                  type={button.type}
-                  drawType={button.drawType}
-                />
-              ))
+              bottomButtons.map((button, index) => {
+                if (!inverted && isWordTypeAbbr(button.text)) {
+                  return (
+                    <Tooltip
+                      key={index}
+                      visible={tooltip.visible && tooltip.index === index}
+                      message={tooltip.message}
+                      onRequestClose={handleHideTooltip}
+                    >
+                      <WordButton
+                        text={button.text}
+                        state={button.state}
+                        onClick={() => { onBottomButtonClicked(button); handleHideTooltip(); }}
+                        onLongPress={() => handleShowTooltip(button.text, index)}
+                        type={button.type}
+                        drawType={button.drawType}
+                      />
+                    </Tooltip>
+                  );
+                }
+                return (
+                  <WordButton
+                    key={index}
+                    text={button.text}
+                    state={button.state}
+                    onClick={() => onBottomButtonClicked(button)}
+                    type={button.type}
+                    drawType={button.drawType}
+                  />
+                );
+              })
             }
           </View>
           :
