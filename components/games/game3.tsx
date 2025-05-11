@@ -1,22 +1,25 @@
 import ContinueButton from '@/components/ui/games/ContinueButton';
 import { LargeGameButton } from '@/components/ui/games/LargeGameButton';
 import { WordSelectionOption } from '@/types/games/SelectionOption';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
-import { GameLayout } from './gameLayout';
 import { useGameContext } from '@/contexts/GameContext';
+import { useLevelContext } from '@/contexts/levelContext';
 
 export function Game3UI(sentece: boolean) {
   const { data, onFinished } = useGameContext();
-  const [options, setOptions] = useState<WordSelectionOption[]>();
+  const { options, setOptions, targetType, setTargetType, selectedOptions, setSelectedOptions } = useLevelContext();
+
+  // const [options, setOptions] = useState<WordSelectionOption[]>();
+  // const [selectedOptions, setSelectedOptions] = useState<WordSelectionOption[]>([]);
 
   useEffect(() => {
     if (data) {
       setOptions(data);
     }
-  }, [data]);
 
-  const [selectedOptions, setSelectedOptions] = useState<WordSelectionOption[]>([]);
+    setTargetType(data[Math.floor(Math.random() * data.length)].type);
+  }, [data]);
 
   const handleSelect = (id: WordSelectionOption) => {
     if (selectedOptions.includes(id)) {
@@ -30,8 +33,6 @@ export function Game3UI(sentece: boolean) {
     onFinished(IsValid())
   }
 
-  const targetType = 'po';
-
   function IsValid(): boolean {
     for (const item of selectedOptions) {
       if (item.type !== targetType)
@@ -41,7 +42,7 @@ export function Game3UI(sentece: boolean) {
   }
 
   return (
-    <GameLayout>
+    <>
       {/* <View style={styles.content}> */}
       <View>
         <Text style={styles.questionText}>Které slovo {sentece ? "ve větě " : ""}je {targetType}?</Text>
@@ -69,7 +70,7 @@ export function Game3UI(sentece: boolean) {
         </ScrollView>
         <ContinueButton onClick={handleContinue} enabled={selectedOptions.length > 0} />
       {/* </View> */}
-    </GameLayout>
+    </>
   );
 };
 
