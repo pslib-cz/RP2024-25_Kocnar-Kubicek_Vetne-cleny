@@ -56,7 +56,6 @@ data/             # Data files (e.g., planet names)
 3. **Run on device or emulator** via your preferred simulator.
 
 ## Time Plan (Milestones)
-|--------------------------------------------------|
 | Date         | Milestone                         |
 |--------------|-----------------------------------|
 | 3.4.         | ✅ Finalize design in Figma       |
@@ -66,8 +65,6 @@ data/             # Data files (e.g., planet names)
 | 14.5.        | ✅ Begin testing                  |
 | 16.5.        | Upload the app to the stores      |
 | 19.5.        | Finalization                      |
-|--------------------------------------------------|
-
 ---
 
 **This project is a "school-year-final" project (ročníková práce).**
