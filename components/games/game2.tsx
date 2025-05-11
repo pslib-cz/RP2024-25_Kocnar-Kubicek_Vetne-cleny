@@ -1,18 +1,14 @@
 import ContinueButton from '@/components/ui/games/ContinueButton';
 import { LargeGameButton } from '@/components/ui/games/LargeGameButton';
 import { WordSelectionOption } from '@/types/games/SelectionOption';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
-import { GameLayout } from './gameLayout';
 import { useGameContext } from '@/contexts/GameContext';
+import { useLevelContext } from '@/contexts/levelContext';
 
 export function Game2UI(multiSelect: boolean) {
   const { data, onFinished } = useGameContext();
-
-  const [targetType, setTargetType] = useState<string>('... loading'); // Set the target type here
-  const [options, setOptions] = useState<WordSelectionOption[]>();
-
-  const [selectedOptions, setSelectedOptions] = useState<WordSelectionOption[]>([]);
+  const { options, setOptions, targetType, setTargetType, selectedOptions, setSelectedOptions } = useLevelContext();
 
   useEffect(() => {
     if (!data) {
@@ -46,7 +42,7 @@ export function Game2UI(multiSelect: boolean) {
   }
 
   return (
-    <GameLayout>
+    <>
       {/* <View style={styles.content}> */}
       <Text style={styles.title}>Vyber {targetType}</Text>
       <ScrollView style={{ width: '100%' }}>
@@ -66,7 +62,7 @@ export function Game2UI(multiSelect: boolean) {
       </ScrollView>
       <ContinueButton onClick={handleContinue} enabled={selectedOptions.length > 0} />
       {/* </View> */}
-    </GameLayout>
+    </>
   );
 };
 

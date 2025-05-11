@@ -1,12 +1,11 @@
 import { ThemedText } from '@/components/ThemedText';
 import WordButton, { ButtonState } from '@/components/ui/games/WordButton';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { WordButtonType } from '@/types/games/WordButtonType';
-import { useFocusEffect } from 'expo-router';
 import { useGameContext } from '@/contexts/GameContext';
-import { GameLayout } from './gameLayout';
 import { WordTypes } from '@/constants/WordTypes';
+import { useLevelContext } from '@/contexts/levelContext';
 
 // TODO: implement custom max error count
 
@@ -20,27 +19,8 @@ export function GameOneUI(type: Game1Type) {
   const inverted = type === Game1Type.inverted;
   const allTypes = type === Game1Type.allTypes;
 
-  const { data, onFinished, gameIndex, setGameIndex } = useGameContext();
-
-  const [phraseButtons, setPhraseButtons] = useState<WordButtonType[]>();
-  const [bottomButtons, setBottomButtons] = useState<WordButtonType[]>();
-
-  // Function to initialize or reset the game
-  // const resetGame = useCallback(() => {
-  //   console.log("-------------- RESETTING Game1 --------------");
-  //   setGameIndex(0);
-  // }, [])
-
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     console.log("Tab focused - resetting game");
-  //     resetGame();
-
-  //     return () => {
-  //       console.log("Tab unfocused");
-  //     };
-  //   }, [resetGame])
-  // );
+  const { data, onFinished } = useGameContext();
+  const { gameIndex, setGameIndex, phraseButtons, setPhraseButtons, bottomButtons, setBottomButtons } = useLevelContext();
 
   useEffect(() => {
     //console.log("Game1 Data were changed");
@@ -112,7 +92,7 @@ export function GameOneUI(type: Game1Type) {
   };
 
   return (
-    <GameLayout>
+    <>
       <View></View>
       {
         phraseButtons ?
@@ -155,7 +135,7 @@ export function GameOneUI(type: Game1Type) {
             <ThemedText>Loading...</ThemedText>
           </View>
       }
-    </GameLayout>
+    </>
   );
 };
 

@@ -12,6 +12,7 @@ import { MultiplayerGameProvider } from '@/contexts/MultiplayerGameContext';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { GameProvider } from '@/contexts/GameContext';
 import React from 'react';
+import { LevelProvider } from '@/contexts/levelContext';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -37,23 +38,25 @@ export default function RootLayout() {
   return (
     <GalaxyProvider>
       <RocketProvider>
-        <MultiplayerGameProvider>
-          <GameProvider>          
-            <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-              <Stack screenOptions={{ headerShown: false }}>
-                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-                <Stack.Screen name="+not-found" />
-                <Stack.Screen name="games/game1" options={{ animation: 'none' }} />
-                <Stack.Screen name="games/game1AllTypes" options={{ animation: 'none' }} />
-                <Stack.Screen name="games/game1Inverted" options={{ animation: 'none' }} />
-                <Stack.Screen name="games/game2" options={{ animation: 'none' }} />
-                <Stack.Screen name="games/game2Multi" options={{ animation: 'none' }} />
-                <Stack.Screen name="games/game3" options={{ animation: 'none' }} />
-              </Stack>
-              <StatusBar style="auto" />
-            </ThemeProvider>          
-          </GameProvider>
-        </MultiplayerGameProvider>
+        <LevelProvider>
+          <MultiplayerGameProvider>
+            <GameProvider>
+              <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+                <Stack screenOptions={{ headerShown: false }}>
+                  <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                  <Stack.Screen name="+not-found" />
+                  {/* <Stack.Screen name="games/game1" options={{ animation: 'none' }} />
+                  <Stack.Screen name="games/game1AllTypes" options={{ animation: 'none' }} />
+                  <Stack.Screen name="games/game1Inverted" options={{ animation: 'none' }} />
+                  <Stack.Screen name="games/game2" options={{ animation: 'none' }} />
+                  <Stack.Screen name="games/game2Multi" options={{ animation: 'none' }} />
+                  <Stack.Screen name="games/game3" options={{ animation: 'none' }} /> */}
+                </Stack>
+                <StatusBar style="auto" />
+              </ThemeProvider>
+            </GameProvider>
+          </MultiplayerGameProvider>
+        </LevelProvider>
       </RocketProvider>
     </GalaxyProvider>
   );

@@ -1,6 +1,7 @@
 import { GameRoute } from "@/constants/gameRoute";
 import { WordSelectionOption } from "./games/SelectionOption";
 import { GameState } from "./gameState";
+import { WordButtonType } from "./games/WordButtonType";
 
 export interface GameData {
   totalQuestion: number;
@@ -28,6 +29,5 @@ export interface GameContextData {
   getDuration : () => number,
   getSuccessRate : () => number,
 
-  gameIndex : number, 
-  setGameIndex : (index : number) => void
+  gameType : GameRoute,
 }
