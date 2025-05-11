@@ -12,7 +12,7 @@ const TestSelection = () => {
       <Text style={styles.title}>Test (Exam) Options</Text>
       <View style={styles.buttonContainer}>
         <Button
-          title="Nenačisto"
+          title="Nanečisto"
           onPress={() => router.push('/exams/practice')}
         />
         <Button

@@ -42,7 +42,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [gameType, setGameType] = useState<GameRoute>(GameRoute.GAME1);
 
   const newGame = (qCount : number) => {
-    const newSeed = Math.floor(Math.random() * 1000); // Random seed for the game
+    const newSeed = Math.floor(Math.random() * 1000000); // Random seed for the game
     setSeed(newSeed); // Random seed for the game
     
     const gameData_ : GameData = {totalQuestion : qCount, questionsRemaining : qCount, startTime: Date.now()};

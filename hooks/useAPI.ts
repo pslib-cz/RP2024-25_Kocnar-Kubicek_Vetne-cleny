@@ -238,14 +238,18 @@ export const useAPI = (userData?: Partial<APIUserData>) => {
     difficulty: number,
     galaxy: number,
     questiontypes: number,
-    expiration: number = 3600 // Default 1 hour expiration
+    expirationTime: string,
+    seeded: boolean,
+    questionCount: number
   ): Promise<GameCreateResponse> => {
     const payload: GameCreateRequest = {
       difficulty,
       galaxy,
       questiontypes,
       version: CLIENT_VERSION,
-      expiration,
+      expirationTime,
+      seeded,
+      questionCount,
     };
     return post<GameCreateResponse>('/games/create', payload);
   };

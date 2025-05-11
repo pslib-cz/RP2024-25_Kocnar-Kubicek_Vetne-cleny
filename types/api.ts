@@ -39,7 +39,9 @@ export interface GameCreateRequest {
   galaxy: number;
   questiontypes: number;
   version: string;
-  expiration: number;
+  expirationTime: string;
+  seeded: boolean;
+  questionCount: number;
 }
 
 export interface GameCreateResponse {
@@ -70,6 +72,8 @@ export interface GameData {
   questiontypes: number;
   seed: string;
   version: string;
+  expirationTime: string;
+  questionCount: number;
 }
 
 export interface GameJoinResponse {

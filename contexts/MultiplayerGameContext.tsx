@@ -12,8 +12,10 @@ export const MultiplayerGameProvider: React.FC<{ children: React.ReactNode }> = 
   const [config, setConfig] = useState<GameConfig>({
     difficulty: 0,
     galaxy: 0,
-    seed: 0,
-    questionTypes: 10,
+    questiontypes: 10,
+    expirationTime: new Date(Date.now() + 30 * 60 * 1000), // Default 30 minutes from now
+    seeded: true,
+    questionCount: 10, // Default number of questions
   });
   const [players, setPlayers] = useState<Player[]>([]);
   const [author, setAuthor] = useState<Player | null>(null);
@@ -34,8 +36,10 @@ export const MultiplayerGameProvider: React.FC<{ children: React.ReactNode }> = 
     setConfig({
       difficulty: 0,
       galaxy: 0,
-      seed: 0,
-      questionTypes: 10,
+      questiontypes: 10,
+      expirationTime: new Date(Date.now() + 30 * 60 * 1000), // Default 30 minutes from now
+      seeded: true,
+      questionCount: 10, // Default number of questions
     });
     setPlayers([]);
     setAuthor(null);
@@ -76,8 +80,10 @@ export const MultiplayerGameProvider: React.FC<{ children: React.ReactNode }> = 
       setConfig({
         difficulty: response.game.difficulty,
         galaxy: response.game.galaxy,
-        seed: parseInt(response.game.seed, 10),
-        questionTypes: response.game.questiontypes,
+        questiontypes: response.game.questiontypes,
+        expirationTime: new Date(response.game.expirationTime),
+        seeded: response.game.seed !== undefined,
+        questionCount: response.game.questionCount,
       });
       
       // Set author and players
@@ -94,7 +100,10 @@ export const MultiplayerGameProvider: React.FC<{ children: React.ReactNode }> = 
       const response = await API.createGame(
         config.difficulty,
         config.galaxy,
-        config.questionTypes
+        config.questiontypes,
+        config.expirationTime.toISOString(),
+        config.seeded,
+        config.questionCount
       );
       
       console.log('Game created successfully:', response);
