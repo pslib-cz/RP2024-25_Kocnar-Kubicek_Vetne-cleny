@@ -193,7 +193,7 @@ export function GameOneUI(type: Game1Type) {
           </View>
           :
           <View style={styles.phraseContainer}>
-            <ThemedText>Loading...</ThemedText>
+            <ThemedText>Načítání...</ThemedText>
           </View>
       }
     </>
