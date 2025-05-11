@@ -41,9 +41,7 @@ export function Game3UI(sentece: boolean) {
   }
 
   return (
-    <GameLayout
-      resetGame={() => { }}
-    >
+    <GameLayout>
       {/* <View style={styles.content}> */}
       <View>
         <Text style={styles.questionText}>Které slovo {sentece ? "ve větě " : ""}je {targetType}?</Text>

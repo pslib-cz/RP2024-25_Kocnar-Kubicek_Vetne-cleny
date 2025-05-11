@@ -46,9 +46,7 @@ export function Game2UI(multiSelect: boolean) {
   }
 
   return (
-    <GameLayout
-      resetGame={() => { }}
-    >
+    <GameLayout>
       {/* <View style={styles.content}> */}
       <Text style={styles.title}>Vyber {targetType}</Text>
       <ScrollView style={{ width: '100%' }}>

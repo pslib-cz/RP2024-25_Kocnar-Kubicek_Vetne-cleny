@@ -64,7 +64,11 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     navigation.navigate(game as never)
   }
 
+  const [gameIndex, setGameIndex] = useState(0);
+
   const moveToNextLevelWithValues = (remainingQuestions: number, levels : GameLevel[], gameData: GameData) => {
+
+    setGameIndex(0)
     setGameData((prev) => ({...prev, questionsRemaining : remainingQuestions - 1}));
 
     console.log(levels);
@@ -134,7 +138,9 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
         newGame,
         gameData,
         getDuration,
-        getSuccessRate
+        getSuccessRate,
+        gameIndex, 
+        setGameIndex
       }}
     >
       {children}

@@ -6,13 +6,13 @@ import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useGameContext } from "@/contexts/GameContext";
 import { Text } from "react-native-svg";
 import { useRouter } from "expo-router";
+import Animated, { SlideInRight, SlideOutLeft } from 'react-native-reanimated';
 
 interface GameLayoutProps {
   children: ReactNode;
-  resetGame: () => void
 }
 
-export const GameLayout: React.FC<GameLayoutProps> = ({ children, resetGame }) => {
+export const GameLayout: React.FC<GameLayoutProps> = ({ children }) => {
   const { state, gameData } = useGameContext();
 
   const navigation = useRouter(); 
@@ -21,7 +21,6 @@ export const GameLayout: React.FC<GameLayoutProps> = ({ children, resetGame }) =
     <SafeAreaView style={styles.container}>
       <FeedbackOverlay
         state={state}
-        resetGame={resetGame}
       />
       <View style={[styles.headerWrapper]}>
         <View style={{ flexShrink: 1, flexGrow: 999 }}>
@@ -40,7 +39,13 @@ export const GameLayout: React.FC<GameLayoutProps> = ({ children, resetGame }) =
           </TouchableOpacity>
         </View>
       </View>
-      {children}
+      <Animated.View
+        entering={SlideInRight.duration(500)}
+        exiting={SlideOutLeft.duration(500)}
+        style={ styles.container1 }
+      >
+        {children}
+      </Animated.View>
     </SafeAreaView>
   );
 }
@@ -52,7 +57,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
-    flexShrink: 1
+    flexShrink: 1,
+    zIndex: 1,
   },
   container: {
     flex: 1,
@@ -62,6 +68,15 @@ const styles = StyleSheet.create({
     gap: 32,
     justifyContent: 'space-between',
     alignItems: 'center',
+    width: '100%',
+  },
+  container1: {
+    flex: 1,
+    backgroundColor: '#000',
+    gap: 32,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '100%',
   },
   button: {
     backgroundColor: '#1E1E5F', // Dark blue color from the image

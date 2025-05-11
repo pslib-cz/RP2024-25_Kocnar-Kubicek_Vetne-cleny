@@ -6,12 +6,10 @@ import { useGameContext } from '@/contexts/GameContext';
 
 interface OverlayProps {
   state: GameState;
-  resetGame: () => void;
 }
 
 export const FeedbackOverlay: React.FC<OverlayProps> = ({ 
   state, 
-  resetGame,
 }) => { 
   const { moveToNextLevel } = useGameContext();
 
@@ -82,10 +80,7 @@ export const FeedbackOverlay: React.FC<OverlayProps> = ({
         
         <TouchableOpacity 
           style={[styles.continueButton, { backgroundColor: themeColor }]} 
-          onPress={() =>{
-            resetGame();
-            moveToNextLevel();
-          }}
+          onPress={() => moveToNextLevel()}
           activeOpacity={0.8}
         >
           <Text style={styles.buttonText}>CONTINUE</Text>
