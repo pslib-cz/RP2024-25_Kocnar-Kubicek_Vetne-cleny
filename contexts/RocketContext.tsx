@@ -56,7 +56,6 @@ export const RocketProvider = ({ children }: RocketProviderProps) => {
     
     try {
       await api.upsertPlayer(activePlanets);
-      console.log('Player config synced with server using upsert');
     } catch (error) {
       console.error('Error syncing player config:', error);
     }
@@ -115,13 +114,6 @@ export const RocketProvider = ({ children }: RocketProviderProps) => {
 
   // Save preferences to AsyncStorage and sync with server
   const savePreferences = async () => {
-    console.log('Saving preferences', {
-      bodyColor,
-      trailColor,
-      selectedRocketIndex,
-      name,
-      teacherMode
-    });
     try {
       await AsyncStorage.setItem('user_profile_body_color', bodyColor);
       await AsyncStorage.setItem('user_profile_trail_color', trailColor);

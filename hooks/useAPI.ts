@@ -17,75 +17,9 @@ import {
   APIErrorCode,
   APIErrorResponse,
 } from '@/types/api';
-
-const API_URL = process.env.EXPO_PUBLIC_API_URL || '';
-const API_BACKUP_URL = process.env.EXPO_PUBLIC_API_BACKUP_URL || '';
-const CLIENT_VERSION = '1.0.0'; // TODO: Get this from app config
+import { useConfigContext } from '@/contexts/ConfigContext';
 
 const NO_AUTH_ENDPOINTS = ['/health', '/players/create', '/players/upsert'];
-
-const handleAPIError = async (response: Response): Promise<never> => {
-  const errorData = await response.json() as APIErrorResponse;
-  throw new APIError(
-    response.status as APIErrorCode,
-    errorData.error || 'An error occurred',
-    errorData.details
-  );
-};
-
-const checkNetworkConnection = async (): Promise<void> => {
-  const networkState = await Network.getNetworkStateAsync();
-  if (!networkState.isConnected) {
-    throw new APIError(
-      APIErrorCode.SERVER_ERROR,
-      'No internet connection available',
-      { networkState }
-    );
-  }
-};
-
-const fetchWithFallback = async <T = any>(path: string, options: RequestInit, secretKey: string, userId: string): Promise<T> => {
-  // Check network connection before making the request
-  await checkNetworkConnection();
-
-  const headers: Record<string, string> = {
-    ...options.headers as Record<string, string>,
-  };
-
-  // Only add auth headers if the endpoint requires them
-  if (!NO_AUTH_ENDPOINTS.includes(path)) {
-    headers['X-User-Secret'] = secretKey;
-    headers['X-User-ID'] = userId;
-  }
-
-  try {
-    const response = await fetch(`${API_URL}${path}`, { ...options, headers });
-    if (!response.ok) {
-      return handleAPIError(response);
-    }
-
-    return await response.json();
-  } catch (primaryError) {
-    console.warn('Primary API failed, trying backup API:', primaryError);
-
-    try {
-      const backupResponse = await fetch(`${API_BACKUP_URL}${path}`, { ...options, headers });
-
-      if (!backupResponse.ok) {
-        return handleAPIError(backupResponse);
-      }
-
-      return await backupResponse.json();
-    } catch (backupError) {
-      console.error('Backup API failed:', backupError);
-      throw new APIError(
-        APIErrorCode.SERVER_ERROR,
-        'Both primary and backup APIs failed',
-        { primaryError, backupError }
-      );
-    }
-  }
-};
 
 interface APIUserData {
   secretKey: string;
@@ -135,8 +69,67 @@ interface AuthoredGame {
 }
 
 export const useAPI = (userData?: Partial<APIUserData>) => {
+  const { config } = useConfigContext();
+  const API_URL = config.API_URL;
+  const API_BACKUP_URL = config.API_BACKUP_URL;
+  const CLIENT_VERSION = '1.0.0'; // TODO: Get this from app config
+
   const data = { ...DEFAULT_USER_DATA, ...userData };
   const { secretKey, userId, name, bodyColor, trailColor, selectedRocketIndex } = data;
+
+  const handleAPIError = async (response: Response): Promise<never> => {
+    const errorData = await response.json() as APIErrorResponse;
+    throw new APIError(
+      response.status as APIErrorCode,
+      errorData.error || 'An error occurred',
+      errorData.details
+    );
+  };
+
+  const checkNetworkConnection = async (): Promise<void> => {
+    const networkState = await Network.getNetworkStateAsync();
+    if (!networkState.isConnected) {
+      throw new APIError(
+        APIErrorCode.SERVER_ERROR,
+        'No internet connection available',
+        { networkState }
+      );
+    }
+  };
+
+  const fetchWithFallback = async <T = any>(path: string, options: RequestInit, secretKey: string, userId: string): Promise<T> => {
+    await checkNetworkConnection();
+    const headers: Record<string, string> = {
+      ...options.headers as Record<string, string>,
+    };
+    if (!NO_AUTH_ENDPOINTS.includes(path)) {
+      headers['X-User-Secret'] = secretKey;
+      headers['X-User-ID'] = userId;
+    }
+    try {
+      const response = await fetch(`${API_URL}${path}`, { ...options, headers });
+      if (!response.ok) {
+        return handleAPIError(response);
+      }
+      return await response.json();
+    } catch (primaryError) {
+      console.warn('Primary API failed, trying backup API:', primaryError);
+      try {
+        const backupResponse = await fetch(`${API_BACKUP_URL}${path}`, { ...options, headers });
+        if (!backupResponse.ok) {
+          return handleAPIError(backupResponse);
+        }
+        return await backupResponse.json();
+      } catch (backupError) {
+        console.error('Backup API failed:', backupError);
+        throw new APIError(
+          APIErrorCode.SERVER_ERROR,
+          'Both primary and backup APIs failed',
+          { primaryError, backupError }
+        );
+      }
+    }
+  };
 
   const post = async <T = any>(path: string, payload?: any): Promise<T> => {
     const options: RequestInit = {
@@ -156,7 +149,6 @@ export const useAPI = (userData?: Partial<APIUserData>) => {
         'Content-Type': 'application/json',
       },
     };
-
     return fetchWithFallback<T>(path, options, secretKey, userId);
   };
 
@@ -194,7 +186,6 @@ export const useAPI = (userData?: Partial<APIUserData>) => {
       levels,
       clientVersion: CLIENT_VERSION,
     };
-    
     const options: RequestInit = {
       method: 'POST',
       headers: {
@@ -204,18 +195,7 @@ export const useAPI = (userData?: Partial<APIUserData>) => {
       },
       body: JSON.stringify(payload),
     };
-    
-    // Use direct fetch to ensure headers are properly set
-    try {
-      const response = await fetch(`${API_URL}/players/upsert`, options);
-      if (!response.ok) {
-        return handleAPIError(response);
-      }
-      return await response.json();
-    } catch (error) {
-      console.error('Error in upsertPlayer:', error);
-      throw error;
-    }
+    return fetchWithFallback<PlayerInfo>('/players/upsert', options, secretKey, userId);
   };
 
   const getPlayerInfo = async (): Promise<PlayerInfo> => {
