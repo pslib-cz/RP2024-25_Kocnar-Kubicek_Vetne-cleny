@@ -20,28 +20,27 @@ export function GameOneUI(type: Game1Type) {
   const inverted = type === Game1Type.inverted;
   const allTypes = type === Game1Type.allTypes;
 
-  const { data, onFinished } = useGameContext();
+  const { data, onFinished, gameIndex, setGameIndex } = useGameContext();
 
-  const [gameIndex, setGameIndex] = useState(0); // id of the current game card
   const [phraseButtons, setPhraseButtons] = useState<WordButtonType[]>();
   const [bottomButtons, setBottomButtons] = useState<WordButtonType[]>();
 
   // Function to initialize or reset the game
-  const resetGame = useCallback(() => {
-    console.log("-------------- RESETTING Game1 --------------");
-    setGameIndex(0);
-  }, [])
+  // const resetGame = useCallback(() => {
+  //   console.log("-------------- RESETTING Game1 --------------");
+  //   setGameIndex(0);
+  // }, [])
 
-  useFocusEffect(
-    useCallback(() => {
-      console.log("Tab focused - resetting game");
-      resetGame();
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     console.log("Tab focused - resetting game");
+  //     resetGame();
 
-      return () => {
-        console.log("Tab unfocused");
-      };
-    }, [resetGame])
-  );
+  //     return () => {
+  //       console.log("Tab unfocused");
+  //     };
+  //   }, [resetGame])
+  // );
 
   useEffect(() => {
     //console.log("Game1 Data were changed");
@@ -89,17 +88,9 @@ export function GameOneUI(type: Game1Type) {
     if (gameIndex >= data.length)
       throw Error("Game index is out of bounds");
 
-    const updatedPhraseButtons = [...phraseButtons];
+    const updatedPhraseButtons = [...phraseButtons];   
 
-    // const isValid = !inverted ?
-    //   data[gameIndex].type === bottomButton.type :
-    //   data[gameIndex].type === bottomButton.type;
-
-    const isValid = data[gameIndex].type === bottomButton.type;
-    
-    //console.log("isValid", isValid, "gameIndex", gameIndex, "bottomButton.type", bottomButton.type, "data[gameIndex].type", data[gameIndex].type);
-
-    if (isValid) {
+    if (data[gameIndex].type === bottomButton.type) {
       if (!allTypes)
         bottomButton.state = ButtonState.disabled;
       
@@ -121,9 +112,8 @@ export function GameOneUI(type: Game1Type) {
   };
 
   return (
-    <GameLayout
-      resetGame={resetGame}
-    >
+    <GameLayout>
+      <View></View>
       {
         phraseButtons ?
           <View style={styles.phraseContainer}>

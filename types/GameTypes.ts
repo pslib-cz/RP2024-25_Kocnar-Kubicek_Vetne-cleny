@@ -27,4 +27,7 @@ export interface GameContextData {
 
   getDuration : () => number,
   getSuccessRate : () => number,
+
+  gameIndex : number, 
+  setGameIndex : (index : number) => void
 }
