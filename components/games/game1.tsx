@@ -21,8 +21,7 @@ export function GameOneUI(type: Game1Type) {
   const allTypes = type === Game1Type.allTypes;
 
   const { data, onFinished } = useGameContext();
-  const { gameIndex, setGameIndex, phraseButtons, setPhraseButtons, bottomButtons, setBottomButtons } = useLevelContext();
-  const [tooltip, setTooltip] = useState<{visible: boolean, message: string, index: number | null}>({visible: false, message: '', index: null});
+  const { gameIndex, setGameIndex, phraseButtons, setPhraseButtons, bottomButtons, setBottomButtons, tooltip, handleHideTooltip, handleShowTooltip } = useLevelContext();
 
   useEffect(() => {
     //console.log("Game1 Data were changed");
@@ -94,21 +93,13 @@ export function GameOneUI(type: Game1Type) {
   };
 
   // Helper to get full definition by abbr
-  const getDefinition = (abbr: string) => {
-    const found = WordTypes.find((w) => w.abbr === abbr);
-    return found ? found.name : abbr;
-  };
+
 
   // Helper to check if a string is a word type abbreviation
   const isWordTypeAbbr = (abbr: string) => WordTypes.some(w => w.abbr === abbr);
 
   // Show tooltip for abbreviation
-  const handleShowTooltip = (abbr: string, index: number) => {
-    setTooltip({ visible: true, message: getDefinition(abbr), index });
-  };
-  const handleHideTooltip = () => {
-    setTooltip({ visible: false, message: '', index: null });
-  };
+
 
   return (
     <>

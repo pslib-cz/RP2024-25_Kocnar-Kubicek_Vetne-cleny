@@ -1,17 +1,24 @@
+import { useWordTooltip, WordTooltip } from "@/hooks/useWordTooltip";
 import { WordSelectionOption } from "@/types/games/SelectionOption";
 import { WordButtonType } from "@/types/games/WordButtonType";
 import React, { createContext, useContext, useState } from "react";
 
 interface LevelContextData {
+  resetLevelData : () => void,
+
+  // tooltip data
+  tooltip: WordTooltip,
+  handleHideTooltip: () => void,
+  handleShowTooltip: (abbr: string, index: number) => void,
+
+
+  // game 1 data
   gameIndex : number, 
   setGameIndex : (index : number) => void,
-
   phraseButtons : WordButtonType[] | undefined,
   setPhraseButtons : (buttons : WordButtonType[] | undefined) => void,
   bottomButtons : WordButtonType[] | undefined,
   setBottomButtons : (buttons : WordButtonType[] | undefined) => void,
-
-  resetLevelData : () => void,
 
   // game 2 data
   targetType : string,
@@ -25,6 +32,8 @@ interface LevelContextData {
 const LevelContext = createContext<LevelContextData | undefined>(undefined);
 
 export const LevelProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+
+  const { tooltip, handleHideTooltip, handleShowTooltip } = useWordTooltip();
 
   // game 1 data
   const [gameIndex, setGameIndex] = useState(0);
@@ -45,6 +54,10 @@ export const LevelProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   return (
     <LevelContext.Provider
       value={{
+        tooltip,
+        handleHideTooltip,
+        handleShowTooltip,
+        
         gameIndex,
         setGameIndex,
         phraseButtons,
