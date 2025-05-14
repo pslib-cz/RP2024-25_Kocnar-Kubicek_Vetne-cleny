@@ -3,6 +3,8 @@ import { View, Text, StyleSheet, TouchableOpacity, FlatList } from 'react-native
 import ArenaHeader from '@/components/ArenaHeader';
 import { GameRoute } from '@/constants/gameRoute';
 import { useGameContext } from '@/contexts/GameContext';
+import { useRouter } from 'expo-router';
+import { useLevelContext } from '@/contexts/levelContext';
 
 const games = Object.entries(GameRoute).map(([key, value]) => ({
   id: value,
@@ -12,11 +14,16 @@ const games = Object.entries(GameRoute).map(([key, value]) => ({
 const GameTests: React.FC = () => {
 
   const { loadLevel } = useGameContext();  
+  const { resetLevelData } = useLevelContext();
 
   //console.log(navigation.getState())
 
+  const navigation = useRouter();
+
   const handleGameSelect = (gameId: GameRoute) => {
+    navigation.push("games/game" as never)
     loadLevel(gameId)
+    resetLevelData()
   };
 
   return (
