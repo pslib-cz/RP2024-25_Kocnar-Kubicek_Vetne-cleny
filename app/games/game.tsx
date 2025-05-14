@@ -42,20 +42,20 @@ export const Game: React.FC = () => {
         state={state}
       />
       <View style={[styles.headerWrapper]}>
+      <View style={{ flexShrink: 1, flexGrow: 1 }}>
+        <TouchableOpacity
+          style={[
+            styles.button
+          ]} 
+          onPress={() => {
+            navigation.push('tutorial' as never, )
+          }}
+        >
+          <Text>?</Text>
+        </TouchableOpacity>
         <View style={{ flexShrink: 1, flexGrow: 999 }}>
           <RocketProgressBar progress={1 - (gameData.questionsRemaining + 1) / gameData.totalQuestion}/>
         </View>
-        <View style={{ flexShrink: 1, flexGrow: 1 }}>
-          <TouchableOpacity
-            style={[
-              styles.button
-            ]} 
-            onPress={() => {
-              navigation.push('tutorial' as never, )
-            }}
-          >
-            <Text>?</Text>
-          </TouchableOpacity>
         </View>
       </View>
       <Animated.View
