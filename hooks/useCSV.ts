@@ -1,48 +1,50 @@
-import { useState, useEffect } from "react";
-import * as FileSystem from "expo-file-system";
-import * as Network from "expo-network";
-import { DataRow } from "@/types/DataRow";
-import { ParseFileToDataRows } from "@/utils/fileParser";
+// I dont think this is gonna be used in the app
 
-const LOCAL_FILE_PATH = `${FileSystem.documentDirectory}data.csv`;
+// import { useState, useEffect } from "react";
+// import * as FileSystem from "expo-file-system";
+// import * as Network from "expo-network";
+// import { DataRow } from "@/types/DataRow";
+// import { ParseFileToDataRows } from "@/utils/fileParser";
 
-export const useCSV = (url: string) => {
-  const [data, setData] = useState<DataRow[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+// const LOCAL_FILE_PATH = `${FileSystem.documentDirectory}data.csv`;
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      const { isConnected } = await Network.getNetworkStateAsync();
+// export const useCSV = (url: string) => {
+//   const [data, setData] = useState<DataRow[]>([]);
+//   const [loading, setLoading] = useState<boolean>(true);
 
-      if (isConnected) {
-        try {
-          const response = await fetch(url);
-          const csvText = await response.text();
-          await FileSystem.writeAsStringAsync(LOCAL_FILE_PATH, csvText);
-          console.log("✅ CSV uloženo");
-        } catch (error) {
-          console.error("❌ Chyba při stahování CSV:", error);
-        }
-      } else {
-        console.log("🔴 Offline, načítám lokální CSV.");
-      }
+//   useEffect(() => {
+//     const fetchData = async () => {
+//       setLoading(true);
+//       const { isConnected } = await Network.getNetworkStateAsync();
 
-      try {
-        ParseFileToDataRows(LOCAL_FILE_PATH, (parsed) => setData(parsed), (error) => {
-          console.error("❌ Chyba při čtení CSV:", error);
-          setData([]);
-        })
-      } catch (error) {
-        console.error("❌ Chyba při čtení CSV:", error);
-        setData([]);
-      }
+//       if (isConnected) {
+//         try {
+//           const response = await fetch(url);
+//           const csvText = await response.text();
+//           await FileSystem.writeAsStringAsync(LOCAL_FILE_PATH, csvText);
+//           console.log("✅ CSV uloženo");
+//         } catch (error) {
+//           console.error("❌ Chyba při stahování CSV:", error);
+//         }
+//       } else {
+//         console.log("🔴 Offline, načítám lokální CSV.");
+//       }
 
-      setLoading(false);
-    };
+//       try {
+//         ParseFileToDataRows(LOCAL_FILE_PATH, (parsed) => setData(parsed), (error) => {
+//           console.error("❌ Chyba při čtení CSV:", error);
+//           setData([]);
+//         })
+//       } catch (error) {
+//         console.error("❌ Chyba při čtení CSV:", error);
+//         setData([]);
+//       }
 
-    fetchData();
-  }, [url]);
+//       setLoading(false);
+//     };
 
-  return { data, loading };
-};
+//     fetchData();
+//   }, [url]);
+
+//   return { data, loading };
+// };

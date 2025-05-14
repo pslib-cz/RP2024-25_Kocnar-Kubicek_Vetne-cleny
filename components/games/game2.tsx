@@ -10,6 +10,7 @@ export function Game2UI(multiSelect: boolean) {
   const { data, onFinished } = useGameContext();
   const { options, setOptions, targetType, setTargetType, selectedOptions, setSelectedOptions } = useLevelContext();
 
+  // ! this is the only allowed useEffect in the games and can only contain the data as dependency
   useEffect(() => {
     if (!data) {
       console.log("Data not initialized yet");

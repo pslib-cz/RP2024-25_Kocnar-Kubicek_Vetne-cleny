@@ -23,9 +23,8 @@ export function GameOneUI(type: Game1Type) {
   const { data, onFinished } = useGameContext();
   const { gameIndex, setGameIndex, phraseButtons, setPhraseButtons, bottomButtons, setBottomButtons, tooltip, handleHideTooltip, handleShowTooltip } = useLevelContext();
 
+  // ! this is the only allowed useEffect in the games and can only contain the data as dependency
   useEffect(() => {
-    //console.log("Game1 Data were changed");
-
     if (data) {
       setPhraseButtons(
         data.map((item, index) => ({
@@ -58,7 +57,7 @@ export function GameOneUI(type: Game1Type) {
           .sort(() => Math.random() - 0.5)
       )
     }
-  }, [allTypes, data, inverted]);
+  }, [data]);
 
   const onBottomButtonClicked = (bottomButton: WordButtonType) => {
     if (!phraseButtons || !data || !bottomButtons) {

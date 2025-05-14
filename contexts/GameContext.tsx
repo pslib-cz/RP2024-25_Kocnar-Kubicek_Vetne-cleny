@@ -64,6 +64,8 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }
 
   const loadLevel = async (game : GameRoute) => {
+    resetLevelData();
+
     setGameState(GameState.pending)
 
     console.log("gameRoute", pathname);
@@ -82,8 +84,6 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const moveToNextLevelWithValues = (remainingQuestions: number, levels : GameLevel[], gameData: GameData) => {
     setGameData((prev) => ({...prev, questionsRemaining : remainingQuestions - 1}));
-
-    resetLevelData();
 
     console.log(levels);
 

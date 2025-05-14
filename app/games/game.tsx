@@ -11,6 +11,7 @@ import { Game1Type, GameOneUI } from "@/components/games/game1";
 import { GameRoute } from "@/constants/gameRoute";
 import { Game2UI } from "@/components/games/game2";
 import { Game3UI } from "@/components/games/game3";
+import { ThemedText } from "@/components/ThemedText";
 
 export const Game: React.FC = () => {
   const { state, gameData, gameType } = useGameContext();
@@ -36,23 +37,31 @@ export const Game: React.FC = () => {
     }
   }
 
+  const HelpButton = () => {
+    return (
+      <TouchableOpacity
+        style={[
+          styles.button
+        ]} 
+        onPress={() => {
+          navigation.push('tutorial' as never, )
+        }}
+      >
+        <ThemedText type="defaultSemiBold">?</ThemedText>
+      </TouchableOpacity>
+    )
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <FeedbackOverlay
         state={state}
       />
       <View style={[styles.headerWrapper]}>
-      <View style={{ flexShrink: 1, flexGrow: 1 }}>
-        <TouchableOpacity
-          style={[
-            styles.button
-          ]} 
-          onPress={() => {
-            navigation.push('tutorial' as never, )
-          }}
-        >
-          <Text>?</Text>
-        </TouchableOpacity>
+      <View style={{ flexShrink: 1, flexGrow: 1, flexDirection: 'row', gap: 8 }}>
+        <View style={{ flexShrink: 1}}>
+          <HelpButton />
+        </View>        
         <View style={{ flexShrink: 1, flexGrow: 999 }}>
           <RocketProgressBar progress={1 - (gameData.questionsRemaining + 1) / gameData.totalQuestion}/>
         </View>
@@ -99,12 +108,12 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: '#1E1E5F', // Dark blue color from the image
-    paddingVertical: 12,
-    paddingHorizontal: 24,
+    // paddingVertical: 12,
+    aspectRatio: 1,
+    paddingHorizontal: 16,
     borderRadius: 24, // Rounded corners
     alignItems: 'center',
     justifyContent: 'center',
-    width: '100%',
     maxWidth: 300, // Maximum width
     color: 'white',
     fontWeight: 'bold',

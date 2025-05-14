@@ -10,9 +10,7 @@ export function Game3UI(sentece: boolean) {
   const { data, onFinished } = useGameContext();
   const { options, setOptions, targetType, setTargetType, selectedOptions, setSelectedOptions } = useLevelContext();
 
-  // const [options, setOptions] = useState<WordSelectionOption[]>();
-  // const [selectedOptions, setSelectedOptions] = useState<WordSelectionOption[]>([]);
-
+  // ! this is the only allowed useEffect in the games and can only contain the data as dependency
   useEffect(() => {
     if (data) {
       setOptions(data);

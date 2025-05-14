@@ -33,7 +33,7 @@ const RocketProgressBar: React.FC<RocketProgressBarProps> = ({
           ]}
         />
 
-        <View style={[styles.rocketContainer, { width: `${normalizedProgress * 100}%`, height }]}>
+        <View style={[{ width: `${normalizedProgress * 100}%`, height, minWidth: "20%" }]}>
           <View style={styles.rocket} />
           <Rocket style={styles.rocket} />
         </View>
@@ -46,7 +46,6 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
     alignItems: 'center',
-    width: '100%',
   },
   backgroundBar: {
     backgroundColor: '#111827',
@@ -58,14 +57,12 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 0,
   },
-  rocketContainer: {
-    width: '100%',
-  },
   rocket: {
     position: 'absolute',
-    right: '-50%',
+    right: '-25%',
     top: '-75%',
-    transform: [{ rotate: '90deg' }],    
+    // left: '0%',
+    transform: [{ rotate: '90deg' }, {scale: 0.7}],
   },
 });
 
