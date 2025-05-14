@@ -1,15 +1,48 @@
 import QuestionRow from '@/components/ui/tutorial/QuestionRow';
 import TutorialButton from '@/components/ui/tutorial/TutorialButton';
 import { useTutorial } from '@/hooks/useTutorial';
+import { Ionicons } from '@expo/vector-icons';
+import { useNavigationState, useRoute } from '@react-navigation/native';
+import { useLocalSearchParams, useNavigation, useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import React, { useEffect } from 'react';
+import { Alert, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { BackHandler } from 'react-native';
 
 export default function Tutorial() {
   const { usedNodes, currentNode, AddNode } = useTutorial();
 
+  const router = useRouter();
+  const { returnTo } = useLocalSearchParams();
+
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+      if (returnTo) {
+        router.push(returnTo as never);
+      }
+      else {
+        router.back();
+      }
+      
+      return true;
+    });
+
+    return () => backHandler.remove();
+  }, [returnTo, router]);
+
   return (
     <SafeAreaView style={styles.container}>
+
+    {returnTo && (
+      <TouchableOpacity
+        style={styles.backButton}
+        onPress={() => router.push(returnTo as never)}
+      >
+        <Ionicons name="arrow-back" size={24} color="white" />
+        <Text style={styles.backText}>Zpět ke hře</Text>
+      </TouchableOpacity>
+    )}
+
       <StatusBar style="light" />
       <View style={styles.verticalLine} />
 
@@ -126,7 +159,18 @@ const styles = StyleSheet.create({
   },
   view1: {
     width: '100%',
-  }
+  },
+  backButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 10,
+    alignSelf: 'flex-start',
+  },
+  backText: {
+    color: 'white',
+    marginLeft: 8,
+    fontSize: 16,
+  },
 });
 
 

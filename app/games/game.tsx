@@ -1,6 +1,6 @@
 import { SafeAreaView } from "react-native-safe-area-context";
-import React, { ReactNode } from "react";
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import React, { useEffect } from "react";
+import { Alert, BackHandler, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useGameContext } from "@/contexts/GameContext";
 import { Text } from "react-native-svg";
 import { useRouter } from "expo-router";
@@ -16,7 +16,31 @@ import { ThemedText } from "@/components/ThemedText";
 export const Game: React.FC = () => {
   const { state, gameData, gameType } = useGameContext();
 
-  const navigation = useRouter(); 
+  const router = useRouter(); 
+
+  useEffect(() => {
+    const onBackPress = () => {
+      Alert.alert(
+        'Ayo bro',
+        'U sure you wanna do this?',
+        [
+          { text: 'Cancel', style: 'cancel', onPress: () => {} },
+          {
+            text: 'Yes',
+            style: 'destructive',
+            onPress: () => {
+              router.replace("/");
+            },
+          },
+        ]
+      );
+      return true;
+    };
+
+    const subscription = BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+    return () => subscription.remove();
+  }, [router]);
 
   const gameContent = () => {
     switch (gameType) {
@@ -44,7 +68,10 @@ export const Game: React.FC = () => {
           styles.button
         ]} 
         onPress={() => {
-          navigation.push('tutorial' as never, )
+            router.push({
+              pathname: '/tutorial',
+              params: { returnTo: 'games/game' }
+            });
         }}
       >
         <ThemedText type="defaultSemiBold">?</ThemedText>

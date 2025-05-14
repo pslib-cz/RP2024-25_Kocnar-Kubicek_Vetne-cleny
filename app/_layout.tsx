@@ -47,12 +47,8 @@ export default function RootLayout() {
                   <Stack screenOptions={{ headerShown: false }}>
                     <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
                     <Stack.Screen name="+not-found" />
-                    {/* <Stack.Screen name="games/game1" options={{ animation: 'none' }} />
-                    <Stack.Screen name="games/game1AllTypes" options={{ animation: 'none' }} />
-                    <Stack.Screen name="games/game1Inverted" options={{ animation: 'none' }} />
-                    <Stack.Screen name="games/game2" options={{ animation: 'none' }} />
-                    <Stack.Screen name="games/game2Multi" options={{ animation: 'none' }} />
-                    <Stack.Screen name="games/game3" options={{ animation: 'none' }} /> */}
+                    <Stack.Screen name="games/game" />
+                    <Stack.Screen name="tutorial" />
                   </Stack>
                   <StatusBar style="auto" />
                 </ThemeProvider>
