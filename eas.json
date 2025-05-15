@@ -4,6 +4,25 @@
         "ios": {
           "simulator": true
         }
+      },
+      "production": {
+        "ios": {
+          "distribution": "store",
+          "autoIncrement": true
+        }
+      }
+    },
+    "submit": {
+      "production": {
+        "ios": {
+          "appleId": "tomas.kubicek.022@pslib.cz",
+          "ascAppId": "6745885150",
+          "appleTeamId": "TBU3RT8975"
+        }
+      }
+    }
+  }
+  
       }
     }
   }
