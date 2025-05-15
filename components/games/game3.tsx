@@ -7,6 +7,7 @@ import { useGameContext } from '@/contexts/GameContext';
 import { useLevelContext } from '@/contexts/levelContext';
 import { Tooltip } from '../ui/games/Tooltip';
 import WordButton from '../ui/games/WordButton';
+import { TargetTypeDisplay } from '../ui/games/TargetTypeDisplay';
 
 export function Game3UI(sentece: boolean) {
   const { data, onFinished } = useGameContext();
@@ -49,33 +50,7 @@ export function Game3UI(sentece: boolean) {
 
   return (
     <>
-      <View>
-        <Text style={styles.questionText}>Které slovo {sentece ? "ve větě " : ""}je 
-        {
-          targetType &&
-          <Tooltip
-            visible={tooltip.visible}
-            message={tooltip.message}
-            onRequestClose={handleHideTooltip}
-          >
-            <WordButton
-              text={targetType.text}
-              state={targetType.state}
-              type={targetType.type}
-              drawType={targetType.drawType}
-              onLongPress={() => handleShowTooltip(targetType.text, 0)}
-              onClick={handleHideTooltip}
-            />
-          </Tooltip>
-        }
-        </Text>
-        {
-          sentece &&
-          <Text style={styles.exampleText}>
-            {data.map((item) => item.text).join(" ")}
-          </Text>
-        }
-      </View>
+      <TargetTypeDisplay text='Které slovo ve větě je ' />
         <ScrollView style={{ width: '100%' }}>
           <View style={[styles.grid, { marginBottom: 40 }]}>
             {

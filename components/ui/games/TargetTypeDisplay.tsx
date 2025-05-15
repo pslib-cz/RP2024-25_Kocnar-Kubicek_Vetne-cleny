@@ -4,19 +4,20 @@ import { View, Text, StyleSheet } from "react-native"
 import { Tooltip } from "./Tooltip";
 import WordButton from "./WordButton";
 
-export const TargetTypeDisplay = () => {
+export const TargetTypeDisplay = ({text} : {text : string}) => {
 
   const { targetType, tooltip, handleHideTooltip, handleShowTooltip } = useLevelContext();
 
   return(
-    <View style={{ width: '100%', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
-      <Text style={styles.title}>Vyber</Text>
+    <View style={styles.container}>
+      <Text style={styles.title}>{text}</Text>
       {
         targetType &&
         <Tooltip
           visible={tooltip.visible}
           message={tooltip.message}
           onRequestClose={handleHideTooltip}
+          top={false}
         >
           <WordButton
             text={targetType.text}
@@ -33,6 +34,15 @@ export const TargetTypeDisplay = () => {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    zIndex: 100,
+  },
   title: {
     color: '#fff',
     fontSize: 24,

@@ -50,7 +50,7 @@ export function Game2UI(multiSelect: boolean) {
 
   return (
     <>
-      <TargetTypeDisplay />
+      <TargetTypeDisplay text='Vyber' />
       <ScrollView style={{ width: '100%' }}>
         <View style={styles.grid}>
           {
