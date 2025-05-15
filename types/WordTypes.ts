@@ -10,20 +10,6 @@ export type WordType =
   | "pum"
   | "pkn"
   | "puz"
-  | "pu příčiny"
+  | "pup"
   | "pu míry"
   | "d";
-
-export const WORD_TYPES: WordType[] = [
-  "po",
-  "pt",
-  "puč",
-  "pks",
-  "př",
-  "pum",
-  "pkn",
-  "puz",
-  "pu příčiny",
-  "pu míry",
-  "d"
-]; 
