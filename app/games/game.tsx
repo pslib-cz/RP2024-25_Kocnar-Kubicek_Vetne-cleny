@@ -1,6 +1,6 @@
 import { SafeAreaView } from "react-native-safe-area-context";
-import React, { useEffect } from "react";
-import { Alert, BackHandler, StyleSheet, TouchableOpacity, View } from 'react-native';
+import React from "react";
+import { Alert, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useGameContext } from "@/contexts/GameContext";
 import { Text } from "react-native-svg";
 import { useRouter } from "expo-router";
@@ -12,35 +12,29 @@ import { GameRoute } from "@/constants/gameRoute";
 import { Game2UI } from "@/components/games/game2";
 import { Game3UI } from "@/components/games/game3";
 import { ThemedText } from "@/components/ThemedText";
+import { useBackspaceIntercept } from "@/hooks/useBackspaceIntercept";
 
 export const Game: React.FC = () => {
   const { state, gameData, gameType } = useGameContext();
 
   const router = useRouter(); 
 
-  useEffect(() => {
-    const onBackPress = () => {
-      Alert.alert(
-        'Ayo bro',
-        'U sure you wanna do this?',
-        [
-          { text: 'Cancel', style: 'cancel', onPress: () => {} },
-          {
-            text: 'Yes',
-            style: 'destructive',
-            onPress: () => {
-              router.replace("/");
-            },
+  useBackspaceIntercept(() => {
+    Alert.alert(
+      'Ayo bro',
+      'U sure you wanna do this?',
+      [
+        { text: 'Cancel', style: 'cancel', onPress: () => {} },
+        {
+          text: 'Yes',
+          style: 'destructive',
+          onPress: () => {
+            router.replace("/");
           },
-        ]
-      );
-      return true;
-    };
-
-    const subscription = BackHandler.addEventListener('hardwareBackPress', onBackPress);
-
-    return () => subscription.remove();
-  }, [router]);
+        },
+      ]
+    );
+  });
 
   const gameContent = () => {
     switch (gameType) {

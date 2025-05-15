@@ -3,7 +3,7 @@ import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 
 const ContinueButton = ({ onClick, enabled }: { onClick: () => void, enabled : boolean }) => {
   return (
-    <TouchableOpacity 
+    <TouchableOpacity
       style={[
         styles.button, 
         !enabled && styles.buttonDisabled

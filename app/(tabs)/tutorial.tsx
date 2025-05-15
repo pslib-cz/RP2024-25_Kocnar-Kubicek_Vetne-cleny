@@ -1,5 +1,6 @@
 import QuestionRow from '@/components/ui/tutorial/QuestionRow';
 import TutorialButton from '@/components/ui/tutorial/TutorialButton';
+import { useBackspaceIntercept } from '@/hooks/useBackspaceIntercept';
 import { useTutorial } from '@/hooks/useTutorial';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigationState, useRoute } from '@react-navigation/native';
@@ -15,20 +16,14 @@ export default function Tutorial() {
   const router = useRouter();
   const { returnTo } = useLocalSearchParams();
 
-  useEffect(() => {
-    const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
-      if (returnTo) {
-        router.push(returnTo as never);
-      }
-      else {
-        router.back();
-      }
-      
-      return true;
-    });
-
-    return () => backHandler.remove();
-  }, [returnTo, router]);
+  useBackspaceIntercept(() => {
+    if (returnTo) {
+      router.push(returnTo as never);
+    }
+    else {
+      router.back();
+    }
+  });
 
   return (
     <SafeAreaView style={styles.container}>
