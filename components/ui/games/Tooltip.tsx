@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: '100%',
     left: '50%',
-    transform: [{ translateX: -Dimensions.get('window').width * 0.2 }],
+    transform: [{ translateX: "-50%" }],
     minWidth: 120,
     maxWidth: 220,
     backgroundColor: 'rgba(30,30,30,0.95)',

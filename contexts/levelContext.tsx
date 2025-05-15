@@ -21,7 +21,7 @@ interface LevelContextData {
   setBottomButtons : (buttons : WordButtonType[] | undefined) => void,
 
   // game 2 data
-  targetType : string,
+  targetType : WordButtonType | undefined,
   options : WordSelectionOption[] | undefined,
   selectedOptions : WordSelectionOption[],
   setSelectedOptions : (options : WordSelectionOption[]) => void,
@@ -32,7 +32,6 @@ interface LevelContextData {
 const LevelContext = createContext<LevelContextData | undefined>(undefined);
 
 export const LevelProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-
   const { tooltip, handleHideTooltip, handleShowTooltip } = useWordTooltip();
 
   // game 1 data
@@ -41,7 +40,15 @@ export const LevelProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [bottomButtons, setBottomButtons] = useState<WordButtonType[] | undefined>();
 
   // game 2 data
-  const [targetType, setTargetType] = useState<string>('... loading'); // Set the target type here
+  const setTargetType = (type: string) => {
+    setTargetTypeInternal({
+      text: type,
+      type: type,
+      drawType: true
+    });
+  }
+  
+  const [targetType, setTargetTypeInternal] = useState<WordButtonType | undefined>(); // Set the target type here
   const [options, setOptions] = useState<WordSelectionOption[]>();
   const [selectedOptions, setSelectedOptions] = useState<WordSelectionOption[]>([]);
 
@@ -49,6 +56,7 @@ export const LevelProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     setGameIndex(0);
     setPhraseButtons(undefined);
     setBottomButtons(undefined);
+    handleHideTooltip();
   }
 
   return (

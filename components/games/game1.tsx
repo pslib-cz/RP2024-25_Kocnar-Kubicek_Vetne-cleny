@@ -91,14 +91,8 @@ export function GameOneUI(type: Game1Type) {
     setPhraseButtons(updatedPhraseButtons);
   };
 
-  // Helper to get full definition by abbr
-
-
   // Helper to check if a string is a word type abbreviation
   const isWordTypeAbbr = (abbr: string) => WordTypes.some(w => w.abbr === abbr);
-
-  // Show tooltip for abbreviation
-
 
   return (
     <>

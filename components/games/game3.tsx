@@ -5,10 +5,12 @@ import React, { useEffect } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useGameContext } from '@/contexts/GameContext';
 import { useLevelContext } from '@/contexts/levelContext';
+import { Tooltip } from '../ui/games/Tooltip';
+import WordButton from '../ui/games/WordButton';
 
 export function Game3UI(sentece: boolean) {
   const { data, onFinished } = useGameContext();
-  const { options, setOptions, targetType, setTargetType, selectedOptions, setSelectedOptions } = useLevelContext();
+  const { options, setOptions, targetType, setTargetType, selectedOptions, setSelectedOptions, tooltip, handleHideTooltip, handleShowTooltip } = useLevelContext();
 
   // ! this is the only allowed useEffect in the games and can only contain the data as dependency
   useEffect(() => {
@@ -33,7 +35,7 @@ export function Game3UI(sentece: boolean) {
 
   function IsValid(): boolean {
     for (const item of selectedOptions) {
-      if (item.type !== targetType)
+      if (item.type !== targetType?.type)
         return false;
     }
     return true;
@@ -41,9 +43,26 @@ export function Game3UI(sentece: boolean) {
 
   return (
     <>
-      {/* <View style={styles.content}> */}
       <View>
-        <Text style={styles.questionText}>Které slovo {sentece ? "ve větě " : ""}je {targetType}?</Text>
+        <Text style={styles.questionText}>Které slovo {sentece ? "ve větě " : ""}je 
+        {
+          targetType &&
+          <Tooltip
+            visible={tooltip.visible}
+            message={tooltip.message}
+            onRequestClose={handleHideTooltip}
+          >
+            <WordButton
+              text={targetType.text}
+              state={targetType.state}
+              type={targetType.type}
+              drawType={targetType.drawType}
+              onLongPress={() => handleShowTooltip(targetType.text, 0)}
+              onClick={handleHideTooltip}
+            />
+          </Tooltip>
+        }
+        </Text>
         {
           sentece &&
           <Text style={styles.exampleText}>
