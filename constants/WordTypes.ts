@@ -1,17 +1,19 @@
-interface WordType{
+import { WordType } from "@/types/WordTypes";
+
+interface WordTypeExt{
   name: string;
-  abbr: string;
+  abbr: WordType;
   color: string;
 }
 
-export const WordTypes: WordType[] = [
+export const WordTypes: WordTypeExt[] = [
   {
-    name: 'podstatné jméno',
+    name: 'podmět',
     abbr: 'po',
     color: '#4A90E2'  // Soft blue
   },
   {
-    name: 'přídavné jméno',
+    name: 'přísudek',
     abbr: 'př',
     color: '#50C878'  // Emerald green
   },
@@ -47,14 +49,19 @@ export const WordTypes: WordType[] = [
   },
   {
     name: 'příslovečné určení míry',
-    abbr: 'pumíry',
+    abbr: 'pu míry',
     color: '#81ECEC'  // Turquoise
   },
   {
     name: 'příslovečné určení příčiny',
     abbr: 'pup',
     color: '#B2BEC3'  // Cool gray
-  }
+  },
+  {
+    name: 'doplněk',
+    abbr: 'd',
+    color: '#D63031'  // Bright red
+  },
 ]
 
 export function getWordTypeColor(type: string): string {

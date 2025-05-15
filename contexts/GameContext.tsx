@@ -95,7 +95,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setGameData((prev) => ({...prev, endTime: Date.now()}));
 
       console.log("Game finished");
-      navigation.navigate('games/resultScreen' as never);
+      navigation.replace('games/resultScreen' as never);
     }
     else{
       setData(level.WordSelectionOption);

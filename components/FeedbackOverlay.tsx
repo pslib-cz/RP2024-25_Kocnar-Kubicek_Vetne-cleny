@@ -75,7 +75,9 @@ export const FeedbackOverlay: React.FC<OverlayProps> = ({
       <View style={styles.container}>
         <View style={styles.header}>
           <Ionicons name={displayIcon} size={32} color={themeColor} style={styles.icon} />
-          <Text style={[styles.headerText, { color: themeColor }]}>{displayMessage}</Text>
+          <Text style={[styles.headerText, { color: themeColor }]}>
+            {displayMessage}
+          </Text>
         </View>
         
         <TouchableOpacity 
@@ -85,18 +87,6 @@ export const FeedbackOverlay: React.FC<OverlayProps> = ({
         >
           <Text style={styles.buttonText}>CONTINUE</Text>
         </TouchableOpacity>
-        
-        <View style={styles.navigationBar}>
-          <TouchableOpacity style={styles.navButton}>
-            <Ionicons name="chevron-back" size={24} color="#888" />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.navButton}>
-            <View style={styles.homeIndicator} />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.navButton}>
-            <View style={styles.squareIndicator} />
-          </TouchableOpacity>
-        </View>
       </View>
     </Animated.View>
   );

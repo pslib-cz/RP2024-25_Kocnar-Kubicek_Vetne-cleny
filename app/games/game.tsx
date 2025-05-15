@@ -79,13 +79,13 @@ export const Game: React.FC = () => {
         state={state}
       />
       <View style={[styles.headerWrapper]}>
-      <View style={{ flexShrink: 1, flexGrow: 1, flexDirection: 'row', gap: 8 }}>
-        <View style={{ flexShrink: 1}}>
-          <HelpButton />
-        </View>        
-        <View style={{ flexShrink: 1, flexGrow: 999 }}>
-          <RocketProgressBar progress={1 - (gameData.questionsRemaining + 1) / gameData.totalQuestion}/>
-        </View>
+        <View style={{ flexShrink: 1, flexGrow: 1, flexDirection: 'row', gap: 8 }}>
+          <View style={{ flexShrink: 1}}>
+            <HelpButton />
+          </View>        
+          <View style={{ flexShrink: 1, flexGrow: 999 }}>
+            <RocketProgressBar progress={1 - (gameData.questionsRemaining + 1) / gameData.totalQuestion}/>
+          </View>
         </View>
       </View>
       <Animated.View
@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#000',
     paddingHorizontal: 20,
     paddingVertical: 24,
-    gap: 32,
+    gap: 40,
     justifyContent: 'space-between',
     alignItems: 'center',
     width: '100%',

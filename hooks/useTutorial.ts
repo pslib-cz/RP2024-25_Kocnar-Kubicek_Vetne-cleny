@@ -1,7 +1,6 @@
 import React from "react";
 import tutorialStart from '@/data/tutorialTree'
 import { TutorialNode } from "@/types/tutorialNode";
-import Tutorial from "@/app/(tabs)/tutorial";
 
 interface TutorialRuntimeNode{
   node: TutorialNode;
