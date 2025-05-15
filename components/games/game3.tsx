@@ -34,7 +34,13 @@ export function Game3UI(sentece: boolean) {
   }
 
   function IsValid(): boolean {
-    for (const item of selectedOptions) {
+
+    console.log("Selected options: ", selectedOptions);
+    console.log("Target type: ", targetType);
+    console.log("Selected options: ", selectedOptions);
+
+    for (const item of selectedOptions) {      
+      if (!targetType?.type) throw new Error("Target type is not set");
       if (item.type !== targetType?.type)
         return false;
     }

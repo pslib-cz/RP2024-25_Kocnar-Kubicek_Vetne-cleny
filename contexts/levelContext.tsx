@@ -47,7 +47,7 @@ export const LevelProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       drawType: true
     });
   }
-  
+
   const [targetType, setTargetTypeInternal] = useState<WordButtonType | undefined>(); // Set the target type here
   const [options, setOptions] = useState<WordSelectionOption[]>();
   const [selectedOptions, setSelectedOptions] = useState<WordSelectionOption[]>([]);
@@ -57,6 +57,8 @@ export const LevelProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     setPhraseButtons(undefined);
     setBottomButtons(undefined);
     handleHideTooltip();
+
+    setSelectedOptions([]);
   }
 
   return (

@@ -62,8 +62,14 @@ export default function Tutorial() {
       {
         !currentNode.node.isResult &&
         <>
-          <TutorialButton title="ANO" filled={true} onPress={() => AddNode(currentNode, true)} />
-          <TutorialButton title="NE" filled={false} onPress={() => AddNode(currentNode, false)} />
+          {
+            currentNode.node.yesNode &&
+            <TutorialButton title="ANO" filled={true} onPress={() => AddNode(currentNode, true)} />
+          }
+          {
+            currentNode.node.noNode &&
+            <TutorialButton title="NE" filled={true} onPress={() => AddNode(currentNode, false)} />
+          }
         </>
       }
       </View>      

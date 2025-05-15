@@ -37,7 +37,12 @@ export function Game2UI(multiSelect: boolean) {
   }
 
   function IsValid(): boolean {
+    console.log("Selected options: ", selectedOptions);
+    console.log("Target type: ", targetType);
+    console.log("Selected options: ", selectedOptions);
+
     for (const item of selectedOptions) {
+      if (!targetType?.type) throw new Error("Target type is not set");
       if (item.type !== targetType?.type)
         return false;
     }
@@ -46,7 +51,6 @@ export function Game2UI(multiSelect: boolean) {
 
   return (
     <>
-      {/* <View style={styles.content}> */}
       <Text style={styles.title}>
         Vyber
         {
@@ -83,7 +87,6 @@ export function Game2UI(multiSelect: boolean) {
         </View>
       </ScrollView>
       <ContinueButton onClick={handleContinue} enabled={selectedOptions.length > 0} />
-      {/* </View> */}
     </>
   );
 };
