@@ -1,23 +1,27 @@
 import React from 'react';
-import { View, Text, StyleSheet, Pressable, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, Pressable, Dimensions, ViewStyle } from 'react-native';
 
 interface TooltipProps {
   visible: boolean;
   message: string;
   children: React.ReactNode;
   onRequestClose: () => void;
+  top?: boolean
 }
 
-export const Tooltip: React.FC<TooltipProps> = ({ visible, message, children, onRequestClose }) => {
+export const Tooltip: React.FC<TooltipProps> = ({ visible, message, children, onRequestClose, top = true }) => {
+  
+  const style : ViewStyle = top ? { bottom: '100%' } : { top: '120%' };
+  
   return (
-    <View style={{ position: 'relative' }}>
+    <View style={{ position: 'relative', zIndex: 1000 }}>
       {children}
       {visible && (
         <Pressable
           style={StyleSheet.absoluteFill}
           onPress={onRequestClose}
         >
-          <View style={styles.tooltipContainer} pointerEvents="box-none">
+          <View style={[styles.tooltipContainer, style]} pointerEvents="box-none">
             <Text style={styles.tooltipText}>{message}</Text>
           </View>
         </Pressable>
@@ -29,7 +33,6 @@ export const Tooltip: React.FC<TooltipProps> = ({ visible, message, children, on
 const styles = StyleSheet.create({
   tooltipContainer: {
     position: 'absolute',
-    bottom: '100%',
     left: '50%',
     transform: [{ translateX: "-50%" }],
     minWidth: 120,

@@ -21,12 +21,12 @@ export const Game: React.FC = () => {
 
   useBackspaceIntercept(() => {
     Alert.alert(
-      'Ayo bro',
-      'U sure you wanna do this?',
+      'Opravdu chcete opustit hru?',
+      'Pokud opustíte hru, ztratíte veškerý pokrok.',
       [
-        { text: 'Cancel', style: 'cancel', onPress: () => {} },
+        { text: 'Zrušit', style: 'cancel', onPress: () => {} },
         {
-          text: 'Yes',
+          text: 'Opustit hru',
           style: 'destructive',
           onPress: () => {
             router.replace("/");

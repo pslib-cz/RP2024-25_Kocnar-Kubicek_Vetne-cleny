@@ -5,12 +5,11 @@ import React, { useEffect } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useGameContext } from '@/contexts/GameContext';
 import { useLevelContext } from '@/contexts/levelContext';
-import { Tooltip } from '../ui/games/Tooltip';
-import WordButton from '../ui/games/WordButton';
+import { TargetTypeDisplay } from '../ui/games/TargetTypeDisplay';
 
 export function Game2UI(multiSelect: boolean) {
   const { data, onFinished } = useGameContext();
-  const { options, setOptions, targetType, setTargetType, selectedOptions, setSelectedOptions, tooltip, handleHideTooltip, handleShowTooltip } = useLevelContext();
+  const { options, setOptions, targetType, setTargetType, selectedOptions, setSelectedOptions } = useLevelContext();
 
   // ! this is the only allowed useEffect in the games and can only contain the data as dependency
   useEffect(() => {
@@ -51,26 +50,7 @@ export function Game2UI(multiSelect: boolean) {
 
   return (
     <>
-      <Text style={styles.title}>
-        Vyber
-        {
-          targetType &&
-          <Tooltip
-            visible={tooltip.visible}
-            message={tooltip.message}
-            onRequestClose={handleHideTooltip}
-          >
-            <WordButton
-              text={targetType.text}
-              state={targetType.state}
-              type={targetType.type}
-              drawType={targetType.drawType}
-              onLongPress={() => handleShowTooltip(targetType.text, 0)}
-              onClick={handleHideTooltip}
-            />
-          </Tooltip>
-        }
-      </Text>
+      <TargetTypeDisplay />
       <ScrollView style={{ width: '100%' }}>
         <View style={styles.grid}>
           {
@@ -92,11 +72,6 @@ export function Game2UI(multiSelect: boolean) {
 };
 
 const styles = StyleSheet.create({
-  title: {
-    color: '#fff',
-    fontSize: 24,
-    fontWeight: 'bold',
-  },
   grid: {
     width: '100%',
     display: 'flex',
