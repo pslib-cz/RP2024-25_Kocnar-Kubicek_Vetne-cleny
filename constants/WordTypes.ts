@@ -6,12 +6,12 @@ interface WordType{
 
 export const WordTypes: WordType[] = [
   {
-    name: 'podstatné jméno',
+    name: 'podmět',
     abbr: 'po',
     color: '#4A90E2'  // Soft blue
   },
   {
-    name: 'přídavné jméno',
+    name: 'předmět',
     abbr: 'př',
     color: '#50C878'  // Emerald green
   },
