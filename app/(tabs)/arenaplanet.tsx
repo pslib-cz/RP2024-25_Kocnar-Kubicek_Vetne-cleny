@@ -3,13 +3,12 @@ import PlanetView from '@/components/PlanetView';
 import BigassButton from '@/components/ui/BigassButton';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, TouchableOpacity } from 'react-native';
 import { useGalaxyContext } from '@/contexts/GalaxyContext';
 import { router } from 'expo-router';
 
 const ArenaPlanet: React.FC = () => {
   const { levelUp } = useGalaxyContext();
-  const nextTask = "Další cvičení";
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -26,7 +25,7 @@ const ArenaPlanet: React.FC = () => {
 
         {/* Next task button */}
         <BigassButton
-          title={nextTask}
+          title={"Další cvičení"}
           bgEmoji="🚀"
           onPress={levelUp}
         />
