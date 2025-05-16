@@ -63,8 +63,9 @@ data/             # Data files (e.g., planet names)
 | 9.4.         | ✅ Complete technical foundation  |
 | 14.5.        | 🔜 Finalize app features          |
 | 14.5.        | ✅ Begin testing                  |
-| 16.5.        | Upload the app to the stores      |
-| 19.5.        | Finalization                      |
+| 20.5.        | 🔜 Upload the app to the stores   |
+| 20.5.        | Beta testing                      |
+| 23.5.        | Finalization                      |
 ---
 
 **This project is a "school-year-final" project (ročníková práce).**
