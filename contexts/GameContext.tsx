@@ -6,8 +6,8 @@ import { useData } from '@/hooks/useData';
 import { GameState } from '@/types/gameState';
 import { GameRoute } from '@/constants/gameRoute';
 import { useMultiplayerGameContext } from './MultiplayerGameContext';
-import { WordButtonType } from '@/types/games/WordButtonType';
 import { useLevelContext } from './levelContext';
+import { useGalaxyContext } from './GalaxyContext';
 
 const GameContext = createContext<GameContextData | undefined>(undefined);
 
@@ -107,13 +107,16 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     moveToNextLevelWithValues(gameData.questionsRemaining, generatedGameData, gameData);
   }  
 
+  const { levelUp } = useGalaxyContext();
+
   const onFinished = (correct : boolean) => {
     setGameState(correct ? GameState.correct : GameState.incorrect)
 
-    const level = generatedGameData[gameData.totalQuestion - gameData.questionsRemaining];
+    const currentLevelId = gameData.totalQuestion - gameData.questionsRemaining - 1;
+    const level = generatedGameData[currentLevelId];
 
     const updatedLevels = [...generatedGameData];
-    updatedLevels[gameData.totalQuestion - gameData.questionsRemaining] = {
+    updatedLevels[currentLevelId] = {
       ...level,
       result: correct ? "correct" : "incorrect",
     };
@@ -126,6 +129,11 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
 
     tryUpdateSession(dataUpdate);
+
+    if (getSuccessRate() >= 75)
+    {
+      levelUp();
+    }
   }
 
   const getDuration = () => {

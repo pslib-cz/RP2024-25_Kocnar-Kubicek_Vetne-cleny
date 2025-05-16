@@ -6,9 +6,10 @@ import React from 'react';
 import { StyleSheet, View, TouchableOpacity } from 'react-native';
 import { useGalaxyContext } from '@/contexts/GalaxyContext';
 import { router } from 'expo-router';
+import { useGameContext } from '@/contexts/GameContext';
 
 const ArenaPlanet: React.FC = () => {
-  const { levelUp } = useGalaxyContext();
+  const { newGame } = useGameContext();
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -27,7 +28,7 @@ const ArenaPlanet: React.FC = () => {
         <BigassButton
           title={"Další cvičení"}
           bgEmoji="🚀"
-          onPress={levelUp}
+          onPress={() => newGame(10)}
         />
       </View>
     </SafeAreaView>

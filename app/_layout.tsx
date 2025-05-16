@@ -41,7 +41,7 @@ export default function RootLayout() {
       <GalaxyProvider>
         <RocketProvider>
           <LevelProvider>
-          <MultiplayerGameProvider>
+            <MultiplayerGameProvider>
               <GameProvider>
                 <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
                   <Stack screenOptions={{ headerShown: false }}>
@@ -55,7 +55,7 @@ export default function RootLayout() {
               </GameProvider>
             </MultiplayerGameProvider>
           </LevelProvider>
-      </RocketProvider>
+        </RocketProvider>
       </GalaxyProvider>
     </ConfigProvider>
   );

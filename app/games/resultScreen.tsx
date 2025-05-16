@@ -42,6 +42,8 @@ const PracticeCompleteScreen = () => {
 
       <Text style={styles.title}>Practice complete!</Text>
 
+      <Text>Btw, you need at least 75% success rate to move to the next level</Text>
+
       <View style={styles.statsContainer}>
         <ResultStuff text="Time" value={`${getDuration()}s`} color="#FF5555" />
         <ResultStuff text="Success rate" value={`${getSuccessRate()}%`} color="#50FA7B" />

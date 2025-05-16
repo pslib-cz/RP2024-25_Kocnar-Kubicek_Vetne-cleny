@@ -73,6 +73,24 @@ export const Game: React.FC = () => {
     )
   }
 
+  const CloseButton = () => {
+    return (
+      <TouchableOpacity
+        style={[
+          styles.button
+        ]} 
+        onPress={() => {
+            router.push({
+              pathname: '/tutorial',
+              params: { returnTo: 'games/game' }
+            });
+        }}
+      >
+        <ThemedText type="defaultSemiBold">x</ThemedText>
+      </TouchableOpacity>
+    )
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <FeedbackOverlay
@@ -85,6 +103,9 @@ export const Game: React.FC = () => {
           </View>        
           <View style={{ flexShrink: 1, flexGrow: 999 }}>
             <RocketProgressBar progress={1 - (gameData.questionsRemaining + 1) / gameData.totalQuestion}/>
+          </View>
+          <View style={{ flexShrink: 1}}>
+            <CloseButton />
           </View>
         </View>
       </View>
