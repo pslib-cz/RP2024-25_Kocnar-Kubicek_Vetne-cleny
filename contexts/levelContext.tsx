@@ -11,7 +11,6 @@ interface LevelContextData {
   handleHideTooltip: () => void,
   handleShowTooltip: (abbr: string, index: number) => void,
 
-
   // game 1 data
   gameIndex : number, 
   setGameIndex : (index : number) => void,

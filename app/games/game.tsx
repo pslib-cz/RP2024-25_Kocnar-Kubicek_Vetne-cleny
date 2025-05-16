@@ -19,7 +19,7 @@ export const Game: React.FC = () => {
 
   const router = useRouter(); 
 
-  useBackspaceIntercept(() => {
+  function leaveAlert(){
     Alert.alert(
       'Opravdu chcete opustit hru?',
       'Pokud opustíte hru, ztratíte veškerý pokrok.',
@@ -34,6 +34,10 @@ export const Game: React.FC = () => {
         },
       ]
     );
+  }
+
+  useBackspaceIntercept(() => {
+    leaveAlert()
   });
 
   const gameContent = () => {
@@ -80,10 +84,7 @@ export const Game: React.FC = () => {
           styles.button
         ]} 
         onPress={() => {
-            router.push({
-              pathname: '/tutorial',
-              params: { returnTo: 'games/game' }
-            });
+          leaveAlert()
         }}
       >
         <ThemedText type="defaultSemiBold">x</ThemedText>

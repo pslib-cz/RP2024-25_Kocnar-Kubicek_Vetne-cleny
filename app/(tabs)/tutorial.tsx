@@ -3,12 +3,10 @@ import TutorialButton from '@/components/ui/tutorial/TutorialButton';
 import { useBackspaceIntercept } from '@/hooks/useBackspaceIntercept';
 import { useTutorial } from '@/hooks/useTutorial';
 import { Ionicons } from '@expo/vector-icons';
-import { useNavigationState, useRoute } from '@react-navigation/native';
-import { useLocalSearchParams, useNavigation, useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import React, { useEffect } from 'react';
-import { Alert, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { BackHandler } from 'react-native';
+import React from 'react';
+import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export default function Tutorial() {
   const { usedNodes, currentNode, AddNode } = useTutorial();

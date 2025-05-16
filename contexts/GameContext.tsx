@@ -70,16 +70,17 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     console.log("gameRoute", pathname);
 
-    if (!pathname.includes("game")) {      
-      navigation.push("games/game" as never);
+    setGameType(game);
+
+    //if (!pathname.includes("game")) {
+      navigation.replace("games/game" as never);
 
       console.log("navigating");
 
       return;
-    }
+    //}
 
     //navigation.navigate(game as never)
-    setGameType(game);
   }
 
   const moveToNextLevelWithValues = (remainingQuestions: number, levels : GameLevel[], gameData: GameData) => {
