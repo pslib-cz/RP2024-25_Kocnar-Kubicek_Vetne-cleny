@@ -111,6 +111,7 @@ export const Game: React.FC = () => {
         </View>
       </View>
       <Animated.View
+        key={gameData?.questionsRemaining} // Force remount -> animation
         entering={SlideInRight.duration(500)}
         exiting={SlideOutLeft.duration(500)}
         style={ styles.container1 }

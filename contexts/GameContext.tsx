@@ -61,6 +61,8 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     moveToNextLevelWithValues(qCount, newGeneratedGameData, gameData_); // so the state update is not an issue
 
     tryStartSession();
+
+    navigation.replace("games/game" as never);
   }
 
   const loadLevel = async (game : GameRoute) => {
@@ -73,11 +75,11 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setGameType(game);
 
     //if (!pathname.includes("game")) {
-      navigation.replace("games/game" as never);
+      // navigation.replace("games/game" as never);
 
-      console.log("navigating");
+      // console.log("navigating");
 
-      return;
+      // return;
     //}
 
     //navigation.navigate(game as never)

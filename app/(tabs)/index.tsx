@@ -22,7 +22,7 @@ export default function HomeScreen()
         <Rocket />
         <ThemedText type="title">{name}</ThemedText>
       </View>
-      <BigassButton title='⛷️ Procvičování' bgEmoji='⛷️' onPress={() => newGame(2)}/>
+      <BigassButton title='⛷️ Procvičování' bgEmoji='⛷️' onPress={() => newGame(7)}/>
       <BigassButton title='🙀 Test' bgEmoji='🙀' onPress={() => {
         router.push('../exams');
       }}/>
