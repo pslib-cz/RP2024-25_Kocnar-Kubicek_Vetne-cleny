@@ -42,6 +42,14 @@ const GameTests: React.FC = () => {
           </TouchableOpacity>
         )}
       />
+      <TouchableOpacity
+        style={styles.gameButton}
+        onPress={() => {
+          navigation.push("games/resultScreen" as never)
+          loadLevel(GameRoute.GAME1)
+          resetLevelData()
+        }}
+      />
     </View>
   );
 };

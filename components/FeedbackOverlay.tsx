@@ -15,7 +15,7 @@ export const FeedbackOverlay: React.FC<OverlayProps> = ({
 
   const isCorrect = state == GameState.correct;
 
-  const displayMessage = isCorrect ? "Nice job!" : "Oops!";
+  const displayMessage = isCorrect ? "Dobrá práce!" : "To není dobře!";
   const displayIcon = isCorrect ? "checkmark-circle" : "close-circle";
   
   // Colors based on answer correctness
@@ -85,7 +85,7 @@ export const FeedbackOverlay: React.FC<OverlayProps> = ({
           onPress={() => moveToNextLevel()}
           activeOpacity={0.8}
         >
-          <Text style={styles.buttonText}>CONTINUE</Text>
+          <Text style={styles.buttonText}>Další otázka</Text>
         </TouchableOpacity>
       </View>
     </Animated.View>

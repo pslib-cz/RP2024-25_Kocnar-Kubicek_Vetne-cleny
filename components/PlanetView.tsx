@@ -2,15 +2,8 @@ import React from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
 import Svg, { Polygon, Polyline } from 'react-native-svg';
 import { Image as RNImage } from 'react-native';
-
-// Import your data
 import planetNames from '@/data/planetnames.json';
-
-// Import context
 import { useGalaxyContext } from '@/contexts/GalaxyContext';
-
-// Define the props type for the GalaxyView component
-
 
 // Pre-load all planet images
 const planetImages: Record<string, any> = {
@@ -175,31 +168,35 @@ const getPlanetDisplaySize = (type: string) => {
   }
 };
 
-const PlanetView: React.FC = () => {
-  // Get activeLevelIndex from context
+function getPlanetType(width: number, height: number, planetIndex : number): string {
+  if (width === 1500 && height === 1500) {
+      return 'ring';
+    } else if (width === 1000 && height === 1000) {
+        if (planetIndex%10 === 9) {
+          return 'sun';
+    } else {
+      return 'hole';
+    }
+  } else if (width === 500 && height === 500) {
+    return 'normal';
+  }
+
+  return 'normal';
+} 
+  
+const PlanetView: React.FC<{displayName? : boolean}> = ({displayName = true}) => {
   const { activeLevelIndex, selectedGalaxy, activePlanets } = useGalaxyContext();
 
   // Use a unique seed for each planet
   const seed = selectedGalaxy * 100 + activePlanets[selectedGalaxy] + 13;
   
-  // Get image source and dimensions
   const planetIndex = activePlanets[selectedGalaxy];
   const imageSource = getPlanetImage(selectedGalaxy, planetIndex);
   const { width, height } = RNImage.resolveAssetSource(imageSource);
   
   // Determine planet type from image size
-  let planetType = 'normal';
-  if (width === 1500 && height === 1500) {
-      planetType = 'ring';
-    } else if (width === 1000 && height === 1000) {
-        if (planetIndex%10 === 9) {
-            planetType = 'sun';
-    } else {
-        planetType = 'hole';
-    }
-} else if (width === 500 && height === 500) {
-    planetType = 'normal';
-  }
+  let planetType = getPlanetType(width, height, planetIndex);
+
   const displaySize = getPlanetDisplaySize(planetType);
   
   // Defensive: check planetNames[selectedGalaxy]
@@ -213,7 +210,6 @@ const PlanetView: React.FC = () => {
       </View>
     );
   }
-  const totalPlanets = planetList.length;
 
   return (
     <View style={styles.planetContentContainer}>
@@ -275,14 +271,17 @@ const PlanetView: React.FC = () => {
           );
         })}
       </Svg>
-      <Text
-        style={[
-          styles.planetName,
-          styles.activePlanetName,
-        ]}
-      >
-        {planetList[planetIndex]}
-      </Text>
+      {
+        displayName &&
+        <Text
+          style={[
+            styles.planetName,
+            styles.activePlanetName,
+          ]}
+        >
+          {planetList[planetIndex]}
+        </Text>
+      }
     </View>
   );
 };
