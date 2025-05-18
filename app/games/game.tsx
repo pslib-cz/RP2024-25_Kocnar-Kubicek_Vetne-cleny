@@ -87,7 +87,7 @@ export const Game: React.FC = () => {
           leaveAlert()
         }}
       >
-        <ThemedText type="defaultSemiBold">x</ThemedText>
+        <ThemedText type="defaultSemiBold">X</ThemedText>
       </TouchableOpacity>
     )
   }
@@ -154,6 +154,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#1E1E5F', // Dark blue color from the image
     // paddingVertical: 12,
     aspectRatio: 1,
+    height: 40,
     paddingHorizontal: 16,
     borderRadius: 24, // Rounded corners
     alignItems: 'center',

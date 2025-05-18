@@ -45,19 +45,16 @@ const PracticeCompleteScreen = () => {
     <View style={styles.container}>
       <PlanetView displayName={false}/>
 
-      <Text style={styles.title}>Úroveň dokončena!</Text>
-
-      <Text>Btw, you need at least 75% success rate to move to the next level</Text>
+      <Text style={styles.title}>{successRate >= 75 ? "Úroveň dokončena!" : "Úroveň nesplněna!"}</Text>
+      <Text style={{color: "white", marginBottom: 16}}>Pro odemčení další úrovně je nutné mít úspěšnost alespoň 75%</Text>
 
       <View style={styles.statsContainer}>
         <ResultStuff text="Time" value={`${getDuration()}s`} color="#6272A4" />
-        <ResultStuff text="Success rate" value={`${successRate}%`} color={successRateColor} />
+        <ResultStuff text="Success rate" value={`${successRate.toFixed(2)}%`} color={successRateColor} />
       </View>
-
-      {/* <View style={{ flexDirection: 'row', gap: 10 }}> */}      
-        <Button title="Další level" filled={true} onPress={() => newGame(7)} />
-        <Button title="Domů" filled={false} onPress={() => navigation.navigate('/' as never)} />
-      {/* </View> */}
+ 
+      <Button title={successRate >= 75 ? "Další level" : "Zkusit znovu"} filled={true} onPress={() => newGame(7)} />
+      <Button title="Domů" filled={false} onPress={() => navigation.navigate('/' as never)} />
     </View>
   );
 };
@@ -90,6 +87,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#F1FA8C',
     marginBottom: 30,
+    marginTop: 30,
   },
   statsContainer: {
     flexDirection: 'row',

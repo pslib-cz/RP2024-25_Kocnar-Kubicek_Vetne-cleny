@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
     height: '100%',
     justifyContent: 'space-between',
     paddingTop: 100,
-    paddingBottom: 100,
+    paddingBottom: 75,
     paddingHorizontal: 20,
   },
   header: {

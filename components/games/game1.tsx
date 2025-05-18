@@ -49,7 +49,7 @@ export function GameOneUI(type: Game1Type) {
 
       setBottomButtons(
         data.map((item) => ({
-          text: !inverted ? item.type : item.text,
+          text: !inverted ? item.type : item.text.toLowerCase().replace('.', ''),
           type: item.type,
           drawType: !inverted,
           state: ButtonState.default
@@ -115,8 +115,8 @@ export function GameOneUI(type: Game1Type) {
                         state={button.state}
                         type={button.type}
                         drawType={button.drawType}
-                        onLongPress={() => handleShowTooltip(button.text, index)}
-                        onClick={handleHideTooltip}
+                        onLongPress={() => {}}
+                        onClick={() => handleShowTooltip(button.text, index)}
                       />
                     </Tooltip>
                   );
