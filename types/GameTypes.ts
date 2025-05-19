@@ -30,4 +30,6 @@ export interface GameContextData {
   getSuccessRate : () => number,
 
   gameType : GameRoute,
+
+  newGameWithCount : () => void,
 }

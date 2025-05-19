@@ -3,7 +3,6 @@ import { View, StyleSheet, TouchableOpacity, Switch, ScrollView, Image, TextInpu
 import { ThemedText } from '@/components/ThemedText';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Slider from '@react-native-community/slider';
-import { useRouter } from 'expo-router';
 import { useGameContext } from '@/contexts/GameContext';
 
 const galaxyImages = [

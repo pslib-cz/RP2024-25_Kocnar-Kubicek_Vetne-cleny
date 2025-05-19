@@ -4,12 +4,11 @@ import BigassButton from '@/components/ui/BigassButton';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import React from 'react';
 import { StyleSheet, View, TouchableOpacity } from 'react-native';
-import { useGalaxyContext } from '@/contexts/GalaxyContext';
 import { router } from 'expo-router';
 import { useGameContext } from '@/contexts/GameContext';
 
 const ArenaPlanet: React.FC = () => {
-  const { newGame } = useGameContext();
+  const { newGameWithCount } = useGameContext();
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -28,7 +27,7 @@ const ArenaPlanet: React.FC = () => {
         <BigassButton
           title={"Další cvičení"}
           bgEmoji="🚀"
-          onPress={() => newGame(10)}
+          onPress={newGameWithCount}
         />
       </View>
     </SafeAreaView>

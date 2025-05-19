@@ -2,14 +2,14 @@ import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { useGameContext } from '@/contexts/GameContext';
+import { NEXT_LEVEL_TRESHOLD, useGameContext } from '@/contexts/GameContext';
 import PlanetView from '@/components/PlanetView';
 
 const PracticeCompleteScreen = () => {
   const navigation = useRouter();
 
   const { getDuration, getSuccessRate } = useGameContext();
-  const { newGame } = useGameContext();
+  const { newGameWithCount } = useGameContext();
 
   const ResultStuff = ({text, value, color} : {text : string, value : string, color : string}) => {
     return(
@@ -45,15 +45,15 @@ const PracticeCompleteScreen = () => {
     <View style={styles.container}>
       <PlanetView displayName={false}/>
 
-      <Text style={styles.title}>{successRate >= 75 ? "Úroveň dokončena!" : "Úroveň nesplněna!"}</Text>
-      <Text style={{color: "white", marginBottom: 16}}>Pro odemčení další úrovně je nutné mít úspěšnost alespoň 75%</Text>
+      <Text style={styles.title}>{successRate >= NEXT_LEVEL_TRESHOLD ? "Úroveň dokončena!" : "Úroveň nesplněna!"}</Text>
+      <Text style={{color: "white", marginBottom: 16}}>Pro odemčení další úrovně je nutné mít úspěšnost alespoň {NEXT_LEVEL_TRESHOLD}%</Text>
 
       <View style={styles.statsContainer}>
         <ResultStuff text="Time" value={`${getDuration()}s`} color="#6272A4" />
         <ResultStuff text="Success rate" value={`${successRate.toFixed(2)}%`} color={successRateColor} />
       </View>
  
-      <Button title={successRate >= 75 ? "Další level" : "Zkusit znovu"} filled={true} onPress={() => newGame(7)} />
+      <Button title={successRate >= NEXT_LEVEL_TRESHOLD ? "Další level" : "Zkusit znovu"} filled={true} onPress={newGameWithCount} />
       <Button title="Domů" filled={false} onPress={() => navigation.navigate('/' as never)} />
     </View>
   );

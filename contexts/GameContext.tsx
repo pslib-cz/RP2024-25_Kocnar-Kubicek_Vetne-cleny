@@ -17,6 +17,8 @@ interface GameLevel {
   result: string
 }
 
+export const NEXT_LEVEL_TRESHOLD = 0.75 * 100;
+
 export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { tryStartSession, tryUpdateSession } = useMultiplayerGameContext();
   const { resetLevelData } = useLevelContext();
@@ -40,6 +42,10 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [state, setGameState] = useState<GameState>(GameState.pending);
 
   const [gameType, setGameType] = useState<GameRoute>(GameRoute.GAME1);
+
+  const newGameWithCount = () => {
+    newGame(2);
+  }
 
   const newGame = (qCount : number) => {
     const newSeed = Math.floor(Math.random() * 1000000); // Random seed for the game
@@ -73,16 +79,6 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     console.log("gameRoute", pathname);
 
     setGameType(game);
-
-    //if (!pathname.includes("game")) {
-      // navigation.replace("games/game" as never);
-
-      // console.log("navigating");
-
-      // return;
-    //}
-
-    //navigation.navigate(game as never)
   }
 
   const moveToNextLevelWithValues = (remainingQuestions: number, levels : GameLevel[], gameData: GameData) => {
@@ -133,7 +129,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     tryUpdateSession(dataUpdate);
 
-    if (getSuccessRate() >= 75)
+    if (getSuccessRate() >= NEXT_LEVEL_TRESHOLD)
     {
       levelUp();
     }
@@ -164,7 +160,8 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
         gameData,
         getDuration,
         getSuccessRate,
-        gameType
+        gameType,
+        newGameWithCount
       }}
     >
       {children}

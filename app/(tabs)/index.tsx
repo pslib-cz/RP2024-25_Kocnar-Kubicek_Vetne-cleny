@@ -12,7 +12,7 @@ export default function HomeScreen()
   const router = useRouter();
   const { name } = useRocket();
 
-  const { newGame } = useGameContext()
+  const { newGameWithCount } = useGameContext()
 
   return (
     <ScrollView contentContainerStyle={{ flexGrow: 1, padding: 16, gap: 16, alignItems: 'center' }}>
@@ -22,7 +22,7 @@ export default function HomeScreen()
         <Rocket />
         <ThemedText type="title">{name}</ThemedText>
       </View>
-      <BigassButton title='⛷️ Procvičování' bgEmoji='⛷️' onPress={() => newGame(7)}/>
+      <BigassButton title='⛷️ Procvičování' bgEmoji='⛷️' onPress={newGameWithCount}/>
       <BigassButton title='🙀 Test' bgEmoji='🙀' onPress={() => {
         router.push('../exams');
       }}/>

@@ -48,7 +48,7 @@ export default function RootLayout() {
                     <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
                     <Stack.Screen name="+not-found" />
                     <Stack.Screen name="games/game" />
-                    <Stack.Screen name="tutorial" />
+                    {/* <Stack.Screen name="tutorial" /> */}
                   </Stack>
                   <StatusBar style="auto" />
                 </ThemeProvider>

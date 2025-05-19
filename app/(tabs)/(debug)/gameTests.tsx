@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
 import ArenaHeader from '@/components/ArenaHeader';
 import { GameRoute } from '@/constants/gameRoute';
@@ -13,10 +13,8 @@ const games = Object.entries(GameRoute).map(([key, value]) => ({
 
 const GameTests: React.FC = () => {
 
-  const { loadLevel } = useGameContext();  
+  const { loadLevel } = useGameContext();
   const { resetLevelData } = useLevelContext();
-
-  //console.log(navigation.getState())
 
   const navigation = useRouter();
 
@@ -28,7 +26,7 @@ const GameTests: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      <ArenaHeader/>
+      <ArenaHeader />
       <Text style={styles.title}>Select a Game to Test</Text>
       <FlatList
         data={games}

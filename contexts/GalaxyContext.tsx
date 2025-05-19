@@ -20,6 +20,8 @@ interface GalaxyProviderProps {
   children: ReactNode;
 }
 
+const DEBUG_RESET_PROGRESS = true; // Set to true to reset progress for debugging
+
 export const GalaxyProvider: React.FC<GalaxyProviderProps> = ({ 
   children
 }) => {
@@ -28,12 +30,14 @@ export const GalaxyProvider: React.FC<GalaxyProviderProps> = ({
   const [activeLevelIndex, setActiveLevelIndex] = useState<number[]>([0, 0, 0, 0, 0]);
   const [loading, setLoading] = useState(true); // Track loading state
 
-    // use this to reset progress
-    //   useEffect(() => {
-    //     setTimeout(() => {
-    //       setActivePlanets([0, 0, 0, 0, 0]);
-    //     }, 1000);
-    //   }, []);
+  if (DEBUG_RESET_PROGRESS)
+  {
+    useEffect(() => {
+      setTimeout(() => {
+        setActivePlanets([0, 0, 0, 0, 0]);
+      }, 1000);
+    }, []);
+  }
 
   useEffect(() => {
     const loadData = async () => {
