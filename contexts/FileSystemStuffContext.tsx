@@ -20,21 +20,22 @@ export const FileSystemStuffProvider = ({ children }: { children: ReactNode }) =
 
     const fetchAndStoreData = async () => {
       try {
-        const [sets, types, version] = await Promise.all([
-          get('/sets/sets.json'),
-          get('/sets/types.json'),
-          get('/sets/version.json'),
-        ]);
-
-        if (!sets || !types || !version) {
+        const version = await get('/sets/version.json');
+        if (!version) {
           throw new Error('Failed to fetch data');
-        }
-
-        console.log('Data fetched successfully');
-
+        }        
         if (version.version === loadedVersion) {
           console.log('Version is the same, no need to update');
           return;
+        }
+
+        const [sets, types] = await Promise.all([
+          get('/sets/sets.json'),
+          get('/sets/types.json')
+        ]);
+
+        if (!sets || !types) {
+          throw new Error('Failed to fetch data');
         }
 
         const latestDir = FileSystem.documentDirectory + 'latest/';
