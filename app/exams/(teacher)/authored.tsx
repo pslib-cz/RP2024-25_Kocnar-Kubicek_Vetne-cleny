@@ -23,7 +23,7 @@ export default function AuthoredGamesPage() {
         const data = await api.getAuthoredGames();
         setGames(data);
       } catch (error) {
-        console.error('Failed to fetch authored games:', error);
+        console.warn('Failed to fetch authored games:', error);
       } finally {
         setLoading(false);
       }

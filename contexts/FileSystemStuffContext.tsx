@@ -52,7 +52,7 @@ export const FileSystemStuffProvider = ({ children }: { children: ReactNode }) =
         // this is fine, I hope at least
         loadLatestData_Local();
 
-        console.error('Error fetching or saving data:', error);
+        console.warn('Error fetching or saving data:', error);
       }
     };
 

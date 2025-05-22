@@ -30,7 +30,7 @@ export const CommonMistakesProvider = ({ children }: { children: ReactNode }) =>
 
         setAllMistakes(JSON.parse(mistakesStr));
       } catch (error) {
-        console.error('Error loading data:', error);
+        console.warn('Error loading data:', error);
       }
     };
 
@@ -79,7 +79,7 @@ export const CommonMistakesProvider = ({ children }: { children: ReactNode }) =>
             JSON.stringify(updatedMistakes)
           );
         } catch (error) {
-          console.error('Error saving mistakes:', error);
+          console.warn('Error saving mistakes:', error);
         }
       })();
 
@@ -92,7 +92,7 @@ export const CommonMistakesProvider = ({ children }: { children: ReactNode }) =>
         JSON.stringify(allMistakes)
       );
     } catch (error) {
-      console.error('Error saving mistakes:', error);
+      console.warn('Error saving mistakes:', error);
     }
 
   };

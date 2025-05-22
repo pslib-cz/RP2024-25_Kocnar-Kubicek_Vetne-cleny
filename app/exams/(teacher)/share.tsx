@@ -17,7 +17,7 @@ export default function ShareGameScreen() {
       router.push('/exams/create');
     } catch (error) {
       alert('Failed to cancel the game. Please try again.');
-      console.error('Error cancelling game:', error);
+      console.warn('Error cancelling game:', error);
     }
   };
 

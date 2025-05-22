@@ -57,7 +57,7 @@ export const RocketProvider = ({ children }: RocketProviderProps) => {
     try {
       await api.upsertPlayer(activePlanets);
     } catch (error) {
-      console.error('Error syncing player config:', error);
+      console.warn('Error syncing player config:', error);
     }
   };
 
@@ -106,7 +106,7 @@ export const RocketProvider = ({ children }: RocketProviderProps) => {
         if (savedName) setName(savedName);
         if (savedTeacherMode) setTeacherMode(savedTeacherMode === 'true');
       } catch (error) {
-        console.error('Error loading rocket preferences:', error);
+        console.warn('Error loading rocket preferences:', error);
       }
     };
     loadPreferences();
@@ -121,7 +121,7 @@ export const RocketProvider = ({ children }: RocketProviderProps) => {
       await AsyncStorage.setItem('user_profile_name', name);
       await AsyncStorage.setItem('user_profile_teacher_mode', teacherMode.toString());
     } catch (error) {
-      console.error('Error saving rocket preferences:', error);
+      console.warn('Error saving rocket preferences:', error);
     }
   };
 

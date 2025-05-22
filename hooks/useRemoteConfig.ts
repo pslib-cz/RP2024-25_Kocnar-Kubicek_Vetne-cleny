@@ -41,7 +41,7 @@ export function useRemoteConfig() {
           setConfig(localConfig);
         }
       } catch (e) {
-        console.error('[useRemoteConfig] Error fetching or loading config:', e);
+        console.warn('[useRemoteConfig] Error fetching or loading config:', e);
         // On error, fallback to local config
         setConfig(localConfig);
       } finally {

@@ -43,7 +43,7 @@ export default function HistoryScreen() {
       const response = await api.get<SessionInfo[]>(`/players/${userId}/sessions`);
       setSessions(response);
     } catch (err) {
-      console.error('Failed to fetch sessions:', err);
+      console.warn('Failed to fetch sessions:', err);
       setError('Failed to load game history. Please try again.');
     } finally {
       setLoading(false);

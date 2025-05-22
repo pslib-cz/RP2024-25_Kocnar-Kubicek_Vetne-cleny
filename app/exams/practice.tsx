@@ -47,7 +47,7 @@ export default function CreateGameScreen() {
         newGame(count);
       } catch (error) {
         alert('Failed to start exam. Please try again.');
-        console.error('Error starting exam:', error);
+        console.warn('Error starting exam:', error);
       }
     } else {
       alert('Please select difficulty and galaxy before starting the exam.');

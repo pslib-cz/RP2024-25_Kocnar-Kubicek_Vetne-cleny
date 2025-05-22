@@ -76,7 +76,7 @@ export default function CreateGameScreen() {
         router.push('/exams/share');
       } catch (error) {
         alert('Failed to create game. Please try again.');
-        console.error('Error creating game:', error);
+        console.warn('Error creating game:', error);
       }
     } else {
       alert('Please select difficulty and galaxy before starting the exam.');

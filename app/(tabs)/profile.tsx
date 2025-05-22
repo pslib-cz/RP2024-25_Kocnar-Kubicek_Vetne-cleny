@@ -16,7 +16,7 @@ export const loadSvgAsset = async (assetModule: any): Promise<string | null> => 
     const fileContent = await FileSystem.readAsStringAsync(asset.localUri!);
     return fileContent;
   } catch (error) {
-    console.error('Error loading SVG:', error);
+    console.warn('Error loading SVG:', error);
     return null;
   }
 };
@@ -66,7 +66,7 @@ export default function ProfileEditScreen(): React.ReactElement {
         // Uložení SVG textů do stavu
         setRocketSvgs([svg1, svg2, svg3, svg4, svg5].filter(svg => svg !== null));
       } catch (error) {
-        console.error('Error loading rocket SVGs:', error);
+        console.warn('Error loading rocket SVGs:', error);
       }
     };
 

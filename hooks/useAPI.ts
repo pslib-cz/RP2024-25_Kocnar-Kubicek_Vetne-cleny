@@ -121,7 +121,7 @@ export const useAPI = (userData?: Partial<APIUserData>) => {
         }
         return await backupResponse.json();
       } catch (backupError) {
-        console.error('Backup API failed:', backupError);
+        console.warn('Backup API failed:', backupError);
         throw new APIError(
           APIErrorCode.SERVER_ERROR,
           'Both primary and backup APIs failed',

@@ -50,7 +50,7 @@ export const GalaxyProvider: React.FC<GalaxyProviderProps> = ({
         if (savedPlanets) setActivePlanets(JSON.parse(savedPlanets));
         if (savedLevels) setActiveLevelIndex(JSON.parse(savedLevels)); // Set active levels
       } catch (error) {
-        console.error('Failed to load data from AsyncStorage:', error);
+        console.warn('Failed to load data from AsyncStorage:', error);
       } finally {
         setLoading(false); // Mark loading as complete
       }
@@ -63,7 +63,7 @@ export const GalaxyProvider: React.FC<GalaxyProviderProps> = ({
       try {
         await AsyncStorage.setItem('selectedGalaxy', selectedGalaxy.toString());
       } catch (error) {
-        console.error('Failed to save selectedGalaxy to AsyncStorage:', error);
+        console.warn('Failed to save selectedGalaxy to AsyncStorage:', error);
       }
     };
     saveSelectedGalaxy();
@@ -75,7 +75,7 @@ export const GalaxyProvider: React.FC<GalaxyProviderProps> = ({
       try {
         await AsyncStorage.setItem('activePlanets', JSON.stringify(activePlanets));
       } catch (error) {
-        console.error('Failed to save activePlanets to AsyncStorage:', error);
+        console.warn('Failed to save activePlanets to AsyncStorage:', error);
       }
     };
     saveActivePlanets();
@@ -87,7 +87,7 @@ export const GalaxyProvider: React.FC<GalaxyProviderProps> = ({
       try {
         await AsyncStorage.setItem('activeLevelIndex', JSON.stringify(activeLevelIndex));
       } catch (error) {
-        console.error('Failed to save activeLevelIndex to AsyncStorage:', error);
+        console.warn('Failed to save activeLevelIndex to AsyncStorage:', error);
       }
     };
     saveActiveLevelIndex();

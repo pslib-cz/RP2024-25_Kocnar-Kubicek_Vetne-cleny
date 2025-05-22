@@ -50,7 +50,7 @@ export default function JoinGameScreen() {
       await joinGame(codeToUse);
     } catch (error) {
       alert('Nepodařilo se připojit ke hře. Zkontrolujte prosím kód a zkuste to znovu.');
-      console.error('Error joining game:', error);
+      console.warn('Error joining game:', error);
     }
   };
 
@@ -60,7 +60,7 @@ export default function JoinGameScreen() {
       setCode('');
       router.push('/exams');
     } catch (error) {
-      console.error('Error leaving game:', error);
+      console.warn('Error leaving game:', error);
       alert('Nepodařilo se opustit hru. Zkuste to prosím znovu.');
     }
   };

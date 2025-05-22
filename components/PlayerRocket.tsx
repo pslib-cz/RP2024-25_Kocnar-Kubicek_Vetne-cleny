@@ -51,7 +51,7 @@ export const PlayerRocket = ({
 
         setRocketSvgs([svg1, svg2, svg3, svg4, svg5].filter(svg => svg !== null));
       } catch (error) {
-        console.error('Error loading rocket SVGs:', error);
+        console.warn('Error loading rocket SVGs:', error);
       }
     };
 

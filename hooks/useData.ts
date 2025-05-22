@@ -28,7 +28,7 @@ export const loadLatestData_Local = async () => {
     updateLoadedSets(sets, types, loadedVer);
   }
   catch (error) {
-    console.error('Error loading data:', error);
+    console.warn('Error loading data:', error);
   }
 }
 
@@ -101,7 +101,7 @@ export const useData: (difficulty?: number, range?: number) => WordSelectionOpti
 //     setData(parsed[0].data);
 //   },
 //   (error) => {
-//     console.error("Error parsing file:", error);
+//     console.warn("Error parsing file:", error);
 //   });
 // }
 
@@ -112,7 +112,7 @@ export const useData: (difficulty?: number, range?: number) => WordSelectionOpti
 //     setData(parsed[0].data);
 //   },
 //   (error) => {
-//     console.error("Error parsing file:", error);
+//     console.warn("Error parsing file:", error);
 //   });
 // }
 
@@ -126,7 +126,7 @@ export const useData: (difficulty?: number, range?: number) => WordSelectionOpti
 //     setData(parsed[0][0].data);
 //   },
 //   (error) => {
-//     console.error("Error parsing file:", error);
+//     console.warn("Error parsing file:", error);
 //   });
 // }
 
@@ -140,7 +140,7 @@ export const useData: (difficulty?: number, range?: number) => WordSelectionOpti
 //     setData(parsed[1][0].data);
 //   },
 //   (error) => {
-//     console.error("Error parsing file:", error);
+//     console.warn("Error parsing file:", error);
 //   });
 // }
 
@@ -157,6 +157,6 @@ export const useData: (difficulty?: number, range?: number) => WordSelectionOpti
 //     setData(parsed[0].data);
 //   },
 //   (error) => {
-//     console.error("Error parsing file:", error);
+//     console.warn("Error parsing file:", error);
 //   });
 // }

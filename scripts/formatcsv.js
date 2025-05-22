@@ -86,7 +86,7 @@ function getRowDifficulty(row) {
 }
 
 parseCsvToJson(spreadsheets).catch((err) => {
-  console.error("Error parsing CSV files:", err);
+  console.warn("Error parsing CSV files:", err);
 });
 
 

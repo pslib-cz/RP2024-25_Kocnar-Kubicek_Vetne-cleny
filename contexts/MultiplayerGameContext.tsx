@@ -90,7 +90,7 @@ export const MultiplayerGameProvider: React.FC<{ children: React.ReactNode }> = 
       setAuthor(response.author);
       setPlayers(response.players || []);
     } catch (error) {
-      console.error('Failed to join game:', error);
+      console.warn('Failed to join game:', error);
       throw error;
     }
   };
@@ -120,7 +120,7 @@ export const MultiplayerGameProvider: React.FC<{ children: React.ReactNode }> = 
         selectedRocketIndex: rocket.selectedRocketIndex,
       });
     } catch (error) {
-      console.error('Failed to create game:', error);
+      console.warn('Failed to create game:', error);
       throw error;
     }
   };
@@ -132,7 +132,7 @@ export const MultiplayerGameProvider: React.FC<{ children: React.ReactNode }> = 
       // No need to call API for leaving, just reset the state
       resetGameState();
     } catch (error) {
-      console.error('Failed to leave game:', error);
+      console.warn('Failed to leave game:', error);
       throw error;
     }
   };

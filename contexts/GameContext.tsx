@@ -55,7 +55,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const newGameWithCount_CommonMistakes = () => {
     if (allMistakes.length === 0) {
-      console.error("No common mistakes found");
+      console.warn("No common mistakes found");
       return;
     }
 
@@ -88,11 +88,11 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const mistakesData = commonMistakes ? getMistakesAsSentences() : [];
 
     if (commonMistakes && mistakesData.length === 0) {
-      console.error("No common mistakes found");
+      console.warn("No common mistakes found");
       return [];
     }
     if (commonMistakes && mistakesData.length < count) {
-      console.error("Not enough common mistakes found");
+      console.warn("Not enough common mistakes found");
       return [];
     }
 
