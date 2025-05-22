@@ -14,17 +14,22 @@ export let loadedVersion : string = require(`../data/sheets/version.json`).versi
 export const loadLatestData_Local = async () => {
   const latestDir = FileSystem.documentDirectory + 'latest/';
 
-  const [setsStr, typesStr, versionStr] = await Promise.all([
-    FileSystem.readAsStringAsync(latestDir + 'sets.json'),
-    FileSystem.readAsStringAsync(latestDir + 'types.json'),
-    FileSystem.readAsStringAsync(latestDir + 'version.json'),
-  ]);
+  try{
+    const [setsStr, typesStr, versionStr] = await Promise.all([
+      FileSystem.readAsStringAsync(latestDir + 'sets.json'),
+      FileSystem.readAsStringAsync(latestDir + 'types.json'),
+      FileSystem.readAsStringAsync(latestDir + 'version.json'),
+    ]);
 
-  const sets = JSON.parse(setsStr);
-  const types = JSON.parse(typesStr);
-  const loadedVer = JSON.parse(versionStr).version;
+    const sets = JSON.parse(setsStr);
+    const types = JSON.parse(typesStr);
+    const loadedVer = JSON.parse(versionStr).version;
 
-  updateLoadedSets(sets, types, loadedVer);
+    updateLoadedSets(sets, types, loadedVer);
+  }
+  catch (error) {
+    console.error('Error loading data:', error);
+  }
 }
 
 export const updateLoadedSets = (ls : any, lts:any, lv:any) => {
