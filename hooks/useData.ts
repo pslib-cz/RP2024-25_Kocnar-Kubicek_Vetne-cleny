@@ -2,13 +2,36 @@ import { useGalaxyContext } from "@/contexts/GalaxyContext";
 import { WordSelectionOption } from "@/types/games/SelectionOption";
 import { WordType } from "@/types/WordTypes";
 import { useMemo } from "react";
+import * as FileSystem from 'expo-file-system';
 
-const version = "v1"
+const version = "latest"
 
-const sets: string[][][] = require(`../data/sheets/${version}/sets.json`);
-const typeSets: Record<string, string[]> = require(`../data/sheets/${version}/types.json`);
+// just in case
+let loadedSets: string[][][] = require(`../data/sheets/${version}/sets.json`);
+let loadedTypeSets: Record<string, string[]> = require(`../data/sheets/${version}/types.json`);
+export let loadedVersion : string = require(`../data/sheets/version.json`).version;
 
-const availableTypes = Object.keys(typeSets);
+export const loadLatestData_Local = async () => {
+  const latestDir = FileSystem.documentDirectory + 'latest/';
+
+  const [setsStr, typesStr, versionStr] = await Promise.all([
+    FileSystem.readAsStringAsync(latestDir + 'sets.json'),
+    FileSystem.readAsStringAsync(latestDir + 'types.json'),
+    FileSystem.readAsStringAsync(latestDir + 'version.json'),
+  ]);
+
+  const sets = JSON.parse(setsStr);
+  const types = JSON.parse(typesStr);
+  const loadedVer = JSON.parse(versionStr).version;
+
+  updateLoadedSets(sets, types, loadedVer);
+}
+
+export const updateLoadedSets = (ls : any, lts:any, lv:any) => {
+  loadedSets = ls;
+  loadedTypeSets = lts;
+  loadedVersion = lv;
+}
 
 export const useWordsByType = (
   count: number,
@@ -23,7 +46,7 @@ export const useWordsByType = (
     // Get all words from requested types
     let allWords: WordSelectionOption[] = [];
     typeArray.forEach(type => {
-      const typeWords = typeSets[type.toLowerCase()] || [];
+      const typeWords = loadedTypeSets[type.toLowerCase()] || [];
       allWords = [...allWords, ...typeWords.map((word: string) => ({ type, text: word }))];
     });
 
@@ -44,7 +67,7 @@ export const useWordsByType = (
 
 export const useData: (difficulty?: number, range?: number) => WordSelectionOption[][] = (difficulty, range = 0.2) => {
   const { selectedGalaxy, activePlanets } = useGalaxyContext();
-  const set: string[][] = sets[selectedGalaxy];
+  const set: string[][] = loadedSets[selectedGalaxy];
 
   const memoizedData : WordSelectionOption[][]  = useMemo(() => {
     const effectiveDifficulty = difficulty ?? (activePlanets[selectedGalaxy] / (selectedGalaxy === 0 ? 24 : 7)); // 0 - 1

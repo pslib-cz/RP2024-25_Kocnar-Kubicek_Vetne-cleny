@@ -9,11 +9,12 @@ import 'react-native-reanimated';
 import { GalaxyProvider } from '@/contexts/GalaxyContext';
 import { MultiplayerGameProvider } from '@/contexts/MultiplayerGameContext';
 import { ConfigProvider } from '@/contexts/ConfigContext';
-
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { GameProvider } from '@/contexts/GameContext';
 import React from 'react';
 import { LevelProvider } from '@/contexts/levelContext';
+import { FileSystemStuffProvider } from '@/contexts/FileSystemStuffContext';
+import { CommonMistakesProvider } from '@/contexts/CommonMistakesContext';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -25,7 +26,7 @@ export default function RootLayout() {
     Outfit: require('../assets/fonts/Outfit.ttf'),
     PT: require('../assets/fonts/PT.ttf'),
   });
-
+  
   useEffect(() => {
     if (loaded) {
       SplashScreen.hideAsync();
@@ -35,28 +36,32 @@ export default function RootLayout() {
   if (!loaded) {
     return null;
   }
-
+  
   return (
     <ConfigProvider>
-      <GalaxyProvider>
-        <RocketProvider>
-          <LevelProvider>
-            <MultiplayerGameProvider>
-              <GameProvider>
-                <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-                  <Stack screenOptions={{ headerShown: false }}>
-                    <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-                    <Stack.Screen name="+not-found" />
-                    <Stack.Screen name="games/game" />
-                    {/* <Stack.Screen name="tutorial" /> */}
-                  </Stack>
-                  <StatusBar style="auto" />
-                </ThemeProvider>
-              </GameProvider>
-            </MultiplayerGameProvider>
-          </LevelProvider>
-        </RocketProvider>
-      </GalaxyProvider>
+      <FileSystemStuffProvider>
+        <GalaxyProvider>
+          <RocketProvider>
+            <LevelProvider>
+              <MultiplayerGameProvider>
+                <CommonMistakesProvider>
+                  <GameProvider>
+                    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+                      <Stack screenOptions={{ headerShown: false }}>
+                        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                        <Stack.Screen name="+not-found" />
+                        <Stack.Screen name="games/game" />
+                        {/* <Stack.Screen name="tutorial" /> */}
+                      </Stack>
+                      <StatusBar style="auto" />
+                    </ThemeProvider>
+                  </GameProvider>
+                </CommonMistakesProvider>
+              </MultiplayerGameProvider>
+            </LevelProvider>
+          </RocketProvider>
+        </GalaxyProvider>
+      </FileSystemStuffProvider>
     </ConfigProvider>
   );
 }

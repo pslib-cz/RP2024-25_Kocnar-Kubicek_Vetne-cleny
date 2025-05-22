@@ -4,12 +4,14 @@ import { FontAwesome } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { NEXT_LEVEL_TRESHOLD, useGameContext } from '@/contexts/GameContext';
 import PlanetView from '@/components/PlanetView';
+import { useMultiplayerGameContext } from '@/contexts/MultiplayerGameContext';
 
 const PracticeCompleteScreen = () => {
   const navigation = useRouter();
 
   const { getDuration, getSuccessRate } = useGameContext();
-  const { newGameWithCount } = useGameContext();
+  const { newGameWithCount, commonMistakes, newGameWithCount_CommonMistakes } = useGameContext();
+  const { code } = useMultiplayerGameContext();
 
   const ResultStuff = ({text, value, color} : {text : string, value : string, color : string}) => {
     return(
@@ -41,22 +43,66 @@ const PracticeCompleteScreen = () => {
 
   const successRateColor = getSuccessRateColor(successRate);
 
-  return (
-    <View style={styles.container}>
-      <PlanetView displayName={false}/>
+  const resultScreenPractice = () => {
+    return (
+      <View style={styles.container}>
+        <PlanetView displayName={false}/>
 
-      <Text style={styles.title}>{successRate >= NEXT_LEVEL_TRESHOLD ? "Úroveň dokončena!" : "Úroveň nesplněna!"}</Text>
-      <Text style={{color: "white", marginBottom: 16}}>Pro odemčení další úrovně je nutné mít úspěšnost alespoň {NEXT_LEVEL_TRESHOLD}%</Text>
+        <Text style={styles.title}>{successRate >= NEXT_LEVEL_TRESHOLD ? "Úroveň dokončena!" : "Úroveň nesplněna!"}</Text>
+        <Text style={{color: "white", marginBottom: 16}}>Pro odemčení další úrovně je nutné mít úspěšnost alespoň {NEXT_LEVEL_TRESHOLD}%</Text>
 
-      <View style={styles.statsContainer}>
-        <ResultStuff text="Time" value={`${getDuration()}s`} color="#6272A4" />
-        <ResultStuff text="Success rate" value={`${successRate.toFixed(2)}%`} color={successRateColor} />
+        <View style={styles.statsContainer}>
+          <ResultStuff text="Time" value={`${getDuration()}s`} color="#6272A4" />
+          <ResultStuff text="Success rate" value={`${successRate.toFixed(2)}%`} color={successRateColor} />
+        </View>
+  
+        <Button title={successRate >= NEXT_LEVEL_TRESHOLD ? "Další level" : "Zkusit znovu"} filled={true} onPress={newGameWithCount} />
+        <Button title="Domů" filled={false} onPress={() => navigation.navigate('/' as never)} />
       </View>
- 
-      <Button title={successRate >= NEXT_LEVEL_TRESHOLD ? "Další level" : "Zkusit znovu"} filled={true} onPress={newGameWithCount} />
-      <Button title="Domů" filled={false} onPress={() => navigation.navigate('/' as never)} />
-    </View>
-  );
+    )
+  }
+
+  const resultScreenMultiplayer = () => {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.title}>
+          Jsi 10 z 9!
+        </Text>
+
+        <View style={styles.statsContainer}>
+          <ResultStuff text="Time" value={`${getDuration()}s`} color="#6272A4" />
+          <ResultStuff text="Success rate" value={`${successRate.toFixed(2)}%`} color={successRateColor} />
+        </View>
+  
+        <Button title={successRate >= NEXT_LEVEL_TRESHOLD ? "Další level" : "Zkusit znovu"} filled={true} onPress={newGameWithCount} />
+        <Button title="Domů" filled={false} onPress={() => navigation.navigate('/' as never)} />
+      </View>
+    )
+  }
+
+  const commonMistakesScreen = () => {
+    return (
+      <View style={styles.container}>
+        <Text style={[styles.title, { textAlign: 'center' }]}>
+          Procvičování chyb dokončeno!
+        </Text>
+
+        <View style={styles.statsContainer}>
+          <ResultStuff text="Time" value={`${getDuration()}s`} color="#6272A4" />
+          <ResultStuff text="Success rate" value={`${successRate.toFixed(2)}%`} color={successRateColor} />
+        </View>
+  
+        <Button title={"Zkusit znovu"} filled={true} onPress={newGameWithCount_CommonMistakes} />
+        <Button title="Domů" filled={false} onPress={() => navigation.navigate('/' as never)} />
+      </View>
+    )
+  }
+
+  console.log(`Finished screen with code: ${code}, commonMistakes: ${commonMistakes}`);
+
+  //if (code) return resultScreenMultiplayer();
+  if (true) return commonMistakesScreen();
+  return resultScreenPractice();
 };
 
 function Button({ title, filled, onPress } : { title: string, filled: boolean, onPress: () => void })
