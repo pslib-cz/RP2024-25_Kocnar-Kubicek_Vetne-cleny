@@ -30,7 +30,7 @@ export default function HomeScreen()
         router.push('/tutorial')
       }/>
 
-      <ThemedText type="subtitle" onPress={() => router.push('/common-mistakes')} style={{ textDecorationLine: 'underline' }}>
+      <ThemedText type="subtitle" onPress={() => router.push('/commonMistakes')} style={{ textDecorationLine: 'underline' }}>
         Nejčastější chyby
       </ThemedText>
     </ScrollView>

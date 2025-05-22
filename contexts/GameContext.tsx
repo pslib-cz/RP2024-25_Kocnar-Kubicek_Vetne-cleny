@@ -153,7 +153,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   /// on level finished, not limited to the whole game
   const onFinished = (correct : boolean) => {
-    updateMistakes(data, !correct);
+    updateMistakes(data, correct);
 
     setGameState(correct ? GameState.correct : GameState.incorrect)
 

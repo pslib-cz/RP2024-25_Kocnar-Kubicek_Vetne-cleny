@@ -44,53 +44,61 @@ const PracticeCompleteScreen = () => {
   const successRateColor = getSuccessRateColor(successRate);
 
   const resultScreenPractice = () => {
-    <View style={styles.container}>
-      <PlanetView displayName={false}/>
+    return (
+      <View style={styles.container}>
+        <PlanetView displayName={false}/>
 
-      <Text style={styles.title}>{successRate >= NEXT_LEVEL_TRESHOLD ? "Úroveň dokončena!" : "Úroveň nesplněna!"}</Text>
-      <Text style={{color: "white", marginBottom: 16}}>Pro odemčení další úrovně je nutné mít úspěšnost alespoň {NEXT_LEVEL_TRESHOLD}%</Text>
+        <Text style={styles.title}>{successRate >= NEXT_LEVEL_TRESHOLD ? "Úroveň dokončena!" : "Úroveň nesplněna!"}</Text>
+        <Text style={{color: "white", marginBottom: 16}}>Pro odemčení další úrovně je nutné mít úspěšnost alespoň {NEXT_LEVEL_TRESHOLD}%</Text>
 
-      <View style={styles.statsContainer}>
-        <ResultStuff text="Time" value={`${getDuration()}s`} color="#6272A4" />
-        <ResultStuff text="Success rate" value={`${successRate.toFixed(2)}%`} color={successRateColor} />
+        <View style={styles.statsContainer}>
+          <ResultStuff text="Time" value={`${getDuration()}s`} color="#6272A4" />
+          <ResultStuff text="Success rate" value={`${successRate.toFixed(2)}%`} color={successRateColor} />
+        </View>
+  
+        <Button title={successRate >= NEXT_LEVEL_TRESHOLD ? "Další level" : "Zkusit znovu"} filled={true} onPress={newGameWithCount} />
+        <Button title="Domů" filled={false} onPress={() => navigation.navigate('/' as never)} />
       </View>
- 
-      <Button title={successRate >= NEXT_LEVEL_TRESHOLD ? "Další level" : "Zkusit znovu"} filled={true} onPress={newGameWithCount} />
-      <Button title="Domů" filled={false} onPress={() => navigation.navigate('/' as never)} />
-    </View>
+    )
   }
 
   const resultScreenMultiplayer = () => {
-    <View style={styles.container}>
-      <div>
-        Jsi 10 z 9!
-      </div>
+    return (
+      <View style={styles.container}>
+        <Text>
+          Jsi 10 z 9!
+        </Text>
 
-      <View style={styles.statsContainer}>
-        <ResultStuff text="Time" value={`${getDuration()}s`} color="#6272A4" />
-        <ResultStuff text="Success rate" value={`${successRate.toFixed(2)}%`} color={successRateColor} />
+        <View style={styles.statsContainer}>
+          <ResultStuff text="Time" value={`${getDuration()}s`} color="#6272A4" />
+          <ResultStuff text="Success rate" value={`${successRate.toFixed(2)}%`} color={successRateColor} />
+        </View>
+  
+        <Button title={successRate >= NEXT_LEVEL_TRESHOLD ? "Další level" : "Zkusit znovu"} filled={true} onPress={newGameWithCount} />
+        <Button title="Domů" filled={false} onPress={() => navigation.navigate('/' as never)} />
       </View>
- 
-      <Button title={successRate >= NEXT_LEVEL_TRESHOLD ? "Další level" : "Zkusit znovu"} filled={true} onPress={newGameWithCount} />
-      <Button title="Domů" filled={false} onPress={() => navigation.navigate('/' as never)} />
-    </View>
+    )
   }
 
   const commonMistakesScreen = () => {
-    <View style={styles.container}>
-      <div>
-        Procvičování chyb dokončeno!
-      </div>
+    return (
+      <View style={styles.container}>
+        <Text>
+          Procvičování chyb dokončeno!
+        </Text>
 
-      <View style={styles.statsContainer}>
-        <ResultStuff text="Time" value={`${getDuration()}s`} color="#6272A4" />
-        <ResultStuff text="Success rate" value={`${successRate.toFixed(2)}%`} color={successRateColor} />
+        <View style={styles.statsContainer}>
+          <ResultStuff text="Time" value={`${getDuration()}s`} color="#6272A4" />
+          <ResultStuff text="Success rate" value={`${successRate.toFixed(2)}%`} color={successRateColor} />
+        </View>
+  
+        <Button title={"Zkusit znovu"} filled={true} onPress={newGameWithCount_CommonMistakes} />
+        <Button title="Domů" filled={false} onPress={() => navigation.navigate('/' as never)} />
       </View>
- 
-      <Button title={"Zkusit znovu"} filled={true} onPress={newGameWithCount_CommonMistakes} />
-      <Button title="Domů" filled={false} onPress={() => navigation.navigate('/' as never)} />
-    </View>
+    )
   }
+
+  console.log("Finished screen");
 
   if (code) return resultScreenMultiplayer();
   if (commonMistakes) return commonMistakesScreen();
