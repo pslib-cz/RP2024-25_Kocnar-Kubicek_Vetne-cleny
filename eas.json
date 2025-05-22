@@ -1,25 +1,27 @@
 {
-    "build": {
-      "development": {
-        "ios": {
-          "simulator": true
-        }
-      },
-      "production": {
-        "ios": {
-          "distribution": "store",
-          "autoIncrement": true
-        }
+  "build": {
+    "development": {
+      "ios": {
+        "simulator": true
       }
     },
-    "submit": {
-      "production": {
-        "ios": {
-          "appleId": "tomas.kubicek.022@pslib.cz",
-          "ascAppId": "6745885150",
-          "appleTeamId": "TBU3RT8975"
-        }
+    "production": {
+      "ios": {
+        "distribution": "store",
+        "autoIncrement": true
       }
     }
+  },
+  "submit": {
+    "production": {
+      "ios": {
+        "appleId": "tomas.kubicek.022@pslib.cz",
+        "ascAppId": "6745885150",
+        "appleTeamId": "TBU3RT8975"
+      }
+    }
+  },
+  "cli": {
+    "appVersionSource": "remote"
   }
-  
+}
