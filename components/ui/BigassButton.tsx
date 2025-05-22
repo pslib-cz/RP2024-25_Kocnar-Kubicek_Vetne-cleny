@@ -2,10 +2,14 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
 export default function BigassButton(
-  { title, bgEmoji, onPress = () => { } }: { title: string, bgEmoji: string, onPress?: () => void }
+  { title, bgEmoji, onPress = () => { }, enabled = true }: { title: string, bgEmoji: string, onPress?: () => void, enabled?: boolean }
 ) {
   return (
-    <TouchableOpacity style={styles.container} onPress={onPress}>
+    <TouchableOpacity
+      style={[styles.container, !enabled && { opacity: 0.5 }]}
+      onPress={onPress}
+      disabled={!enabled}
+    >
       <View style={styles.logoContainer}>
         <View style={styles.logoContent}>
           <Text style={styles.logoText}>{title}</Text>
