@@ -1,4 +1,4 @@
 {
-    "API_URL": "http://copper.tkdev.cz:5173",
-    "API_BACKUP_URL": "http://192.168.1.192:5173"
+    "API_URL": "https://id-102.pslib.cloud",
+    "API_BACKUP_URL": "https://vdserver.tkdev.cz"
 }
