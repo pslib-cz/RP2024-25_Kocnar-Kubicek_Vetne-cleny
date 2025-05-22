@@ -4,6 +4,7 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Alert } from 'react-native';
 
 type GalaxyContextType = {
   selectedGalaxy: number;
@@ -93,6 +94,7 @@ export const GalaxyProvider: React.FC<GalaxyProviderProps> = ({
   }, [activeLevelIndex, loading]);
 
   const levelUp = () => {
+    alert("New level achieved!")
     setActiveLevelIndex((prevLevels) => {
       const newLevels = [...prevLevels];
       if (newLevels[selectedGalaxy] < 5) {

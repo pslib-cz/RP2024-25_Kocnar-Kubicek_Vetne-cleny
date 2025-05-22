@@ -23,13 +23,13 @@ export const CommonMistakesProvider = ({ children }: { children: ReactNode }) =>
   // on mount, load all mistakes from the local file
   // when new mistake is added, add it to the list and save it to the local file
 
-  const dir = FileSystem.documentDirectory + 'mistakes/'; 
+  const file = FileSystem.documentDirectory + 'mistakes.json'; 
 
   useEffect(() => {
     const loadMistakes = async () => {
       try {
         const [mistakesStr] = await Promise.all([
-          FileSystem.readAsStringAsync(dir + 'mistakes.json'),
+          FileSystem.readAsStringAsync(file),
         ]);
 
         allMistakes = JSON.parse(mistakesStr);
@@ -68,9 +68,9 @@ export const CommonMistakesProvider = ({ children }: { children: ReactNode }) =>
     }
 
     try {
-      await FileSystem.makeDirectoryAsync(dir, { intermediates: true });
+      //await FileSystem.makeDirectoryAsync(dir, { intermediates: true });
       await FileSystem.writeAsStringAsync(
-        dir + 'mistakes.json',
+        file,
         JSON.stringify(allMistakes)
       );
     } catch (error) {
