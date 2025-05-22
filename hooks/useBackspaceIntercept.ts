@@ -1,6 +1,6 @@
 import { useRouter } from "expo-router";
 import { useEffect } from "react";
-import { Alert, BackHandler } from "react-native";
+import { BackHandler } from "react-native";
 
 export const useBackspaceIntercept = (onBackPress : () => void) => {
   const router = useRouter(); 

@@ -17,11 +17,7 @@ export interface MistakeSaveData {
 const CommonMistakesContext = createContext<CommonMistakesContextValue | undefined>(undefined);
 
 export const CommonMistakesProvider = ({ children }: { children: ReactNode }) => {
-
   const [allMistakes, setAllMistakes] = useState<MistakeSaveData[]>([]);
-
-  // on mount, load all mistakes from the local file
-  // when new mistake is added, add it to the list and save it to the local file
 
   const file = FileSystem.documentDirectory + 'mistakes.json';
 

@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, SafeAreaView, ScrollView, Keyboard, TouchableWithoutFeedback, FlatList } from 'react-native';
+import { View, Text, TextInput, StyleSheet, SafeAreaView, ScrollView, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useMultiplayerGameContext } from '@/contexts/MultiplayerGameContext';
-import { useRocket } from '@/contexts/RocketContext';
 import PlayfulButton from '@/components/ui/PlayfulButton';
 import { Image } from 'expo-image';
 import { Ionicons } from '@expo/vector-icons';
@@ -34,7 +33,6 @@ export default function JoinGameScreen() {
   const [code, setCode] = useState('');
   const { joinGame, code: contextCode, config, leaveGame, author, players } = useMultiplayerGameContext();
   const router = useRouter();
-  const rocket = useRocket();
   const params = useLocalSearchParams();
 
   useEffect(() => {

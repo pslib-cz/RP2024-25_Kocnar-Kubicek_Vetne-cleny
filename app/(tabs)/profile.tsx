@@ -42,9 +42,6 @@ export default function ProfileEditScreen(): React.ReactElement {
   const [rocketSvgs, setRocketSvgs] = useState<string[]>([]);
   const [modifiedRocketSvgs, setModifiedRocketSvgs] = useState<string[]>([]);
 
-  // Load saved preferences when component mounts
-  // This is now handled by the RocketContext
-
   // Načtení všech raket při spuštění komponenty
   useEffect(() => {
     const loadRockets = async () => {
