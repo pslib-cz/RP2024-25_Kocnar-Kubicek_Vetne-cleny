@@ -30,7 +30,9 @@ export default function HomeScreen()
         router.push('/tutorial')
       }/>
 
-      <ThemedText type="subtitle">Nejčastější chyby</ThemedText>
+      <ThemedText type="subtitle" onPress={() => router.push('/common-mistakes')} style={{ textDecorationLine: 'underline' }}>
+        Nejčastější chyby
+      </ThemedText>
     </ScrollView>
   );
 }

@@ -14,6 +14,7 @@ import { GameProvider } from '@/contexts/GameContext';
 import React from 'react';
 import { LevelProvider } from '@/contexts/levelContext';
 import { FileSystemStuffProvider } from '@/contexts/FileSystemStuffContext';
+import { CommonMistakesProvider } from '@/contexts/CommonMistakesContext';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -43,17 +44,19 @@ export default function RootLayout() {
           <RocketProvider>
             <LevelProvider>
               <MultiplayerGameProvider>
-                <GameProvider>
-                  <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-                    <Stack screenOptions={{ headerShown: false }}>
-                      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-                      <Stack.Screen name="+not-found" />
-                      <Stack.Screen name="games/game" />
-                      {/* <Stack.Screen name="tutorial" /> */}
-                    </Stack>
-                    <StatusBar style="auto" />
-                  </ThemeProvider>
-                </GameProvider>
+                <CommonMistakesProvider>
+                  <GameProvider>
+                    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+                      <Stack screenOptions={{ headerShown: false }}>
+                        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                        <Stack.Screen name="+not-found" />
+                        <Stack.Screen name="games/game" />
+                        {/* <Stack.Screen name="tutorial" /> */}
+                      </Stack>
+                      <StatusBar style="auto" />
+                    </ThemeProvider>
+                  </GameProvider>
+                </CommonMistakesProvider>
               </MultiplayerGameProvider>
             </LevelProvider>
           </RocketProvider>

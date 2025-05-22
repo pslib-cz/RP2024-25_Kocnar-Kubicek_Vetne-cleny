@@ -32,4 +32,7 @@ export interface GameContextData {
   gameType : GameRoute,
 
   newGameWithCount : () => void,
+  newGameWithCount_CommonMistakes : () => void,
+
+  commonMistakes : boolean
 }
