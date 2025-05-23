@@ -1,7 +1,6 @@
 import { WordSelectionOption } from "@/types/games/SelectionOption"
 import React from "react"
-import { ScrollView, StyleSheet } from "react-native"
-import { View } from "react-native-reanimated/lib/typescript/Animated"
+import { ScrollView, StyleSheet, View } from "react-native"
 import { LargeGameButton } from "./LargeGameButton"
 
 
