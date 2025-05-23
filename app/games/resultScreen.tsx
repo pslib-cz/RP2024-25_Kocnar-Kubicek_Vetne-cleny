@@ -74,7 +74,7 @@ const PracticeCompleteScreen = () => {
           <ResultStuff text="Success rate" value={`${successRate.toFixed(2)}%`} color={successRateColor} />
         </View>
   
-        <Button title={successRate >= NEXT_LEVEL_TRESHOLD ? "Další level" : "Zkusit znovu"} filled={true} onPress={newGameWithCount} />
+        {/* <Button title={successRate >= NEXT_LEVEL_TRESHOLD ? "Další level" : "Zkusit znovu"} filled={true} onPress={newGameWithCount} /> */}
         <Button title="Domů" filled={false} onPress={() => navigation.navigate('/' as never)} />
       </View>
     )

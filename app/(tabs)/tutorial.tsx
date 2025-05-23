@@ -91,22 +91,6 @@ const styles = StyleSheet.create({
     width: 1,
     backgroundColor: '#333',
   },
-  mascotContainer: {
-    position: 'absolute',
-    left: 0,
-    top: '40%',
-  },
-  mascot: {
-    width: 30,
-    height: 30,
-    borderRadius: 15,
-    backgroundColor: '#FF9500',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  mascotText: {
-    fontSize: 16,
-  },
   questionSection: {
     marginVertical: 40,
     width: '100%',
@@ -115,21 +99,6 @@ const styles = StyleSheet.create({
   questionRow: {
     flexDirection: 'row',
     marginBottom: 12,
-  },
-  questionText: {
-    color: '#FFF',
-    fontSize: 16,
-    marginRight: 10,
-  },
-  answerYes: {
-    color: '#4CD964',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  answerNo: {
-    color: '#FF3B30',
-    fontSize: 16,
-    fontWeight: 'bold',
   },
   mainContent: {
     alignItems: 'center',
@@ -155,9 +124,6 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingHorizontal: 20,
     marginVertical: 40,
-  },
-  view1: {
-    width: '100%',
   },
   backButton: {
     flexDirection: 'row',

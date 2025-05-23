@@ -1,8 +1,6 @@
 import ContinueButton from '@/components/ui/games/ContinueButton';
-import { LargeGameButton } from '@/components/ui/games/LargeGameButton';
 import { WordSelectionOption } from '@/types/games/SelectionOption';
 import React, { useEffect } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useGameContext } from '@/contexts/GameContext';
 import { useLevelContext } from '@/contexts/levelContext';
 import { TargetTypeDisplay } from '../ui/games/TargetTypeDisplay';

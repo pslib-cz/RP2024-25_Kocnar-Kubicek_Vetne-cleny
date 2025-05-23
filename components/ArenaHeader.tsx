@@ -4,8 +4,6 @@ import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { Ionicons } from '@expo/vector-icons'; // Import Ionicons for the arrow
 import { router } from 'expo-router';
 import { useGalaxyContext } from '@/contexts/GalaxyContext';
-
-// Import PlanetView component
 import { NamedRocket } from '@/components/NamedRocket';
 import { ThemedText } from '@/components/ThemedText';
 import { Galaxy } from '@/types/Galaxy';
