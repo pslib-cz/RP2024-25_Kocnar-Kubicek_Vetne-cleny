@@ -4,6 +4,7 @@ import { useRocket } from '@/contexts/RocketContext';
 import { useState, useEffect } from 'react';
 import { loadSvgAsset } from '@/app/(tabs)/profile';
 import { StyleProp, ViewStyle } from 'react-native';
+import { rocket1, rocket2, rocket3, rocket4, rocket5 } from '@/data/rocketsImages';
 
 interface RocketProps {
   style?: StyleProp<ViewStyle>;
@@ -20,12 +21,6 @@ export const Rocket = ({ style, width = 100, height = 100 }: RocketProps) => {
   useEffect(() => {
     const loadRockets = async () => {
       try {
-        const rocket1 = require('../assets/images/rockets/rocket1.svg');
-        const rocket2 = require('../assets/images/rockets/rocket2.svg');
-        const rocket3 = require('../assets/images/rockets/rocket3.svg');
-        const rocket4 = require('../assets/images/rockets/rocket4.svg');
-        const rocket5 = require('../assets/images/rockets/rocket5.svg');
-
         const svg1 = await loadSvgAsset(rocket1);
         const svg2 = await loadSvgAsset(rocket2);
         const svg3 = await loadSvgAsset(rocket3);

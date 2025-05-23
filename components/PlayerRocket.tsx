@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { SvgXml } from 'react-native-svg';
 import { StyleProp, ViewStyle, View, Text, StyleSheet, TextStyle } from 'react-native';
 import { loadSvgAsset } from '@/app/(tabs)/profile';
+import { rocket1, rocket2, rocket3, rocket4, rocket5 } from '@/data/rocketsImages';
 
 interface PlayerData {
   id: string;
@@ -37,12 +38,6 @@ export const PlayerRocket = ({
   useEffect(() => {
     const loadRockets = async () => {
       try {
-        const rocket1 = require('../assets/images/rockets/rocket1.svg');
-        const rocket2 = require('../assets/images/rockets/rocket2.svg');
-        const rocket3 = require('../assets/images/rockets/rocket3.svg');
-        const rocket4 = require('../assets/images/rockets/rocket4.svg');
-        const rocket5 = require('../assets/images/rockets/rocket5.svg');
-
         const svg1 = await loadSvgAsset(rocket1);
         const svg2 = await loadSvgAsset(rocket2);
         const svg3 = await loadSvgAsset(rocket3);

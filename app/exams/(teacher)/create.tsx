@@ -6,14 +6,7 @@ import Slider from '@react-native-community/slider';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useMultiplayerGameContext } from '@/contexts/MultiplayerGameContext';
 import { useRouter } from 'expo-router';
-
-const galaxyImages = [
-  require('@/assets/images/uni/g/1.png'),
-  require('@/assets/images/uni/g/2.png'),
-  require('@/assets/images/uni/g/3.png'),
-  require('@/assets/images/uni/g/4.png'),
-  require('@/assets/images/uni/g/5.png'),
-];
+import { galaxyImages } from '@/data/galaxyImages';
 
 export default function CreateGameScreen() {
   const [difficulty, setDifficulty] = useState(50);

@@ -7,6 +7,7 @@ import React, { useEffect, useState } from 'react';
 import { Modal, SafeAreaView, StatusBar, StyleSheet, TextInput, TouchableOpacity, View, Switch } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import ColorPicker from 'react-native-wheel-color-picker';
+import { rocket1, rocket2, rocket3, rocket4, rocket5 } from '@/data/rocketsImages';
 
 // Načtení SVG souboru jako text
 export const loadSvgAsset = async (assetModule: any): Promise<string | null> => {
@@ -46,16 +47,6 @@ export default function ProfileEditScreen(): React.ReactElement {
   useEffect(() => {
     const loadRockets = async () => {
       try {
-        // Načtení SVG souborů - zde je potřeba správně importovat soubory z assets
-        // Toto je příklad, jak by se soubory mohly importovat
-        const rocket1 = require('../../assets/images/rockets/rocket1.svg');
-        const rocket2 = require('../../assets/images/rockets/rocket2.svg');
-        const rocket3 = require('../../assets/images/rockets/rocket3.svg');
-        const rocket4 = require('../../assets/images/rockets/rocket4.svg');
-        const rocket5 = require('../../assets/images/rockets/rocket5.svg');
-
-        //console.log(rocket1, rocket2, rocket3, rocket4, rocket5);
-
         // Načtení obsahu SVG souborů
         const svg1 = await loadSvgAsset(rocket1);
         const svg2 = await loadSvgAsset(rocket2);

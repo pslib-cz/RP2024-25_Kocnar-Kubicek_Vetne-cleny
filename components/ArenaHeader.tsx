@@ -7,23 +7,15 @@ import { useGalaxyContext } from '@/contexts/GalaxyContext';
 import { NamedRocket } from '@/components/NamedRocket';
 import { ThemedText } from '@/components/ThemedText';
 import { Galaxy } from '@/types/Galaxy';
+import { galaxyImages } from '@/data/galaxyImages';
 
 // Galaxy names and planet counts
 const galaxies : Galaxy[] = [
-    { name: "Všechny členy", planetCount: 25 },
-    { name: "Hlavní členy", planetCount: 8 },
-    { name: "Přívlastky", planetCount: 8 },
-    { name: "Přísl. určení", planetCount: 8 },
-    { name: "Doplňky", planetCount: 8 },
-];
-
-// Pre-load all galaxy images
-const galaxyImages = [
-    require('@/assets/images/uni/g/1.png'),
-    require('@/assets/images/uni/g/2.png'),
-    require('@/assets/images/uni/g/3.png'),
-    require('@/assets/images/uni/g/4.png'),
-    require('@/assets/images/uni/g/5.png'),
+  { name: "Všechny členy", planetCount: 25 },
+  { name: "Hlavní členy", planetCount: 8 },
+  { name: "Přívlastky", planetCount: 8 },
+  { name: "Přísl. určení", planetCount: 8 },
+  { name: "Doplňky", planetCount: 8 },
 ];
 
 interface ArenaHeaderProps {
