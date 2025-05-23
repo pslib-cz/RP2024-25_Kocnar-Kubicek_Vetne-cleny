@@ -7,6 +7,7 @@ import { useGameContext } from "@/contexts/GameContext";
 import { Text } from "react-native-svg";
 import { useRouter } from "expo-router";
 import Animated, { SlideInRight, SlideOutLeft } from 'react-native-reanimated';
+import { useMultiplayerGameContext } from "@/contexts/MultiplayerGameContext";
 
 interface GameLayoutProps {
   children: ReactNode;
@@ -14,6 +15,7 @@ interface GameLayoutProps {
 
 export const GameLayout: React.FC<GameLayoutProps> = ({ children }) => {
   const { state, gameData } = useGameContext();
+  const { code } = useMultiplayerGameContext();
 
   const navigation = useRouter(); 
 
@@ -32,7 +34,7 @@ export const GameLayout: React.FC<GameLayoutProps> = ({ children }) => {
               styles.button
             ]} 
             onPress={() => {
-              navigation.push('tutorial' as never, )
+              navigation.push('tutorial' as never)
             }}
           >
             <Text>?</Text>

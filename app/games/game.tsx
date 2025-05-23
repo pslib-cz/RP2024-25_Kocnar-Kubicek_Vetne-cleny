@@ -49,11 +49,9 @@ export const Game: React.FC = () => {
       case GameRoute.GAME1_ALL_TYPES:
         return GameOneUI(Game1Type.allTypes)
       case GameRoute.GAME2:
-        return Game2UI(false)
-      case GameRoute.GAME2_MULTI:
-        return Game2UI(true)
+        return Game2UI()
       case GameRoute.GAME3:
-        return Game3UI(true)
+        return Game3UI()
       default:
         return <Text>Game not found</Text>
     }

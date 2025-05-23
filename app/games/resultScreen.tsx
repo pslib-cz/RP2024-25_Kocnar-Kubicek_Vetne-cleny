@@ -66,7 +66,7 @@ const PracticeCompleteScreen = () => {
     return (
       <View style={styles.container}>
         <Text style={styles.title}>
-          Jsi 10 z 9!
+          Test dokončen!
         </Text>
 
         <View style={styles.statsContainer}>
@@ -100,8 +100,8 @@ const PracticeCompleteScreen = () => {
 
   console.log(`Finished screen with code: ${code}, commonMistakes: ${commonMistakes}`);
 
-  //if (code) return resultScreenMultiplayer();
-  if (true) return commonMistakesScreen();
+  if (code) return resultScreenMultiplayer();
+  if (commonMistakes) return commonMistakesScreen();
   return resultScreenPractice();
 };
 

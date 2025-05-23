@@ -8,8 +8,9 @@ import { useLevelContext } from '@/contexts/levelContext';
 import { Tooltip } from '../ui/games/Tooltip';
 import WordButton from '../ui/games/WordButton';
 import { TargetTypeDisplay } from '../ui/games/TargetTypeDisplay';
+import { LargeGameButtonsGrid } from '../ui/games/LargeGameButtonsGrid';
 
-export function Game3UI(sentece: boolean) {
+export function Game3UI() {
   const { data, onFinished } = useGameContext();
   const { options, setOptions, targetType, setTargetType, selectedOptions, setSelectedOptions, tooltip, handleHideTooltip, handleShowTooltip } = useLevelContext();
 
@@ -50,24 +51,33 @@ export function Game3UI(sentece: boolean) {
 
   return (
     <>
-      <TargetTypeDisplay text='Které slovo ve větě je ' />
-        <ScrollView style={{ width: '100%' }}>
-          <View style={[styles.grid, { marginBottom: 40 }]}>
-            {
-              options &&
-              options.map((option, index) => (
-                <LargeGameButton
-                  key={index}
-                  text={option.text}
-                  selected={selectedOptions.includes(option)}
-                  onPress={() => handleSelect(option)}
-                />
-              ))
-            }
-          </View>
-        </ScrollView>
-        <ContinueButton onClick={handleContinue} enabled={selectedOptions.length > 0} />
-      {/* </View> */}
+      <View>
+        <TargetTypeDisplay text='Které slovo ve větě je ' />
+        <Text style={styles.questionText}>
+          {data.map(option => option.text).join(' ')}
+        </Text>
+      </View>
+      <LargeGameButtonsGrid 
+        options={options} 
+        selectedOptions={selectedOptions} 
+        handleSelect={handleSelect} 
+      />
+      {/* <ScrollView style={{ width: '100%' }}>
+        <View style={[styles.grid, { marginBottom: 40 }]}>
+          {
+            options &&
+            options.map((option, index) => (
+              <LargeGameButton
+                key={index}
+                text={option.text}
+                selected={selectedOptions.includes(option)}
+                onPress={() => handleSelect(option)}
+              />
+            ))
+          }
+        </View>
+      </ScrollView> */}
+      <ContinueButton onClick={handleContinue} enabled={selectedOptions.length > 0} />
     </>
   );
 };
@@ -90,15 +100,15 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     paddingHorizontal: 20,
   },
-  grid: {
-    width: '100%',
-    display: 'flex',
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 16,
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
+  // grid: {
+  //   width: '100%',
+  //   display: 'flex',
+  //   flexDirection: 'row',
+  //   flexWrap: 'wrap',
+  //   gap: 16,
+  //   justifyContent: 'space-between',
+  //   alignItems: 'center',
+  // },
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',

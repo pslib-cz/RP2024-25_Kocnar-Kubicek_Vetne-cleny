@@ -6,8 +6,9 @@ import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useGameContext } from '@/contexts/GameContext';
 import { useLevelContext } from '@/contexts/levelContext';
 import { TargetTypeDisplay } from '../ui/games/TargetTypeDisplay';
+import { LargeGameButtonsGrid } from '../ui/games/LargeGameButtonsGrid';
 
-export function Game2UI(multiSelect: boolean) {
+export function Game2UI() {
   const { data, onFinished } = useGameContext();
   const { options, setOptions, targetType, setTargetType, selectedOptions, setSelectedOptions } = useLevelContext();
 
@@ -51,7 +52,12 @@ export function Game2UI(multiSelect: boolean) {
   return (
     <>
       <TargetTypeDisplay text='Vyber' />
-      <ScrollView style={{ width: '100%' }}>
+      <LargeGameButtonsGrid 
+        options={options} 
+        selectedOptions={selectedOptions} 
+        handleSelect={handleSelect} 
+      />
+      {/* <ScrollView style={{ width: '100%' }}>
         <View style={styles.grid}>
           {
             options &&
@@ -65,20 +71,20 @@ export function Game2UI(multiSelect: boolean) {
             ))
           }
         </View>
-      </ScrollView>
+      </ScrollView> */}
       <ContinueButton onClick={handleContinue} enabled={selectedOptions.length > 0} />
     </>
   );
 };
 
-const styles = StyleSheet.create({
-  grid: {
-    width: '100%',
-    display: 'flex',
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'center',
-    gap: 20,
-    justifyContent: 'space-between',
-  }
-});
+// const styles = StyleSheet.create({
+//   grid: {
+//     width: '100%',
+//     display: 'flex',
+//     flexDirection: 'row',
+//     flexWrap: 'wrap',
+//     alignItems: 'center',
+//     gap: 20,
+//     justifyContent: 'space-between',
+//   }
+// });

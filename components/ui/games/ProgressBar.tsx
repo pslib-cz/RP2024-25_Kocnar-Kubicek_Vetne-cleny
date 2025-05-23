@@ -14,8 +14,7 @@ const RocketProgressBar: React.FC<RocketProgressBarProps> = ({
   height = 40,
 }) => {
   // Constrain progress between 0 and 1
-  const normalizedProgress = Math.min(Math.max(progress, 0), 1);
-  
+  const normalizedProgress = Math.min(Math.max(progress, 0), 1);  
   const animatedProgress = useRef(new Animated.Value(0)).current;
   
   useEffect(() => {
