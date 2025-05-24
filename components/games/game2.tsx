@@ -55,34 +55,7 @@ export function Game2UI() {
         selectedOptions={selectedOptions} 
         handleSelect={handleSelect} 
       />
-      {/* <ScrollView style={{ width: '100%' }}>
-        <View style={styles.grid}>
-          {
-            options &&
-            options.map((option, index) => (
-              <LargeGameButton
-                key={index}
-                text={option.text}
-                selected={selectedOptions.includes(option)}
-                onPress={() => handleSelect(option)}
-              />
-            ))
-          }
-        </View>
-      </ScrollView> */}
       <ContinueButton onClick={handleContinue} enabled={selectedOptions.length > 0} />
     </>
   );
 };
-
-// const styles = StyleSheet.create({
-//   grid: {
-//     width: '100%',
-//     display: 'flex',
-//     flexDirection: 'row',
-//     flexWrap: 'wrap',
-//     alignItems: 'center',
-//     gap: 20,
-//     justifyContent: 'space-between',
-//   }
-// });
