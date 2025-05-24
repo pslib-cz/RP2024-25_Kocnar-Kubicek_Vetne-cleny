@@ -3,11 +3,8 @@ import React from "react";
 import { StyleSheet, View } from "react-native";
 import { Tooltip } from "./Tooltip";
 import WordButton from "./WordButton";
-import { WordTypes } from "@/constants/WordTypes";
 import { ThemedText } from "@/components/ThemedText";
 import { useLevelContext } from "@/contexts/levelContext";
-
-const isWordTypeAbbr = (abbr: string) => WordTypes.some(w => w.abbr === abbr);
 
 export const WordButtonsContainer = (
   {buttons, showTooltip, longPress, onClick} : 
@@ -28,33 +25,22 @@ export const WordButtonsContainer = (
       <View style={styles.phraseContainer}>
         {
           buttons.map((button, index) => {
-            if (showTooltip) {
-              return (
-                <Tooltip
-                  key={index}
-                  visible={tooltip.visible && tooltip.index === index}
-                  message={tooltip.message}
-                  onRequestClose={handleHideTooltip}
-                >
-                  <WordButton
-                    text={button.text}
-                    state={button.state}
-                    type={button.type}
-                    drawType={button.drawType}
-                    onLongPress={() => longPress(button, index)}
-                    onClick={() => onClick(button, index)}
-                  />
-                </Tooltip>
-              );
-            }
             return (
-              <WordButton
+              <Tooltip
                 key={index}
-                text={button.text}
-                state={button.state}
-                type={button.type}
-                drawType={button.drawType}
-              />
+                visible={showTooltip && tooltip.visible && tooltip.index === index}
+                message={tooltip.message}
+                onRequestClose={handleHideTooltip}
+              >
+                <WordButton
+                  text={button.text}
+                  state={button.state}
+                  type={button.type}
+                  drawType={button.drawType}
+                  onLongPress={() => longPress(button, index)}
+                  onClick={() => onClick(button, index)}
+                />
+              </Tooltip>
             );
           })
         }

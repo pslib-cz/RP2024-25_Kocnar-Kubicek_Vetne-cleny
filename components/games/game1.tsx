@@ -67,12 +67,12 @@ export function GameOneUI(type: Game1Type) {
     if (gameIndex >= data.length)
       throw Error("Game index is out of bounds");
 
-    const updatedPhraseButtons = [...phraseButtons];   
+    const updatedPhraseButtons = [...phraseButtons];
 
     if (data[gameIndex].type === bottomButton.type) {
       if (!allTypes)
         bottomButton.state = ButtonState.disabled;
-      
+
       updatedPhraseButtons[gameIndex].state = ButtonState.correct;
 
       if (gameIndex < bottomButtons.length - 1)
@@ -95,13 +95,13 @@ export function GameOneUI(type: Game1Type) {
       <View></View>
       <WordButtonsContainer buttons={phraseButtons}
         showTooltip={inverted}
-        longPress={(button, index) => handleShowTooltip(button.text, index)}
-        onClick={(button, index) => handleShowTooltip(button.text, index)}
+        longPress={(button, index) => { inverted && handleShowTooltip(button.text, index) }}
+        onClick={(button, index) => { inverted && handleShowTooltip(button.text, index) }}
       />
       <WordButtonsContainer buttons={bottomButtons}
         showTooltip={!inverted}
-        longPress={(button, index) => handleShowTooltip(button.text, index)}
-        onClick={(button) => {onBottomButtonClicked(button); handleHideTooltip();}}
+        longPress={(button, index) => { !inverted && handleShowTooltip(button.text, index) }}
+        onClick={(button) => { onBottomButtonClicked(button); handleHideTooltip(); }}
       />
     </>
   );
