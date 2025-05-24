@@ -10,7 +10,6 @@ import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-na
 
 export default function Tutorial() {
   const { usedNodes, currentNode, AddNode } = useTutorial();
-
   const router = useRouter();
   const { returnTo } = useLocalSearchParams();
 

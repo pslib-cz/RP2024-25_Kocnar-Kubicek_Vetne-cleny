@@ -2,19 +2,30 @@ import { ThemedText } from '@/components/ThemedText';
 import BigassButton from '@/components/ui/BigassButton';
 import { MistakeSaveData, useCommonMistakesContext } from '@/contexts/CommonMistakesContext';
 import { useGameContext } from '@/contexts/GameContext';
+import { useRouter } from 'expo-router';
 import React from 'react';
-import { ScrollView, View } from 'react-native';
+import { Pressable, ScrollView, View } from 'react-native';
 
 export default function CommonMistakes()
 {
   const { newGameWithCount_CommonMistakes } = useGameContext()
   const { allMistakes } = useCommonMistakesContext();
+  const router = useRouter()
 
   const MistakeContainer = ({mistake} : {mistake : MistakeSaveData}) => {
     return (
+      <Pressable 
+        onPress={() => router.push({
+          pathname: '/sentenceDetail',
+          params: { sentence: JSON.stringify(mistake.sentence) }
+        })}
+        style={({ pressed }) => [
+          { opacity: pressed ? 0.7 : 1 }
+        ]}
+      >
       <View style={{ flexDirection: 'row', alignItems: 'flex-start', marginBottom: 8, backgroundColor: '#222', borderRadius: 12, padding: 16, shadowColor: '#000', shadowOpacity: 0.1, shadowRadius: 6, width: 320 }}>
         <ThemedText style={{ fontSize: 18, marginRight: 8 }}>❌</ThemedText>
-        <ThemedText style={{ flex: 1 }}>
+        <ThemedText style={{ flex: 1, color: '#fff', fontSize: 16 }}>
           {mistake.sentence.map((part: { text: string }) => part.text).join(' ')}
           {'\n'}
           <ThemedText style={{ color: '#e74c3c', fontSize: 14 }}>
@@ -26,6 +37,7 @@ export default function CommonMistakes()
           </ThemedText>
         </ThemedText>
       </View>
+      </Pressable>
     )
   }
 

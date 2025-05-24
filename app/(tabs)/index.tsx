@@ -11,7 +11,6 @@ export default function HomeScreen()
 {
   const router = useRouter();
   const { name } = useRocket();
-
   const { newGameWithCount } = useGameContext()
 
   return (
