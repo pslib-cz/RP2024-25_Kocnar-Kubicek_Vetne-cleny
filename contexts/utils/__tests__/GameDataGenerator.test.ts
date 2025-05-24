@@ -38,4 +38,16 @@ describe('GameDataGenerator', () => {
     const levels = generateRandomMistakesLevels(2, 42, []);
     expect(levels).toEqual([]);
   });
+
+  it('generateRandomGameLevels with same seed produces same data', () => {
+    const levels1 = generateRandomGameLevels(3, 123, mockData);
+    const levels2 = generateRandomGameLevels(3, 123, mockData);
+    expect(levels1).toEqual(levels2);
+  });
+
+  it('generateRandomGameLevels with different seeds produces different data', () => {
+    const levels1 = generateRandomGameLevels(3, 123, mockData);
+    const levels2 = generateRandomGameLevels(3, 456, mockData);
+    expect(levels1).not.toEqual(levels2);
+  });
 });
