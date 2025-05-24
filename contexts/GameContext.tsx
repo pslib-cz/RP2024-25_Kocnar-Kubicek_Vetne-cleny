@@ -9,10 +9,11 @@ import { useMultiplayerGameContext } from './MultiplayerGameContext';
 import { useLevelContext } from './levelContext';
 import { useGalaxyContext } from './GalaxyContext';
 import { useCommonMistakesContext } from './CommonMistakesContext';
+import { generateRandomGameLevels, generateRandomMistakesLevels } from './utils/GameDataGenerator';
 
 const GameContext = createContext<GameContextData | undefined>(undefined);
 
-interface GameLevel {
+export interface GameLevel {
   game: GameRoute,
   WordSelectionOption: WordSelectionOption[],
   result: string
@@ -83,32 +84,21 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }
 
   const generateGameData = (count : number, seed : number, commonMistakes : boolean) : GameLevel[] => {
-    const data = [];
-
-    const mistakesData = commonMistakes ? getMistakesAsSentences() : [];
-
-    if (commonMistakes && mistakesData.length === 0) {
-      console.warn("No common mistakes found");
-      return [];
-    }
-    if (commonMistakes && mistakesData.length < count) {
-      console.warn("Not enough common mistakes found");
-      return [];
-    }
-
-    for (let i = 0; i < count; i++) {
-      const game = Object.values(GameRoute)[(seed + i) % Object.values(GameRoute).length];
-
-      if (commonMistakes){
-        const randomIndex = Math.floor(Math.random() * mistakesData.length);
-        data.push({ game, WordSelectionOption: mistakesData[randomIndex], result: "" });
-        continue;
+    if (commonMistakes)
+    {
+      const mistakesData = commonMistakes ? getMistakesAsSentences() : [];
+      if (mistakesData.length === 0) {
+        console.warn("No common mistakes found");
+        return [];
       }
-
-      const randomIndex = Math.floor(Math.random() * allData.length);
-      data.push({ game, WordSelectionOption: allData[randomIndex], result: "" });
+      if (mistakesData.length < count) {
+        console.warn("Not enough common mistakes found");
+        return [];
+      }
+      return generateRandomMistakesLevels(count, seed, mistakesData);
     }
-    return data;
+
+    return generateRandomGameLevels(count, seed, allData);
   }
 
   const loadLevel = async (game : GameRoute) => {
