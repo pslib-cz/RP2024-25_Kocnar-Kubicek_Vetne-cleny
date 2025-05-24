@@ -1,38 +1,56 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { WordSelectionOption } from '@/types/games/SelectionOption';
 import { useLocalSearchParams } from 'expo-router';
+import { WordButtonType } from '@/types/games/WordButtonType';
+import { ButtonState } from '@/components/ui/games/WordButton';
+import { WordButtonsContainer } from '@/components/ui/games/WordButtonsContainer';
+import { useLevelContext } from '@/contexts/levelContext';
 
 // Accepts param: sentence (as JSON stringified WordSelectionOption[])
 export default function SentenceDisplayPage() {
   const params = useLocalSearchParams();
-  let sentence: WordSelectionOption[] | null = null;
+  const [sentence, setSentence] = useState<WordSelectionOption[] | null>(null);
+  const [buttons, setButtons] = useState<WordButtonType[]>([]);
 
-  console.log('SentenceDisplayPage params:', params);
+  const { handleShowTooltip } = useLevelContext();
 
-  if (typeof params.sentence === 'string') {
-    try {
-      const arr = JSON.parse(params.sentence);
-      console.log('Parsed sentence:', arr);
-      if (Array.isArray(arr) && arr.every(w => typeof w.text === 'string')) {
-        sentence = arr;
-      }
-    } catch {
-      sentence = null;
+  useEffect(() => {
+    if (typeof params.sentence === 'string') {
+      try {
+        const arr = JSON.parse(params.sentence);
+        if (Array.isArray(arr) && arr.every(w => typeof w.text === 'string')) {
+          setSentence(arr);
+        } else {
+          setSentence(null);
+        }
+      } catch { }
     }
-  }
+
+    handleShowTooltip("", -1);
+  }, [params.sentence]);
+  
+  useEffect(() => {
+    if (!sentence) return;
+
+    setButtons(
+      sentence.map((item) => ({
+        text: item.text,
+        type: item.type,
+        drawType: true,
+        state: ButtonState.correct
+      }))
+    )      
+  }, [sentence]);
 
   return (
     <View style={styles.container}>
-      <View style={styles.sentenceContainer}>
-        {sentence ? (
-          <Text style={styles.sentenceText}>
-            {sentence.map((w, i) => w.text + (i < sentence.length - 1 ? ' ' : ''))}
-          </Text>
-        ) : (
-          <Text style={styles.label}>No valid sentence provided.</Text>
-        )}
-      </View>
+      <WordButtonsContainer
+        buttons={buttons}
+        showTooltip={true}
+        longPress={() => {}}
+        onClick={(button, index) => handleShowTooltip(button.type || "null", index)}
+      />
     </View>
   );
 }
