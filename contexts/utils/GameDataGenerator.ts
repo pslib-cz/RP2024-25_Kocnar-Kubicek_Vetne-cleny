@@ -1,6 +1,6 @@
 import { GameRoute } from "@/constants/gameRoute";
+import { GameLevel } from "@/types/games/GameLevel";
 import { WordSelectionOption } from "@/types/games/SelectionOption";
-import { GameLevel } from "../GameContext";
 
 export const generateRandomGameLevels = (count : number, seed : number, allData : WordSelectionOption[][]) : GameLevel[] => {
   const data = [];

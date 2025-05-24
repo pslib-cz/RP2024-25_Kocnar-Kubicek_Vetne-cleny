@@ -1,7 +1,8 @@
 import { ThemedText } from '@/components/ThemedText';
 import BigassButton from '@/components/ui/BigassButton';
-import { MistakeSaveData, useCommonMistakesContext } from '@/contexts/CommonMistakesContext';
+import { useCommonMistakesContext } from '@/contexts/CommonMistakesContext';
 import { useGameContext } from '@/contexts/GameContext';
+import { CommonMistake } from '@/types/CommonMistake';
 import { useRouter } from 'expo-router';
 import React from 'react';
 import { Pressable, ScrollView, View } from 'react-native';
@@ -12,7 +13,7 @@ export default function CommonMistakes()
   const { allMistakes } = useCommonMistakesContext();
   const router = useRouter()
 
-  const MistakeContainer = ({mistake} : {mistake : MistakeSaveData}) => {
+  const MistakeContainer = ({mistake} : {mistake : CommonMistake}) => {
     return (
       <Pressable 
         onPress={() => router.push({

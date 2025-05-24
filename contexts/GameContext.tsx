@@ -10,14 +10,9 @@ import { useLevelContext } from './levelContext';
 import { useGalaxyContext } from './GalaxyContext';
 import { useCommonMistakesContext } from './CommonMistakesContext';
 import { generateRandomGameLevels, generateRandomMistakesLevels } from './utils/GameDataGenerator';
+import { GameLevel } from '@/types/games/GameLevel';
 
 const GameContext = createContext<GameContextData | undefined>(undefined);
-
-export interface GameLevel {
-  game: GameRoute,
-  WordSelectionOption: WordSelectionOption[],
-  result: string
-}
 
 export const NEXT_LEVEL_TRESHOLD = 0.75 * 100;
 const LEVELS_COUNT = 2;

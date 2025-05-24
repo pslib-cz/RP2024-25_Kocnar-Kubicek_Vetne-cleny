@@ -3,8 +3,9 @@
 // Word in a sentence and its type
 //
 
-// TODO: replace type with enum ?
+import { WordType } from "../WordTypes";
+
 export interface WordSelectionOption {
   text: string;
-  type: string;
+  type: WordType;
 }

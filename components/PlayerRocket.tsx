@@ -3,14 +3,7 @@ import { SvgXml } from 'react-native-svg';
 import { StyleProp, ViewStyle, View, Text, StyleSheet, TextStyle } from 'react-native';
 import { loadSvgAsset } from '@/app/(tabs)/profile';
 import { rocket1, rocket2, rocket3, rocket4, rocket5 } from '@/data/rocketsImages';
-
-interface PlayerData {
-  id: string;
-  name: string;
-  bodyColor: string;
-  trailColor: string;
-  selectedRocketIndex: number;
-}
+import { PlayerData } from '@/types/api';
 
 interface PlayerRocketProps {
   player: PlayerData;

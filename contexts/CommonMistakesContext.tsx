@@ -1,23 +1,18 @@
 import { WordSelectionOption } from '@/types/games/SelectionOption';
 import React, { createContext, useContext, ReactNode, useEffect, useState } from 'react';
 import * as FileSystem from 'expo-file-system';
+import { CommonMistake } from '@/types/CommonMistake';
 
 interface CommonMistakesContextValue {
-  allMistakes: MistakeSaveData[];
+  allMistakes: CommonMistake[];
   updateMistakes: (newMistake: WordSelectionOption[], correct: boolean) => Promise<void>;
   getMistakesAsSentences: () => WordSelectionOption[][];
-}
-
-export interface MistakeSaveData {
-  sentence: WordSelectionOption[],
-  mistakeCount: number,
-  correctCount: number,
 }
 
 const CommonMistakesContext = createContext<CommonMistakesContextValue | undefined>(undefined);
 
 export const CommonMistakesProvider = ({ children }: { children: ReactNode }) => {
-  const [allMistakes, setAllMistakes] = useState<MistakeSaveData[]>([]);
+  const [allMistakes, setAllMistakes] = useState<CommonMistake[]>([]);
 
   const file = FileSystem.documentDirectory + 'mistakes.json';
 

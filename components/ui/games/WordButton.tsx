@@ -1,5 +1,4 @@
 import { getWordTypeColor } from '@/constants/WordTypes';
-import { WordButtonType } from '@/types/games/WordButtonType';
 import React from 'react';
 import { Text, StyleSheet, TouchableOpacity } from 'react-native';
 
