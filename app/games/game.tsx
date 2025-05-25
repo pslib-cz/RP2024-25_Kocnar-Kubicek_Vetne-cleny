@@ -13,9 +13,10 @@ import { Game2UI } from "@/components/games/game2";
 import { Game3UI } from "@/components/games/game3";
 import { ThemedText } from "@/components/ThemedText";
 import { useBackspaceIntercept } from "@/hooks/useBackspaceIntercept";
+import { GeneratorParam, QuestionType } from "@/constants/questionGeneratorParams";
 
 export const Game: React.FC = () => {
-  const { state, gameData, gameType } = useGameContext();
+  const { gameState, activeQuestion, questions, gameInfo } = useGameContext();
 
   const router = useRouter(); 
 
@@ -41,19 +42,19 @@ export const Game: React.FC = () => {
   });
 
   const gameContent = () => {
-    switch (gameType) {
-      case GameRoute.GAME1:
+    switch (activeQuestion?.TEMPLATE[GeneratorParam.QUESTION_TYPE]) {
+      case QuestionType.MARK_WORDS:
         return GameOneUI(Game1Type.normal)
-      case GameRoute.GAME1_INVERTED:
+      case QuestionType.MARK_TYPES:
         return GameOneUI(Game1Type.inverted)
-      case GameRoute.GAME1_ALL_TYPES:
+      case QuestionType.MARK_WORDS_ALL_TYPES:
         return GameOneUI(Game1Type.allTypes)
-      case GameRoute.GAME2:
+      case QuestionType.SELECT_MULTIPLE:
         return Game2UI()
-      case GameRoute.GAME3:
+      case QuestionType.SELECT_ONE_W_SENTENCE:
         return Game3UI()
       default:
-        return <Text>Game not found</Text>
+        return <Text>Not implemented</Text>
     }
   }
 
@@ -93,7 +94,7 @@ export const Game: React.FC = () => {
   return (
     <SafeAreaView style={styles.container}>
       <FeedbackOverlay
-        state={state}
+        state={gameState}
       />
       <View style={[styles.headerWrapper]}>
         <View style={{ flexShrink: 1, flexGrow: 1, flexDirection: 'row', gap: 8 }}>
@@ -101,7 +102,7 @@ export const Game: React.FC = () => {
             <HelpButton />
           </View>        
           <View style={{ flexShrink: 1, flexGrow: 999 }}>
-            <RocketProgressBar progress={1 - (gameData.questionsRemaining + 1) / gameData.totalQuestion}/>
+            <RocketProgressBar progress={1 - (gameInfo.activeQuestionIndex + 1) / questions.length}/>
           </View>
           <View style={{ flexShrink: 1}}>
             <CloseButton />
@@ -109,7 +110,7 @@ export const Game: React.FC = () => {
         </View>
       </View>
       <Animated.View
-        key={gameData?.questionsRemaining} // Force remount -> animation
+        key={gameInfo.activeQuestionIndex} // Force remount -> animation
         entering={SlideInRight.duration(500)}
         exiting={SlideOutLeft.duration(500)}
         style={ styles.container1 }

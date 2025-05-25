@@ -2,37 +2,34 @@ import { GameRoute } from "@/constants/gameRoute";
 import { WordSelectionOption } from "./games/SelectionOption";
 import { GameState } from "./gameState";
 import { WordButtonType } from "./games/WordButtonType";
+import { Question } from "@/hooks/useQuestionGenerator";
 
-export interface GameData {
-  totalQuestion: number;
-  questionsRemaining: number;
+export interface ActiveGameInfo {
+  activeQuestionIndex: number;
   startTime?: number;
   endTime?: number;
+  answers: {
+    question: Question,
+    mistakeIndex?: number,
+    correct: boolean,
+    time: number,
+  }[]
 }
 
 export interface GameContextData {
-  seed: number;
-  setSeed: (seed: number) => void;
-
-  moveToNextLevel: () => void,
-  data : WordSelectionOption[],
-
-  loadLevel : (game : GameRoute) => void,
-  onFinished : (correct : boolean) => void,
-
-  state : GameState
-
-  newGame : (qCount : number) => void,
-
-  gameData : GameData,
-
-  getDuration : () => number,
-  getSuccessRate : () => number,
-
-  gameType : GameRoute,
-
-  newGameWithCount : () => void,
-  newGameWithCount_CommonMistakes : () => void,
-
-  commonMistakes : boolean
+  newGame: (config: any) => void;
+  newGameInArena: () => void;
+  onFinished: (isCorrect: boolean) => void;
+  getDuration: () => number;
+  getSuccessRate: () => number;
+  gameState: GameState;
+  gameConfig: any;
+  questions: Question[];
+  activeQuestion?: Question;
+  gameInfo: ActiveGameInfo;
+  nextQuestion: () => void;
+  setGameInfo: React.Dispatch<React.SetStateAction<ActiveGameInfo>>;
+  setGameConfig: React.Dispatch<React.SetStateAction<any>>;
+  setQuestions: React.Dispatch<React.SetStateAction<Question[]>>;
+  setActiveQuestion: React.Dispatch<React.SetStateAction<Question | undefined>>;
 }

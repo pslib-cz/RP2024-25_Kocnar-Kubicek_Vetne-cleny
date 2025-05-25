@@ -114,7 +114,29 @@ function getWantedTypesFromModifiers(modifiers: QuestionModifier[] | undefined):
   return onlyTypes as string[];
 }
 
-// Main hook
+/**
+ * Question Generator Hook
+ * 
+ * This hook generates questions based on provided parameters:
+ * - galaxy: The galaxy to generate questions for (ALL, PAP, PK, PU, D)
+ * - difficulty: A number between 0-1 indicating question difficulty
+ * - seed: Random seed for deterministic generation
+ * - count: Number of questions to generate
+ * - questionTypesBitfield: Bitfield indicating allowed question types
+ * 
+ * Questions are generated deterministically based on the seed, allowing
+ * for reproducible question sets while maintaining randomness.
+ * 
+ * @returns Array of generated questions based on the input parameters
+ */
+
+export type Question = {
+  SOURCE: WordSelectionOption[];
+  TEMPLATE: typeof questionGeneratorParams[number][number];
+  WANTED?: string;
+  INDEX?: number;
+}
+
 export function useQuestionGenerator({
   galaxy,
   difficulty,
@@ -208,7 +230,12 @@ export function useQuestionGenerator({
       // Convert to [word, type][] only if both exist
       const source = sentence
         .filter((item: any) => Array.isArray(item) && item.length >= 2 && typeof item[0] === 'string' && typeof item[1] === 'string')
-        .map((item: any) => [item[0], item[1]] as [string, string]);
+        .map((item: any) => {
+            return {
+                text: item[0],
+                type: item[1],
+            } as WordSelectionOption;
+        });
       // Prepare output
       const out: any = {
         SOURCE: source,
@@ -235,14 +262,14 @@ export function useQuestionGenerator({
       }
       return out;
     }).filter(Boolean) as {
-      SOURCE: [string, string][];
+      SOURCE: WordSelectionOption[];
       TEMPLATE: typeof questionGeneratorParams[number][number];
       WANTED?: string;
       INDEX?: number;
     }[];
   }, [pickedTemplates, loadedSets, loadedTypeSets, difficulty, seed]);
 
-  return questions;
+  return questions as Question[];
 }
 
 

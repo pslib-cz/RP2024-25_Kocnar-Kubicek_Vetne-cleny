@@ -1,5 +1,5 @@
-import React, { createContext, useContext, useState } from 'react';
-import { GameContextData, GameData } from '../types/GameTypes';
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import { ActiveGameInfo, GameContextData } from '../types/GameTypes';
 import { usePathname, useRouter } from 'expo-router';
 import { WordSelectionOption } from '@/types/games/SelectionOption';
 import { useData } from '@/hooks/useData';
@@ -11,114 +11,120 @@ import { useGalaxyContext } from './GalaxyContext';
 import { useCommonMistakesContext } from './CommonMistakesContext';
 import { generateRandomGameLevels, generateRandomMistakesLevels } from './utils/GameDataGenerator';
 import { GameLevel } from '@/types/games/GameLevel';
+import { Question, useQuestionGenerator } from '@/hooks/useQuestionGenerator';
+import { Galaxy, GeneratorParam, QuestionType } from '@/constants/questionGeneratorParams';
 
 const GameContext = createContext<GameContextData | undefined>(undefined);
 
 export const NEXT_LEVEL_TRESHOLD = 0.75 * 100;
 const LEVELS_COUNT = 2;
+const questionTypeOptions = Object.entries(QuestionType).filter(([k, v]) => typeof v === 'number');
 
 export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { tryStartSession, tryUpdateSession } = useMultiplayerGameContext();
   const { resetLevelData } = useLevelContext();
   const { getMistakesAsSentences, updateMistakes, allMistakes } = useCommonMistakesContext();
   const { levelUp } = useGalaxyContext();
-
   const navigation = useRouter();
   const pathname = usePathname();
 
-  const allData : WordSelectionOption[][] = useData();
+  const { selectedGalaxy, activePlanets, activeLevelIndex } = useGalaxyContext();
 
-  const [seed, setSeed] = useState(50);
-
-  const [data, setData] = useState<WordSelectionOption[]>(allData[0])
-  const [gameData, setGameData] = useState<GameData>({
-    totalQuestion : 10, 
-    questionsRemaining : 10,
-    startTime: undefined,
-    endTime: undefined,
+  const [gameConfig, setGameConfig] = useState({
+    galaxy: Galaxy.ALL,
+    difficulty: 0,
+    seed: 0,
+    count: 0,
+    questionTypesBitfield: (1 << questionTypeOptions.length) - 1,
   });
 
-  const [generatedGameData, setGeneratedGameData] = useState<GameLevel[]>([]);
-  const [state, setGameState] = useState<GameState>(GameState.pending);
+  const [gameInfo, setGameInfo] = useState<ActiveGameInfo>({
+    activeQuestionIndex : 0,
+    startTime: undefined,
+    endTime: undefined,
+    answers: [],
+  });
+  
+  const [questions, setQuestions] = useState<Question[]>([]);
+  const [activeQuestion, setActiveQuestion] = useState<Question | undefined>(undefined);
 
-  const [gameType, setGameType] = useState<GameRoute>(GameRoute.GAME1);
+  const [gameState, setGameState] = useState<GameState>(GameState.pending);
 
-  const [commonMistakes, setCommonMistakes] = useState(false);
 
-  const newGameWithCount = () => {
-    newGame(LEVELS_COUNT);
+//   const newGameWithCount_CommonMistakes = () => {
+//     if (allMistakes.length === 0) {
+//       console.warn("No common mistakes found");
+//       return;
+//     }
+
+//     const qCount = Math.min(LEVELS_COUNT, allMistakes.length);
+//     newGame(qCount, true);
+//   }
+
+  const newGameInArena = () => {
+    newGame({
+        galaxy: selectedGalaxy,
+        difficulty: activeLevelIndex[selectedGalaxy],
+        count: activePlanets[selectedGalaxy],
+        seed: Math.floor(Math.random() * 1000000),
+        questionTypesBitfield: (1 << questionTypeOptions.length) - 1,
+    });
   }
 
-  const newGameWithCount_CommonMistakes = () => {
-    if (allMistakes.length === 0) {
-      console.warn("No common mistakes found");
-      return;
-    }
-
-    const qCount = Math.min(LEVELS_COUNT, allMistakes.length);
-    newGame(qCount, true);
-  }
-
-  const newGame = (qCount : number, commonMistakes : boolean = false) => {
-    const newSeed = Math.floor(Math.random() * 1000000); // Random seed for the game
-    setSeed(newSeed); // Random seed for the game
+  const newGame = (config: typeof gameConfig) => {
+    if (!config.seed) config.seed = Math.floor(Math.random() * 1000000);
+    if (!config.questionTypesBitfield) config.questionTypesBitfield = (1 << questionTypeOptions.length) - 1;
     
-    const gameData_ : GameData = {totalQuestion : qCount, questionsRemaining : qCount, startTime: Date.now()};
-    setGameData(gameData_);
+    // reset game info
+    setGameInfo({
+        activeQuestionIndex : 0,
+        startTime : Date.now(),
+        answers : [],
+    });
 
-    const newGeneratedGameData = generateGameData(qCount, seed, commonMistakes)
-    setGeneratedGameData(newGeneratedGameData);
+    // set game state
+    setGameState(GameState.pending);
 
-    setCommonMistakes(commonMistakes);
+    // set game config
+    setGameConfig(config);
+
+    // generate questions
+    setQuestions(useQuestionGenerator(config));
     
-    moveToNextLevelWithValues(qCount, newGeneratedGameData, gameData_); // so the state update is not an issue
+
+    nextQuestion();
 
     tryStartSession();
 
     navigation.replace("games/game" as never);
   }
 
-  const generateGameData = (count : number, seed : number, commonMistakes : boolean) : GameLevel[] => {
-    if (commonMistakes)
-    {
-      const mistakesData = commonMistakes ? getMistakesAsSentences() : [];
-      if (mistakesData.length === 0) {
-        console.warn("No common mistakes found");
-        return [];
-      }
-      if (mistakesData.length < count) {
-        console.warn("Not enough common mistakes found");
-        return [];
-      }
-      return generateRandomMistakesLevels(count, seed, mistakesData);
-    }
+//   const generateGameData = (count : number, seed : number, commonMistakes : boolean) : GameLevel[] => {
+//     if (commonMistakes)
+//     {
+//       const mistakesData = commonMistakes ? getMistakesAsSentences() : [];
+//       if (mistakesData.length === 0) {
+//         console.warn("No common mistakes found");
+//         return [];
+//       }
+//       if (mistakesData.length < count) {
+//         console.warn("Not enough common mistakes found");
+//         return [];
+//       }
+//       return generateRandomMistakesLevels(count, seed, mistakesData);
+//     }
 
-    return generateRandomGameLevels(count, seed, allData);
-  }
+//     return generateRandomGameLevels(count, seed, allData);
+//   }
 
-  const loadLevel = async (game : GameRoute) => {
-    resetLevelData();
+  const nextQuestion = () => {
+    setGameInfo((prev) => ({...prev, activeQuestionIndex : prev.activeQuestionIndex + 1})); // Increment the active question index
+    setActiveQuestion(questions[gameInfo.activeQuestionIndex]);
 
-    setGameState(GameState.pending)
+    if (gameInfo.activeQuestionIndex >= questions.length) {
+      setGameInfo((prev) => ({...prev, endTime: Date.now()})); // Set the end time
 
-    console.log("gameRoute", pathname);
-
-    setGameType(game);
-  }
-
-  const moveToNextLevelWithValues = (remainingQuestions: number, levels : GameLevel[], gameData: GameData) => {
-    setGameData((prev) => ({...prev, questionsRemaining : remainingQuestions - 1}));
-
-    console.log(levels);
-
-    const level = levels[gameData.totalQuestion - remainingQuestions];
-  
-    console.log("level", level, "level", gameData.totalQuestion - remainingQuestions, "remainingQuestions", remainingQuestions);
-
-    if (remainingQuestions <= 0) {
-      setGameData((prev) => ({...prev, endTime: Date.now()}));
-
-      if (getSuccessRate() >= NEXT_LEVEL_TRESHOLD && !commonMistakes)
+      if (getSuccessRate() >= NEXT_LEVEL_TRESHOLD)
       {
         levelUp();
       }
@@ -126,70 +132,56 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
       console.log("Game finished");
       navigation.replace('games/resultScreen' as never);
     }
-    else{
-      setData(level.WordSelectionOption);
-      loadLevel(level.game);
-    }
   }
 
-  const moveToNextLevel = async () => {
-    moveToNextLevelWithValues(gameData.questionsRemaining, generatedGameData, gameData);
-  }  
+//   const moveToNextLevel = async () => {
+//     moveToNextLevelWithValues(gameData.questionsRemaining, generatedGameData, gameData);
+//   }  
 
   /// on level finished, not limited to the whole game
-  const onFinished = (correct : boolean) => {
-    updateMistakes(data, correct);
-
-    setGameState(correct ? GameState.correct : GameState.incorrect)
-
-    const currentLevelId = gameData.totalQuestion - gameData.questionsRemaining - 1;
-    const level = generatedGameData[currentLevelId];
-
-    const updatedLevels = [...generatedGameData];
-    updatedLevels[currentLevelId] = {
-      ...level,
-      result: correct ? "correct" : "incorrect",
-    };
-    setGeneratedGameData(updatedLevels);
+  const onFinished = (isCorrect : boolean) => {
+    if (!activeQuestion) return;
+    updateMistakes(activeQuestion?.SOURCE, isCorrect);
+    setGameState(isCorrect ? GameState.correct : GameState.incorrect)
 
     const dataUpdate = {
-      score: correct ? 1 : 0,
-      correctAnswers: correct ? 1 : 0,
-      completed: gameData.questionsRemaining === 1,
+      score: isCorrect ? 1 : 0,
+      correctAnswers: isCorrect ? 1 : 0,
+      completed: questions.length === 1,
     };
 
     tryUpdateSession(dataUpdate);
   }
 
   const getDuration = () => {
-    if (gameData.startTime && gameData.endTime)
-      return Math.floor((gameData.endTime - gameData.startTime) / 1000);
+    if (gameInfo.startTime && gameInfo.endTime)
+      return Math.floor((gameInfo.endTime - gameInfo.startTime) / 1000);
     return 0;
   };
 
   const getSuccessRate = () => {
-    const correctAnswers = generatedGameData.filter(level => level.result === "correct").length;
-    return (correctAnswers / generatedGameData.length) * 100;
+    const correctAnswers = gameInfo.answers.filter(answer => answer.correct).length;
+    return (correctAnswers / gameInfo.answers.length) * 100;
   }
 
   return (
     <GameContext.Provider
       value={{
-        seed,
-        setSeed,
-        moveToNextLevel,
-        data,
-        loadLevel,
-        onFinished,
-        state,
         newGame,
-        gameData,
+        newGameInArena,
+        onFinished,
         getDuration,
         getSuccessRate,
-        gameType,
-        newGameWithCount,
-        newGameWithCount_CommonMistakes,
-        commonMistakes
+        gameState,
+        gameConfig,
+        questions,
+        activeQuestion,
+        gameInfo,
+        nextQuestion,
+        setGameInfo,
+        setGameConfig,
+        setQuestions,
+        setActiveQuestion,
       }}
     >
       {children}
