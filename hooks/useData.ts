@@ -1,7 +1,7 @@
 import { useGalaxyContext } from "@/contexts/GalaxyContext";
 import { WordSelectionOption } from "@/types/games/SelectionOption";
 import { WordType } from "@/types/WordTypes";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import * as FileSystem from 'expo-file-system';
 
 const version = "latest"
@@ -36,6 +36,11 @@ export const updateLoadedSets = (ls : any, lts:any, lv:any) => {
   loadedSets = ls;
   loadedTypeSets = lts;
   loadedVersion = lv;
+}
+
+// New hook: useLoadedData
+export function useLoadedData() {
+  return { loadedSets, loadedTypeSets, loadedVersion };
 }
 
 export const useWordsByType = (
