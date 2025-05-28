@@ -2,117 +2,10 @@ import { questionGeneratorParams, QuestionType, Galaxy, GeneratorParam, DataSour
 import { useLoadedData } from "@/hooks/useData";
 import { WordSelectionOption } from "@/types/games/SelectionOption";
 import { useMemo } from "react";
+import { applyDataSourceModifiers, applyOnlyTypeModifiers, getWantedTypesFromModifiers, isTypeAllowed, isValidTemplate, seededShuffle } from "./questionGeneratorUtils";
 
 // Utility: Map QuestionType enum to bit positions
 const QUESTION_TYPE_VALUES = Object.values(QuestionType).filter(v => typeof v === 'number') as number[];
-
-function isTypeAllowed(bitfield: number, type: number) {
-  return (bitfield & (1 << type)) !== 0;
-}
-
-// Utility: Deterministic shuffle
-function seededShuffle<T>(array: T[], seed: number): T[] {
-  const result = [...array];
-  let s = seed;
-  for (let i = result.length - 1; i > 0; i--) {
-    s = (s * 9301 + 49297) % 233280;
-    const j = Math.floor((s / 233280) * (i + 1));
-    [result[i], result[j]] = [result[j], result[i]];
-  }
-  return result;
-}
-
-function isValidTemplate(template: any[]): boolean {
-  return (
-    Array.isArray(template) &&
-    template.length > GeneratorParam.QUESTION_TYPE &&
-    typeof template[GeneratorParam.DATA_SOURCE] === 'number' &&
-    typeof template[GeneratorParam.QUESTION_TYPE] === 'number'
-  );
-}
-
-// DataSourceModifier filter logic
-function applyDataSourceModifiers(sentences: string[][], modifiers: DataSourceModifier[] | undefined): string[][] {
-  if (!modifiers || !Array.isArray(modifiers) || modifiers.length === 0) return sentences;
-  return sentences.filter(sentence => {
-    // Each modifier must be satisfied (AND logic)
-    return modifiers.every(mod => {
-      switch (mod) {
-        case DataSourceModifier.SENTENCE_CONTAINS_PK:
-          // At least one word with type 'pks' or 'pkn'
-          return sentence.some(item => Array.isArray(item) && (item[1] === 'pks' || item[1] === 'pkn'));
-        case DataSourceModifier.SENTENCE_CONTAINS_PT:
-          // At least one word with type 'pt'
-          return sentence.some(item => Array.isArray(item) && item[1] === 'pt');
-        case DataSourceModifier.SENTENCE_CONTAINS_PU:
-          // At least one word with type starting with 'pu'
-          return sentence.some(item => Array.isArray(item) && typeof item[1] === 'string' && item[1].startsWith('pu'));
-        default:
-          return true;
-      }
-    });
-  });
-}
-
-// QuestionModifier filter logic for ONLY_<type>
-function applyOnlyTypeModifiers(sentences: string[][], modifiers: QuestionModifier[] | undefined): string[][] {
-  if (!modifiers || !Array.isArray(modifiers) || modifiers.length === 0) return sentences;
-  // Find all ONLY_... modifiers
-  const onlyTypes = modifiers
-    .filter(mod => typeof mod === 'number' && [
-      QuestionModifier.ONLY_PO,
-      QuestionModifier.ONLY_PR,
-      QuestionModifier.ONLY_PT,
-      QuestionModifier.ONLY_PKS,
-      QuestionModifier.ONLY_PKN,
-      QuestionModifier.ONLY_PU
-    ].includes(mod))
-    .map(mod => {
-      switch (mod) {
-        case QuestionModifier.ONLY_PO: return 'po';
-        case QuestionModifier.ONLY_PR: return 'př';
-        case QuestionModifier.ONLY_PT: return 'pt';
-        case QuestionModifier.ONLY_PKS: return 'pks';
-        case QuestionModifier.ONLY_PKN: return 'pkn';
-        case QuestionModifier.ONLY_PU: return 'pu';
-        default: return null;
-      }
-    })
-    .filter(Boolean);
-  if (onlyTypes.length === 0) return sentences;
-  // Sentence must contain at least one of the required types (OR logic)
-  return sentences.filter(sentence =>
-    sentence.some(item => Array.isArray(item) && onlyTypes.some(type => item[1] === type || (type === 'pu' && typeof item[1] === 'string' && item[1].startsWith('pu'))))
-  );
-}
-
-// Helper to get WANTED types from QuestionModifiers
-function getWantedTypesFromModifiers(modifiers: QuestionModifier[] | undefined): string[] | undefined {
-  if (!modifiers || !Array.isArray(modifiers) || modifiers.length === 0) return undefined;
-  const onlyTypes = modifiers
-    .filter(mod => typeof mod === 'number' && [
-      QuestionModifier.ONLY_PO,
-      QuestionModifier.ONLY_PR,
-      QuestionModifier.ONLY_PT,
-      QuestionModifier.ONLY_PKS,
-      QuestionModifier.ONLY_PKN,
-      QuestionModifier.ONLY_PU
-    ].includes(mod))
-    .map(mod => {
-      switch (mod) {
-        case QuestionModifier.ONLY_PO: return 'po';
-        case QuestionModifier.ONLY_PR: return 'př';
-        case QuestionModifier.ONLY_PT: return 'pt';
-        case QuestionModifier.ONLY_PKS: return 'pks';
-        case QuestionModifier.ONLY_PKN: return 'pkn';
-        case QuestionModifier.ONLY_PU: return 'pu';
-        default: return null;
-      }
-    })
-    .filter(Boolean);
-  if (onlyTypes.length === 0) return undefined;
-  return onlyTypes as string[];
-}
 
 /**
  * Question Generator Hook
@@ -162,17 +55,20 @@ export function useQuestionGenerator({
   });
 
   // Shuffle and pick templates
-  const pickedTemplates = useMemo(() => {
+  const pickedTemplates = () => {
     if (allowedTemplates.length === 0) return [];
     // For each question, pick a pseudo-random template from allowedTemplates
     return Array.from({ length: count }, (_, i) => {
       return seededShuffle(allowedTemplates, seed + i)[0];
     });
-  }, [allowedTemplates, seed, count]);
+  };
 
   // Generate questions
-  const questions = useMemo(() => {
-    return pickedTemplates.map((template, idx) => {
+  const questions = () => {
+
+    if(pickedTemplates() == undefined) throw new Error("No templates available for the selected parameters");
+
+    return pickedTemplates().map((template, idx) => {
       const dataSource = template[GeneratorParam.DATA_SOURCE] as DataSource;
       const questionType = template[GeneratorParam.QUESTION_TYPE] as QuestionType;
       const dataSourceModifiers = template[GeneratorParam.DATA_SOURCE_MODIFIER] as DataSourceModifier[] | undefined;
@@ -267,9 +163,14 @@ export function useQuestionGenerator({
       WANTED?: string;
       INDEX?: number;
     }[];
-  }, [pickedTemplates, loadedSets, loadedTypeSets, difficulty, seed]);
+  };
 
-  return questions as Question[];
+  const questionsad = questions() as Question[];
+
+  console.log("Params: ", galaxy, difficulty, seed, count, questionTypesBitfield);
+  console.log("Generated questions:", questionsad);
+
+  return questionsad;
 }
 
 

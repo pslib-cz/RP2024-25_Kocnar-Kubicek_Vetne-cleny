@@ -14,7 +14,7 @@ interface GameLayoutProps {
 }
 
 export const GameLayout: React.FC<GameLayoutProps> = ({ children }) => {
-  const { state, gameData } = useGameContext();
+  const { gameState, gameConfig } = useGameContext();
   const { code } = useMultiplayerGameContext();
 
   const navigation = useRouter(); 
@@ -22,11 +22,11 @@ export const GameLayout: React.FC<GameLayoutProps> = ({ children }) => {
   return (
     <SafeAreaView style={styles.container}>
       <FeedbackOverlay
-        state={state}
+        state={gameState}
       />
       <View style={[styles.headerWrapper]}>
         <View style={{ flexShrink: 1, flexGrow: 999 }}>
-          <RocketProgressBar progress={1 - (gameData.questionsRemaining + 1) / gameData.totalQuestion}/>
+          <RocketProgressBar progress={1 - (gameConfig.questionsRemaining + 1) / gameConfig.totalQuestion}/>
         </View>
         <View style={{ flexShrink: 1, flexGrow: 1 }}>
           <TouchableOpacity

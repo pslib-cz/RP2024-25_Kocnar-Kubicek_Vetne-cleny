@@ -80,7 +80,7 @@ export const LevelProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         options,
         setOptions,
         selectedOptions,
-        setSelectedOptions
+        setSelectedOptions,
       }}
     >
       {children}

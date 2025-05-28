@@ -15,9 +15,8 @@ export function Game3UI() {
   useEffect(() => {
     if (data) {
       setOptions(data);
+      setTargetType(data[Math.floor(Math.random() * data.length)].type);
     }
-
-    setTargetType(data[Math.floor(Math.random() * data.length)].type);
   }, [data]);
 
   const handleSelect = (id: WordSelectionOption) => {
@@ -44,10 +43,19 @@ export function Game3UI() {
   return (
     <>
       <View>
-        <TargetTypeDisplay text='Které slovo ve větě je ' />
+        {
+          data ?
+          <>
+            <TargetTypeDisplay text='Které slovo ve větě je ' />
+            <Text style={styles.exampleText}>
+              {data.map(option => option.text).join(' ')}
+            </Text>
+          </>
+        :
         <Text style={styles.exampleText}>
-          {data.map(option => option.text).join(' ')}
+          Načítání dat...
         </Text>
+        }
       </View>
       <LargeGameButtonsGrid 
         options={options} 

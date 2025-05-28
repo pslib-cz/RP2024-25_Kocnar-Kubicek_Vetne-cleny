@@ -1,5 +1,5 @@
 import { SafeAreaView } from "react-native-safe-area-context";
-import React from "react";
+import React, { useEffect } from "react";
 import { Alert, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useGameContext } from "@/contexts/GameContext";
 import { Text } from "react-native-svg";
@@ -40,6 +40,10 @@ export const Game: React.FC = () => {
   useBackspaceIntercept(() => {
     leaveAlert()
   });
+
+  useEffect(() => {
+    console.log("activeQuestion", activeQuestion);
+  }, [activeQuestion]);
 
   const gameContent = () => {
     switch (activeQuestion?.TEMPLATE[GeneratorParam.QUESTION_TYPE]) {

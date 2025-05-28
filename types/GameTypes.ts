@@ -32,4 +32,5 @@ export interface GameContextData {
   setGameConfig: React.Dispatch<React.SetStateAction<any>>;
   setQuestions: React.Dispatch<React.SetStateAction<Question[]>>;
   setActiveQuestion: React.Dispatch<React.SetStateAction<Question | undefined>>;
+  data: WordSelectionOption[] | undefined;
 }

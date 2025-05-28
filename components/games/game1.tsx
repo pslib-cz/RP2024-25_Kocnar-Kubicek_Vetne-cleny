@@ -19,7 +19,7 @@ export function GameOneUI(type: Game1Type) {
   const inverted = type === Game1Type.inverted;
   const allTypes = type === Game1Type.allTypes;
 
-  const { data, onFinished } = useGameContext();
+  const { onFinished, data } = useGameContext();
   const { gameIndex, setGameIndex, phraseButtons, setPhraseButtons, bottomButtons, setBottomButtons, handleHideTooltip, handleShowTooltip } = useLevelContext();
 
   // ! this is the only allowed useEffect in the games and can only contain the data as dependency

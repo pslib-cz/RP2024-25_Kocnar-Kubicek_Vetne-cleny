@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { act, createContext, useContext, useEffect, useState } from 'react';
 import { ActiveGameInfo, GameContextData } from '../types/GameTypes';
 import { usePathname, useRouter } from 'expo-router';
 import { WordSelectionOption } from '@/types/games/SelectionOption';
@@ -11,7 +11,7 @@ import { useGalaxyContext } from './GalaxyContext';
 import { useCommonMistakesContext } from './CommonMistakesContext';
 import { generateRandomGameLevels, generateRandomMistakesLevels } from './utils/GameDataGenerator';
 import { GameLevel } from '@/types/games/GameLevel';
-import { Question, useQuestionGenerator } from '@/hooks/useQuestionGenerator';
+import { Question, useQuestionGenerator } from '@/hooks/QuestionsGenerator/useQuestionGenerator';
 import { Galaxy, GeneratorParam, QuestionType } from '@/constants/questionGeneratorParams';
 
 const GameContext = createContext<GameContextData | undefined>(undefined);
@@ -39,47 +39,47 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
   });
 
   const [gameInfo, setGameInfo] = useState<ActiveGameInfo>({
-    activeQuestionIndex : 0,
+    activeQuestionIndex: 0,
     startTime: undefined,
     endTime: undefined,
     answers: [],
   });
-  
+
   const [questions, setQuestions] = useState<Question[]>([]);
   const [activeQuestion, setActiveQuestion] = useState<Question | undefined>(undefined);
 
   const [gameState, setGameState] = useState<GameState>(GameState.pending);
 
 
-//   const newGameWithCount_CommonMistakes = () => {
-//     if (allMistakes.length === 0) {
-//       console.warn("No common mistakes found");
-//       return;
-//     }
+  //   const newGameWithCount_CommonMistakes = () => {
+  //     if (allMistakes.length === 0) {
+  //       console.warn("No common mistakes found");
+  //       return;
+  //     }
 
-//     const qCount = Math.min(LEVELS_COUNT, allMistakes.length);
-//     newGame(qCount, true);
-//   }
+  //     const qCount = Math.min(LEVELS_COUNT, allMistakes.length);
+  //     newGame(qCount, true);
+  //   }
 
   const newGameInArena = () => {
     newGame({
-        galaxy: selectedGalaxy,
-        difficulty: activeLevelIndex[selectedGalaxy],
-        count: activePlanets[selectedGalaxy],
-        seed: Math.floor(Math.random() * 1000000),
-        questionTypesBitfield: (1 << questionTypeOptions.length) - 1,
+      galaxy: selectedGalaxy,
+      difficulty: activeLevelIndex[selectedGalaxy],
+      count: LEVELS_COUNT,
+      seed: Math.floor(Math.random() * 1000000),
+      questionTypesBitfield: (1 << questionTypeOptions.length) - 1,
     });
   }
 
   const newGame = (config: typeof gameConfig) => {
     if (!config.seed) config.seed = Math.floor(Math.random() * 1000000);
     if (!config.questionTypesBitfield) config.questionTypesBitfield = (1 << questionTypeOptions.length) - 1;
-    
+
     // reset game info
     setGameInfo({
-        activeQuestionIndex : 0,
-        startTime : Date.now(),
-        answers : [],
+      activeQuestionIndex: 0,
+      startTime: Date.now(),
+      answers: [],
     });
 
     // set game state
@@ -90,7 +90,6 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     // generate questions
     setQuestions(useQuestionGenerator(config));
-    
 
     nextQuestion();
 
@@ -99,33 +98,32 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     navigation.replace("games/game" as never);
   }
 
-//   const generateGameData = (count : number, seed : number, commonMistakes : boolean) : GameLevel[] => {
-//     if (commonMistakes)
-//     {
-//       const mistakesData = commonMistakes ? getMistakesAsSentences() : [];
-//       if (mistakesData.length === 0) {
-//         console.warn("No common mistakes found");
-//         return [];
-//       }
-//       if (mistakesData.length < count) {
-//         console.warn("Not enough common mistakes found");
-//         return [];
-//       }
-//       return generateRandomMistakesLevels(count, seed, mistakesData);
-//     }
+  //   const generateGameData = (count : number, seed : number, commonMistakes : boolean) : GameLevel[] => {
+  //     if (commonMistakes)
+  //     {
+  //       const mistakesData = commonMistakes ? getMistakesAsSentences() : [];
+  //       if (mistakesData.length === 0) {
+  //         console.warn("No common mistakes found");
+  //         return [];
+  //       }
+  //       if (mistakesData.length < count) {
+  //         console.warn("Not enough common mistakes found");
+  //         return [];
+  //       }
+  //       return generateRandomMistakesLevels(count, seed, mistakesData);
+  //     }
 
-//     return generateRandomGameLevels(count, seed, allData);
-//   }
+  //     return generateRandomGameLevels(count, seed, allData);
+  //   }
 
   const nextQuestion = () => {
-    setGameInfo((prev) => ({...prev, activeQuestionIndex : prev.activeQuestionIndex + 1})); // Increment the active question index
+    setGameInfo((prev) => ({ ...prev, activeQuestionIndex: prev.activeQuestionIndex + 1 })); // Increment the active question index
     setActiveQuestion(questions[gameInfo.activeQuestionIndex]);
 
     if (gameInfo.activeQuestionIndex >= questions.length) {
-      setGameInfo((prev) => ({...prev, endTime: Date.now()})); // Set the end time
+      setGameInfo((prev) => ({ ...prev, endTime: Date.now() })); // Set the end time
 
-      if (getSuccessRate() >= NEXT_LEVEL_TRESHOLD)
-      {
+      if (getSuccessRate() >= NEXT_LEVEL_TRESHOLD) {
         levelUp();
       }
 
@@ -134,12 +132,14 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }
 
-//   const moveToNextLevel = async () => {
-//     moveToNextLevelWithValues(gameData.questionsRemaining, generatedGameData, gameData);
-//   }  
+  //   const moveToNextLevel = async () => {
+  //     moveToNextLevelWithValues(gameData.questionsRemaining, generatedGameData, gameData);
+  //   }  
 
   /// on level finished, not limited to the whole game
-  const onFinished = (isCorrect : boolean) => {
+  const onFinished = (isCorrect: boolean) => {
+    resetLevelData();
+
     if (!activeQuestion) return;
     updateMistakes(activeQuestion?.SOURCE, isCorrect);
     setGameState(isCorrect ? GameState.correct : GameState.incorrect)
@@ -182,6 +182,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setGameConfig,
         setQuestions,
         setActiveQuestion,
+        data: activeQuestion?.SOURCE as WordSelectionOption[] | undefined,
       }}
     >
       {children}
