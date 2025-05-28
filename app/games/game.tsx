@@ -42,7 +42,7 @@ export const Game: React.FC = () => {
   });
 
   useEffect(() => {
-    console.log("activeQuestion", activeQuestion);
+    console.log("activeQuestion:", activeQuestion?.TEMPLATE[GeneratorParam.QUESTION_TYPE]);
   }, [activeQuestion]);
 
   const gameContent = () => {

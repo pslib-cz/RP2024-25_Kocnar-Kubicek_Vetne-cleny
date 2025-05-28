@@ -64,7 +64,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const newGameInArena = () => {
     newGame({
       galaxy: selectedGalaxy,
-      difficulty: activeLevelIndex[selectedGalaxy],
+      difficulty: .1,
       count: LEVELS_COUNT,
       seed: Math.floor(Math.random() * 1000000),
       questionTypesBitfield: (1 << questionTypeOptions.length) - 1,
@@ -89,9 +89,12 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setGameConfig(config);
 
     // generate questions
-    setQuestions(useQuestionGenerator(config));
 
-    nextQuestion();
+    const dfsdfsdf = useQuestionGenerator(config)
+
+    setQuestions(dfsdfsdf);
+
+    nextQuestionWithValues(dfsdfsdf);
 
     tryStartSession();
 
@@ -116,7 +119,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
   //     return generateRandomGameLevels(count, seed, allData);
   //   }
 
-  const nextQuestion = () => {
+  const nextQuestionWithValues = (questions: Question[]) => {
     setGameInfo((prev) => ({ ...prev, activeQuestionIndex: prev.activeQuestionIndex + 1 })); // Increment the active question index
     setActiveQuestion(questions[gameInfo.activeQuestionIndex]);
 
@@ -130,6 +133,10 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
       console.log("Game finished");
       navigation.replace('games/resultScreen' as never);
     }
+  }
+  
+  const nextQuestion = () => {
+    nextQuestionWithValues(questions);
   }
 
   //   const moveToNextLevel = async () => {

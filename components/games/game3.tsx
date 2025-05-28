@@ -13,6 +13,8 @@ export function Game3UI() {
 
   // ! this is the only allowed useEffect in the games and can only contain the data as dependency
   useEffect(() => {
+    console.log("GameOneUI useEffect triggered with data: ", data);
+
     if (data) {
       setOptions(data);
       setTargetType(data[Math.floor(Math.random() * data.length)].type);
