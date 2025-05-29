@@ -16,16 +16,24 @@ import { Galaxy, GeneratorParam, QuestionType } from '@/constants/questionGenera
 
 const GameContext = createContext<GameContextData | undefined>(undefined);
 
+export enum GameType{
+  PRACTICE,
+  TEST,
+  COMMON_MISTAKES
+}
+
 export const NEXT_LEVEL_TRESHOLD = 0.75 * 100;
 const LEVELS_COUNT = 4;
 const questionTypeOptions = Object.entries(QuestionType).filter(([k, v]) => typeof v === 'number');
 
 export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { tryStartSession, tryUpdateSession } = useMultiplayerGameContext();
+  const { tryStartSession, tryUpdateSession, code } = useMultiplayerGameContext();
   const { resetLevelData } = useLevelContext();
   const { updateMistakes, allMistakes } = useCommonMistakesContext();
   const { levelUp } = useGalaxyContext();
   const { selectedGalaxy } = useGalaxyContext();
+
+  const [gameType, setGameType] = useState<GameType>(GameType.PRACTICE);
 
   const navigation = useRouter();
 
@@ -73,15 +81,15 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setGameConfig(config);
     setCorrectAnswersCount(0);
 
-    newGameWithQuestions(useQuestionGenerator(config));
+    newGameWithQuestions(useQuestionGenerator(config), code ? GameType.TEST : GameType.PRACTICE);
   }
 
   const newGameWitMostCommonMistakes = () => {
     const shuffledMistakes = [...allMistakes].sort(() => Math.random() - 0.5).slice(0, 2);
-    newGameWithQuestions(shuffledMistakes.map(mistake => mistake.question));
+    newGameWithQuestions(shuffledMistakes.map(mistake => mistake.question), GameType.COMMON_MISTAKES);
   }
 
-  const newGameWithQuestions = (questions: Question[]) => {
+  const newGameWithQuestions = (questions: Question[], type : GameType) => {
     setQuestions(questions);
 
     nextQuestionWithValues(questions);
@@ -89,6 +97,8 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     console.log("New game started with config: ", questions.length);
 
     tryStartSession();
+
+    setGameType(type);
 
     navigation.replace("games/game" as never);
   }
@@ -168,6 +178,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setGameConfig,
         setActiveQuestion,
         newGameWitMostCommonMistakes,
+        gameType,
         data: activeQuestion?.SOURCE as WordSelectionOption[] | undefined,
       }}
     >

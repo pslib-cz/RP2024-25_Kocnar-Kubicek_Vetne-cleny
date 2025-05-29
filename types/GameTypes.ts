@@ -3,6 +3,7 @@ import { WordSelectionOption } from "./games/SelectionOption";
 import { GameState } from "./gameState";
 import { WordButtonType } from "./games/WordButtonType";
 import { Question } from "@/hooks/QuestionsGenerator/useQuestionGenerator";
+import { GameType } from "@/contexts/GameContext";
 
 export interface ActiveGameInfo {
   activeQuestionIndex: number;
@@ -32,5 +33,6 @@ export interface GameContextData {
   setGameConfig: React.Dispatch<React.SetStateAction<any>>;
   setActiveQuestion: React.Dispatch<React.SetStateAction<Question | undefined>>;
   newGameWitMostCommonMistakes: () => void;
+  gameType: GameType;
   data: WordSelectionOption[] | undefined;
 }

@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { NEXT_LEVEL_TRESHOLD, useGameContext } from '@/contexts/GameContext';
+import { GameType, NEXT_LEVEL_TRESHOLD, useGameContext } from '@/contexts/GameContext';
 import PlanetView from '@/components/PlanetView';
 import { useMultiplayerGameContext } from '@/contexts/MultiplayerGameContext';
 
@@ -10,7 +10,7 @@ const PracticeCompleteScreen = () => {
   const navigation = useRouter();
 
   const { getDuration, getSuccessRate } = useGameContext();
-  const { newGameWithCount, commonMistakes, newGameWithCount_CommonMistakes } = useGameContext();
+  const { newGameInArena, gameType, newGameWitMostCommonMistakes } = useGameContext();
   const { code } = useMultiplayerGameContext();
 
   const ResultStuff = ({text, value, color} : {text : string, value : string, color : string}) => {
@@ -56,7 +56,7 @@ const PracticeCompleteScreen = () => {
           <ResultStuff text="Success rate" value={`${successRate.toFixed(2)}%`} color={successRateColor} />
         </View>
   
-        <Button title={successRate >= NEXT_LEVEL_TRESHOLD ? "Další level" : "Zkusit znovu"} filled={true} onPress={newGameWithCount} />
+        <Button title={successRate >= NEXT_LEVEL_TRESHOLD ? "Další level" : "Zkusit znovu"} filled={true} onPress={newGameInArena} />
         <Button title="Domů" filled={false} onPress={() => navigation.navigate('/' as never)} />
       </View>
     )
@@ -92,16 +92,14 @@ const PracticeCompleteScreen = () => {
           <ResultStuff text="Success rate" value={`${successRate.toFixed(2)}%`} color={successRateColor} />
         </View>
   
-        <Button title={"Zkusit znovu"} filled={true} onPress={newGameWithCount_CommonMistakes} />
+        <Button title={"Zkusit znovu"} filled={true} onPress={newGameWitMostCommonMistakes} />
         <Button title="Domů" filled={false} onPress={() => navigation.navigate('/' as never)} />
       </View>
     )
   }
 
-  console.log(`Finished screen with code: ${code}, commonMistakes: ${commonMistakes}`);
-
-  if (code) return resultScreenMultiplayer();
-  if (commonMistakes) return commonMistakesScreen();
+  if (gameType == GameType.TEST) return resultScreenMultiplayer();
+  if (gameType == GameType.COMMON_MISTAKES) return commonMistakesScreen();
   return resultScreenPractice();
 };
 
