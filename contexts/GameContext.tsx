@@ -82,9 +82,6 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
       answers: [],
     });
 
-    // set game state
-    setGameState(GameState.pending);
-
     // set game config
     setGameConfig(config);
 
@@ -122,6 +119,8 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const nextQuestionWithValues = (questions: Question[]) => {
     setGameInfo((prev) => ({ ...prev, activeQuestionIndex: prev.activeQuestionIndex + 1 })); // Increment the active question index
     setActiveQuestion(questions[gameInfo.activeQuestionIndex]);
+
+    setGameState(GameState.pending);
 
     if (gameInfo.activeQuestionIndex >= questions.length) {
       setGameInfo((prev) => ({ ...prev, endTime: Date.now() })); // Set the end time

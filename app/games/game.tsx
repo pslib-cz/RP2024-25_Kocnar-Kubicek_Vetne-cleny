@@ -58,7 +58,7 @@ export const Game: React.FC = () => {
       case QuestionType.SELECT_MULTIPLE_W_SENTENCE:
         return Game3UI()
       default:
-        return Game3UI()
+        throw new Error(`Unsupported question type: ${activeQuestion?.TEMPLATE[GeneratorParam.QUESTION_TYPE]}`);
     }
   }
 
