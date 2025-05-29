@@ -11,6 +11,8 @@ import { useRouter } from 'expo-router';
 import ColorPicker from 'react-native-wheel-color-picker';
 import PlayfulButton from '@/components/ui/PlayfulButton';
 import { MaterialIcons } from '@expo/vector-icons';
+import { WordButtonsContainer } from '@/components/ui/games/WordButtonsContainer';
+import { ButtonState } from '@/components/ui/games/WordButton';
 
 // Helper to load SVG as string
 const loadSvgAsset = async (assetModule: any): Promise<string | null> => {
@@ -47,6 +49,19 @@ export default function OnboardingScreen() {
   const [rocketPickerVisible, setRocketPickerVisible] = useState(false);
   const [localName, setLocalName] = useState('');
   const [nameTouched, setNameTouched] = useState(false);
+
+  const staticWordButtons1 = [
+    { text: 'Veverky', type: 'po', state: ButtonState.correct },
+    { text: 'se starají', type: 'př', state: ButtonState.highlighted },
+    { text: 'o opuštěná', type: 'pks' },
+    { text: '(o) mláďata.', type: 'pt' }
+  ]
+  const staticWordButtons2 = [
+    { text: 'pks', type: 'pks', drawType: true },
+    { text: 'po', type: 'po', drawType: true, state: ButtonState.disabled },
+    { text: 'pt', type: 'pt', drawType: true },
+    { text: 'př', type: 'př', drawType: true }
+  ]
 
   useEffect(() => {
     const loadRockets = async () => {
@@ -106,10 +121,21 @@ export default function OnboardingScreen() {
       >
         {/* Slide 1: Introduction */}
         <View key="1" style={styles.slide}>
-          <ThemedText type="title" style={{ marginBottom: 24, paddingHorizontal: 16 }}>Vítejte v aplikaci Větná dráha!</ThemedText>
-          <ThemedText type="default" style={{ marginBottom: 16, textAlign: 'center', paddingHorizontal: 16 }}>
-            Procvičujte větné členy, sbírejte body a vylepšujte svou raketu. Pojďme začít!
-          </ThemedText>
+          <Image
+            source={require('../../assets/images/icons/splash-icon-light.png')}
+            style={{ width: 120, height: 120, marginBottom: 16, alignSelf: 'center', borderRadius: 16 }}
+            resizeMode="contain"
+          />
+          <View style={styles.paddedContainer}>
+            <ThemedText type="title" style={{ marginBottom: 12, textAlign: 'center' }}>Vítejte v aplikaci</ThemedText>
+            <ThemedText type="title" style={{ marginBottom: 24, textAlign: 'center' }}>Větná dráha</ThemedText>
+            <ThemedText type="default" style={{ marginBottom: 16, textAlign: 'center', fontSize: 18 }}>
+              Procvičuj větné členy, sbírej body a zlepšuj se! Čekají tě mise vesmírem a zkoušky znalostí.
+            </ThemedText>
+            <ThemedText type="default" style={{ marginBottom: 16, textAlign: 'center', fontSize: 18 }}>
+              Před tím, než můžeš začít, musíš si nastavit svůj profil a naučit se používat aplikaci.
+            </ThemedText>
+          </View>
           <View style={styles.bottomButtonContainer}>
             <PlayfulButton title="Pokračovat" icon={<MaterialIcons name="arrow-forward" size={24} color="white" />} onPress={() => goToPage(1)} />
           </View>
@@ -119,8 +145,10 @@ export default function OnboardingScreen() {
         <RNScrollView key="2" contentContainerStyle={[styles.slide, { alignItems: 'center', justifyContent: 'flex-start' }]}
           keyboardShouldPersistTaps="handled"
         >
-          <ThemedText type="title" style={{ marginBottom: 12, paddingHorizontal: 16 }}>Váš profil</ThemedText>
-          <ThemedText style={{ color: '#aaa', marginBottom: 16, paddingHorizontal: 16 }}>Zadejte své jméno a vyberte si raketu</ThemedText>
+          <View style={styles.paddedContainer}>
+            <ThemedText type="title" style={{ marginBottom: 12, textAlign: 'center' }}>Váš profil</ThemedText>
+            <ThemedText style={{ color: '#aaa', marginBottom: 16, textAlign: 'center' }}>Zadejte své jméno a vyberte si raketu</ThemedText>
+          </View>
           <View style={styles.avatarOptions}>
             {/* Body Color */}
             <View style={styles.optionContainer}>
@@ -128,7 +156,7 @@ export default function OnboardingScreen() {
                 style={[styles.colorOption, { backgroundColor: bodyColor }]}
                 onPress={() => openColorPicker('body')}
               />
-              <ThemedText style={[styles.optionLabel, { paddingHorizontal: 16 }]}>Barva rakety</ThemedText>
+              <ThemedText style={styles.optionLabel}>Barva rakety</ThemedText>
             </View>
             {/* Rocket Shape */}
             <View style={styles.optionContainer}>
@@ -140,7 +168,7 @@ export default function OnboardingScreen() {
                   <SvgXml xml={modifiedRocketSvgs[selectedRocketIndex]} width={70} height={70} />
                 )}
               </TouchableOpacity>
-              <ThemedText style={[styles.optionLabel, { paddingHorizontal: 16 }]}>Tvar rakety</ThemedText>
+              <ThemedText style={styles.optionLabel}>Tvar rakety</ThemedText>
             </View>
             {/* Trail Color */}
             <View style={styles.optionContainer}>
@@ -148,12 +176,12 @@ export default function OnboardingScreen() {
                 style={[styles.colorOption, { backgroundColor: trailColor }]}
                 onPress={() => openColorPicker('trail')}
               />
-              <ThemedText style={[styles.optionLabel, { paddingHorizontal: 16 }]}>Barva trysek</ThemedText>
+              <ThemedText style={styles.optionLabel}>Barva trysek</ThemedText>
             </View>
           </View>
           {/* Name Input */}
           <View style={styles.nameContainer}>
-            <ThemedText style={[styles.nameLabel, { paddingHorizontal: 16 }]}>Jméno</ThemedText>
+            <ThemedText style={styles.nameLabel}>Jméno</ThemedText>
             <TextInput
               style={styles.nameInput}
               value={localName}
@@ -183,7 +211,7 @@ export default function OnboardingScreen() {
             <View style={styles.modalOverlay}>
               <View style={styles.colorPickerContainer}>
                 <ThemedText type="subtitle" style={[styles.colorPickerTitle, { paddingHorizontal: 16 }]}>
-                  {currentPickingFor === 'body' ? 'Vyberte barvu rakety' : 'Vyberte barvu stopy'}
+                  {currentPickingFor === 'body' ? 'Vyberte barvu rakety' : 'Vyberte barvu trysek'}
                 </ThemedText>
                 <View style={styles.colorPickerWrapper}>
                   <ColorPicker
@@ -246,13 +274,20 @@ export default function OnboardingScreen() {
 
         {/* Slide 3: Arena Info */}
         <View key="3" style={styles.slide}>
-          <ThemedText type="title" style={{ marginBottom: 16, paddingHorizontal: 16 }}>Co je Aréna?</ThemedText>
-          <ThemedText style={{ marginBottom: 16, textAlign: 'center', paddingHorizontal: 16 }}>
-            Arena je místo, ve kterém můžeš cestovat po galaxiích. V ní můžeš procvičovat větné členy v různých úlohách a sbírat body za správné odpovědi. 
-          </ThemedText>
+          <View style={styles.paddedContainer}>
+            <ThemedText type="title" style={{ marginBottom: 16, textAlign: 'center' }}>Seznam se s Arénou!</ThemedText>
+            <ThemedText style={{ marginBottom: 16, textAlign: 'center' }}>
+              Arena je místo, ve kterém můžeš cestovat po galaxiích. V galaxiích můžeš procvičovat větné členy v různých úlohách a sbírat body za správné odpovědi. 
+            </ThemedText>
+          </View>
           <Image
-            source={require('../../assets/images/uni/1/celestial4.png')}
-            style={{ height: width * 0.6, borderRadius: 16, marginBottom: 24 }}
+            source={require('../../assets/images/uni/2/celestial7.png')}
+            style={{ height: width * 0.6, borderRadius: 16, marginBottom: 24, zIndex: 1000, transform: [{ translateX: -width * 0.1}] }}
+            resizeMode="contain"
+          />
+          <Image
+            source={require('../../assets/images/uni/4/celestial8.png')}
+            style={{ height: width * 0.6, borderRadius: 16, marginBottom: 24, transform: [{ translateX: width * 0.2}, { translateY: -width * 0.3 }] }}
             resizeMode="contain"
           />
           <View style={styles.bottomButtonContainer}>
@@ -262,10 +297,19 @@ export default function OnboardingScreen() {
 
         {/* Slide 4: Games/Gametypes Info */}
         <View key="4" style={styles.slide}>
-          <ThemedText type="title" style={{ marginBottom: 16, paddingHorizontal: 16 }}>Herní režimy</ThemedText>
-          <ThemedText style={{ marginBottom: 16, textAlign: 'center', paddingHorizontal: 16 }}>
-            V aplikaci najdeš různé typy her: označování větných členů, doplňování, třídění a další. Každý herní režim ti pomůže procvičit jiné dovednosti.
-          </ThemedText>
+          <View style={styles.paddedContainer}>
+            <ThemedText type="title" style={{ marginBottom: 16, textAlign: 'center' }}>Herní režimy</ThemedText>
+            <ThemedText style={{ marginBottom: 16, textAlign: 'center' }}>
+              V aplikaci najdeš různé typy her, ve kterých buď označuješ větné členy, nebo je vybíráš z nabídky. Každý herní režim ti pomůže procvičit jiné dovednosti.
+            </ThemedText>
+            <ThemedText style={{ marginBottom: 16, textAlign: 'center' }}>
+                Zde můžeš vidět příklad hry, ve které budeš  klikat na barevné větné členy dole, a tím postupně označovat větu.
+            </ThemedText>
+          </View>
+          <View style={{ width: '100%', alignItems: 'center', marginBottom: 24 }}>
+            <WordButtonsContainer buttons={staticWordButtons1} showTooltip={false} longPress={() => {}} onClick={() => {}} />
+            <WordButtonsContainer buttons={staticWordButtons2} showTooltip={false} longPress={() => {}} onClick={() => {}} />
+          </View>
           <View style={styles.bottomButtonContainer}>
             <PlayfulButton title="Pokračovat" icon={<MaterialIcons name="sports-esports" size={24} color="white" />} onPress={() => goToPage(4)} />
           </View>
@@ -273,12 +317,17 @@ export default function OnboardingScreen() {
 
         {/* Slide 5: Exams Info */}
         <View key="5" style={styles.slide}>
-          <ThemedText type="title" style={{ marginBottom: 16, paddingHorizontal: 16 }}>Testy a zkoušky</ThemedText>
-          <ThemedText style={{ marginBottom: 16, textAlign: 'center', paddingHorizontal: 16 }}>
-            Vyzkoušej si testy nanečisto nebo se připoj k reálné zkoušce. Sleduj svůj pokrok a porovnej výsledky s ostatními!
-          </ThemedText>
+          <View style={styles.paddedContainer}>
+            <ThemedText type="title" style={{ marginBottom: 16, textAlign: 'center' }}>Testy a zkoušky</ThemedText>
+            <ThemedText style={{ marginBottom: 16, textAlign: 'center' }}>
+              Vyzkoušej si testy nanečisto nebo se připoj ke zkoušce sdílené tvým učitelem!
+            </ThemedText>
+            <ThemedText style={{ marginBottom: 16, textAlign: 'center' }}>
+            Sleduj svůj pokrok a porovnej výsledky s ostatními!
+            </ThemedText>
+                      </View>
           <View style={styles.bottomButtonContainer}>
-            <PlayfulButton title="Začít" icon={<MaterialIcons name="rocket-launch" size={24} color="white" />} onPress={() => router.replace('/(tabs)')} />
+            <PlayfulButton title="Začít" icon={<MaterialIcons name="rocket-launch" size={24} color="white" />} onPress={() => router.replace('/(tabs)/arenaplanet')} />
           </View>
         </View>
       </PagerView>
@@ -289,9 +338,13 @@ export default function OnboardingScreen() {
 const styles = StyleSheet.create({
   slide: {
     flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
+    padding: 24,
     backgroundColor: '#000',
+  },
+  paddedContainer: {
+    width: '100%',
+    padding: 16,
   },
   avatarOptions: {
     flexDirection: 'row',
@@ -418,10 +471,10 @@ const styles = StyleSheet.create({
     borderColor: '#FF7733',
   },
   bottomButtonContainer: {
-    width: '100%',
     position: 'absolute',
     bottom: 64,
     left: 0,
+    right: 0,
     alignItems: 'center',
     display: 'flex',
     justifyContent: 'center',
