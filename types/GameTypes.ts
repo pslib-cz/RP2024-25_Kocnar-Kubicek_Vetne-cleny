@@ -31,5 +31,6 @@ export interface GameContextData {
   setGameInfo: React.Dispatch<React.SetStateAction<ActiveGameInfo>>;
   setGameConfig: React.Dispatch<React.SetStateAction<any>>;
   setActiveQuestion: React.Dispatch<React.SetStateAction<Question | undefined>>;
+  newGameWitMostCommonMistakes: () => void;
   data: WordSelectionOption[] | undefined;
 }
