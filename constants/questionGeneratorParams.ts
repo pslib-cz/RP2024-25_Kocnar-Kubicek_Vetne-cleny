@@ -81,7 +81,6 @@ export let questionGeneratorParams = [
         [10, DataSource.ALL, QuestionType.MARK_WORDS_ALL_TYPES],
         [10, DataSource.ALL, QuestionType.SELECT_MULTIPLE_W_SENTENCE],
         [0, DataSource.ALL, QuestionType.SELECT_ONE_W_SENTENCE],
-        [10, DataSource.ALL, QuestionType.SELECT_TYPE],
     ],
     // PAP GALAXY
     [
