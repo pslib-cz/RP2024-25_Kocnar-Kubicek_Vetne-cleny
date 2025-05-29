@@ -55,10 +55,10 @@ export const Game: React.FC = () => {
         return GameOneUI(Game1Type.allTypes)
       case QuestionType.SELECT_MULTIPLE:
         return Game2UI()
-      case QuestionType.SELECT_ONE_W_SENTENCE:
+      case QuestionType.SELECT_MULTIPLE_W_SENTENCE:
         return Game3UI()
       default:
-        return <Text>Not implemented</Text>
+        return Game3UI()
     }
   }
 

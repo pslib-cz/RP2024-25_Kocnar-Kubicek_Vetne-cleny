@@ -21,7 +21,8 @@ export function isValidTemplate(template: any[]): boolean {
     Array.isArray(template) &&
     template.length > GeneratorParam.QUESTION_TYPE &&
     typeof template[GeneratorParam.DATA_SOURCE] === 'number' &&
-    typeof template[GeneratorParam.QUESTION_TYPE] === 'number'
+    typeof template[GeneratorParam.QUESTION_TYPE] === 'number' &&
+    template[GeneratorParam.WEIGHT] > 0
   );
 }
 
