@@ -2,7 +2,7 @@ import { GameRoute } from "@/constants/gameRoute";
 import { WordSelectionOption } from "./games/SelectionOption";
 import { GameState } from "./gameState";
 import { WordButtonType } from "./games/WordButtonType";
-import { Question } from "@/hooks/useQuestionGenerator";
+import { Question } from "@/hooks/QuestionsGenerator/useQuestionGenerator";
 
 export interface ActiveGameInfo {
   activeQuestionIndex: number;
@@ -30,7 +30,6 @@ export interface GameContextData {
   nextQuestion: () => void;
   setGameInfo: React.Dispatch<React.SetStateAction<ActiveGameInfo>>;
   setGameConfig: React.Dispatch<React.SetStateAction<any>>;
-  setQuestions: React.Dispatch<React.SetStateAction<Question[]>>;
   setActiveQuestion: React.Dispatch<React.SetStateAction<Question | undefined>>;
   data: WordSelectionOption[] | undefined;
 }

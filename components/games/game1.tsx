@@ -75,6 +75,7 @@ export function GameOneUI(type: Game1Type) {
       if (!allTypes)
         bottomButton.state = ButtonState.disabled;
 
+      console.log("Correct answer for game index:", gameIndex, "button:", updatedPhraseButtons[gameIndex]);
       updatedPhraseButtons[gameIndex].state = ButtonState.correct;
 
       if (gameIndex < bottomButtons.length - 1)

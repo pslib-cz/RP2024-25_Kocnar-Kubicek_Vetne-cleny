@@ -26,7 +26,12 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const { getMistakesAsSentences, updateMistakes, allMistakes } = useCommonMistakesContext();
   const { levelUp } = useGalaxyContext();
   const navigation = useRouter();
-  const pathname = usePathname();
+
+  const [questions, setQuestions] = useState<Question[]>([]);
+  const [activeQuestion, setActiveQuestion] = useState<Question | undefined>(undefined);
+  const [gameState, setGameState] = useState<GameState>(GameState.pending);
+
+  const [correctAnswersCount, setCorrectAnswersCount] = useState<number>(0);
 
   const { selectedGalaxy, activePlanets, activeLevelIndex } = useGalaxyContext();
 
@@ -44,12 +49,6 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     endTime: undefined,
     answers: [],
   });
-
-  const [questions, setQuestions] = useState<Question[]>([]);
-  const [activeQuestion, setActiveQuestion] = useState<Question | undefined>(undefined);
-
-  const [gameState, setGameState] = useState<GameState>(GameState.pending);
-
 
   //   const newGameWithCount_CommonMistakes = () => {
   //     if (allMistakes.length === 0) {
@@ -87,38 +86,26 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     // generate questions
 
+    setCorrectAnswersCount(0);
+
     const dfsdfsdf = useQuestionGenerator(config)
 
     setQuestions(dfsdfsdf);
 
     nextQuestionWithValues(dfsdfsdf);
 
+    console.log("New game started with config: ", questions.length);
+
     tryStartSession();
 
     navigation.replace("games/game" as never);
   }
 
-  //   const generateGameData = (count : number, seed : number, commonMistakes : boolean) : GameLevel[] => {
-  //     if (commonMistakes)
-  //     {
-  //       const mistakesData = commonMistakes ? getMistakesAsSentences() : [];
-  //       if (mistakesData.length === 0) {
-  //         console.warn("No common mistakes found");
-  //         return [];
-  //       }
-  //       if (mistakesData.length < count) {
-  //         console.warn("Not enough common mistakes found");
-  //         return [];
-  //       }
-  //       return generateRandomMistakesLevels(count, seed, mistakesData);
-  //     }
-
-  //     return generateRandomGameLevels(count, seed, allData);
-  //   }
-
   const nextQuestionWithValues = (questions: Question[]) => {
     setGameInfo((prev) => ({ ...prev, activeQuestionIndex: prev.activeQuestionIndex + 1 })); // Increment the active question index
-    setActiveQuestion(questions[gameInfo.activeQuestionIndex]);
+
+    console.log("Next question: ", questions[gameInfo.activeQuestionIndex]);
+    console.log("Game info: ", gameInfo);
 
     setGameState(GameState.pending);
 
@@ -132,15 +119,14 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
       console.log("Game finished");
       navigation.replace('games/resultScreen' as never);
     }
+    else {
+      setActiveQuestion(questions[gameInfo.activeQuestionIndex]);
+    }
   }
   
   const nextQuestion = () => {
     nextQuestionWithValues(questions);
   }
-
-  //   const moveToNextLevel = async () => {
-  //     moveToNextLevelWithValues(gameData.questionsRemaining, generatedGameData, gameData);
-  //   }  
 
   /// on level finished, not limited to the whole game
   const onFinished = (isCorrect: boolean) => {
@@ -149,6 +135,8 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (!activeQuestion) return;
     updateMistakes(activeQuestion?.SOURCE, isCorrect);
     setGameState(isCorrect ? GameState.correct : GameState.incorrect)
+
+    setCorrectAnswersCount((prev) => prev + (isCorrect ? 1 : 0));
 
     const dataUpdate = {
       score: isCorrect ? 1 : 0,
@@ -166,8 +154,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const getSuccessRate = () => {
-    const correctAnswers = gameInfo.answers.filter(answer => answer.correct).length;
-    return (correctAnswers / gameInfo.answers.length) * 100;
+    return (correctAnswersCount / questions.length) * 100;
   }
 
   return (
@@ -186,7 +173,6 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
         nextQuestion,
         setGameInfo,
         setGameConfig,
-        setQuestions,
         setActiveQuestion,
         data: activeQuestion?.SOURCE as WordSelectionOption[] | undefined,
       }}
