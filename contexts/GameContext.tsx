@@ -17,7 +17,7 @@ import { Galaxy, GeneratorParam, QuestionType } from '@/constants/questionGenera
 const GameContext = createContext<GameContextData | undefined>(undefined);
 
 export const NEXT_LEVEL_TRESHOLD = 0.75 * 100;
-const LEVELS_COUNT = 2;
+const LEVELS_COUNT = 4;
 const questionTypeOptions = Object.entries(QuestionType).filter(([k, v]) => typeof v === 'number');
 
 export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -25,6 +25,8 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const { resetLevelData } = useLevelContext();
   const { updateMistakes, allMistakes } = useCommonMistakesContext();
   const { levelUp } = useGalaxyContext();
+  const { selectedGalaxy } = useGalaxyContext();
+
   const navigation = useRouter();
 
   const [questions, setQuestions] = useState<Question[]>([]);
@@ -32,8 +34,6 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [gameState, setGameState] = useState<GameState>(GameState.pending);
 
   const [correctAnswersCount, setCorrectAnswersCount] = useState<number>(0);
-
-  const { selectedGalaxy, activePlanets, activeLevelIndex } = useGalaxyContext();
 
   const [gameConfig, setGameConfig] = useState({
     galaxy: Galaxy.ALL,
@@ -64,17 +64,13 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (!config.seed) config.seed = Math.floor(Math.random() * 1000000);
     if (!config.questionTypesBitfield) config.questionTypesBitfield = (1 << questionTypeOptions.length) - 1;
 
-    // reset game info
     setGameInfo({
       activeQuestionIndex: 0,
       startTime: Date.now(),
       answers: [],
     });
 
-    // set game config
     setGameConfig(config);
-
-    // generate questions
     setCorrectAnswersCount(0);
 
     newGameWithQuestions(useQuestionGenerator(config));
@@ -86,6 +82,8 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }
 
   const newGameWithQuestions = (questions: Question[]) => {
+    setQuestions(questions);
+
     nextQuestionWithValues(questions);
 
     console.log("New game started with config: ", questions.length);
@@ -95,8 +93,10 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     navigation.replace("games/game" as never);
   }
 
-
   const nextQuestionWithValues = (questions: Question[]) => {
+
+    resetLevelData();
+
     setGameInfo((prev) => ({ ...prev, activeQuestionIndex: prev.activeQuestionIndex + 1 })); // Increment the active question index
 
     console.log("Next question: ", questions[gameInfo.activeQuestionIndex]);
@@ -125,8 +125,6 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   /// on level finished, not limited to the whole game
   const onFinished = (isCorrect: boolean) => {
-    resetLevelData();
-
     if (!activeQuestion) return;
     updateMistakes(activeQuestion, isCorrect);
     setGameState(isCorrect ? GameState.correct : GameState.incorrect)

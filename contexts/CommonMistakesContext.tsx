@@ -14,7 +14,7 @@ const CommonMistakesContext = createContext<CommonMistakesContextValue | undefin
 export const CommonMistakesProvider = ({ children }: { children: ReactNode }) => {
   const [allMistakes, setAllMistakes] = useState<CommonMistake[]>([]);
 
-  const file = FileSystem.documentDirectory + 'mistakes.json';
+  const file = FileSystem.documentDirectory + 'mistakesData.json';
 
   useEffect(() => {
     const loadMistakes = async () => {

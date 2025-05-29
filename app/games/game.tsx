@@ -106,7 +106,7 @@ export const Game: React.FC = () => {
             <HelpButton />
           </View>        
           <View style={{ flexShrink: 1, flexGrow: 999 }}>
-            <RocketProgressBar progress={1 - (gameInfo.activeQuestionIndex + 1) / questions.length}/>
+            <RocketProgressBar progress={(gameInfo.activeQuestionIndex - 1) / questions.length}/>
           </View>
           <View style={{ flexShrink: 1}}>
             <CloseButton />
