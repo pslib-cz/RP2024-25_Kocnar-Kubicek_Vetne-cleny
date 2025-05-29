@@ -8,7 +8,7 @@ import { router } from 'expo-router';
 import { useGameContext } from '@/contexts/GameContext';
 
 const ArenaPlanet: React.FC = () => {
-  const { newGameWithCount } = useGameContext();
+  const { newGameInArena } = useGameContext();
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -23,7 +23,7 @@ const ArenaPlanet: React.FC = () => {
         <BigassButton
           title={"Další cvičení"}
           bgEmoji="🚀"
-          onPress={newGameWithCount}
+          onPress={newGameInArena}
         />
       </View>
     </SafeAreaView>

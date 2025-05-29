@@ -30,11 +30,23 @@ interface RocketProviderProps {
   children: ReactNode;
 }
 
+// Helper to generate a random light gray color
+function randomLightGray() {
+  const v = Math.floor(200 + Math.random() * 55); // 200-255
+  return `rgb(${v},${v},${v})`;
+}
+
+// Helper to generate a random fully saturated color (HSV to RGB)
+function randomSaturatedColor() {
+  const h = Math.floor(Math.random() * 360);
+  return `hsl(${h}, 100%, 50%)`;
+}
+
 export const RocketProvider = ({ children }: RocketProviderProps) => {
-  const [bodyColor, setBodyColor] = useState('#FF7733');
-  const [trailColor, setTrailColor] = useState('#F7D795');
+  const [bodyColor, setBodyColor] = useState(() => randomLightGray());
+  const [trailColor, setTrailColor] = useState(() => randomSaturatedColor());
   const [selectedRocketIndex, setSelectedRocketIndex] = useState(0);
-  const [name, setName] = useState('Uživatel');
+  const [name, setName] = useState('');
   const [teacherMode, setTeacherMode] = useState(false);
   const [userId, setUserId] = useState<string>('');
   const [secretKey, setSecretKey] = useState<string>('');
