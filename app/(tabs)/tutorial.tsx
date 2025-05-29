@@ -1,5 +1,6 @@
 import QuestionRow from '@/components/ui/tutorial/QuestionRow';
 import TutorialButton from '@/components/ui/tutorial/TutorialButton';
+import PlayfulButton from '@/components/ui/PlayfulButton';
 import { useBackspaceIntercept } from '@/hooks/useBackspaceIntercept';
 import { useTutorial } from '@/hooks/useTutorial';
 import { Ionicons } from '@expo/vector-icons';
@@ -61,11 +62,11 @@ export default function Tutorial() {
         <>
           {
             currentNode.node.yesNode &&
-            <TutorialButton title="ANO" filled={true} onPress={() => AddNode(currentNode, true)} />
+            <PlayfulButton title="ANO" variant="success" style={{width: '50%'}}onPress={() => AddNode(currentNode, true)} />
           }
           {
             currentNode.node.noNode &&
-            <TutorialButton title="NE" filled={true} onPress={() => AddNode(currentNode, false)} />
+            <PlayfulButton title="NE" variant="danger" style={{width: '50%'}} onPress={() => AddNode(currentNode, false)} />
           }
         </>
       }
@@ -101,7 +102,6 @@ const styles = StyleSheet.create({
   },
   mainContent: {
     alignItems: 'center',
-    marginBottom: 80,
     marginHorizontal: 40,
     flexGrow: 1,
   },
@@ -119,10 +119,12 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flexDirection: 'row',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     width: '100%',
     paddingHorizontal: 20,
     marginVertical: 40,
+    marginBottom: 80,
+    gap: 10,
   },
   backButton: {
     flexDirection: 'row',

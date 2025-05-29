@@ -8,6 +8,7 @@ import { Modal, SafeAreaView, StatusBar, StyleSheet, TextInput, TouchableOpacity
 import { SvgXml } from 'react-native-svg';
 import ColorPicker from 'react-native-wheel-color-picker';
 import { rocket1, rocket2, rocket3, rocket4, rocket5 } from '@/data/rocketsImages';
+import { router } from 'expo-router';
 
 // Načtení SVG souboru jako text
 export const loadSvgAsset = async (assetModule: any): Promise<string | null> => {
@@ -97,7 +98,7 @@ export default function ProfileEditScreen(): React.ReactElement {
 
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton}>
+        <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
           <Ionicons name="chevron-back" size={24} color="white" />
           <ThemedText style={styles.backText}>Zpět</ThemedText>
         </TouchableOpacity>
