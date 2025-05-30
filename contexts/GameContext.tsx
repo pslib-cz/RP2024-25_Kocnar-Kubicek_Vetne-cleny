@@ -23,7 +23,7 @@ export enum GameType{
 }
 
 export const NEXT_LEVEL_TRESHOLD = 0.75 * 100;
-const LEVELS_COUNT = 4;
+const LEVELS_COUNT = 3;
 const questionTypeOptions = Object.entries(QuestionType).filter(([k, v]) => typeof v === 'number');
 
 export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -72,12 +72,6 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (!config.seed) config.seed = Math.floor(Math.random() * 1000000);
     if (!config.questionTypesBitfield) config.questionTypesBitfield = (1 << questionTypeOptions.length) - 1;
 
-    setGameInfo({
-      activeQuestionIndex: 0,
-      startTime: Date.now(),
-      answers: [],
-    });
-
     setGameConfig(config);
     setCorrectAnswersCount(0);
 
@@ -92,7 +86,14 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const newGameWithQuestions = (questions: Question[], type : GameType) => {
     setQuestions(questions);
 
-    nextQuestionWithValues(questions);
+    const conf : ActiveGameInfo = {
+      activeQuestionIndex: 0,
+      startTime: Date.now(),
+      answers: [],
+    }
+
+    setGameInfo(conf);
+    nextQuestionWithValues(questions, conf);
 
     console.log("New game started with config: ", questions.length);
 
@@ -103,8 +104,9 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     navigation.replace("games/game" as never);
   }
 
-  const nextQuestionWithValues = (questions: Question[]) => {
+  const nextQuestion = () => nextQuestionWithValues(questions, gameInfo);
 
+  const nextQuestionWithValues = (questions: Question[], gameInfo: ActiveGameInfo) => {
     resetLevelData();
 
     setGameInfo((prev) => ({ ...prev, activeQuestionIndex: prev.activeQuestionIndex + 1 })); // Increment the active question index
@@ -127,10 +129,6 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     else {
       setActiveQuestion(questions[gameInfo.activeQuestionIndex]);
     }
-  }
-  
-  const nextQuestion = () => {
-    nextQuestionWithValues(questions);
   }
 
   /// on level finished, not limited to the whole game
