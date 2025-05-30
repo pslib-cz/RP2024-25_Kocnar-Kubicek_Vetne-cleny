@@ -127,7 +127,7 @@ export default function OnboardingScreen() {
             resizeMode="contain"
           />
           <View style={styles.paddedContainer}>
-            <ThemedText type="title" style={{ marginBottom: 12, textAlign: 'center' }}>Vítejte v aplikaci</ThemedText>
+            <ThemedText type="title" style={{ marginBottom: 12, textAlign: 'center' }}>Vítej v aplikaci</ThemedText>
             <ThemedText type="title" style={{ marginBottom: 24, textAlign: 'center' }}>Větná dráha</ThemedText>
             <ThemedText type="default" style={{ marginBottom: 16, textAlign: 'center', fontSize: 18 }}>
               Procvičuj větné členy, sbírej body a zlepšuj se! Čekají tě mise vesmírem a zkoušky znalostí.

@@ -72,13 +72,13 @@ export function GameOneUI(type: Game1Type) {
     const updatedPhraseButtons = [...phraseButtons];
 
     if (data[gameIndex].type === bottomButton.type) {
-      if (!allTypes)
+      if (!allTypes && bottomButton)
         bottomButton.state = ButtonState.disabled;
 
       console.log("Correct answer for game index:", gameIndex, "button:", updatedPhraseButtons[gameIndex]);
       updatedPhraseButtons[gameIndex].state = ButtonState.correct;
 
-      if (gameIndex < bottomButtons.length - 1)
+      if (gameIndex < bottomButtons.length - 1 && updatedPhraseButtons[gameIndex + 1])
         updatedPhraseButtons[gameIndex + 1].state = ButtonState.highlighted;
 
       if (gameIndex === data.length - 1)
