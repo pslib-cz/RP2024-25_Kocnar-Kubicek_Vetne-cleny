@@ -144,6 +144,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     width: '100%',
+    display: 'flex',
+    flexDirection: 'column',
   },
   container1: {
     flex: 1,
