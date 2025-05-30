@@ -4,13 +4,13 @@ import { usePathname, useRouter } from 'expo-router';
 import { WordSelectionOption } from '@/types/games/SelectionOption';
 import { useData } from '@/hooks/useData';
 import { GameState } from '@/types/gameState';
-import { GameRoute } from '@/constants/gameRoute';
+// import { GameRoute } from '@/constants/gameRoute';
 import { useMultiplayerGameContext } from './MultiplayerGameContext';
 import { useLevelContext } from './levelContext';
 import { useGalaxyContext } from './GalaxyContext';
 import { useCommonMistakesContext } from './CommonMistakesContext';
-import { generateRandomGameLevels, generateRandomMistakesLevels } from './utils/GameDataGenerator';
-import { GameLevel } from '@/types/games/GameLevel';
+// import { generateRandomGameLevels, generateRandomMistakesLevels } from './utils/GameDataGenerator';
+// import { GameLevel } from '@/types/games/GameLevel';
 import { Question, useQuestionGenerator } from '@/hooks/QuestionsGenerator/useQuestionGenerator';
 import { Galaxy, GeneratorParam, QuestionType } from '@/constants/questionGeneratorParams';
 
@@ -177,6 +177,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setActiveQuestion,
         newGameWitMostCommonMistakes,
         gameType,
+        newGameWithQuestions,
         data: activeQuestion?.SOURCE as WordSelectionOption[] | undefined,
       }}
     >

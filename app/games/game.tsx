@@ -8,7 +8,7 @@ import Animated, { SlideInRight, SlideOutLeft } from 'react-native-reanimated';
 import { FeedbackOverlay } from "@/components/FeedbackOverlay";
 import RocketProgressBar from "@/components/ui/games/ProgressBar";
 import { Game1Type, GameOneUI } from "@/components/games/game1";
-import { GameRoute } from "@/constants/gameRoute";
+// import { GameRoute } from "@/constants/gameRoute";
 import { Game2UI } from "@/components/games/game2";
 import { Game3UI } from "@/components/games/game3";
 import { ThemedText } from "@/components/ThemedText";
@@ -53,10 +53,16 @@ export const Game: React.FC = () => {
         return GameOneUI(Game1Type.inverted)
       case QuestionType.MARK_WORDS_ALL_TYPES:
         return GameOneUI(Game1Type.allTypes)
+      case QuestionType.MARK_TYPE_ONE_WORD:
+        return GameOneUI(Game1Type.oneWord, activeQuestion?.INDEX)
       case QuestionType.SELECT_MULTIPLE:
         return Game2UI()
       case QuestionType.SELECT_MULTIPLE_W_SENTENCE:
         return Game3UI()
+      case QuestionType.SELECT_ONE_W_SENTENCE:
+        return Game3UI()
+      // case QuestionType.SELECT_TYPE:
+      //   return Game2UI(true)
       default:
         throw new Error(`Unsupported question type: ${activeQuestion?.TEMPLATE[GeneratorParam.QUESTION_TYPE]}`);
     }
