@@ -30,19 +30,27 @@ export const hints: Record<QuestionType, string[]> = {
     "Pokud si nejsi jistý zkratkami, dlouhým podržením tlačítka s členem se ti zobrazí celý název členu"
   ],
   [QuestionType.SELECT_MULTIPLE]: [
-    "Zaměřte se na vztah mezi nabízenými možnostmi.",
-    "Pečlivě zvažte všechny možné odpovědi."
+    "Vyber správná slova ze spodní nabídky. ",
+    "Pečlivě zvaž všechna slova na výběr, které odpovídají otázce. Tato slova netvoří větu, pocházejí z různých vět. " + 
+    "Může být více možností!",
+    "Pokud si nejsi jistý zkratkami, dlouhým podržením tlačítka se ti zobrazí celý název členu"
   ],
   [QuestionType.SELECT_MULTIPLE_W_SENTENCE]: [
-    "Hledejte slova, která odpovídají danému typu.",
-    "Použijte kontext věty k určení správných slov."
+    "Vyber správná slova ze spodní nabídky. ",
+    "Pečlivě zvaž všechna slova na výběr, které odpovídají otázce. " + 
+    "Může být více možností!",
+    "Pokud si nejsi jistý zkratkami, dlouhým podržením tlačítka se ti zobrazí celý název členu"
   ],
   [QuestionType.SELECT_ONE_W_SENTENCE]: [
-    "Hledejte slovo, které odpovídá danému typu.",
-    "Použijte kontext věty k určení správného slova."
+    "Vyber správné slovo ze spodní nabídky. ",
+    "Pečlivě vyber jednu správnou možnost, která odpovídá otázce. ",
+    "Je pouze jedna správná odpověď!",
+    "Pokud si nejsi jistý zkratkami, dlouhým podržením tlačítka se ti zobrazí celý název členu"
   ],
   [QuestionType.SELECT_TYPE]: [
-    "Hledejte typy, které odpovídají danému typu.",
-    "Použijte kontext věty k určení správného typu."
+    "Vyber správný člen ze spodní nabídky. ",
+    "Pečlivě vyber jednu správnou možnost, která odpovídá otázce. ",
+    "Je pouze jedna správná odpověď!",
+    "Pokud si nejsi jistý zkratkami, dlouhým podržením tlačítka se ti zobrazí celý název členu"
   ],
 }

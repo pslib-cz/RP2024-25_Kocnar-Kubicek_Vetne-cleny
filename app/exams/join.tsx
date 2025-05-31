@@ -17,7 +17,7 @@ import { ThemedText } from '@/components/ThemedText';
 // Galaxy names to map from index
 const galaxies: Galaxy[] = [
   { name: "Všechny členy", planetCount: 25 },
-  { name: "Hlavní členy", planetCount: 8 },
+  { name: "Základní členy", planetCount: 8 },
   { name: "Přívlastky", planetCount: 8 },
   { name: "Přísl. určení", planetCount: 8 },
   { name: "Doplňky", planetCount: 8 },
