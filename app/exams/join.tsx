@@ -12,6 +12,7 @@ import { galaxyImages } from '@/data/galaxyImages';
 // Import Galaxy names
 import { Galaxy } from '@/types/Galaxy';
 import { useGameContext } from '@/contexts/GameContext';
+import { ThemedText } from '@/components/ThemedText';
 
 // Galaxy names to map from index
 const galaxies: Galaxy[] = [
@@ -95,7 +96,6 @@ export default function JoinGameScreen() {
               <Text style={{color: 'white', fontSize: 16, marginLeft: 4}}>Zpět</Text>
             </TouchableOpacity>
           </View>
-          <Text style={[styles.title, {flex: 2, textAlign: 'center'}]}>Připojit se ke hře</Text>
           <View style={{flex: 1}} />
         </View>
         <View style={styles.container}>
@@ -222,11 +222,11 @@ export default function JoinGameScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#000',
+    backgroundColor: '#101223',
   },
   container: {
     flex: 1,
-    backgroundColor: '#000',
+    backgroundColor: '#101223',
     padding: 20,
   },
   scrollContent: {

@@ -246,7 +246,7 @@ export default function ProfileEditScreen(): React.ReactElement {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000',
+    backgroundColor: '#101223',
   },
   header: {
     flexDirection: 'row',
@@ -294,7 +294,7 @@ const styles = StyleSheet.create({
     width: 120, // Increased from 60
     height: 120, // Increased from 60
     borderRadius: 60, // Adjusted to match the new size
-    backgroundColor: '#121212',
+    backgroundColor: '#1c1f3d',
     borderWidth: 2,
     borderColor: '#333',
     justifyContent: 'center',
@@ -315,7 +315,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   nameInput: {
-    backgroundColor: '#121212',
+    backgroundColor: '#1c1f3d',
     color: 'white',
     padding: 12,
     borderRadius: 8,
@@ -340,14 +340,14 @@ const styles = StyleSheet.create({
   },
   colorPickerContainer: {
     width: '80%',
-    backgroundColor: '#121212',
+    backgroundColor: '#1c1f3d',
     borderRadius: 12,
     padding: 16,
     alignItems: 'center',
   },
   rocketPickerContainer: {
     width: '80%',
-    backgroundColor: '#121212',
+    backgroundColor: '#1c1f3d',
     borderRadius: 12,
     padding: 16,
     alignItems: 'center',

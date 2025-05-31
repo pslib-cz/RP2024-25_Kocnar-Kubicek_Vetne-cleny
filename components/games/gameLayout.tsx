@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: '#000',
+    backgroundColor: '#101223',
     paddingHorizontal: 20,
     paddingVertical: 24,
     gap: 32,
@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
   },
   container1: {
     flex: 1,
-    backgroundColor: '#000',
+    backgroundColor: '#101223',
     gap: 32,
     justifyContent: 'space-between',
     alignItems: 'center',

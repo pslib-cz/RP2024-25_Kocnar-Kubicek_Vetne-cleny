@@ -92,7 +92,7 @@ export default function CreateGameScreen() {
             <ThemedText style={{color: 'white', fontSize: 16, marginLeft: 4}}>Zpět</ThemedText>
           </TouchableOpacity>
         </View>
-        <ThemedText type="title" style={[styles.title, {flex: 2, textAlign: 'center'}]}>Vytvořit sdílený test</ThemedText>
+        <ThemedText type="title" style={[styles.title, {flex: 2, textAlign: 'center'}]}>Sdílený test</ThemedText>
         <View style={{flex: 1}} />
       </View>
       <ScrollView contentContainerStyle={styles.scrollContainer} showsVerticalScrollIndicator={false}>
@@ -280,7 +280,7 @@ export default function CreateGameScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000',
+    backgroundColor: '#101223',
     padding: 20,
   },
   title: {
@@ -301,7 +301,7 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
   },
   input: {
-    backgroundColor: '#121212',
+    backgroundColor: '#1c1f3d',
     color: 'white',
     padding: 15,
     borderRadius: 8,
@@ -314,7 +314,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   picker: {
-    backgroundColor: '#121212',
+    backgroundColor: '#1c1f3d',
     color: 'white',
     borderRadius: 8,
   },
@@ -350,7 +350,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
     margin: 5,
-    backgroundColor: '#121212',
+    backgroundColor: '#1c1f3d',
     borderRadius: 8,
     alignItems: 'center',
     flexDirection: 'row',
@@ -403,7 +403,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   datePickerButton: {
-    backgroundColor: '#121212',
+    backgroundColor: '#1c1f3d',
     padding: 15,
     borderRadius: 8,
     marginTop: 10,
@@ -425,7 +425,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   presetButton: {
-    backgroundColor: '#121212',
+    backgroundColor: '#1c1f3d',
     paddingVertical: 6,
     paddingHorizontal: 12,
     borderRadius: 6,

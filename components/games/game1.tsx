@@ -7,6 +7,7 @@ import { useLevelContext } from '@/contexts/levelContext';
 import { WordButtonsContainer } from '../ui/games/WordButtonsContainer';
 import { ButtonState } from '../ui/games/WordButton';
 import { WordType } from '@/types/WordTypes';
+import { GeneratorParam, QuestionModifier } from '@/constants/questionGeneratorParams';
 
 export const enum Game1Type {
   normal = 0,
@@ -17,16 +18,44 @@ export const enum Game1Type {
 
 const BASIC_TYPES = ["po", "př", "pt", "pks", "pkn", "pum", "puč", "puz"]
 
+const filterData = (data: WordButtonType[], modifiers: QuestionModifier[]) => {
+    if (modifiers.length == 0) return data;
+
+    return data.filter(item => {
+        let result = false;
+        if (!result && modifiers.includes(QuestionModifier.ONLY_PO)) {
+            result = item.type == "po";
+        }
+        if (!result && modifiers.includes(QuestionModifier.ONLY_PR)) {
+            result = item.type == "pr";
+        }
+        if (!result && modifiers.includes(QuestionModifier.ONLY_PT)) {
+            result = item.type == "pt";
+        }
+        if (!result && modifiers.includes(QuestionModifier.ONLY_PKS)) {
+            result = item.type == "pks";
+        }
+        if (!result && modifiers.includes(QuestionModifier.ONLY_PKN)) {
+            result = item.type == "pkn";
+        }
+        if (!result && modifiers.includes(QuestionModifier.ONLY_PU)) {
+            result = item.type?.includes("pu") ?? false;
+        }
+        return result;
+    });
+}
+
 export function GameOneUI(type: Game1Type, oneWord_INDEX: number = 1) {
   const inverted = type === Game1Type.inverted;
   const allTypes = type === Game1Type.allTypes || type === Game1Type.oneWord;
   const oneWord = type === Game1Type.oneWord;
 
-  const { onFinished, data } = useGameContext();
+  const { onFinished, data, activeQuestion } = useGameContext();
   const { gameIndex, setGameIndex, phraseButtons, setPhraseButtons, bottomButtons, setBottomButtons, handleHideTooltip, handleShowTooltip } = useLevelContext();
 
+  const modifiers: QuestionModifier[] = activeQuestion?.TEMPLATE[GeneratorParam.QUESTION_MODIFIER] as QuestionModifier[] ?? [];
   const InvertedPhraseButtons = (data: WordButtonType[]): WordButtonType[] => {
-    return data.map((item, index) => ({
+    return filterData(data, modifiers).map((item, index) => ({
       text: item.type || "",
       type: item.type || "",
       drawType: true,
