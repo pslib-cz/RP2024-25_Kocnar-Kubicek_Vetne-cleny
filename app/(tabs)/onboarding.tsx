@@ -13,7 +13,6 @@ import PlayfulButton from '@/components/ui/PlayfulButton';
 import { MaterialIcons } from '@expo/vector-icons';
 import { WordButtonsContainer } from '@/components/ui/games/WordButtonsContainer';
 import { ButtonState } from '@/components/ui/games/WordButton';
-import { QuestionType } from '@/constants/questionGeneratorParams';
 
 // Helper to load SVG as string
 const loadSvgAsset = async (assetModule: any): Promise<string | null> => {
@@ -134,7 +133,7 @@ export default function OnboardingScreen() {
               Procvičuj větné členy, sbírej body a zlepšuj se! Čekají tě mise vesmírem a zkoušky znalostí.
             </ThemedText>
             <ThemedText type="default" style={{ marginBottom: 16, textAlign: 'center', fontSize: 18 }}>
-              Před tím, než můžeš začít, musíš si nastavit svůj profil a naučit se používat aplikaci.
+              Před tím, než začneš, musíš si nastavit svůj profil a naučit se používat aplikaci.
             </ThemedText>
           </View>
           <View style={styles.bottomButtonContainer}>
@@ -278,7 +277,7 @@ export default function OnboardingScreen() {
           <View style={styles.paddedContainer}>
             <ThemedText type="title" style={{ marginBottom: 16, textAlign: 'center' }}>Seznam se s Arénou!</ThemedText>
             <ThemedText style={{ marginBottom: 16, textAlign: 'center' }}>
-              Arena je místo, ve kterém můžeš cestovat po galaxiích. V galaxiích můžeš procvičovat větné členy v různých úlohách a sbírat body za správné odpovědi. 
+              Arena je prostor, ve kterém můžeš cestovat po galaxiích. V galaxiích můžeš procvičovat větné členy v různých úlohách a sbírat body za správné odpovědi. 
             </ThemedText>
           </View>
           <Image
@@ -304,7 +303,7 @@ export default function OnboardingScreen() {
               V aplikaci najdeš různé typy her, ve kterých buď označuješ větné členy, nebo je vybíráš z nabídky. Každý herní režim ti pomůže procvičit jiné dovednosti.
             </ThemedText>
             <ThemedText style={{ marginBottom: 16, textAlign: 'center' }}>
-                Zde můžeš vidět příklad hry, ve které budeš  klikat na barevné větné členy dole, a tím postupně označovat větu.
+                Zde můžeš vidět příklad hry, ve které budeš klikat na barevné zkratky větných členů dole, a tím postupně označovat větu.
             </ThemedText>
           </View>
           <View style={{ width: '100%', alignItems: 'center', marginBottom: 24 }}>
@@ -351,7 +350,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     width: '100%',
-    marginVertical: 30,
+    marginVertical: 0,
   },
   optionContainer: {
     alignItems: 'center',

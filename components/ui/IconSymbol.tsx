@@ -17,6 +17,7 @@ const MAPPING = {
   'person.crop.circle': 'account-circle',
   'wrench.and.screwdriver': 'build',
   'doc.text': 'description',
+  'exclamationmark.triangle': 'warning',
 } as Partial<
   Record<
     import('expo-symbols').SymbolViewProps['name'],

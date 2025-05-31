@@ -96,7 +96,7 @@ export const GalaxyProvider: React.FC<GalaxyProviderProps> = ({
     alert("New level achieved!")
     setActiveLevelIndex((prevLevels) => {
       const newLevels = [...prevLevels];
-      if (newLevels[selectedGalaxy] < 5) {
+      if (newLevels[selectedGalaxy] < 4) {
         newLevels[selectedGalaxy] += 1;
       } else {
         setActivePlanets((prevPlanets) => {

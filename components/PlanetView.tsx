@@ -23,7 +23,7 @@ const seededRandom = (seed: number) => {
   };
 };
 
-const HEXAGON_COUNT = 5;
+const HEXAGON_COUNT = 4;
 const PLANET_SIZE = 250;
 const HEXAGON_SIZE = 36; // slightly larger for clarity
 const HEXAGON_RADIUS = HEXAGON_SIZE * Math.sqrt(3) / 2;

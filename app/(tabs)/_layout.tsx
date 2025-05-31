@@ -45,17 +45,10 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="tutorial"
-        options={{
-          title: 'Návod',
-          tabBarIcon: ({ color }) => <IconSymbol size={32} name="book" color={color} />,
-        }}
-      />
-      <Tabs.Screen
         name="commonMistakes"
         options={{
           title: 'Časté chyby',
-          tabBarIcon: ({ color }) => <IconSymbol size={32} name="doc.text" color={color} />,
+          tabBarIcon: ({ color }) => <IconSymbol size={32} name="exclamationmark.triangle" color={color} />,
         }}
       />
       <Tabs.Screen
@@ -63,6 +56,13 @@ export default function TabLayout() {
         options={{
           title: 'TESTOVACÍ',
           tabBarIcon: ({ color }) => <IconSymbol size={32} name="wrench.and.screwdriver" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="tutorial"
+        options={{
+          title: 'Návod',
+          tabBarIcon: ({ color }) => <IconSymbol size={32} name="book" color={color} />,
         }}
       />
     </Tabs>

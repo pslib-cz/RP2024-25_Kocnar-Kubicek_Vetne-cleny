@@ -1,6 +1,6 @@
 import { getWordTypeColor } from '@/constants/WordTypes';
-import React from 'react';
-import { Text, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { Text, StyleSheet, TouchableOpacity, Animated, Easing } from 'react-native';
 
 interface WordButtonProps {
   text: string;
@@ -24,6 +24,68 @@ const WordButton: React.FC<WordButtonProps> = ({ text, state, onClick, onLongPre
     [ButtonState.highlighted]: styles.highlightedButton,
     [ButtonState.disabled]: styles.disabledButton,
     [ButtonState.correct]: styles.correctButton,
+  }
+
+  // Animated border for highlighted state
+  const borderAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    if (state === ButtonState.highlighted) {
+      Animated.loop(
+        Animated.sequence([
+          Animated.timing(borderAnim, {
+            toValue: 1,
+            duration: 500,
+            easing: Easing.linear,
+            useNativeDriver: false,
+          }),
+          Animated.timing(borderAnim, {
+            toValue: 0,
+            duration: 500,
+            easing: Easing.linear,
+            useNativeDriver: false,
+          }),
+        ])
+      ).start();
+    } else {
+      borderAnim.stopAnimation();
+      borderAnim.setValue(0);
+    }
+  }, [state, borderAnim]);
+
+  const animatedBorderColor = borderAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['#ffffff', '#aaaa88'], // blikání mezi bílou a šedou
+  });
+
+  if (state === ButtonState.highlighted) {
+    return (
+      <Animated.View
+        style={[
+          styles.button,
+          styles.highlightedButton,
+          {
+            borderColor: animatedBorderColor,
+            backgroundColor: type && drawType && getWordTypeColor(type) || 'transparent',
+            alignItems: 'center',
+            justifyContent: 'center',
+          },
+        ]}
+      >
+        <TouchableOpacity
+          onPress={onClick}
+          onLongPress={onLongPress}
+          disabled={!onClick}
+        >
+          <Text style={[
+            styles.buttonText,
+          ]}
+          >
+            {text}
+          </Text>
+        </TouchableOpacity>
+      </Animated.View>
+    );
   }
 
   return (
@@ -60,7 +122,8 @@ const styles = StyleSheet.create({
   },
   highlightedButton: {
     backgroundColor: 'transparent',
-    borderColor: '#1155BB',
+    borderColor: '#ffffff',
+    borderWidth: 3,
   },
   disabledButton: {
     // backgroundColor: '#333',

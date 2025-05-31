@@ -35,12 +35,6 @@ export default function Tutorial() {
           <Text style={styles.backText}>Zpět ke hře</Text>
         </TouchableOpacity>
       )} */}
-      <TouchableOpacity
-        style={styles.backButton}
-        onPress={reset}
-      >
-        <Text style={styles.backText}>RESET</Text>
-      </TouchableOpacity>
 
       <StatusBar style="light" />
       <View style={styles.verticalLine} />
@@ -76,6 +70,9 @@ export default function Tutorial() {
             }
           </>
         }
+      </View>
+      <View style={styles.resetButtonContainer}>
+        <PlayfulButton title="RESET" variant="secondary" style={{ width: '50%', padding: 10 }} onPress={reset} />
       </View>
     </SafeAreaView>
   );
@@ -128,7 +125,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     width: '100%',
     paddingHorizontal: 20,
-    marginVertical: 40,
+    marginTop: 40,
     gap: 10
   },
   backButton: {
@@ -142,6 +139,11 @@ const styles = StyleSheet.create({
     color: 'white',
     marginLeft: 8,
     fontSize: 16,
+  },
+  resetButtonContainer: {
+    width: '100%',
+    alignItems: 'center',
+    marginBottom: 0,
   },
 });
 
