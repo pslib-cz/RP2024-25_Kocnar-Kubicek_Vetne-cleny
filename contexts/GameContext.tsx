@@ -72,6 +72,8 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (!config.seed) config.seed = Math.floor(Math.random() * 1000000);
     if (!config.questionTypesBitfield) config.questionTypesBitfield = (1 << questionTypeOptions.length) - 1;
 
+    console.log("New game started with config: ", config);
+
     setGameInfo({
       activeQuestionIndex: 0,
       startTime: Date.now(),

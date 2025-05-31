@@ -13,6 +13,7 @@ import PlayfulButton from '@/components/ui/PlayfulButton';
 import { MaterialIcons } from '@expo/vector-icons';
 import { WordButtonsContainer } from '@/components/ui/games/WordButtonsContainer';
 import { ButtonState } from '@/components/ui/games/WordButton';
+import { QuestionType } from '@/constants/questionGeneratorParams';
 
 // Helper to load SVG as string
 const loadSvgAsset = async (assetModule: any): Promise<string | null> => {

@@ -57,6 +57,29 @@ export default function JoinGameScreen() {
     }
   };
 
+  const handleStartExam = async () => {
+    if (difficulty && galaxy >= 0) {
+      try {
+        const count = parseInt(questionCount);
+        if (isNaN(count) || count < 1 || count > 100) {
+          alert('Please enter a valid number of questions (1-100)');
+          return;
+        };+
+        newGame({
+            galaxy: galaxy,
+            difficulty: difficulty/100,
+            count: count,
+            questionTypesBitfield: questionTypes,
+        });
+      } catch (error) {
+        alert('Failed to start exam. Please try again.');
+        console.warn('Error starting exam:', error);
+      }
+    } else {
+      alert('Please select difficulty and galaxy before starting the exam.');
+    }
+  };
+
   const dismissKeyboard = () => {
     Keyboard.dismiss();
   };
@@ -172,7 +195,7 @@ export default function JoinGameScreen() {
                   <PlayfulButton
                     title="Začít hru"
                     icon={<Ionicons name="rocket" size={24} color="white" />}
-                    onPress={() => router.push('/arenagalaxies')}
+                    onPress={handleStartExam}
                     variant="success"
                   />
                 </View>
