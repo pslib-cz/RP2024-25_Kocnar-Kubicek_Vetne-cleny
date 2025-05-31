@@ -199,11 +199,11 @@ export default function HistoryScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#000',
+    backgroundColor: '#101223',
   },
   container: {
     flex: 1,
-    backgroundColor: '#000',
+    backgroundColor: '#101223',
     padding: 20,
   },
   title: {
@@ -214,7 +214,7 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
   sessionCard: {
-    backgroundColor: '#121212',
+    backgroundColor: '#1c1f3d',
     borderRadius: 12,
     marginBottom: 16,
     borderWidth: 1,

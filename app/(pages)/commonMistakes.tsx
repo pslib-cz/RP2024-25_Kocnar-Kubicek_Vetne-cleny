@@ -43,7 +43,7 @@ export default function CommonMistakes()
   }
 
   return (
-    <View style={{ flex: 1, padding: 16, gap: 16, justifyContent: 'center', backgroundColor: '#000' }}>
+    <View style={{ flex: 1, padding: 16, gap: 16, justifyContent: 'center', backgroundColor: '#101223' }}>
       <BigassButton title='⛷️ Procvičování' bgEmoji='⛷️' onPress={newGameWitMostCommonMistakes} enabled={allMistakes.length != 0}/>
       <View style={{ marginBottom: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', flexGrow: 1 }}>
         <ThemedText type="title" style={{ marginBottom: 16, textAlign: 'center' }}>Nejčastější chyby</ThemedText>

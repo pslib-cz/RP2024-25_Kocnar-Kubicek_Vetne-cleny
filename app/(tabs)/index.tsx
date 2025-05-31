@@ -33,11 +33,11 @@ const ArenaPlanet: React.FC = () => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#000',
+    backgroundColor: '#101223',
   },
   container: {
     flex: 1,
-    backgroundColor: '#000',
+    backgroundColor: '#101223',
   },
   planetContainer: {
     flex: 1,

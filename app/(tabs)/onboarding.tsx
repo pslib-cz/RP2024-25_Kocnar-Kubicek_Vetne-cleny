@@ -112,7 +112,7 @@ export default function OnboardingScreen() {
   const { width } = Dimensions.get('window');
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#000' }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#101223' }}>
       <StatusBar barStyle="light-content" />
       <PagerView
         style={{ flex: 1 }}
@@ -328,7 +328,7 @@ export default function OnboardingScreen() {
             </ThemedText>
                       </View>
           <View style={styles.bottomButtonContainer}>
-            <PlayfulButton title="Začít" icon={<MaterialIcons name="rocket-launch" size={24} color="white" />} onPress={() => router.replace('/(tabs)/arenaplanet')} />
+            <PlayfulButton title="Začít" icon={<MaterialIcons name="rocket-launch" size={24} color="white" />} onPress={() => router.replace('/')} />
           </View>
         </View>
       </PagerView>
@@ -341,7 +341,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     padding: 24,
-    backgroundColor: '#000',
+    backgroundColor: '#101223',
   },
   paddedContainer: {
     width: '100%',
@@ -367,7 +367,7 @@ const styles = StyleSheet.create({
     width: 120,
     height: 120,
     borderRadius: 60,
-    backgroundColor: '#121212',
+    backgroundColor: '#1c1f3d',
     borderWidth: 2,
     borderColor: '#333',
     justifyContent: 'center',
@@ -388,7 +388,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   nameInput: {
-    backgroundColor: '#121212',
+    backgroundColor: '#1c1f3d',
     color: 'white',
     padding: 12,
     borderRadius: 8,
@@ -402,14 +402,14 @@ const styles = StyleSheet.create({
   },
   colorPickerContainer: {
     width: '80%',
-    backgroundColor: '#121212',
+    backgroundColor: '#1c1f3d',
     borderRadius: 12,
     padding: 16,
     alignItems: 'center',
   },
   rocketPickerContainer: {
     width: '80%',
-    backgroundColor: '#121212',
+    backgroundColor: '#1c1f3d',
     borderRadius: 12,
     padding: 16,
     alignItems: 'center',

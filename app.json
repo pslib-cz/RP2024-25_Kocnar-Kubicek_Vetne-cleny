@@ -23,7 +23,7 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/icons/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#101223"
       },
       "package": "cz.pslib.vetnecleny"
     },
@@ -37,11 +37,11 @@
       [
         "expo-splash-screen",
         {
-          "backgroundColor": "#232323",
+          "backgroundColor": "#101223",
           "image": "./assets/images/icons/splash-icon-light.png",
           "dark": {
             "image": "./assets/images/icons/splash-icon-dark.png",
-            "backgroundColor": "#000000"
+            "backgroundColor": "#101223"
           },
           "imageWidth": 200
         }

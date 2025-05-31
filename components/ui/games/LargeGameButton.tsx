@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
     borderColor: '#444',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#000',
+    backgroundColor: '#101223',
   },
   selectedOption: {
     borderColor: '#6266f1',
