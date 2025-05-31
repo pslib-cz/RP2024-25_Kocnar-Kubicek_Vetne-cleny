@@ -14,11 +14,14 @@ import { Game3UI } from "@/components/games/game3";
 import { ThemedText } from "@/components/ThemedText";
 import { useBackspaceIntercept } from "@/hooks/useBackspaceIntercept";
 import { GeneratorParam, QuestionModifier, QuestionType } from "@/constants/questionGeneratorParams";
+import HintModal from "@/components/HintModal";
+import { hints } from "@/constants/GameHints";
 
 export const Game: React.FC = () => {
   const { gameState, activeQuestion, questions, gameInfo } = useGameContext();
 
   const router = useRouter(); 
+  const [hintActive, setHintActive] = React.useState(false);
 
   function leaveAlert(){
     Alert.alert(
@@ -91,12 +94,7 @@ export const Game: React.FC = () => {
         style={[
           styles.button
         ]} 
-        onPress={() => {
-            router.push({
-              pathname: '/tutorial',
-              params: { returnTo: 'games/game' }
-            });
-        }}
+        onPress={() => {setHintActive(true)}}
       >
         <ThemedText type="defaultSemiBold">?</ThemedText>
       </TouchableOpacity>
@@ -120,6 +118,14 @@ export const Game: React.FC = () => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <HintModal 
+        visible={hintActive} 
+        onClose={() => {setHintActive(false)}}
+        message={
+          hints[activeQuestion?.TEMPLATE[GeneratorParam.QUESTION_TYPE] as keyof typeof hints] || 
+          "No hints available for this question."
+        }
+      />
       <FeedbackOverlay
         state={gameState}
       />
