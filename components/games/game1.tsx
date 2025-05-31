@@ -19,30 +19,30 @@ export const enum Game1Type {
 const BASIC_TYPES = ["po", "př", "pt", "pks", "pkn", "pum", "puč", "puz"]
 
 const filterData = (data: WordButtonType[], modifiers: QuestionModifier[]) => {
-    if (modifiers.length == 0) return data;
+  if (modifiers.length == 0) return data;
 
-    return data.filter(item => {
-        let result = false;
-        if (!result && modifiers.includes(QuestionModifier.ONLY_PO)) {
-            result = item.type == "po";
-        }
-        if (!result && modifiers.includes(QuestionModifier.ONLY_PR)) {
-            result = item.type == "pr";
-        }
-        if (!result && modifiers.includes(QuestionModifier.ONLY_PT)) {
-            result = item.type == "pt";
-        }
-        if (!result && modifiers.includes(QuestionModifier.ONLY_PKS)) {
-            result = item.type == "pks";
-        }
-        if (!result && modifiers.includes(QuestionModifier.ONLY_PKN)) {
-            result = item.type == "pkn";
-        }
-        if (!result && modifiers.includes(QuestionModifier.ONLY_PU)) {
-            result = item.type?.includes("pu") ?? false;
-        }
-        return result;
-    });
+  return data.filter(item => {
+    let result = false;
+    if (!result && modifiers.includes(QuestionModifier.ONLY_PO)) {
+      result = item.type == "po";
+    }
+    if (!result && modifiers.includes(QuestionModifier.ONLY_PR)) {
+      result = item.type == "př";
+    }
+    if (!result && modifiers.includes(QuestionModifier.ONLY_PT)) {
+      result = item.type == "pt";
+    }
+    if (!result && modifiers.includes(QuestionModifier.ONLY_PKS)) {
+      result = item.type == "pks";
+    }
+    if (!result && modifiers.includes(QuestionModifier.ONLY_PKN)) {
+      result = item.type == "pkn";
+    }
+    if (!result && modifiers.includes(QuestionModifier.ONLY_PU)) {
+      result = item.type?.includes("pu") ?? false;
+    }
+    return result;
+  });
 }
 
 export function GameOneUI(type: Game1Type, oneWord_INDEX: number = 1) {
@@ -54,6 +54,7 @@ export function GameOneUI(type: Game1Type, oneWord_INDEX: number = 1) {
   const { gameIndex, setGameIndex, phraseButtons, setPhraseButtons, bottomButtons, setBottomButtons, handleHideTooltip, handleShowTooltip } = useLevelContext();
 
   const modifiers: QuestionModifier[] = activeQuestion?.TEMPLATE[GeneratorParam.QUESTION_MODIFIER] as QuestionModifier[] ?? [];
+
   const InvertedPhraseButtons = (data: WordButtonType[]): WordButtonType[] => {
     return filterData(data, modifiers).map((item, index) => ({
       text: item.type || "",
@@ -114,8 +115,18 @@ export function GameOneUI(type: Game1Type, oneWord_INDEX: number = 1) {
 
     if (data) {
       if (inverted) {
-        setPhraseButtons(InvertedPhraseButtons(data));
-        setBottomButtons(InvertedBottomButtons(data));
+        let updatedData : WordButtonType[] = data;
+        const sentenceContainsPo = data.some(item => item.type === "po");
+
+        if (modifiers.includes(QuestionModifier.ONLY_PO)) {
+          updatedData = [...data, {
+            text: "neurčitý podmět",
+            type: sentenceContainsPo ? "x" : "po"
+          }];
+        }
+
+        setPhraseButtons(InvertedPhraseButtons(updatedData));
+        setBottomButtons(InvertedBottomButtons(updatedData));
       }
       else {
         setPhraseButtons(NormalPhraseButtons(data));
@@ -146,7 +157,7 @@ export function GameOneUI(type: Game1Type, oneWord_INDEX: number = 1) {
       return;
     }
 
-    if (data[gameIndex].type === bottomButton.type) {
+    if (phraseButtons[gameIndex].type === bottomButton.type) {
       if (!allTypes && bottomButton)
         bottomButton.state = ButtonState.disabled;
 
@@ -156,7 +167,7 @@ export function GameOneUI(type: Game1Type, oneWord_INDEX: number = 1) {
       if (gameIndex < bottomButtons.length - 1 && updatedPhraseButtons[gameIndex + 1])
         updatedPhraseButtons[gameIndex + 1].state = ButtonState.highlighted;
 
-      if (gameIndex === data.length - 1)
+      if (gameIndex === phraseButtons.length - 1)
         onFinished(true)
 
       setGameIndex(gameIndex + 1);
@@ -184,24 +195,3 @@ export function GameOneUI(type: Game1Type, oneWord_INDEX: number = 1) {
     </>
   );
 };
-
-const styles = StyleSheet.create({
-  phraseContainer: {
-    display: 'flex',
-    gap: 8,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 40,
-  },
-  phraseButton: {
-    backgroundColor: 'transparent',
-    borderColor: '#444',
-    borderWidth: 1,
-    borderRadius: 5,
-    paddingHorizontal: 15,
-    paddingVertical: 8,
-    marginHorizontal: 5,
-  }
-});
