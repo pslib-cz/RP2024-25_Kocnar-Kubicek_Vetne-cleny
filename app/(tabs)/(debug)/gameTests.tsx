@@ -35,7 +35,7 @@ const GameTests: React.FC = () => {
     resetLevelData()
   };
 
-  console.log("GameTests rendered with games:", games, typeof games[0].id);
+  //console.log("GameTests rendered with games:", games, typeof games[0].id);
 
   return (
     <View style={styles.container}>

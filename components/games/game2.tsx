@@ -5,14 +5,15 @@ import { useGameContext } from '@/contexts/GameContext';
 import { useLevelContext } from '@/contexts/levelContext';
 import { TargetTypeDisplay } from '../ui/games/TargetTypeDisplay';
 import { LargeGameButtonsGrid } from '../ui/games/LargeGameButtonsGrid';
+import { WordType } from '@/types/WordTypes';
 
-export function Game2UI() {
+export function Game2UI(wantedType : WordType | null = null) {
   const { data, onFinished } = useGameContext();
   const { options, setOptions, targetType, setTargetType, selectedOptions, setSelectedOptions } = useLevelContext();
 
   // ! this is the only allowed useEffect in the games and can only contain the data as dependency
   useEffect(() => {
-    console.log("GameOneUI useEffect triggered with data: ", data);
+    console.log("GameOneUI2 useEffect triggered with data: ", data);
 
     if (!data) {
       console.log("Data not initialized yet");
@@ -20,8 +21,7 @@ export function Game2UI() {
     }
 
     setOptions(data)
-
-    setTargetType(data[Math.floor(Math.random() * data.length)].type);
+    setTargetType(wantedType ?? data[Math.floor(Math.random() * data.length)].type);
   }, [data]);
 
   const handleSelect = (id: WordSelectionOption) => {

@@ -61,7 +61,6 @@ export enum GeneratorParam {
   WEIGHT, DATA_SOURCE, QUESTION_TYPE, DATA_SOURCE_MODIFIER, QUESTION_MODIFIER
 }
 
-
 // Structure of the question generator params
 // 1. Weight of the input
 // 2. DataSource

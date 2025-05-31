@@ -15,7 +15,7 @@ export const enum Game1Type {
   oneWord = 3
 }
 
-const BASIC_TYPES = ["po","př","pt","pks","pkn","pum","puč","puz"]
+const BASIC_TYPES = ["po", "př", "pt", "pks", "pkn", "pum", "puč", "puz"]
 
 export function GameOneUI(type: Game1Type, oneWord_INDEX: number = 1) {
   const inverted = type === Game1Type.inverted;
@@ -24,6 +24,56 @@ export function GameOneUI(type: Game1Type, oneWord_INDEX: number = 1) {
 
   const { onFinished, data } = useGameContext();
   const { gameIndex, setGameIndex, phraseButtons, setPhraseButtons, bottomButtons, setBottomButtons, handleHideTooltip, handleShowTooltip } = useLevelContext();
+
+  const InvertedPhraseButtons = (data: WordButtonType[]): WordButtonType[] => {
+    return data.map((item, index) => ({
+      text: item.type || "",
+      type: item.type || "",
+      drawType: true,
+      state: oneWord ?
+        (index == oneWord_INDEX ? ButtonState.highlighted : ButtonState.disabled) :
+        (index === 0 ? ButtonState.highlighted : ButtonState.default)
+    }))
+  }
+
+  const NormalPhraseButtons = (data: WordButtonType[]): WordButtonType[] => {
+    return data.map((item, index) => ({
+      text: item.text || "",
+      type: item.type,
+      drawType: inverted,
+      state: oneWord ?
+        (index == oneWord_INDEX ? ButtonState.highlighted : ButtonState.disabled) :
+        (index === 0 ? ButtonState.highlighted : ButtonState.default)
+    }))
+  }
+
+  const NormalBottomButtons = (data: WordButtonType[]): WordButtonType[] => {
+    return data.map((item) => ({
+      text: item.type || "",
+      type: item.type,
+      drawType: true,
+      state: ButtonState.default
+    })).sort(() => Math.random() - 0.5)
+  }
+
+  const InvertedBottomButtons = (data: WordButtonType[]): WordButtonType[] => {
+    return data.map((item) => ({
+      text: item.text?.toLowerCase().replace('.', ''),
+      type: item.type,
+      drawType: false,
+      state: ButtonState.default
+    })).sort(() => Math.random() - 0.5)
+  }
+
+  const AllTypesBottomButtons = (data: WordButtonType[]): WordButtonType[] => {
+    return WordTypes.map((i) => ({
+      text: i.abbr,
+      type: i.abbr,
+      drawType: true,
+      state: ButtonState.default
+    }))
+  }
+
 
   // ! this is the only allowed useEffect in the games and can only contain the data as dependency
   useEffect(() => {
@@ -34,42 +84,20 @@ export function GameOneUI(type: Game1Type, oneWord_INDEX: number = 1) {
     }
 
     if (data) {
-      setPhraseButtons(
-        data.map((item, index) => ({
-          text: !inverted ? item.text : item.type,
-          type: item.type,
-          drawType: inverted,
-          state: oneWord ? 
-            (index == oneWord_INDEX ? ButtonState.highlighted : ButtonState.disabled) : 
-            (index === 0 ? ButtonState.highlighted : ButtonState.default)
-        }))
-      );
-
-      if (allTypes) {
-        //const typesInSentence = data.map(item => item.type);
-        //const uniqueTypesWithBasicTypes = Array.from(new Set([...typesInSentence, ...BASIC_TYPES]));
-        //const types = getWordTypesByType(uniqueTypesWithBasicTypes as WordType[]);
-
-        setBottomButtons(
-          WordTypes.map((i) => ({
-            text: i.abbr,
-            type: i.abbr,
-            drawType: true,
-            state: ButtonState.default
-          }))
-        )
-        return;
+      if (inverted) {
+        setPhraseButtons(InvertedPhraseButtons(data));
+        setBottomButtons(InvertedBottomButtons(data));
       }
+      else {
+        setPhraseButtons(NormalPhraseButtons(data));
 
-      setBottomButtons(
-        data.map((item) => ({
-          text: !inverted ? item.type : item.text.toLowerCase().replace('.', ''),
-          type: item.type,
-          drawType: !inverted,
-          state: ButtonState.default
-        }))
-          .sort(() => Math.random() - 0.5)
-      )
+        if (allTypes) {
+          setBottomButtons(AllTypesBottomButtons(data));
+        }
+        else {
+          setBottomButtons(NormalBottomButtons(data));
+        }
+      }
     }
   }, [data]);
 
@@ -84,8 +112,7 @@ export function GameOneUI(type: Game1Type, oneWord_INDEX: number = 1) {
 
     const updatedPhraseButtons = [...phraseButtons];
 
-    if (oneWord)
-    {
+    if (oneWord) {
       onFinished(data[gameIndex].type === bottomButton.type)
       return;
     }
