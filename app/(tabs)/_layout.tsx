@@ -29,14 +29,6 @@ export default function TabLayout() {
         },
         
       }}>
-      {/* <Tabs.Screen
-        name="index"
-        options={{
-          title: 'Domů',
-          tabBarIcon: ({ color }) => <IconSymbol size={32} name="house" color={color} />,
-        }}
-      /> */}
-
       <Tabs.Screen
         name="index"
         options={{
@@ -57,6 +49,13 @@ export default function TabLayout() {
         options={{
           title: 'Návod',
           tabBarIcon: ({ color }) => <IconSymbol size={32} name="book" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="commonMistakes"
+        options={{
+          title: 'Časté chyby',
+          tabBarIcon: ({ color }) => <IconSymbol size={32} name="doc.text" color={color} />,
         }}
       />
       <Tabs.Screen

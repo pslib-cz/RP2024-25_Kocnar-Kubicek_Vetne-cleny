@@ -1,8 +1,10 @@
+import SentenceDetailModal from '@/components/modals/SentenceDetailModal';
 import { ThemedText } from '@/components/ThemedText';
 import BigassButton from '@/components/ui/BigassButton';
 import { useCommonMistakesContext } from '@/contexts/CommonMistakesContext';
 import { useGameContext } from '@/contexts/GameContext';
 import { CommonMistake } from '@/types/CommonMistake';
+import { WordSelectionOption } from '@/types/games/SelectionOption';
 import { useRouter } from 'expo-router';
 import React from 'react';
 import { Pressable, ScrollView, View } from 'react-native';
@@ -13,13 +15,12 @@ export default function CommonMistakes()
   const { allMistakes } = useCommonMistakesContext();
   const router = useRouter()
 
+  const [displayedSentence, setDisplayedSentence] = React.useState<WordSelectionOption[] | null>(null); 
+
   const MistakeContainer = ({mistake} : {mistake : CommonMistake}) => {
     return (
       <Pressable 
-        onPress={() => router.push({
-          pathname: '/sentenceDetail',
-          params: { sentence: JSON.stringify(mistake.question.SOURCE) }
-        })}
+        onPress={() => setDisplayedSentence(mistake.question.SOURCE)}
         style={({ pressed }) => [
           { opacity: pressed ? 0.7 : 1 }
         ]}
@@ -44,6 +45,11 @@ export default function CommonMistakes()
 
   return (
     <View style={{ flex: 1, padding: 16, gap: 16, justifyContent: 'center', backgroundColor: '#101223' }}>
+      <SentenceDetailModal
+        visible={displayedSentence !== null}
+        onClose={() => {setDisplayedSentence(null)}}
+        sentence={displayedSentence}
+      />
       <BigassButton title='⛷️ Procvičování' bgEmoji='⛷️' onPress={newGameWitMostCommonMistakes} enabled={allMistakes.length != 0}/>
       <View style={{ marginBottom: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', flexGrow: 1 }}>
         <ThemedText type="title" style={{ marginBottom: 16, textAlign: 'center' }}>Nejčastější chyby</ThemedText>

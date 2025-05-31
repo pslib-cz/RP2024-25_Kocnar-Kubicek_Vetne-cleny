@@ -53,7 +53,7 @@ export default function PlayfulButton({
   const handlePressIn = () => {
     scale.value = withSpring(0.95, { damping: 10 });
     rotation.value = withTiming(5, { duration: 100 });
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    //Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium); fuck this shit
   };
 
   const handlePressOut = () => {

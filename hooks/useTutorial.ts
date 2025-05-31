@@ -29,5 +29,13 @@ export const useTutorial = () => {
     setCurrentNode(newNode);
   }
 
-  return {usedNodes, currentNode, AddNode};
+  function reset() {
+    setUsedNodes([]);
+    setCurrentNode({
+      node: tutorialStart,
+      yes: false,
+    });
+  }
+
+  return {usedNodes, currentNode, AddNode, reset};
 }

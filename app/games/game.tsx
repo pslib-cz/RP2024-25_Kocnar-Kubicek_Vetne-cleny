@@ -5,7 +5,6 @@ import { useGameContext } from "@/contexts/GameContext";
 import { Text } from "react-native-svg";
 import { useRouter } from "expo-router";
 import Animated, { SlideInRight, SlideOutLeft } from 'react-native-reanimated';
-import { FeedbackOverlay } from "@/components/FeedbackOverlay";
 import RocketProgressBar from "@/components/ui/games/ProgressBar";
 import { Game1Type, GameOneUI } from "@/components/games/game1";
 // import { GameRoute } from "@/constants/gameRoute";
@@ -14,8 +13,9 @@ import { Game3UI } from "@/components/games/game3";
 import { ThemedText } from "@/components/ThemedText";
 import { useBackspaceIntercept } from "@/hooks/useBackspaceIntercept";
 import { GeneratorParam, QuestionModifier, QuestionType } from "@/constants/questionGeneratorParams";
-import HintModal from "@/components/HintModal";
 import { hints } from "@/constants/GameHints";
+import { FeedbackOverlay } from "@/components/modals/FeedbackOverlay";
+import HintModal from "@/components/modals/HintModal";
 
 export const Game: React.FC = () => {
   const { gameState, activeQuestion, questions, gameInfo } = useGameContext();
@@ -118,7 +118,7 @@ export const Game: React.FC = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <HintModal 
+      <HintModal
         visible={hintActive} 
         onClose={() => {setHintActive(false)}}
         message={

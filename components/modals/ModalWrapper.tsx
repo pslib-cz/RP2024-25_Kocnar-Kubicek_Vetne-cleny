@@ -1,29 +1,20 @@
 import React, { useEffect, useRef } from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  Dimensions,
-  Animated,
-} from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Dimensions, Animated} from 'react-native';
 
-const { width, height } = Dimensions.get('window');
-
-interface HintModalProps {
+interface ModalWrapperProps {
   visible: boolean;
   onClose: () => void;
   title?: string;
-  message?: string[];
   closeButtonText?: string;
+  children: React.ReactNode;
 }
 
-const HintModal: React.FC<HintModalProps> = ({
+const ModalWrapper: React.FC<ModalWrapperProps> = ({
   visible,
   onClose,
   title = "Nápověda",
-  message = [],
-  closeButtonText = "Chápu",
+  closeButtonText = "Zavřít",
+  children
 }) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const scaleAnim = useRef(new Animated.Value(0.8)).current;
@@ -59,16 +50,6 @@ const HintModal: React.FC<HintModalProps> = ({
     }
   }, [visible, fadeAnim, scaleAnim]);
 
-  const renderMessage = () => {
-    if (!message) return null;
-    
-    return message.map((paragraph, index) => (
-      <Text key={index} style={[styles.message, index > 0 && styles.messageSpacing]}>
-        {paragraph}
-      </Text>
-    ));
-  };
-
   return (
     <Animated.View
       style={[
@@ -98,7 +79,7 @@ const HintModal: React.FC<HintModalProps> = ({
         </View>
         
         <View style={styles.content}>
-          {renderMessage()}
+          {children}
         </View>
         
         <View style={styles.footer}>
@@ -165,15 +146,6 @@ const styles = StyleSheet.create({
     padding: 20,
     justifyContent: 'center',
   },
-  message: {
-    fontSize: 16,
-    lineHeight: 24,
-    color: '#E0E0E0',
-    textAlign: 'center',
-  },
-  messageSpacing: {
-    marginTop: 16,
-  },
   footer: {
     padding: 20,
     alignItems: 'center',
@@ -195,4 +167,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HintModal;
+export default ModalWrapper;

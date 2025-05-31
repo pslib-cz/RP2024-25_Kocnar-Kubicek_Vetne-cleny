@@ -10,31 +10,37 @@ import React from 'react';
 import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export default function Tutorial() {
-  const { usedNodes, currentNode, AddNode } = useTutorial();
+  const { usedNodes, currentNode, AddNode, reset } = useTutorial();
   const router = useRouter();
-  const { returnTo } = useLocalSearchParams();
+  // const { returnTo } = useLocalSearchParams();
 
-  useBackspaceIntercept(() => {
-    if (returnTo) {
-      router.push(returnTo as never);
-    }
-    else {
-      router.back();
-    }
-  });
+  // useBackspaceIntercept(() => {
+  //   if (returnTo) {
+  //     router.push(returnTo as never);
+  //   }
+  //   else {
+  //     router.back();
+  //   }
+  // });
 
   return (
     <SafeAreaView style={styles.container}>
 
-    {returnTo && (
+      {/* {returnTo && (
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => router.push(returnTo as never)}
+        >
+          <Ionicons name="arrow-back" size={24} color="white" />
+          <Text style={styles.backText}>Zpět ke hře</Text>
+        </TouchableOpacity>
+      )} */}
       <TouchableOpacity
         style={styles.backButton}
-        onPress={() => router.push(returnTo as never)}
+        onPress={reset}
       >
-        <Ionicons name="arrow-back" size={24} color="white" />
-        <Text style={styles.backText}>Zpět ke hře</Text>
+        <Text style={styles.backText}>RESET</Text>
       </TouchableOpacity>
-    )}
 
       <StatusBar style="light" />
       <View style={styles.verticalLine} />
@@ -57,20 +63,20 @@ export default function Tutorial() {
       </View>
 
       <View style={styles.buttonContainer}>
-      {
-        !currentNode.node.isResult &&
-        <>
-          {
-            currentNode.node.yesNode &&
-            <PlayfulButton title="ANO" variant="success" style={{width: '50%'}}onPress={() => AddNode(currentNode, true)} />
-          }
-          {
-            currentNode.node.noNode &&
-            <PlayfulButton title="NE" variant="danger" style={{width: '50%'}} onPress={() => AddNode(currentNode, false)} />
-          }
-        </>
-      }
-      </View>      
+        {
+          !currentNode.node.isResult &&
+          <>
+            {
+              currentNode.node.yesNode &&
+              <PlayfulButton title="ANO" variant="success" style={{ width: '50%' }} onPress={() => AddNode(currentNode, true)} />
+            }
+            {
+              currentNode.node.noNode &&
+              <PlayfulButton title="NE" variant="danger" style={{ width: '50%' }} onPress={() => AddNode(currentNode, false)} />
+            }
+          </>
+        }
+      </View>
     </SafeAreaView>
   );
 }
@@ -123,13 +129,14 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingHorizontal: 20,
     marginVertical: 40,
-    gap: 10,
+    gap: 10
   },
   backButton: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: 10,
     alignSelf: 'flex-start',
+    marginTop: 50,
   },
   backText: {
     color: 'white',
