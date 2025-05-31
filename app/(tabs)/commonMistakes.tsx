@@ -9,7 +9,7 @@ import { Pressable, ScrollView, View } from 'react-native';
 
 export default function CommonMistakes()
 {
-  const { newGameWithCount_CommonMistakes } = useGameContext()
+  const { newGameWitMostCommonMistakes } = useGameContext()
   const { allMistakes } = useCommonMistakesContext();
   const router = useRouter()
 
@@ -18,7 +18,7 @@ export default function CommonMistakes()
       <Pressable 
         onPress={() => router.push({
           pathname: '/sentenceDetail',
-          params: { sentence: JSON.stringify(mistake.sentence) }
+          params: { sentence: JSON.stringify(mistake.question.SOURCE) }
         })}
         style={({ pressed }) => [
           { opacity: pressed ? 0.7 : 1 }
@@ -27,7 +27,7 @@ export default function CommonMistakes()
       <View style={{ flexDirection: 'row', alignItems: 'flex-start', marginBottom: 8, backgroundColor: '#222', borderRadius: 12, padding: 16, shadowColor: '#000', shadowOpacity: 0.1, shadowRadius: 6, width: 320 }}>
         <ThemedText style={{ fontSize: 18, marginRight: 8 }}>❌</ThemedText>
         <ThemedText style={{ flex: 1, color: '#fff', fontSize: 16 }}>
-          {mistake.sentence.map((part: { text: string }) => part.text).join(' ')}
+          {mistake.question.SOURCE.map((part: { text: string }) => part.text).join(' ')}
           {'\n'}
           <ThemedText style={{ color: '#e74c3c', fontSize: 14 }}>
             Chyby: {mistake.mistakeCount}
@@ -44,7 +44,7 @@ export default function CommonMistakes()
 
   return (
     <View style={{ flex: 1, padding: 16, gap: 16, justifyContent: 'center', backgroundColor: '#000' }}>
-      <BigassButton title='⛷️ Procvičování' bgEmoji='⛷️' onPress={newGameWithCount_CommonMistakes} enabled={allMistakes.length != 0}/>
+      <BigassButton title='⛷️ Procvičování' bgEmoji='⛷️' onPress={newGameWitMostCommonMistakes} enabled={allMistakes.length != 0}/>
       <View style={{ marginBottom: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', flexGrow: 1 }}>
         <ThemedText type="title" style={{ marginBottom: 16, textAlign: 'center' }}>Nejčastější chyby</ThemedText>
         <ScrollView style={{ height: 10 }}>

@@ -1,195 +1,186 @@
-import React, { createContext, useContext, useState } from 'react';
-import { GameContextData, GameData } from '../types/GameTypes';
+import React, { act, createContext, useContext, useEffect, useState } from 'react';
+import { ActiveGameInfo, GameContextData } from '../types/GameTypes';
 import { usePathname, useRouter } from 'expo-router';
 import { WordSelectionOption } from '@/types/games/SelectionOption';
 import { useData } from '@/hooks/useData';
 import { GameState } from '@/types/gameState';
-import { GameRoute } from '@/constants/gameRoute';
+// import { GameRoute } from '@/constants/gameRoute';
 import { useMultiplayerGameContext } from './MultiplayerGameContext';
 import { useLevelContext } from './levelContext';
 import { useGalaxyContext } from './GalaxyContext';
 import { useCommonMistakesContext } from './CommonMistakesContext';
-import { generateRandomGameLevels, generateRandomMistakesLevels } from './utils/GameDataGenerator';
-import { GameLevel } from '@/types/games/GameLevel';
+// import { generateRandomGameLevels, generateRandomMistakesLevels } from './utils/GameDataGenerator';
+// import { GameLevel } from '@/types/games/GameLevel';
+import { Question, useQuestionGenerator } from '@/hooks/QuestionsGenerator/useQuestionGenerator';
+import { Galaxy, GeneratorParam, QuestionType } from '@/constants/questionGeneratorParams';
 
 const GameContext = createContext<GameContextData | undefined>(undefined);
 
+export enum GameType{
+  PRACTICE,
+  TEST,
+  COMMON_MISTAKES
+}
+
 export const NEXT_LEVEL_TRESHOLD = 0.75 * 100;
-const LEVELS_COUNT = 2;
+const LEVELS_COUNT = 3;
+const questionTypeOptions = Object.entries(QuestionType).filter(([k, v]) => typeof v === 'number');
 
 export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { tryStartSession, tryUpdateSession } = useMultiplayerGameContext();
+  const { tryStartSession, tryUpdateSession, code } = useMultiplayerGameContext();
   const { resetLevelData } = useLevelContext();
-  const { getMistakesAsSentences, updateMistakes, allMistakes } = useCommonMistakesContext();
+  const { updateMistakes, allMistakes } = useCommonMistakesContext();
   const { levelUp } = useGalaxyContext();
+  const { selectedGalaxy } = useGalaxyContext();
+
+  const [gameType, setGameType] = useState<GameType>(GameType.PRACTICE);
 
   const navigation = useRouter();
-  const pathname = usePathname();
 
-  const allData : WordSelectionOption[][] = useData();
+  const [questions, setQuestions] = useState<Question[]>([]);
+  const [activeQuestion, setActiveQuestion] = useState<Question | undefined>(undefined);
+  const [gameState, setGameState] = useState<GameState>(GameState.pending);
 
-  const [seed, setSeed] = useState(50);
+  const [correctAnswersCount, setCorrectAnswersCount] = useState<number>(0);
 
-  const [data, setData] = useState<WordSelectionOption[]>(allData[0])
-  const [gameData, setGameData] = useState<GameData>({
-    totalQuestion : 10, 
-    questionsRemaining : 10,
-    startTime: undefined,
-    endTime: undefined,
+  const [gameConfig, setGameConfig] = useState({
+    galaxy: Galaxy.ALL,
+    difficulty: 0,
+    seed: 0,
+    count: 0,
+    questionTypesBitfield: (1 << questionTypeOptions.length) - 1,
   });
 
-  const [generatedGameData, setGeneratedGameData] = useState<GameLevel[]>([]);
-  const [state, setGameState] = useState<GameState>(GameState.pending);
+  const [gameInfo, setGameInfo] = useState<ActiveGameInfo>({
+    activeQuestionIndex: 0,
+    startTime: undefined,
+    endTime: undefined,
+    answers: [],
+  });
 
-  const [gameType, setGameType] = useState<GameRoute>(GameRoute.GAME1);
-
-  const [commonMistakes, setCommonMistakes] = useState(false);
-
-  const newGameWithCount = () => {
-    newGame(LEVELS_COUNT);
+  const newGameInArena = () => {
+    newGame({
+      galaxy: selectedGalaxy,
+      difficulty: .1,
+      count: LEVELS_COUNT,
+      seed: Math.floor(Math.random() * 1000000),
+      questionTypesBitfield: (1 << questionTypeOptions.length) - 1,
+    });
   }
 
-  const newGameWithCount_CommonMistakes = () => {
-    if (allMistakes.length === 0) {
-      console.warn("No common mistakes found");
-      return;
+  const newGame = (config: typeof gameConfig) => {
+    if (!config.seed) config.seed = Math.floor(Math.random() * 1000000);
+    if (!config.questionTypesBitfield) config.questionTypesBitfield = (1 << questionTypeOptions.length) - 1;
+
+    console.log("New game started with config: ", config);
+
+    setGameConfig(config);
+    setCorrectAnswersCount(0);
+
+    newGameWithQuestions(useQuestionGenerator(config), code ? GameType.TEST : GameType.PRACTICE);
+  }
+
+  const newGameWitMostCommonMistakes = () => {
+    const shuffledMistakes = [...allMistakes].sort(() => Math.random() - 0.5).slice(0, 2);
+    newGameWithQuestions(shuffledMistakes.map(mistake => mistake.question), GameType.COMMON_MISTAKES);
+  }
+
+  const newGameWithQuestions = (questions: Question[], type : GameType) => {
+    setQuestions(questions);
+
+    const conf : ActiveGameInfo = {
+      activeQuestionIndex: 0,
+      startTime: Date.now(),
+      answers: [],
     }
 
-    const qCount = Math.min(LEVELS_COUNT, allMistakes.length);
-    newGame(qCount, true);
-  }
+    setGameInfo(conf);
+    nextQuestionWithValues(questions, conf);
 
-  const newGame = (qCount : number, commonMistakes : boolean = false) => {
-    const newSeed = Math.floor(Math.random() * 1000000); // Random seed for the game
-    setSeed(newSeed); // Random seed for the game
-    
-    const gameData_ : GameData = {totalQuestion : qCount, questionsRemaining : qCount, startTime: Date.now()};
-    setGameData(gameData_);
-
-    const newGeneratedGameData = generateGameData(qCount, seed, commonMistakes)
-    setGeneratedGameData(newGeneratedGameData);
-
-    setCommonMistakes(commonMistakes);
-    
-    moveToNextLevelWithValues(qCount, newGeneratedGameData, gameData_); // so the state update is not an issue
+    console.log("New game started with config: ", questions.length);
 
     tryStartSession();
+
+    setGameType(type);
 
     navigation.replace("games/game" as never);
   }
 
-  const generateGameData = (count : number, seed : number, commonMistakes : boolean) : GameLevel[] => {
-    if (commonMistakes)
-    {
-      const mistakesData = commonMistakes ? getMistakesAsSentences() : [];
-      if (mistakesData.length === 0) {
-        console.warn("No common mistakes found");
-        return [];
-      }
-      if (mistakesData.length < count) {
-        console.warn("Not enough common mistakes found");
-        return [];
-      }
-      return generateRandomMistakesLevels(count, seed, mistakesData);
-    }
+  const nextQuestion = () => nextQuestionWithValues(questions, gameInfo);
 
-    return generateRandomGameLevels(count, seed, allData);
-  }
-
-  const loadLevel = async (game : GameRoute) => {
+  const nextQuestionWithValues = (questions: Question[], gameInfo: ActiveGameInfo) => {
     resetLevelData();
 
-    setGameState(GameState.pending)
+    setGameInfo((prev) => ({ ...prev, activeQuestionIndex: prev.activeQuestionIndex + 1 })); // Increment the active question index
 
-    console.log("gameRoute", pathname);
+    console.log("Next question: ", questions[gameInfo.activeQuestionIndex]);
+    console.log("Game info: ", gameInfo);
 
-    setGameType(game);
-  }
+    setGameState(GameState.pending);
 
-  const moveToNextLevelWithValues = (remainingQuestions: number, levels : GameLevel[], gameData: GameData) => {
-    setGameData((prev) => ({...prev, questionsRemaining : remainingQuestions - 1}));
+    if (gameInfo.activeQuestionIndex >= questions.length) {
+      setGameInfo((prev) => ({ ...prev, endTime: Date.now() })); // Set the end time
 
-    console.log(levels);
-
-    const level = levels[gameData.totalQuestion - remainingQuestions];
-  
-    console.log("level", level, "level", gameData.totalQuestion - remainingQuestions, "remainingQuestions", remainingQuestions);
-
-    if (remainingQuestions <= 0) {
-      setGameData((prev) => ({...prev, endTime: Date.now()}));
-
-      if (getSuccessRate() >= NEXT_LEVEL_TRESHOLD && !commonMistakes)
-      {
+      if (getSuccessRate() >= NEXT_LEVEL_TRESHOLD) {
         levelUp();
       }
 
       console.log("Game finished");
       navigation.replace('games/resultScreen' as never);
     }
-    else{
-      setData(level.WordSelectionOption);
-      loadLevel(level.game);
+    else {
+      setActiveQuestion(questions[gameInfo.activeQuestionIndex]);
     }
   }
 
-  const moveToNextLevel = async () => {
-    moveToNextLevelWithValues(gameData.questionsRemaining, generatedGameData, gameData);
-  }  
-
   /// on level finished, not limited to the whole game
-  const onFinished = (correct : boolean) => {
-    updateMistakes(data, correct);
+  const onFinished = (isCorrect: boolean) => {
+    if (!activeQuestion) return;
+    updateMistakes(activeQuestion, isCorrect);
+    setGameState(isCorrect ? GameState.correct : GameState.incorrect)
 
-    setGameState(correct ? GameState.correct : GameState.incorrect)
-
-    const currentLevelId = gameData.totalQuestion - gameData.questionsRemaining - 1;
-    const level = generatedGameData[currentLevelId];
-
-    const updatedLevels = [...generatedGameData];
-    updatedLevels[currentLevelId] = {
-      ...level,
-      result: correct ? "correct" : "incorrect",
-    };
-    setGeneratedGameData(updatedLevels);
+    setCorrectAnswersCount((prev) => prev + (isCorrect ? 1 : 0));
 
     const dataUpdate = {
-      score: correct ? 1 : 0,
-      correctAnswers: correct ? 1 : 0,
-      completed: gameData.questionsRemaining === 1,
+      score: isCorrect ? 1 : 0,
+      correctAnswers: isCorrect ? 1 : 0,
+      completed: questions.length === 1,
     };
 
     tryUpdateSession(dataUpdate);
   }
 
   const getDuration = () => {
-    if (gameData.startTime && gameData.endTime)
-      return Math.floor((gameData.endTime - gameData.startTime) / 1000);
+    if (gameInfo.startTime && gameInfo.endTime)
+      return Math.floor((gameInfo.endTime - gameInfo.startTime) / 1000);
     return 0;
   };
 
   const getSuccessRate = () => {
-    const correctAnswers = generatedGameData.filter(level => level.result === "correct").length;
-    return (correctAnswers / generatedGameData.length) * 100;
+    return (correctAnswersCount / questions.length) * 100;
   }
 
   return (
     <GameContext.Provider
       value={{
-        seed,
-        setSeed,
-        moveToNextLevel,
-        data,
-        loadLevel,
-        onFinished,
-        state,
         newGame,
-        gameData,
+        newGameInArena,
+        onFinished,
         getDuration,
         getSuccessRate,
+        gameState,
+        gameConfig,
+        questions,
+        activeQuestion,
+        gameInfo,
+        nextQuestion,
+        setGameInfo,
+        setGameConfig,
+        setActiveQuestion,
+        newGameWitMostCommonMistakes,
         gameType,
-        newGameWithCount,
-        newGameWithCount_CommonMistakes,
-        commonMistakes
+        newGameWithQuestions,
+        data: activeQuestion?.SOURCE as WordSelectionOption[] | undefined,
       }}
     >
       {children}

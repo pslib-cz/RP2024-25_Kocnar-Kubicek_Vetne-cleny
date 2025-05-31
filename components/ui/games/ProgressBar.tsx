@@ -18,6 +18,8 @@ const RocketProgressBar: React.FC<RocketProgressBarProps> = ({
   const animatedProgress = useRef(new Animated.Value(0)).current;
   
   useEffect(() => {
+    console.log("RocketProgressBar useEffect triggered with progress: ", normalizedProgress);
+
     Animated.timing(animatedProgress, {
       toValue: normalizedProgress,
       duration: 500,

@@ -11,7 +11,7 @@ interface OverlayProps {
 export const FeedbackOverlay: React.FC<OverlayProps> = ({ 
   state, 
 }) => { 
-  const { moveToNextLevel } = useGameContext();
+  const { nextQuestion } = useGameContext();
 
   const isCorrect = state == GameState.correct;
 
@@ -82,7 +82,7 @@ export const FeedbackOverlay: React.FC<OverlayProps> = ({
         
         <TouchableOpacity 
           style={[styles.continueButton, { backgroundColor: themeColor }]} 
-          onPress={() => moveToNextLevel()}
+          onPress={() => nextQuestion()}
           activeOpacity={0.8}
         >
           <Text style={styles.buttonText}>Další otázka</Text>

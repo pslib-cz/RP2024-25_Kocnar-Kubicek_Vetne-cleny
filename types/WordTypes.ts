@@ -9,4 +9,7 @@ export type WordType =
   | "puz"
   | "pup"
   | "pu míry"
-  | "d";
+  | "d"
+  | 'pu účelu'
+  | 'pu podmínky'
+  | 'pu přípustky';

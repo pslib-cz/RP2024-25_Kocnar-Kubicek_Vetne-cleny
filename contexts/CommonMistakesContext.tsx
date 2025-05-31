@@ -2,11 +2,11 @@ import { WordSelectionOption } from '@/types/games/SelectionOption';
 import React, { createContext, useContext, ReactNode, useEffect, useState } from 'react';
 import * as FileSystem from 'expo-file-system';
 import { CommonMistake } from '@/types/CommonMistake';
+import { Question } from '@/hooks/QuestionsGenerator/useQuestionGenerator';
 
 interface CommonMistakesContextValue {
   allMistakes: CommonMistake[];
-  updateMistakes: (newMistake: WordSelectionOption[], correct: boolean) => Promise<void>;
-  getMistakesAsSentences: () => WordSelectionOption[][];
+  updateMistakes: (newMistake: Question, correct: boolean) => Promise<void>;
 }
 
 const CommonMistakesContext = createContext<CommonMistakesContextValue | undefined>(undefined);
@@ -14,7 +14,7 @@ const CommonMistakesContext = createContext<CommonMistakesContextValue | undefin
 export const CommonMistakesProvider = ({ children }: { children: ReactNode }) => {
   const [allMistakes, setAllMistakes] = useState<CommonMistake[]>([]);
 
-  const file = FileSystem.documentDirectory + 'mistakes.json';
+  const file = FileSystem.documentDirectory + 'mistakesData.json';
 
   useEffect(() => {
     const loadMistakes = async () => {
@@ -32,15 +32,15 @@ export const CommonMistakesProvider = ({ children }: { children: ReactNode }) =>
     loadMistakes();
   }, []);
 
-  const updateMistakes = async (newMistake: WordSelectionOption[], correct: boolean) => {
+  const updateMistakes = async (newMistake: Question, correct: boolean) => {
     console.log('Updating mistakes:', newMistake, correct);
 
     setAllMistakes(prevMistakes => {
       const updatedMistakes = [...prevMistakes];
       const idx = updatedMistakes.findIndex(
         (m) =>
-          m.sentence.length === newMistake.length &&
-          m.sentence.every((word, i) => word.text === newMistake[i].text)
+          m.question.SOURCE.length === newMistake.SOURCE.length &&
+          m.question.SOURCE.every((word, i) => word.text === newMistake.SOURCE[i].text)
       );
 
       if (idx !== -1) {
@@ -61,7 +61,7 @@ export const CommonMistakesProvider = ({ children }: { children: ReactNode }) =>
       } else {
         if (!correct)
           updatedMistakes.push({
-            sentence: newMistake,
+            question: newMistake,
             mistakeCount: 1,
             correctCount: 0,
           });
@@ -92,12 +92,12 @@ export const CommonMistakesProvider = ({ children }: { children: ReactNode }) =>
 
   };
 
-  const getMistakesAsSentences = (): WordSelectionOption[][] => {
-    return allMistakes.map((m) => m.sentence);
-  };
+  // const getMistakesAsSentences = (): WordSelectionOption[][] => {
+  //   return allMistakes.map((m) => m.question.SOURCE);
+  // };
 
   return (
-    <CommonMistakesContext.Provider value={{ allMistakes, updateMistakes, getMistakesAsSentences }}>
+    <CommonMistakesContext.Provider value={{ allMistakes, updateMistakes }}>
       {children}
     </CommonMistakesContext.Provider>
   );

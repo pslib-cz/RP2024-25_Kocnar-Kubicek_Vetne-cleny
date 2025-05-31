@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { useQuestionGenerator } from "@/hooks/useQuestionGenerator";
 import { Galaxy, QuestionType } from "@/constants/questionGeneratorParams";
 import { View, Text, ScrollView, TextInput, Switch } from "react-native";
 import Slider from "@react-native-community/slider";
 import { Picker } from "@react-native-picker/picker";
+import { Question, useQuestionGenerator } from '@/hooks/QuestionsGenerator/useQuestionGenerator';
 
 const galaxyOptions = Object.entries(Galaxy).filter(([k, v]) => typeof v === 'number');
 const questionTypeOptions = Object.entries(QuestionType).filter(([k, v]) => typeof v === 'number');

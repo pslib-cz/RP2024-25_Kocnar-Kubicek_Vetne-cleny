@@ -62,9 +62,28 @@ export const WordTypes: WordTypeExt[] = [
     abbr: 'd',
     color: '#D63031'  // Bright red
   },
+  {
+    name: 'príslovečné určení účelu',
+    abbr: 'pu účelu',
+    color: '#FFB142'  // Light orange
+  },
+  {
+    name: 'príslovečné určení podmínky',
+    abbr: 'pu podmínky',
+    color: '#FFB142'  // Light orange
+  },
+  {
+    name: 'príslovečné určení přípustky',
+    abbr: 'pu přípustky',
+    color: '#FFB142'  // Light orange
+  }
 ]
 
 export function getWordTypeColor(type: string): string {
   const wordType = WordTypes.find((wordType) => wordType.abbr === type);
   return wordType ? wordType.color : '#000'; // Default color if not found
+}
+
+export function getWordTypesByType(types: WordType[]): WordTypeExt[] {
+  return WordTypes.filter((wordType) => types.includes(wordType.abbr));
 }

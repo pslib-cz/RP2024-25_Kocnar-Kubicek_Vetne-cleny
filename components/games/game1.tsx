@@ -2,39 +2,54 @@ import React, { useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { WordButtonType } from '@/types/games/WordButtonType';
 import { useGameContext } from '@/contexts/GameContext';
-import { WordTypes } from '@/constants/WordTypes';
+import { getWordTypesByType, WordTypes } from '@/constants/WordTypes';
 import { useLevelContext } from '@/contexts/levelContext';
 import { WordButtonsContainer } from '../ui/games/WordButtonsContainer';
 import { ButtonState } from '../ui/games/WordButton';
-
-// TODO: implement custom max error count
+import { WordType } from '@/types/WordTypes';
 
 export const enum Game1Type {
   normal = 0,
   inverted = 1,
-  allTypes = 2
+  allTypes = 2,
+  oneWord = 3
 }
 
-export function GameOneUI(type: Game1Type) {
-  const inverted = type === Game1Type.inverted;
-  const allTypes = type === Game1Type.allTypes;
+const BASIC_TYPES = ["po","př","pt","pks","pkn","pum","puč","puz"]
 
-  const { data, onFinished } = useGameContext();
+export function GameOneUI(type: Game1Type, oneWord_INDEX: number = 1) {
+  const inverted = type === Game1Type.inverted;
+  const allTypes = type === Game1Type.allTypes || type === Game1Type.oneWord;
+  const oneWord = type === Game1Type.oneWord;
+
+  const { onFinished, data } = useGameContext();
   const { gameIndex, setGameIndex, phraseButtons, setPhraseButtons, bottomButtons, setBottomButtons, handleHideTooltip, handleShowTooltip } = useLevelContext();
 
   // ! this is the only allowed useEffect in the games and can only contain the data as dependency
   useEffect(() => {
+    console.log("GameOneUI useEffect triggered with data: ", data);
+
+    if (oneWord) {
+      setGameIndex(oneWord_INDEX);
+    }
+
     if (data) {
       setPhraseButtons(
         data.map((item, index) => ({
           text: !inverted ? item.text : item.type,
           type: item.type,
           drawType: inverted,
-          state: index === 0 ? ButtonState.highlighted : ButtonState.default
+          state: oneWord ? 
+            (index == oneWord_INDEX ? ButtonState.highlighted : ButtonState.disabled) : 
+            (index === 0 ? ButtonState.highlighted : ButtonState.default)
         }))
       );
 
       if (allTypes) {
+        //const typesInSentence = data.map(item => item.type);
+        //const uniqueTypesWithBasicTypes = Array.from(new Set([...typesInSentence, ...BASIC_TYPES]));
+        //const types = getWordTypesByType(uniqueTypesWithBasicTypes as WordType[]);
+
         setBottomButtons(
           WordTypes.map((i) => ({
             text: i.abbr,
@@ -69,13 +84,20 @@ export function GameOneUI(type: Game1Type) {
 
     const updatedPhraseButtons = [...phraseButtons];
 
+    if (oneWord)
+    {
+      onFinished(data[gameIndex].type === bottomButton.type)
+      return;
+    }
+
     if (data[gameIndex].type === bottomButton.type) {
-      if (!allTypes)
+      if (!allTypes && bottomButton)
         bottomButton.state = ButtonState.disabled;
 
+      console.log("Correct answer for game index:", gameIndex, "button:", updatedPhraseButtons[gameIndex]);
       updatedPhraseButtons[gameIndex].state = ButtonState.correct;
 
-      if (gameIndex < bottomButtons.length - 1)
+      if (gameIndex < bottomButtons.length - 1 && updatedPhraseButtons[gameIndex + 1])
         updatedPhraseButtons[gameIndex + 1].state = ButtonState.highlighted;
 
       if (gameIndex === data.length - 1)

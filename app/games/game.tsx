@@ -1,5 +1,5 @@
 import { SafeAreaView } from "react-native-safe-area-context";
-import React from "react";
+import React, { useEffect } from "react";
 import { Alert, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useGameContext } from "@/contexts/GameContext";
 import { Text } from "react-native-svg";
@@ -8,14 +8,15 @@ import Animated, { SlideInRight, SlideOutLeft } from 'react-native-reanimated';
 import { FeedbackOverlay } from "@/components/FeedbackOverlay";
 import RocketProgressBar from "@/components/ui/games/ProgressBar";
 import { Game1Type, GameOneUI } from "@/components/games/game1";
-import { GameRoute } from "@/constants/gameRoute";
+// import { GameRoute } from "@/constants/gameRoute";
 import { Game2UI } from "@/components/games/game2";
 import { Game3UI } from "@/components/games/game3";
 import { ThemedText } from "@/components/ThemedText";
 import { useBackspaceIntercept } from "@/hooks/useBackspaceIntercept";
+import { GeneratorParam, QuestionType } from "@/constants/questionGeneratorParams";
 
 export const Game: React.FC = () => {
-  const { state, gameData, gameType } = useGameContext();
+  const { gameState, activeQuestion, questions, gameInfo } = useGameContext();
 
   const router = useRouter(); 
 
@@ -40,20 +41,30 @@ export const Game: React.FC = () => {
     leaveAlert()
   });
 
+  useEffect(() => {
+    console.log("activeQuestion:", activeQuestion?.TEMPLATE[GeneratorParam.QUESTION_TYPE]);
+  }, [activeQuestion]);
+
   const gameContent = () => {
-    switch (gameType) {
-      case GameRoute.GAME1:
+    switch (activeQuestion?.TEMPLATE[GeneratorParam.QUESTION_TYPE]) {
+      case QuestionType.MARK_WORDS:
         return GameOneUI(Game1Type.normal)
-      case GameRoute.GAME1_INVERTED:
+      case QuestionType.MARK_TYPES:
         return GameOneUI(Game1Type.inverted)
-      case GameRoute.GAME1_ALL_TYPES:
+      case QuestionType.MARK_WORDS_ALL_TYPES:
         return GameOneUI(Game1Type.allTypes)
-      case GameRoute.GAME2:
+      case QuestionType.MARK_TYPE_ONE_WORD:
+        return GameOneUI(Game1Type.oneWord, activeQuestion?.INDEX)
+      case QuestionType.SELECT_MULTIPLE:
         return Game2UI()
-      case GameRoute.GAME3:
-        return Game3UI()
+      case QuestionType.SELECT_MULTIPLE_W_SENTENCE:
+        return Game3UI(activeQuestion.WANTED)
+      case QuestionType.SELECT_ONE_W_SENTENCE:
+        return Game3UI(activeQuestion.WANTED)
+      // case QuestionType.SELECT_TYPE:
+      //   return Game2UI(true)
       default:
-        return <Text>Game not found</Text>
+        throw new Error(`Unsupported question type: ${activeQuestion?.TEMPLATE[GeneratorParam.QUESTION_TYPE]}`);
     }
   }
 
@@ -93,7 +104,7 @@ export const Game: React.FC = () => {
   return (
     <SafeAreaView style={styles.container}>
       <FeedbackOverlay
-        state={state}
+        state={gameState}
       />
       <View style={[styles.headerWrapper]}>
         <View style={{ flexShrink: 1, flexGrow: 1, flexDirection: 'row', gap: 8 }}>
@@ -101,7 +112,7 @@ export const Game: React.FC = () => {
             <HelpButton />
           </View>        
           <View style={{ flexShrink: 1, flexGrow: 999 }}>
-            <RocketProgressBar progress={1 - (gameData.questionsRemaining + 1) / gameData.totalQuestion}/>
+            <RocketProgressBar progress={(gameInfo.activeQuestionIndex - 1) / questions.length}/>
           </View>
           <View style={{ flexShrink: 1}}>
             <CloseButton />
@@ -109,7 +120,7 @@ export const Game: React.FC = () => {
         </View>
       </View>
       <Animated.View
-        key={gameData?.questionsRemaining} // Force remount -> animation
+        key={gameInfo.activeQuestionIndex} // Force remount -> animation
         entering={SlideInRight.duration(500)}
         exiting={SlideOutLeft.duration(500)}
         style={ styles.container1 }
@@ -139,6 +150,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     width: '100%',
+    display: 'flex',
+    flexDirection: 'column',
   },
   container1: {
     flex: 1,

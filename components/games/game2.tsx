@@ -12,6 +12,8 @@ export function Game2UI() {
 
   // ! this is the only allowed useEffect in the games and can only contain the data as dependency
   useEffect(() => {
+    console.log("GameOneUI useEffect triggered with data: ", data);
+
     if (!data) {
       console.log("Data not initialized yet");
       return;

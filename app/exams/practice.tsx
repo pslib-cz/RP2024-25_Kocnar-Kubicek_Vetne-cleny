@@ -9,7 +9,7 @@ import { galaxyImages } from '@/data/galaxyImages';
 export default function CreateGameScreen() {
   const [difficulty, setDifficulty] = useState(50);
   const [galaxy, setGalaxy] = useState(0);
-  const [questionTypes, setQuestionTypes] = useState(0b111111);
+  const [questionTypes, setQuestionTypes] = useState(0b11111111);
   const [questionCount, setQuestionCount] = useState('10');
   const [isCustomCount, setIsCustomCount] = useState(false);
   const { newGame } = useGameContext();
@@ -36,8 +36,13 @@ export default function CreateGameScreen() {
         if (isNaN(count) || count < 1 || count > 100) {
           alert('Please enter a valid number of questions (1-100)');
           return;
-        }
-        newGame(count);
+        };+
+        newGame({
+            galaxy: galaxy,
+            difficulty: difficulty/100,
+            count: count,
+            questionTypesBitfield: questionTypes,
+        });
       } catch (error) {
         alert('Failed to start exam. Please try again.');
         console.warn('Error starting exam:', error);
@@ -163,7 +168,7 @@ export default function CreateGameScreen() {
         {/* Question Types */}
         <View style={styles.section}>
           <ThemedText style={styles.label}>Typy otázek:</ThemedText>
-          {['Přiřazování členů', 'Přiřazování slov', 'Označování členů', 'Vybírání slova', 'Vybírání více slov', 'Vybírání s větou'].map((type, index) => (
+          {['Označování věty členy', 'Označování členů větou', 'Označování věty (jedno slovo)', 'Označování věty (všechny členy)', 'Vybírání bez věty', 'Vybírání s větou (více možností)', 'Vybírání s větou (jedna možnost)', 'Vybírání členu'].map((type, index) => (
             <View key={type} style={styles.switchRow}>
               <ThemedText style={styles.switchLabel}>{type}</ThemedText>
               <Switch
