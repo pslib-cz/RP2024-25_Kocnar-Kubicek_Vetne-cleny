@@ -3,26 +3,31 @@ import { QuestionType } from "./questionGeneratorParams";
 
 export const hints: Record<QuestionType, string[]> = {
   [QuestionType.MARK_WORDS]: [
-    "Cílem této minihry je přiřadit správné typy ke slovům. " +
-    "A to tím, že klikneš na správný typ právě označeného slova.",
+    "Přiřad správné členy ke slovům z věty. ",
 
-    "Nejdříve si urči typ prvního slova a poté klikni na správný typ ze spodní nabídky. " + 
-    "Pokud si nejsi jistý, dlouhým podržením tlačítka s typem se ti zobrazí vysvětlení"
+    "Nejdříve si v hlavě urči člen prvního slova nahoře a poté klikni na správný člen ze spodní nabídky. " +
+    "Pak přejdi ke druhému slovu a opakuj. ",
+    "Pokud si nejsi jistý zkratkami, dlouhým podržením tlačítka s členem se ti zobrazí celý název členu"
   ],
   [QuestionType.MARK_TYPES]: [
-    "Cílem této minihry je přiřadit správná slova k typům. " +
-    "A to tím, že klikneš na vhodné slovo pro právě označený typ.",
+    "Přiřad správná slova k typům. ",
 
-    "Nejdříve vyber vhodné slovo pro první typ a poté klikni na správný ze spodní nabídky. " + 
-    "Pokud si nejsi jistý, dlouhým podržením tlačítka s typem se ti zobrazí vysvětlení"
+    "Nejdříve vyber vhodné slovo pro první člen věty nahoře a poté klikni na správné slovo z věty ze spodní nabídky. " + 
+    "Pak přejdi ke druhému členu a opakuj. ",
+    "Pokud si nejsi jistý zkratkami, dlouhým podržením tlačítka se člen věty zobrazí"
   ],
   [QuestionType.MARK_TYPE_ONE_WORD]: [
-    "Hledejte slovo, které odpovídá zadanému typu.",
-    "Použijte kontext věty k určení správného slova."
+    "Přiřad správný členy ke slovu z věty. ",
+
+    "Nejdříve si v hlavě urči člen zvýrazněného slova nahoře a poté klikni na správný člen ze spodní nabídky. ",
+    "Pokud si nejsi jistý zkratkami, dlouhým podržením tlačítka s členem se ti zobrazí celý název členu"
   ],
   [QuestionType.MARK_WORDS_ALL_TYPES]: [
-    "Hledejte slova, která odpovídají různým typům.",
-    "Použijte kontext věty k určení správných slov."
+    "Přiřad správné členy ke slovům z věty. ",
+
+    "Nejdříve si v hlavě urči člen prvního slova nahoře a poté klikni na správný člen ze spodní nabídky. " +
+    "Pak přejdi ke druhému slovu a opakuj. ",
+    "Pokud si nejsi jistý zkratkami, dlouhým podržením tlačítka s členem se ti zobrazí celý název členu"
   ],
   [QuestionType.SELECT_MULTIPLE]: [
     "Zaměřte se na vztah mezi nabízenými možnostmi.",

@@ -54,7 +54,7 @@ export const WordTypes: WordTypeExt[] = [
   },
   {
     name: 'příslovečné určení příčiny',
-    abbr: 'pup',
+    abbr: 'pu příčiny',
     color: '#B2BEC3'  // Cool gray
   },
   {
@@ -63,17 +63,17 @@ export const WordTypes: WordTypeExt[] = [
     color: '#D63031'  // Bright red
   },
   {
-    name: 'príslovečné určení účelu',
+    name: 'příslovečné určení účelu',
     abbr: 'pu účelu',
     color: '#FFB142'  // Light orange
   },
   {
-    name: 'príslovečné určení podmínky',
+    name: 'příslovečné určení podmínky',
     abbr: 'pu podmínky',
     color: '#FFB142'  // Light orange
   },
   {
-    name: 'príslovečné určení přípustky',
+    name: 'příslovečné určení přípustky',
     abbr: 'pu přípustky',
     color: '#FFB142'  // Light orange
   }

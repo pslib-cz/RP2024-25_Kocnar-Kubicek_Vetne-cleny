@@ -7,7 +7,7 @@ export type WordType =
   | "pum"
   | "pkn"
   | "puz"
-  | "pup"
+  | "pu příčiny"
   | "pu míry"
   | "d"
   | 'pu účelu'

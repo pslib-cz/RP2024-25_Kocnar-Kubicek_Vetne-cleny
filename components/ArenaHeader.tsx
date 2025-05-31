@@ -94,7 +94,7 @@ const ArenaHeader: React.FC<ArenaHeaderProps> = ({ onBackPress }) => {
 
 const styles = StyleSheet.create({
     container: {
-        
+        zIndex: 1000,
     },
     header: {
         flexDirection: 'row',
