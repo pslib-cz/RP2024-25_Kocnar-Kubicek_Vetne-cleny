@@ -16,49 +16,53 @@ export default function TabLayout() {
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
         headerShown: false,
         tabBarButton: HapticTab,
-        tabBarBackground: TabBarBackground,
+        tabBarBackground: undefined,
+        tabBarStyle: {
+          backgroundColor: '#000',
+          borderTopColor: '#000',
+          marginTop: 10,
+        },
+        tabBarIconStyle: {
+          width: 32,
+          height: 32,
+        },
         
-        tabBarStyle: Platform.select({
-          ios: {
-            // Use a transparent background on iOS to show the blur effect
-            position: 'absolute',
-          },
-          default: {},
-        }),
       }}>
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+          title: 'Domů',
+          tabBarIcon: ({ color }) => <IconSymbol size={32} name="house" color={color} />,
         }}
       />
-      {/* <Tabs.Screen
+
+      <Tabs.Screen
+        name="arenaplanet"
+        options={{
+          title: 'Aréna',
+          tabBarIcon: ({ color }) => <IconSymbol size={32} name="sparkles" color={color} />,
+        }}
+      />
+
+      <Tabs.Screen
+        name="exams"
+        options={{
+          title: 'Testy',
+          tabBarIcon: ({ color }) => <IconSymbol size={32} name="doc.text" color={color} />,
+        }}
+      />
+      <Tabs.Screen
         name="tutorial"
         options={{
-          title: 'Tutorial',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
-        }}
-      /> */}
-      <Tabs.Screen
-        name="profile"
-        options={{
-          title: 'Profile',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="person.crop.circle" color={color} />,
+          title: 'Návod',
+          tabBarIcon: ({ color }) => <IconSymbol size={32} name="book" color={color} />,
         }}
       />
       <Tabs.Screen
         name="(debug)/gameTests"
         options={{
-          title: 'game menu (debug)',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="wrench.and.screwdriver" color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="exams"
-        options={{
-          title: 'Test (Exam)',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="doc.text" color={color} />,
+          title: 'TESTOVACÍ',
+          tabBarIcon: ({ color }) => <IconSymbol size={32} name="wrench.and.screwdriver" color={color} />,
         }}
       />
     </Tabs>

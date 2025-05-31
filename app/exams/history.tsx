@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, FlatList, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { useAPI } from '@/hooks/useAPI';
-import { FontAwesome } from '@expo/vector-icons';
+import { FontAwesome, Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ThemedText } from '@/components/ThemedText';
 import { useRocket } from '@/contexts/RocketContext';
 import { galaxies } from '@/components/ArenaHeader';
+import { useRouter } from 'expo-router';
+
 interface SessionInfo {
   id: string;
   gameId: string;
@@ -31,9 +33,9 @@ export default function HistoryScreen() {
   const [error, setError] = useState<string | null>(null);
   const [expandedSession, setExpandedSession] = useState<string | null>(null);
   const { userId, secretKey } = useRocket();
-  
   const api = useAPI({ userId, secretKey });
-
+  const router = useRouter();
+  
   useEffect(() => {
     fetchSessions();
   }, []);
@@ -163,10 +165,18 @@ export default function HistoryScreen() {
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
         <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 20}}>
-          <ThemedText style={styles.title} type="title">Historie her</ThemedText>
-          <TouchableOpacity onPress={fetchSessions} style={{marginLeft: 12, padding: 6}} accessibilityLabel="Obnovit historii">
-            <FontAwesome name="refresh" size={22} color="#fff" />
-          </TouchableOpacity>
+          <View style={{flex: 1}}>
+            <TouchableOpacity style={{flexDirection: 'row', alignItems: 'center'}} onPress={() => router.back()}>
+              <Ionicons name="chevron-back" size={24} color="white" />
+              <ThemedText style={{color: 'white', fontSize: 16, marginLeft: 4}}>Zpět</ThemedText>
+            </TouchableOpacity>
+          </View>
+          <ThemedText style={[styles.title, {flex: 2, textAlign: 'center'}]} type="title">Historie her</ThemedText>
+          <View style={{flex: 1, alignItems: 'flex-end'}}>
+            <TouchableOpacity onPress={fetchSessions} style={{padding: 6}} accessibilityLabel="Obnovit historii">
+              <FontAwesome name="refresh" size={22} color="#fff" />
+            </TouchableOpacity>
+          </View>
         </View>
         
         {sessions.length === 0 ? (

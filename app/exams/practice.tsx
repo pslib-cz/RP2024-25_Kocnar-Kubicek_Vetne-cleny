@@ -5,6 +5,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Slider from '@react-native-community/slider';
 import { useGameContext } from '@/contexts/GameContext';
 import { galaxyImages } from '@/data/galaxyImages';
+import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 
 export default function CreateGameScreen() {
   const [difficulty, setDifficulty] = useState(50);
@@ -13,6 +15,7 @@ export default function CreateGameScreen() {
   const [questionCount, setQuestionCount] = useState('10');
   const [isCustomCount, setIsCustomCount] = useState(false);
   const { newGame } = useGameContext();
+  const router = useRouter();
 
   const questionCountPresets = [10, 15, 20, 25];
 
@@ -54,9 +57,17 @@ export default function CreateGameScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 20}}>
+        <View style={{flex: 1}}>
+          <TouchableOpacity style={{flexDirection: 'row', alignItems: 'center'}} onPress={() => router.back()}>
+            <Ionicons name="chevron-back" size={24} color="white" />
+            <ThemedText style={{color: 'white', fontSize: 16, marginLeft: 4}}>Zpět</ThemedText>
+          </TouchableOpacity>
+        </View>
+        <ThemedText type="title" style={[styles.title, {flex: 2, textAlign: 'center'}]}>Vytvořit test</ThemedText>
+        <View style={{flex: 1}} />
+      </View>
       <ScrollView contentContainerStyle={styles.scrollContainer} showsVerticalScrollIndicator={false}>
-        <ThemedText type="title" style={styles.title}>Vytvořit test</ThemedText>
-
         {/* Question Count Selection */}
         <View style={styles.section}>
           <ThemedText style={styles.label}>Počet otázek:</ThemedText>

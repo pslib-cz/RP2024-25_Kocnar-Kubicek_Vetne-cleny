@@ -4,6 +4,7 @@ import QRCode from 'react-native-qrcode-svg';
 import { useRouter } from 'expo-router';
 import { useMultiplayerGameContext } from '@/contexts/MultiplayerGameContext';
 import { useRocket } from '@/contexts/RocketContext';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function ShareGameScreen() {
   const router = useRouter();
@@ -23,7 +24,16 @@ export default function ShareGameScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Sdílej hru</Text>
+      <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 20}}>
+        <View style={{flex: 1}}>
+          <TouchableOpacity style={{flexDirection: 'row', alignItems: 'center'}} onPress={() => router.back()}>
+            <Ionicons name="chevron-back" size={24} color="white" />
+            <Text style={{color: 'white', fontSize: 16, marginLeft: 4}}>Zpět</Text>
+          </TouchableOpacity>
+        </View>
+        <Text style={[styles.title, {flex: 2, textAlign: 'center'}]}>Sdílej hru</Text>
+        <View style={{flex: 1}} />
+      </View>
       <Text style={styles.codeLabel}>Kód hry:</Text>
       <Text style={styles.code}>{code}</Text>
       <Text style={styles.infoText}>Your ID: {rocket.userId}</Text>

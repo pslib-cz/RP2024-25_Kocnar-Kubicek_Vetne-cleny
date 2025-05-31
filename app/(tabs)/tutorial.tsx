@@ -81,7 +81,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 20,
-    paddingVertical: 40
   },
   verticalLine: {
     position: 'absolute',
@@ -123,7 +122,6 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingHorizontal: 20,
     marginVertical: 40,
-    marginBottom: 80,
     gap: 10,
   },
   backButton: {

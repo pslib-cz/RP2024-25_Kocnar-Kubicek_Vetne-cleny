@@ -1,10 +1,12 @@
 import React from 'react';
-import { View, Text, ScrollView, ActivityIndicator, StyleSheet } from 'react-native';
+import { View, Text, ScrollView, ActivityIndicator, StyleSheet, TouchableOpacity } from 'react-native';
 import { useAPI } from '@/hooks/useAPI';
 import { useEffect, useState } from 'react';
 import { useRocket } from '@/contexts/RocketContext';
 import { galaxies } from '@/components/ArenaHeader';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 
 export default function AuthoredGamesPage() {
     
@@ -13,6 +15,7 @@ export default function AuthoredGamesPage() {
   const [games, setGames] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [fetchGamesFn, setFetchGamesFn] = useState<() => void>(() => () => {});
+  const router = useRouter();
 
   // Function to check if a game is still active based on expiration time
   const isGameActive = (expirationTime: string) => {
@@ -49,18 +52,25 @@ export default function AuthoredGamesPage() {
   return (
     <ScrollView style={styles.container}>
       <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 16}}>
-        <Text style={styles.title}>Moje vytvořené hry</Text>
-        <Text> </Text>
-        <MaterialIcons.Button
-          name="refresh"
-          backgroundColor="transparent"
-          underlayColor="transparent"
-          color="#000"
-          size={24}
-          onPress={fetchGamesFn}
-          accessibilityLabel="Obnovit seznam her"
-          style={{marginLeft: 8, padding: 0}}
-        />
+        <View style={{flex: 1}}>
+          <TouchableOpacity style={{flexDirection: 'row', alignItems: 'center'}} onPress={() => router.back()}>
+            <Ionicons name="chevron-back" size={24} color="#000" />
+            <Text style={{color: '#000', fontSize: 16, marginLeft: 4}}>Zpět</Text>
+          </TouchableOpacity>
+        </View>
+        <Text style={[styles.title, {flex: 2, textAlign: 'center'}]}>Moje vytvořené hry</Text>
+        <View style={{flex: 1, alignItems: 'flex-end'}}>
+          <MaterialIcons.Button
+            name="refresh"
+            backgroundColor="transparent"
+            underlayColor="transparent"
+            color="#000"
+            size={24}
+            onPress={fetchGamesFn}
+            accessibilityLabel="Obnovit seznam her"
+            style={{padding: 0}}
+          />
+        </View>
       </View>
       
       {games.length === 0 ? (

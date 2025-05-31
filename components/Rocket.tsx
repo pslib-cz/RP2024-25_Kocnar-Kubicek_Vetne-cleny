@@ -2,7 +2,7 @@ import React from 'react';
 import { SvgXml } from 'react-native-svg';
 import { useRocket } from '@/contexts/RocketContext';
 import { useState, useEffect } from 'react';
-import { loadSvgAsset } from '@/app/(tabs)/profile';
+import { loadSvgAsset } from '@/app/(pages)/profile';
 import { StyleProp, ViewStyle } from 'react-native';
 import { rocket1, rocket2, rocket3, rocket4, rocket5 } from '@/data/rocketsImages';
 

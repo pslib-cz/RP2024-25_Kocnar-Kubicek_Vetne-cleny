@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { SvgXml } from 'react-native-svg';
 import { StyleProp, ViewStyle, View, Text, StyleSheet, TextStyle } from 'react-native';
-import { loadSvgAsset } from '@/app/(tabs)/profile';
+import { loadSvgAsset } from '@/app/(pages)/profile';
 import { rocket1, rocket2, rocket3, rocket4, rocket5 } from '@/data/rocketsImages';
 import { PlayerData } from '@/types/api';
 

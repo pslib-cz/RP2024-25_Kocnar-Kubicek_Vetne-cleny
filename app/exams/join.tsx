@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, StyleSheet, SafeAreaView, ScrollView, Keyboard, TouchableWithoutFeedback } from 'react-native';
+import { View, Text, TextInput, StyleSheet, SafeAreaView, ScrollView, Keyboard, TouchableWithoutFeedback, TouchableOpacity } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useMultiplayerGameContext } from '@/contexts/MultiplayerGameContext';
 import PlayfulButton from '@/components/ui/PlayfulButton';
@@ -88,6 +88,16 @@ export default function JoinGameScreen() {
   return (
     <TouchableWithoutFeedback onPress={dismissKeyboard}>
       <SafeAreaView style={styles.safeArea}>
+        <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 20}}>
+          <View style={{flex: 1}}>
+            <TouchableOpacity style={{flexDirection: 'row', alignItems: 'center'}} onPress={() => router.back()}>
+              <Ionicons name="chevron-back" size={24} color="white" />
+              <Text style={{color: 'white', fontSize: 16, marginLeft: 4}}>Zpět</Text>
+            </TouchableOpacity>
+          </View>
+          <Text style={[styles.title, {flex: 2, textAlign: 'center'}]}>Připojit se ke hře</Text>
+          <View style={{flex: 1}} />
+        </View>
         <View style={styles.container}>
           {!contextCode ? (
             <View style={styles.joinContainer}>

@@ -7,6 +7,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { useMultiplayerGameContext } from '@/contexts/MultiplayerGameContext';
 import { useRouter } from 'expo-router';
 import { galaxyImages } from '@/data/galaxyImages';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function CreateGameScreen() {
   const [difficulty, setDifficulty] = useState(50);
@@ -84,9 +85,17 @@ export default function CreateGameScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 20}}>
+        <View style={{flex: 1}}>
+          <TouchableOpacity style={{flexDirection: 'row', alignItems: 'center'}} onPress={() => router.back()}>
+            <Ionicons name="chevron-back" size={24} color="white" />
+            <ThemedText style={{color: 'white', fontSize: 16, marginLeft: 4}}>Zpět</ThemedText>
+          </TouchableOpacity>
+        </View>
+        <ThemedText type="title" style={[styles.title, {flex: 2, textAlign: 'center'}]}>Vytvořit sdílený test</ThemedText>
+        <View style={{flex: 1}} />
+      </View>
       <ScrollView contentContainerStyle={styles.scrollContainer} showsVerticalScrollIndicator={false}>
-        <ThemedText type="title" style={styles.title}>Vytvořit sdílený test</ThemedText>
-
         {/* Question Count Selection */}
         <View style={styles.section}>
           <ThemedText style={styles.label}>Počet otázek:</ThemedText>
