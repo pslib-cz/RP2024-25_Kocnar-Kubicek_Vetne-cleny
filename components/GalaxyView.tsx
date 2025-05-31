@@ -5,18 +5,10 @@ import { Rocket } from './Rocket';
 import { useGalaxyContext } from '@/contexts/GalaxyContext';
 import { useRouter } from 'expo-router';
 import planetNames from '@/data/planetnames.json';
-import { planetImages } from '@/data/planetImages';
-
-// Utility function to get planet image
-const getPlanetImage = (galaxyIndex: number, planetIndex: number) => {
-  const key = `${galaxyIndex + 1}_${planetIndex + 1}`;
-  // Return default image if specific one not found
-  return planetImages[key] || planetImages['1_1'];
-};
+import { getPlanetImage } from '@/data/planetImages';
 
 const GalaxyView: React.FC = () => {
   const { selectedGalaxy, activePlanets } = useGalaxyContext();
-  const router = useRouter(); // Initialize router
   const activePlanetIndex = activePlanets[selectedGalaxy];
   const planetsInGalaxy = selectedGalaxy === 0 ? 25 : 8;
 
