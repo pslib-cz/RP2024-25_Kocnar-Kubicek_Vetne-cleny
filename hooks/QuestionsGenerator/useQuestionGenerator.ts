@@ -3,6 +3,7 @@ import { useLoadedData } from "@/hooks/useData";
 import { WordSelectionOption } from "@/types/games/SelectionOption";
 import { useMemo } from "react";
 import { applyDataSourceModifiers, applyOnlyTypeModifiers, getWantedTypesFromModifiers, isTypeAllowed, isValidTemplate, seededShuffle } from "./questionGeneratorUtils";
+import { WordType } from "@/types/WordTypes";
 
 // Utility: Map QuestionType enum to bit positions
 const QUESTION_TYPE_VALUES = Object.values(QuestionType).filter(v => typeof v === 'number') as number[];
@@ -26,7 +27,7 @@ const QUESTION_TYPE_VALUES = Object.values(QuestionType).filter(v => typeof v ==
 export type Question = {
   SOURCE: WordSelectionOption[];
   TEMPLATE: typeof questionGeneratorParams[number][number];
-  WANTED?: string;
+  WANTED?: WordType;
   INDEX?: number;
 }
 

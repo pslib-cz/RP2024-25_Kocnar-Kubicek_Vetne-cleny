@@ -4,13 +4,13 @@ import { usePathname, useRouter } from 'expo-router';
 import { WordSelectionOption } from '@/types/games/SelectionOption';
 import { useData } from '@/hooks/useData';
 import { GameState } from '@/types/gameState';
-import { GameRoute } from '@/constants/gameRoute';
+// import { GameRoute } from '@/constants/gameRoute';
 import { useMultiplayerGameContext } from './MultiplayerGameContext';
 import { useLevelContext } from './levelContext';
 import { useGalaxyContext } from './GalaxyContext';
 import { useCommonMistakesContext } from './CommonMistakesContext';
-import { generateRandomGameLevels, generateRandomMistakesLevels } from './utils/GameDataGenerator';
-import { GameLevel } from '@/types/games/GameLevel';
+// import { generateRandomGameLevels, generateRandomMistakesLevels } from './utils/GameDataGenerator';
+// import { GameLevel } from '@/types/games/GameLevel';
 import { Question, useQuestionGenerator } from '@/hooks/QuestionsGenerator/useQuestionGenerator';
 import { Galaxy, GeneratorParam, QuestionType } from '@/constants/questionGeneratorParams';
 
@@ -23,7 +23,7 @@ export enum GameType{
 }
 
 export const NEXT_LEVEL_TRESHOLD = 0.75 * 100;
-const LEVELS_COUNT = 4;
+const LEVELS_COUNT = 3;
 const questionTypeOptions = Object.entries(QuestionType).filter(([k, v]) => typeof v === 'number');
 
 export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -74,12 +74,6 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     console.log("New game started with config: ", config);
 
-    setGameInfo({
-      activeQuestionIndex: 0,
-      startTime: Date.now(),
-      answers: [],
-    });
-
     setGameConfig(config);
     setCorrectAnswersCount(0);
 
@@ -94,7 +88,14 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const newGameWithQuestions = (questions: Question[], type : GameType) => {
     setQuestions(questions);
 
-    nextQuestionWithValues(questions);
+    const conf : ActiveGameInfo = {
+      activeQuestionIndex: 0,
+      startTime: Date.now(),
+      answers: [],
+    }
+
+    setGameInfo(conf);
+    nextQuestionWithValues(questions, conf);
 
     console.log("New game started with config: ", questions.length);
 
@@ -105,8 +106,9 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     navigation.replace("games/game" as never);
   }
 
-  const nextQuestionWithValues = (questions: Question[]) => {
+  const nextQuestion = () => nextQuestionWithValues(questions, gameInfo);
 
+  const nextQuestionWithValues = (questions: Question[], gameInfo: ActiveGameInfo) => {
     resetLevelData();
 
     setGameInfo((prev) => ({ ...prev, activeQuestionIndex: prev.activeQuestionIndex + 1 })); // Increment the active question index
@@ -129,10 +131,6 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     else {
       setActiveQuestion(questions[gameInfo.activeQuestionIndex]);
     }
-  }
-  
-  const nextQuestion = () => {
-    nextQuestionWithValues(questions);
   }
 
   /// on level finished, not limited to the whole game
@@ -181,6 +179,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setActiveQuestion,
         newGameWitMostCommonMistakes,
         gameType,
+        newGameWithQuestions,
         data: activeQuestion?.SOURCE as WordSelectionOption[] | undefined,
       }}
     >

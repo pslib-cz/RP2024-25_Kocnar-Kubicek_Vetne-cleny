@@ -76,6 +76,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   disabledButtonText: {
-    color: '#333',
+    color: '#BBB',
+    borderColor: '#BBB'
   },
 });
