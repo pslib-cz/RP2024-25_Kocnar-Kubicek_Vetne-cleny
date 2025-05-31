@@ -25,7 +25,7 @@ export const TargetTypeDisplay = ({text} : {text : string}) => {
             type={targetType.type}
             drawType={targetType.drawType}
             onLongPress={() => handleShowTooltip(targetType.text, 0)}
-            onClick={handleHideTooltip}
+            onClick={() => handleShowTooltip(targetType.text, 0)}
           />
         </Tooltip>
       }
