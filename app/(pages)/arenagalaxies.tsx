@@ -11,7 +11,7 @@ const ArenaGalaxies: React.FC = () => {
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
         <ArenaHeader
-          onBackPress={() => router.replace("/arenaplanet")} // Pass back button handler
+          onBackPress={() => router.back()} // Pass back button handler
         />
         <GalaxyView />
       </View>
