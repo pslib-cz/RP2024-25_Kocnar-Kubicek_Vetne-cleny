@@ -5,7 +5,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ThemedText } from '@/components/ThemedText';
 import { useRocket } from '@/contexts/RocketContext';
-
+import { galaxies } from '@/components/ArenaHeader';
 interface SessionInfo {
   id: string;
   gameId: string;
@@ -21,6 +21,7 @@ interface SessionInfo {
     galaxy: number;
     questiontypes: number;
     version: string;
+    questionCount: number;
   };
 }
 
@@ -44,7 +45,7 @@ export default function HistoryScreen() {
       setSessions(response);
     } catch (err) {
       console.warn('Failed to fetch sessions:', err);
-      setError('Failed to load game history. Please try again.');
+      setError('Nepodařilo se načíst historii her. Zkuste to prosím znovu.');
     } finally {
       setLoading(false);
     }
@@ -80,13 +81,13 @@ export default function HistoryScreen() {
         >
           <View style={styles.headerInfo}>
             <ThemedText style={styles.sessionTitle}>
-              {getGalaxyLabel(item.game.galaxy)} • {getDifficultyLabel(item.game.difficulty)}
+              Hra {item.game.code} 
             </ThemedText>
             <ThemedText style={styles.sessionDate}>{formatDate(item.startedAt)}</ThemedText>
           </View>
           <View style={styles.scoreContainer}>
-            <ThemedText style={styles.scoreText}>{item.score}</ThemedText>
-            <ThemedText style={styles.scoreLabel}>points</ThemedText>
+            <ThemedText style={styles.scoreText}>{item.correctAnswers} / {item.game.questionCount} ({Math.round((item.correctAnswers / item.game.questionCount) * 100)}%)</ThemedText>
+            <ThemedText style={styles.scoreLabel}>úspěšnost</ThemedText>
           </View>
           <FontAwesome 
             name={isExpanded ? 'chevron-up' : 'chevron-down'} 
@@ -98,31 +99,35 @@ export default function HistoryScreen() {
         {isExpanded && (
           <View style={styles.sessionDetails}>
             <View style={styles.detailRow}>
-              <ThemedText style={styles.detailLabel}>Game Code:</ThemedText>
-              <ThemedText style={styles.detailValue}>{item.game.code}</ThemedText>
+              <ThemedText style={styles.detailLabel}>Galaxie:</ThemedText>
+              <ThemedText style={styles.detailValue}>{galaxies[item.game.galaxy].name}</ThemedText>
             </View>
             <View style={styles.detailRow}>
-              <ThemedText style={styles.detailLabel}>Correct Answers:</ThemedText>
+              <ThemedText style={styles.detailLabel}>Správné odpovědi:</ThemedText>
               <ThemedText style={styles.detailValue}>{item.correctAnswers}</ThemedText>
             </View>
             <View style={styles.detailRow}>
-              <ThemedText style={styles.detailLabel}>Status:</ThemedText>
+              <ThemedText style={styles.detailLabel}>Stav:</ThemedText>
               <ThemedText style={styles.detailValue}>
-                {item.completed ? 'Completed' : 'In Progress'}
+                {item.completed ? 'Dokončeno' : 'Probíhá'}
               </ThemedText>
             </View>
             <View style={styles.detailRow}>
-              <ThemedText style={styles.detailLabel}>Started:</ThemedText>
+              <ThemedText style={styles.detailLabel}>Začátek:</ThemedText>
               <ThemedText style={styles.detailValue}>{formatDate(item.startedAt)}</ThemedText>
             </View>
-            {item.endedAt && (
+            {item.endedAt && (<>
               <View style={styles.detailRow}>
-                <ThemedText style={styles.detailLabel}>Ended:</ThemedText>
+                <ThemedText style={styles.detailLabel}>Konec:</ThemedText>
                 <ThemedText style={styles.detailValue}>{formatDate(item.endedAt)}</ThemedText>
               </View>
+              <View style={styles.detailRow}>
+                <ThemedText style={styles.detailLabel}>Doba trvání:</ThemedText>
+                <ThemedText style={styles.detailValue}>{Math.round((new Date(item.endedAt).getTime() - new Date(item.startedAt).getTime()) / 1000)} s</ThemedText>
+              </View></>
             )}
             <View style={styles.detailRow}>
-              <ThemedText style={styles.detailLabel}>Question Types:</ThemedText>
+              <ThemedText style={styles.detailLabel}>Typy otázek:</ThemedText>
               <ThemedText style={styles.detailValue}>{item.game.questiontypes}</ThemedText>
             </View>
           </View>
@@ -147,7 +152,7 @@ export default function HistoryScreen() {
         <View style={styles.centered}>
           <ThemedText style={styles.errorText}>{error}</ThemedText>
           <TouchableOpacity style={styles.retryButton} onPress={fetchSessions}>
-            <ThemedText style={styles.retryText}>Retry</ThemedText>
+            <ThemedText style={styles.retryText}>Zkusit znovu</ThemedText>
           </TouchableOpacity>
         </View>
       </SafeAreaView>
@@ -157,11 +162,16 @@ export default function HistoryScreen() {
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
-        <ThemedText style={styles.title} type="title">Game History</ThemedText>
+        <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 20}}>
+          <ThemedText style={styles.title} type="title">Historie her</ThemedText>
+          <TouchableOpacity onPress={fetchSessions} style={{marginLeft: 12, padding: 6}} accessibilityLabel="Obnovit historii">
+            <FontAwesome name="refresh" size={22} color="#fff" />
+          </TouchableOpacity>
+        </View>
         
         {sessions.length === 0 ? (
           <View style={styles.centered}>
-            <ThemedText style={styles.emptyText}>No games played yet</ThemedText>
+            <ThemedText style={styles.emptyText}>Zatím nebyly odehrány žádné hry</ThemedText>
           </View>
         ) : (
           <FlatList

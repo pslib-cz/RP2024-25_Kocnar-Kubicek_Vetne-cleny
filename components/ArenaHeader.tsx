@@ -10,7 +10,7 @@ import { Galaxy } from '@/types/Galaxy';
 import { galaxyImages } from '@/data/galaxyImages';
 
 // Galaxy names and planet counts
-const galaxies : Galaxy[] = [
+export const galaxies : Galaxy[] = [
   { name: "Všechny členy", planetCount: 25 },
   { name: "Hlavní členy", planetCount: 8 },
   { name: "Přívlastky", planetCount: 8 },

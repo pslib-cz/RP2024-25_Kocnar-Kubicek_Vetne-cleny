@@ -3,12 +3,16 @@ import { View, Text, ScrollView, ActivityIndicator, StyleSheet } from 'react-nat
 import { useAPI } from '@/hooks/useAPI';
 import { useEffect, useState } from 'react';
 import { useRocket } from '@/contexts/RocketContext';
+import { galaxies } from '@/components/ArenaHeader';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
 export default function AuthoredGamesPage() {
+    
   const { userId, secretKey } = useRocket();
   const api = useAPI({ userId, secretKey });
   const [games, setGames] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [fetchGamesFn, setFetchGamesFn] = useState<() => void>(() => () => {});
 
   // Function to check if a game is still active based on expiration time
   const isGameActive = (expirationTime: string) => {
@@ -30,6 +34,8 @@ export default function AuthoredGamesPage() {
     };
 
     fetchGames();
+    // Expose fetchGames for refresh button
+    setFetchGamesFn(() => fetchGames);
   }, []);
 
   if (loading) {
@@ -42,7 +48,20 @@ export default function AuthoredGamesPage() {
 
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.title}>Moje vytvořené hry</Text>
+      <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 16}}>
+        <Text style={styles.title}>Moje vytvořené hry</Text>
+        <Text> </Text>
+        <MaterialIcons.Button
+          name="refresh"
+          backgroundColor="transparent"
+          underlayColor="transparent"
+          color="#000"
+          size={24}
+          onPress={fetchGamesFn}
+          accessibilityLabel="Obnovit seznam her"
+          style={{marginLeft: 8, padding: 0}}
+        />
+      </View>
       
       {games.length === 0 ? (
         <Text style={styles.emptyMessage}>Zatím jste nevytvořili žádné hry</Text>
@@ -71,16 +90,27 @@ export default function AuthoredGamesPage() {
               </View>
 
               <View style={styles.detailsRow}>
-                <Text style={styles.detail}>Obtížnost: {game.difficulty}</Text>
-                <Text style={styles.detail}>Galaxie: {game.galaxy}</Text>
-                <Text style={styles.detail}>Typy otázek: {game.questiontypes}</Text>
+                <View style={styles.detail}>
+                  <MaterialIcons name="speed" size={18} color="#F9A825" style={{ marginRight: 4 }} />
+                  <Text>{game.difficulty}% obtížnost</Text>
+                </View>
+                <View style={styles.detail}>
+                  <MaterialIcons name="public" size={18} color="#42A5F5" style={{ marginRight: 4 }} />
+                  <Text>{galaxies[game.galaxy].name}</Text>
+                </View>
+                <View style={styles.detail}>
+                  <MaterialIcons name="numbers" size={18} color="#AB47BC" style={{ marginRight: 4 }} />
+                  <Text>{game.questionCount} otázek</Text>
+                </View>    
+                <View style={styles.detail}>
+                    <MaterialIcons name="casino" size={18} color="#26A69A" style={{ marginRight: 4 }} />
+                    <Text>{game.seeded ? 'Stejné otázky' : 'Různé otázky'}</Text>
+                </View>
+                <View style={styles.detail}>
+                  <MaterialIcons name="hourglass-empty" size={18} color="#FF7043" style={{ marginRight: 4 }} />
+                  <Text>{game.expirationTime ? 'Do ' + new Date(game.expirationTime).toLocaleString([], { dateStyle: 'short', timeStyle: 'short' }) : 'Bez expirace'}</Text>
+                </View>
               </View>
-
-              {game.expirationTime && (
-                <Text style={styles.expirationTime}>
-                  Platné do: {new Date(game.expirationTime).toLocaleString()}
-                </Text>
-              )}
 
               <View style={styles.sessionsContainer}>
                 <Text style={styles.sessionsTitle}>Hráči ({game.sessions.length}):</Text>
@@ -96,7 +126,7 @@ export default function AuthoredGamesPage() {
                       <Text>{session.player.name}</Text>
                     </View>
                     <Text style={styles.sessionScore}>
-                      {session.completed ? `Skóre: ${session.score}` : 'Ve hře'}
+                      {session.completed ? `Skóre: ${session.correctAnswers} / ${game.questionCount} (${Math.round((session.correctAnswers / game.questionCount) * 100)}%)` : 'Ve hře'}
                     </Text>
                   </View>
                 ))}
@@ -186,6 +216,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#f5f5f5',
     borderRadius: 4,
     overflow: 'hidden',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row',
   },
   sessionsContainer: {
     marginTop: 8,

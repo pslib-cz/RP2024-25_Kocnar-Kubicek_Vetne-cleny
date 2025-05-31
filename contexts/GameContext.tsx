@@ -143,7 +143,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const dataUpdate = {
       score: isCorrect ? 1 : 0,
-      correctAnswers: isCorrect ? 1 : 0,
+      correctAnswers: correctAnswersCount,
       completed: gameInfo.activeQuestionIndex >= questions.length - 1,
     };
 
