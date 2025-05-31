@@ -1,5 +1,5 @@
 import { SafeAreaView } from "react-native-safe-area-context";
-import React, { useEffect } from "react";
+import React, { act, useEffect } from "react";
 import { Alert, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useGameContext } from "@/contexts/GameContext";
 import { Text } from "react-native-svg";
@@ -13,7 +13,7 @@ import { Game2UI } from "@/components/games/game2";
 import { Game3UI } from "@/components/games/game3";
 import { ThemedText } from "@/components/ThemedText";
 import { useBackspaceIntercept } from "@/hooks/useBackspaceIntercept";
-import { GeneratorParam, QuestionType } from "@/constants/questionGeneratorParams";
+import { GeneratorParam, QuestionModifier, QuestionType } from "@/constants/questionGeneratorParams";
 
 export const Game: React.FC = () => {
   const { gameState, activeQuestion, questions, gameInfo } = useGameContext();
@@ -42,7 +42,24 @@ export const Game: React.FC = () => {
   });
 
   useEffect(() => {
-    console.log("activeQuestion:", activeQuestion?.TEMPLATE[GeneratorParam.QUESTION_TYPE]);
+    console.log("Active question modifiers " + activeQuestion?.TEMPLATE[GeneratorParam.QUESTION_TYPE]);
+
+    if (activeQuestion?.TEMPLATE && activeQuestion?.TEMPLATE[GeneratorParam.QUESTION_MODIFIER]) {
+      console.log("Question modifiers:");
+      const modifiers = activeQuestion.TEMPLATE[GeneratorParam.QUESTION_MODIFIER];
+      
+      // If it's an array of modifiers
+      if (Array.isArray(modifiers)) {
+        for (const modifier of modifiers) {
+          console.log(`- ${QuestionModifier[modifier]}`);
+        }
+      } 
+      // If it's a single modifier value
+      else {
+        console.log(`- ${QuestionModifier[modifiers]}`);
+      }
+    }
+
   }, [activeQuestion]);
 
   const gameContent = () => {
@@ -56,7 +73,7 @@ export const Game: React.FC = () => {
       case QuestionType.MARK_TYPE_ONE_WORD:
         return GameOneUI(Game1Type.oneWord, activeQuestion?.INDEX)
       case QuestionType.SELECT_MULTIPLE:
-        return Game2UI()
+        return Game2UI(activeQuestion.WANTED)
       case QuestionType.SELECT_MULTIPLE_W_SENTENCE:
         return Game3UI(activeQuestion.WANTED)
       case QuestionType.SELECT_ONE_W_SENTENCE:

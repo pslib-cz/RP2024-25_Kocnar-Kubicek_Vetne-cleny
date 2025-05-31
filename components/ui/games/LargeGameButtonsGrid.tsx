@@ -1,6 +1,6 @@
 import { WordSelectionOption } from "@/types/games/SelectionOption"
 import React from "react"
-import { ScrollView, StyleSheet, View } from "react-native"
+import { ScrollView, StyleSheet, Text, View } from "react-native"
 import { LargeGameButton } from "./LargeGameButton"
 
 
@@ -14,7 +14,7 @@ export const LargeGameButtonsGrid: React.FC<LargeGameButtonsGridProps> = ({optio
   return (
     <ScrollView style={{ width: '100%' }}>
       <View style={[styles.grid, { marginBottom: 40 }]}>
-        {options &&
+        {options ?
           options.map((option, index) => (
             <LargeGameButton
               key={index}
@@ -22,7 +22,12 @@ export const LargeGameButtonsGrid: React.FC<LargeGameButtonsGridProps> = ({optio
               selected={selectedOptions.includes(option)}
               onPress={() => handleSelect(option)}
             />
-          ))}
+          ))
+        :
+          <Text style={{ textAlign: 'center', width: '100%' }}>
+            Načítání dat...
+          </Text>
+        }
       </View>
     </ScrollView>
   );

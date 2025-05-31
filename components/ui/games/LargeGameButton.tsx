@@ -1,7 +1,12 @@
 import React from "react";
 import { TouchableOpacity, StyleSheet, Text } from "react-native";
 
-export const LargeGameButton = ({ text, selected, onPress }: { text: string; selected: boolean; onPress: () => void }) => (
+export const LargeGameButton = ({ text, selected, onPress }: { text: string; selected: boolean; onPress: () => void }) => {
+  
+  if (!text || text.length === 0)
+    console.warn("LargeGameButton received an empty text prop.");
+  
+  return (
   <TouchableOpacity
     style={[styles.option, selected && styles.selectedOption]}
     onPress={onPress}
@@ -9,7 +14,8 @@ export const LargeGameButton = ({ text, selected, onPress }: { text: string; sel
   >
     <Text style={styles.optionText}>{text}</Text>
   </TouchableOpacity>
-);
+  );
+}
 
 const styles = StyleSheet.create({
   option: {

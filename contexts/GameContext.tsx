@@ -16,7 +16,7 @@ import { Galaxy, GeneratorParam, QuestionType } from '@/constants/questionGenera
 
 const GameContext = createContext<GameContextData | undefined>(undefined);
 
-export enum GameType{
+export enum GameType {
   PRACTICE,
   TEST,
   COMMON_MISTAKES
@@ -85,10 +85,10 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     newGameWithQuestions(shuffledMistakes.map(mistake => mistake.question), GameType.COMMON_MISTAKES);
   }
 
-  const newGameWithQuestions = (questions: Question[], type : GameType) => {
+  const newGameWithQuestions = (questions: Question[], type: GameType) => {
     setQuestions(questions);
 
-    const conf : ActiveGameInfo = {
+    const conf: ActiveGameInfo = {
       activeQuestionIndex: 0,
       startTime: Date.now(),
       answers: [],
@@ -113,9 +113,6 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     setGameInfo((prev) => ({ ...prev, activeQuestionIndex: prev.activeQuestionIndex + 1 })); // Increment the active question index
 
-    console.log("Next question: ", questions[gameInfo.activeQuestionIndex]);
-    console.log("Game info: ", gameInfo);
-
     setGameState(GameState.pending);
 
     if (gameInfo.activeQuestionIndex >= questions.length) {
@@ -130,6 +127,11 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
     else {
       setActiveQuestion(questions[gameInfo.activeQuestionIndex]);
+
+      if (questions[gameInfo.activeQuestionIndex].SOURCE.length === 0) {
+        console.warn("Question has no data");
+      } else if (!questions[gameInfo.activeQuestionIndex].SOURCE[0]?.text)
+        console.warn("Question contains invalid data: ", questions[gameInfo.activeQuestionIndex]);
     }
   }
 
