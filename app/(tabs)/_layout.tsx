@@ -28,16 +28,16 @@ export default function TabLayout() {
         },
         
       }}>
-      <Tabs.Screen
+      {/* <Tabs.Screen
         name="index"
         options={{
           title: 'Domů',
           tabBarIcon: ({ color }) => <IconSymbol size={32} name="house" color={color} />,
         }}
-      />
+      /> */}
 
       <Tabs.Screen
-        name="arenaplanet"
+        name="index"
         options={{
           title: 'Aréna',
           tabBarIcon: ({ color }) => <IconSymbol size={32} name="sparkles" color={color} />,

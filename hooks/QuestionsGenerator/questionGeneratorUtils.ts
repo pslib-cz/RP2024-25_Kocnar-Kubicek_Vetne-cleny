@@ -82,9 +82,9 @@ export function applyOnlyTypeModifiers(sentences: string[][], modifiers: Questio
 }
 
 // Helper to get WANTED types from QuestionModifiers
-export function getWantedTypesFromModifiers(modifiers: QuestionModifier[] | undefined): string[] | undefined {
+export function getWantedTypesFromModifiers(modifiers: QuestionModifier[] | undefined,): string[] | undefined {
   if (!modifiers || !Array.isArray(modifiers) || modifiers.length === 0) return undefined;
-  const onlyTypes = modifiers
+  let onlyTypes: (string|null)[] = modifiers
     .filter(mod => typeof mod === 'number' && [
       QuestionModifier.ONLY_PO,
       QuestionModifier.ONLY_PR,
@@ -107,6 +107,19 @@ export function getWantedTypesFromModifiers(modifiers: QuestionModifier[] | unde
       }
     })
     .filter(Boolean);
+  if (onlyTypes.includes("pu")) {
+    onlyTypes = onlyTypes.filter(type => type !== "pu")
+    onlyTypes.push(
+        "pum",
+        "puz",
+        "puč",
+        "pu míry",
+        "pu účelu",
+        "pu podmínky",
+        "pu přípustky",
+        "pu příčiny"
+        );
+    }
   if (onlyTypes.length === 0) return undefined;
   return onlyTypes as string[];
 }

@@ -152,7 +152,7 @@ export function useQuestionGenerator({
         questionType === QuestionType.SELECT_MULTIPLE_W_SENTENCE ||
         questionType === QuestionType.SELECT_ONE_W_SENTENCE
       ) {
-        const wanted = getWantedTypesFromModifiers(questionModifiers);
+        const wanted = getWantedTypesFromModifiers(questionModifiers)?.filter(a => source.some(b => b.type === a));
         if (wanted) {
           out.WANTED = wanted[(seed + idx) % wanted.length];
         } else {
