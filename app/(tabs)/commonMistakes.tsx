@@ -52,7 +52,7 @@ export default function CommonMistakes() {
       />
       {/* <BigassButton title='⛷️ Procvičování' bgEmoji='⛷️' onPress={newGameWitMostCommonMistakes} enabled={allMistakes.length != 0}/> */}
       <View style={{ marginBottom: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', flexGrow: 1 }}>
-        <ThemedText type="title" style={{ marginBottom: 16, textAlign: 'center' }}>Nejčastější chyby</ThemedText>
+        <ThemedText type="title" style={{ marginBottom: 16, marginTop: 16, textAlign: 'center' }}>Nejčastější chyby</ThemedText>
         <ScrollView style={{ height: 10 }}>
           {allMistakes.length === 0 ? (
             <ThemedText style={{ color: '#888' }}>Žádné chyby zatím nejsou zaznamenány.</ThemedText>

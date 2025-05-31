@@ -37,9 +37,9 @@ export default function CreateGameScreen() {
       try {
         const count = parseInt(questionCount);
         if (isNaN(count) || count < 1 || count > 100) {
-          alert('Please enter a valid number of questions (1-100)');
+          alert('Prosím zadejte platný počet otázek (1-100)');
           return;
-        };+
+        };
         newGame({
             galaxy: galaxy,
             difficulty: difficulty/100,
@@ -47,11 +47,11 @@ export default function CreateGameScreen() {
             questionTypesBitfield: questionTypes,
         });
       } catch (error) {
-        alert('Failed to start exam. Please try again.');
+        alert('Nepodařilo se spustit cvičení. Zkuste to znovu.');
         console.warn('Error starting exam:', error);
       }
     } else {
-      alert('Please select difficulty and galaxy before starting the exam.');
+      alert('Prosím vyberte obtížnost a galaxii před spuštěním cvičení.');
     }
   };
 

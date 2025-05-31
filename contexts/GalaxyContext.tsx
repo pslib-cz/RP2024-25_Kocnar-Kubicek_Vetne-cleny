@@ -135,7 +135,6 @@ export const GalaxyProvider: React.FC<GalaxyProviderProps> = ({
   }, [activeLevelIndex, loading]);
 
   const levelUp = () => {
-    alert("New level achieved!")
     setActiveLevelIndex((prevLevels) => {
       const newLevels = [...prevLevels];
       if (newLevels[selectedGalaxy] < 4) {
@@ -166,7 +165,7 @@ export const GalaxyProvider: React.FC<GalaxyProviderProps> = ({
       name: planetList[planetIndex],
       planetType: getPlanetType(width, height, planetIndex),
       displaySize: getPlanetDisplaySize(getPlanetType(width, height, planetIndex)),
-      seed: selectedGalaxy * 100 + activePlanets[selectedGalaxy] + 13
+      seed: selectedGalaxy * 100 + activePlanets[selectedGalaxy] + 12
     };
   }
 
