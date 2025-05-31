@@ -17,7 +17,7 @@ export default function ShareGameScreen() {
       await leaveGame();
       router.push('/exams/create');
     } catch (error) {
-      alert('Failed to cancel the game. Please try again.');
+      alert('Nepodařilo se zrušit hru. Zkuste to znovu.');
       console.warn('Error cancelling game:', error);
     }
   };

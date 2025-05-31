@@ -32,8 +32,8 @@ const getRandomHexagonCenters = (
   const radius = width / 2;
   const centerX = width / 2;
   const centerY = height / 2;
-  const minDist = HEXAGON_SIZE * 1.2;
-  const maxDistFromCenter = radius - HEXAGON_SIZE * 0.7;
+  const minDist = HEXAGON_SIZE * 2; // Increased for more spread
+  const maxDistFromCenter = radius - HEXAGON_SIZE * 0.5; // Reduced edge margin
   const centers: { x: number; y: number }[] = [];
 
   let attempts = 0;
@@ -84,7 +84,7 @@ const generateHexagonPoints = (centerX: number, centerY: number, size: number) =
 
   
 const PlanetView: React.FC<{displayName? : boolean}> = ({displayName = true}) => {
-  const { activeLevelIndex, selectedGalaxy, activePlanets, selectedPlanet } = useGalaxyContext();
+  const { activeLevelIndex, selectedGalaxy, selectedPlanet } = useGalaxyContext();
 
   const hexagonCenters = getRandomHexagonCenters(HEXAGON_COUNT, selectedPlanet.displaySize, selectedPlanet.displaySize, selectedPlanet.seed);
   

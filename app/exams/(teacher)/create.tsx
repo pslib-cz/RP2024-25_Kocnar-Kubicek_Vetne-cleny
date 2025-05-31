@@ -52,7 +52,7 @@ export default function CreateGameScreen() {
       try {
         const count = parseInt(questionCount);
         if (isNaN(count) || count < 1 || count > 100) {
-          alert('Please enter a valid number of questions (1-100)');
+          alert('Prosím zadejte platný počet otázek (1-100)');
           return;
         }
 
@@ -69,11 +69,11 @@ export default function CreateGameScreen() {
         await createGame(gameData);
         router.push('/exams/share');
       } catch (error) {
-        alert('Failed to create game. Please try again.');
+        alert('Nepodařilo se vytvořit hru. Zkuste to znovu.');
         console.warn('Error creating game:', error);
       }
     } else {
-      alert('Please select difficulty and galaxy before starting the exam.');
+      alert('Prosím vyberte obtížnost a galaxii před spuštěním cvičení.');
     }
   };
 

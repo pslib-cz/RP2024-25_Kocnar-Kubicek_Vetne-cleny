@@ -64,7 +64,7 @@ export default function JoinGameScreen() {
     if (config.difficulty && config.galaxy >= 0) {
       try {
         if (isNaN(config.questionCount) || config.questionCount < 1 || config.questionCount > 100) {
-          alert('Please enter a valid number of questions (1-100)');
+          alert('Prosím zadejte platný počet otázek (1-100)');
           return;
         };+
         newGame({
@@ -74,11 +74,11 @@ export default function JoinGameScreen() {
             questionTypesBitfield: config.questiontypes,
         });
       } catch (error) {
-        alert('Failed to start exam. Please try again.');
+        alert('Nepodařilo se spustit cvičení. Zkuste to znovu.');
         console.warn('Error starting exam:', error);
       }
     } else {
-      alert('Please select difficulty and galaxy before starting the exam.');
+      alert('Prosím vyberte obtížnost a galaxii před spuštěním cvičení.');
     }
   };
 

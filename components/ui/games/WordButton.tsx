@@ -132,6 +132,7 @@ const styles = StyleSheet.create({
   correctButton: {
     // backgroundColor: '#2a9d8f',
     borderColor: '#2a9d8f',
+    borderWidth: 3,
   },
   buttonText: {
     color: 'white',

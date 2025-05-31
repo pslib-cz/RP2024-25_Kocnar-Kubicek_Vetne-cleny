@@ -35,9 +35,9 @@ const PracticeCompleteScreen = () => {
     // Red:   r=255, g=85,  b=85
     // Green: r=80,  g=250, b=123
     const t = (clamped - 10) / 80; // 0 at 10%, 1 at 90%
-    const r = Math.round(255 + (80 - 255) * t);
-    const g = Math.round(85 + (250 - 85) * t);
-    const b = Math.round(85 + (123 - 85) * t);
+    const r = Math.round(215 + (80 - 255) * t);
+    const g = Math.round(45 + (250 - 85) * t);
+    const b = Math.round(45 + (123 - 85) * t);
     return `rgb(${r},${g},${b})`;
   };
 
@@ -52,8 +52,8 @@ const PracticeCompleteScreen = () => {
         <Text style={{color: "white", marginBottom: 16}}>Pro odemčení další úrovně je nutné mít úspěšnost alespoň {NEXT_LEVEL_TRESHOLD}%</Text>
 
         <View style={styles.statsContainer}>
-          <ResultStuff text="Time" value={`${getDuration()}s`} color="#6272A4" />
-          <ResultStuff text="Success rate" value={`${successRate.toFixed(2)}%`} color={successRateColor} />
+          <ResultStuff text="Čas" value={`${getDuration()}s`} color="#6272A4" />
+          <ResultStuff text="Úspěšnost" value={`${successRate.toFixed(2)}%`} color={successRateColor} />
         </View>
   
         <Button title={successRate >= NEXT_LEVEL_TRESHOLD ? "Další level" : "Zkusit znovu"} filled={true} onPress={newGameInArena} />
@@ -125,6 +125,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 20,
     paddingVertical: 40,
+    backgroundColor: '#101223',
   },
   title: {
     fontSize: 32,
