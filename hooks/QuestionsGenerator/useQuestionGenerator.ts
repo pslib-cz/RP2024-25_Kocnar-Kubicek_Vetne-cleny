@@ -99,7 +99,7 @@ export function useQuestionGenerator({
         const shuffledOptions = seededShuffle(options, seed + idx).slice(0, numOptions);
         const wanted = shuffledOptions[(seed + idx) % shuffledOptions.length][1];
         return {
-          SOURCE: shuffledOptions,
+          SOURCE: shuffledOptions.map(([word, type]) => ({text: word, type: type})),
           TEMPLATE: template,
           WANTED: wanted
         };
