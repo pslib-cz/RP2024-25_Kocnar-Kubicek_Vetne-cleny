@@ -30,7 +30,7 @@ const GameTests: React.FC = () => {
       SOURCE: [{text: "Test", type: "po"}, {text: "Test", type: "po"}, {text: "Test", type: "po"}, {text: "Test", type: "po"}],
       TEMPLATE: [1,0,gameId],
       INDEX: 1,
-      WANTED: "po"
+      WANTED: "pu přípustky"
     }], GameType.PRACTICE)
     resetLevelData()
   };

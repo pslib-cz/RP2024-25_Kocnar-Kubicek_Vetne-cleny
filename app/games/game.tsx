@@ -130,16 +130,14 @@ export const Game: React.FC = () => {
         state={gameState}
       />
       <View style={[styles.headerWrapper]}>
-        <View style={{ flexShrink: 1, flexGrow: 1, flexDirection: 'row', gap: 8 }}>
-          <View style={{ flexShrink: 1}}>
-            <HelpButton />
-          </View>        
-          <View style={{ flexShrink: 1, flexGrow: 999 }}>
-            <RocketProgressBar progress={(gameInfo.activeQuestionIndex - 1) / questions.length}/>
-          </View>
-          <View style={{ flexShrink: 1}}>
-            <CloseButton />
-          </View>
+        <View style={{ flexShrink: 1}}>
+          <HelpButton />
+        </View>        
+        <View style={{ flexShrink: 1, flexGrow: 999 }}>
+          <RocketProgressBar progress={(gameInfo.activeQuestionIndex - 1) / questions.length}/>
+        </View>
+        <View style={{ flexShrink: 1}}>
+          <CloseButton />
         </View>
       </View>
       <Animated.View
@@ -156,13 +154,13 @@ export const Game: React.FC = () => {
 
 const styles = StyleSheet.create({
   headerWrapper: {
-    width: '100%',
-    display: 'flex',
+    // width: '100%',
+    // display: 'flex',
     flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    flexShrink: 1,
-    zIndex: 1,
+    // alignItems: 'center',
+    gap: 12,
+    // flexShrink: 1,
+    // zIndex: 1,
   },
   container: {
     flex: 1,
@@ -178,8 +176,8 @@ const styles = StyleSheet.create({
   },
   container1: {
     flex: 1,
-    backgroundColor: '#101223',
-    gap: 32,
+    // backgroundColor: '#101223',
+    gap: 24,
     justifyContent: 'space-between',
     alignItems: 'center',
     width: '100%',

@@ -40,8 +40,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 6,
+    // gap: 0,
     zIndex: 100,
+    flexWrap: 'wrap',
   },
   title: {
     color: '#fff',

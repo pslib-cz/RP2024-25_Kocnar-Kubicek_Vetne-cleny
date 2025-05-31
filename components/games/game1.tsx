@@ -115,7 +115,7 @@ export function GameOneUI(type: Game1Type, oneWord_INDEX: number = 1) {
 
     if (data) {
       if (inverted) {
-        let updatedData : WordButtonType[] = data;
+        let updatedData: WordButtonType[] = data;
         const sentenceContainsPo = data.some(item => item.type === "po");
 
         if (modifiers.includes(QuestionModifier.ONLY_PO)) {
@@ -147,7 +147,7 @@ export function GameOneUI(type: Game1Type, oneWord_INDEX: number = 1) {
       return;
     }
 
-    if (gameIndex >= data.length)
+    if (gameIndex >= phraseButtons.length)
       throw Error("Game index is out of bounds");
 
     const updatedPhraseButtons = [...phraseButtons];
