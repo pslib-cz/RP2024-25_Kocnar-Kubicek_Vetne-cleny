@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   subHeading: {
-    // color: '#777',
+    color: '#777',
     fontSize: 16,
     textAlign: 'center',
   },
