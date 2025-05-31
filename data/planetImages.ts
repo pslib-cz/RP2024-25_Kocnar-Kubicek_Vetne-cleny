@@ -1,4 +1,10 @@
-export const planetImages: Record<string, any> = {
+export const getPlanetImage = (galaxyIndex: number, planetIndex: number) => {
+  const key = `${galaxyIndex + 1}_${planetIndex + 1}`;
+  // Return default image if specific one not found
+  return planetImages[key] || planetImages['1_1'];
+};
+
+const planetImages: Record<string, any> = {
   // Galaxy 1 (25 planets)
   '1_1': require('@/assets/images/uni/1/celestial1.png'),
   '1_2': require('@/assets/images/uni/1/celestial2.png'),

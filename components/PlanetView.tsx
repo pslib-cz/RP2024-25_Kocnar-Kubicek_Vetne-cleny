@@ -4,14 +4,7 @@ import Svg, { Polygon, Polyline } from 'react-native-svg';
 import { Image as RNImage } from 'react-native';
 import planetNames from '@/data/planetnames.json';
 import { useGalaxyContext } from '@/contexts/GalaxyContext';
-import { planetImages } from '@/data/planetImages';
-
-// Utility function to get planet image
-const getPlanetImage = (galaxyIndex: number, planetIndex: number) => {
-  const key = `${galaxyIndex + 1}_${planetIndex + 1}`;
-  // Return default image if specific one not found
-  return planetImages[key] || planetImages['1_1'];
-};
+import { getPlanetImage } from '@/data/planetImages';
 
 // Seeded random generator
 const seededRandom = (seed: number) => {
@@ -89,49 +82,11 @@ const generateHexagonPoints = (centerX: number, centerY: number, size: number) =
   ].join(' ');
 };
 
-// Remove getPlanetType, use image dimensions instead
-const getPlanetDisplaySize = (type: string) => {
-  switch (type) {
-    case 'ring': return 380;
-    case 'sun': return 500;
-    case 'hole': return 340;
-    default: return 260;
-  }
-};
-
-function getPlanetType(width: number, height: number, planetIndex : number): string {
-  if (width === 1500 && height === 1500) {
-      return 'ring';
-    } else if (width === 1000 && height === 1000) {
-        if (planetIndex%10 === 9) {
-          return 'sun';
-    } else {
-      return 'hole';
-    }
-  } else if (width === 500 && height === 500) {
-    return 'normal';
-  }
-
-  return 'normal';
-} 
   
 const PlanetView: React.FC<{displayName? : boolean}> = ({displayName = true}) => {
-  const { activeLevelIndex, selectedGalaxy, activePlanets } = useGalaxyContext();
+  const { activeLevelIndex, selectedGalaxy, activePlanets, selectedPlanet } = useGalaxyContext();
 
-  // Use a unique seed for each planet
-  const seed = selectedGalaxy * 100 + activePlanets[selectedGalaxy] + 13;
-  
-  const planetIndex = activePlanets[selectedGalaxy];
-  const imageSource = getPlanetImage(selectedGalaxy, planetIndex);
-  const { width, height } = RNImage.resolveAssetSource(imageSource);
-  
-  // Determine planet type from image size
-  let planetType = getPlanetType(width, height, planetIndex);
-
-  const displaySize = getPlanetDisplaySize(planetType);
-  
-  // Defensive: check planetNames[selectedGalaxy]
-  const hexagonCenters = getRandomHexagonCenters(HEXAGON_COUNT, displaySize, displaySize, seed);
+  const hexagonCenters = getRandomHexagonCenters(HEXAGON_COUNT, selectedPlanet.displaySize, selectedPlanet.displaySize, selectedPlanet.seed);
   
   const planetList = planetNames[selectedGalaxy];
   if (!planetList) {
@@ -145,17 +100,17 @@ const PlanetView: React.FC<{displayName? : boolean}> = ({displayName = true}) =>
   return (
     <View style={styles.planetContentContainer}>
       <Image
-        source={imageSource}
+        source={selectedPlanet.imageSource}
         style={[
           styles.planetImage,
           {
-            width: displaySize,
-            height: displaySize,
+            width: selectedPlanet.displaySize,
+            height: selectedPlanet.displaySize,
           },
         ]}
         resizeMode="contain"
       />
-      <Svg style={styles.hexagonOverlay} width={displaySize} height={displaySize}>
+      <Svg style={styles.hexagonOverlay} width={selectedPlanet.displaySize} height={selectedPlanet.displaySize}>
         {/* Draw the path connecting the hexagons */}
         <Polyline
           points={hexagonCenters.map(({ x, y }) => `${x},${y}`).join(' ')}
@@ -210,7 +165,7 @@ const PlanetView: React.FC<{displayName? : boolean}> = ({displayName = true}) =>
             styles.activePlanetName,
           ]}
         >
-          {planetList[planetIndex]}
+          {selectedPlanet.name}
         </Text>
       }
     </View>
@@ -218,7 +173,6 @@ const PlanetView: React.FC<{displayName? : boolean}> = ({displayName = true}) =>
 };
 
 const styles = StyleSheet.create({
-
   planetsContainer: {
     padding: 20,
   },

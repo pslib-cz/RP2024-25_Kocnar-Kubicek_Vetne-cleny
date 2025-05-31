@@ -4,6 +4,9 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getPlanetImage } from '@/data/planetImages';
+import { Image as RNImage } from 'react-native';
+import planetNames from '@/data/planetnames.json';
 
 type GalaxyContextType = {
   selectedGalaxy: number;
@@ -12,7 +15,21 @@ type GalaxyContextType = {
   levelUp: () => void;
   activeLevelIndex: number[]; // Array of active levels for each galaxy
   setActiveLevelIndex: (index: number[]) => void;
+  selectedPlanet: SelectedPlanet; // Optional selected planet object
 };
+
+interface SelectedPlanet {
+  planetIndex: number;
+  imageSource: any;
+  size:{
+    width: number;
+    height: number;
+  };
+  name: string;
+  planetType: string;
+  displaySize: number;
+  seed: number;
+}
 
 const GalaxyContext = createContext<GalaxyContextType | undefined>(undefined);
 
@@ -20,9 +37,35 @@ interface GalaxyProviderProps {
   children: ReactNode;
 }
 
+function getPlanetType(width: number, height: number, planetIndex : number): string {
+  if (width === 1500 && height === 1500) {
+      return 'ring';
+    } else if (width === 1000 && height === 1000) {
+        if (planetIndex%10 === 9) {
+          return 'sun';
+    } else {
+      return 'hole';
+    }
+  } else if (width === 500 && height === 500) {
+    return 'normal';
+  }
+
+  return 'normal';
+} 
+
+const getPlanetDisplaySize = (type: string) => {
+  switch (type) {
+    case 'ring': return 380;
+    case 'sun': return 500;
+    case 'hole': return 340;
+    default: return 260;
+  }
+};
+
+
 const DEBUG_RESET_PROGRESS = true; // Set to true to reset progress for debugging
 
-export const GalaxyProvider: React.FC<GalaxyProviderProps> = ({ 
+export const GalaxyProvider: React.FC<GalaxyProviderProps> = ({
   children
 }) => {
   const [selectedGalaxy, setSelectedGalaxy] = useState(0);
@@ -30,8 +73,7 @@ export const GalaxyProvider: React.FC<GalaxyProviderProps> = ({
   const [activeLevelIndex, setActiveLevelIndex] = useState<number[]>([0, 0, 0, 0, 0]);
   const [loading, setLoading] = useState(true); // Track loading state
 
-  if (DEBUG_RESET_PROGRESS)
-  {
+  if (DEBUG_RESET_PROGRESS) {
     useEffect(() => {
       setTimeout(() => {
         setActivePlanets([0, 0, 0, 0, 0]);
@@ -112,8 +154,32 @@ export const GalaxyProvider: React.FC<GalaxyProviderProps> = ({
     });
   };
 
+  const getSelectedPlanet = (): SelectedPlanet => {
+    const planetIndex = activePlanets[selectedGalaxy];
+    const imageSource = getPlanetImage(selectedGalaxy, planetIndex);
+    const { width, height } = RNImage.resolveAssetSource(imageSource);
+    const planetList = planetNames[selectedGalaxy];
+    return { 
+      planetIndex, 
+      imageSource, 
+      size: { width, height },
+      name: planetList[planetIndex],
+      planetType: getPlanetType(width, height, planetIndex),
+      displaySize: getPlanetDisplaySize(getPlanetType(width, height, planetIndex)),
+      seed: selectedGalaxy * 100 + activePlanets[selectedGalaxy] + 13
+    };
+  }
+
   return (
-    <GalaxyContext.Provider value={{ selectedGalaxy, activePlanets, setSelectedGalaxy, levelUp, activeLevelIndex, setActiveLevelIndex }}>
+    <GalaxyContext.Provider value={{
+      selectedGalaxy,
+      activePlanets,
+      setSelectedGalaxy,
+      levelUp,
+      activeLevelIndex,
+      setActiveLevelIndex,
+      selectedPlanet: getSelectedPlanet()
+    }}>
       {children}
     </GalaxyContext.Provider>
   );
@@ -123,6 +189,6 @@ export const useGalaxyContext = () => {
   const context = useContext(GalaxyContext);
   if (!context)
     throw new Error('useGalaxyContext must be used within a GalaxyProvider');
-  
+
   return context;
 };
