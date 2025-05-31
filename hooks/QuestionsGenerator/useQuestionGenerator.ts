@@ -67,9 +67,11 @@ export function useQuestionGenerator({
   // Generate questions
   const questions = () => {
 
-    if(pickedTemplates() == undefined) throw new Error("No templates available for the selected parameters");
+    const templates = pickedTemplates();
 
-    return pickedTemplates().map((template, idx) => {
+    if(templates == undefined) throw new Error("No templates available for the selected parameters");
+
+    return templates.map((template, idx) => {
       const dataSource = template[GeneratorParam.DATA_SOURCE] as DataSource;
       const questionType = template[GeneratorParam.QUESTION_TYPE] as QuestionType;
       const dataSourceModifiers = template[GeneratorParam.DATA_SOURCE_MODIFIER] as DataSourceModifier[] | undefined;

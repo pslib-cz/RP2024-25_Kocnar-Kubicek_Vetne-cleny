@@ -91,7 +91,8 @@ export function getWantedTypesFromModifiers(modifiers: QuestionModifier[] | unde
       QuestionModifier.ONLY_PT,
       QuestionModifier.ONLY_PKS,
       QuestionModifier.ONLY_PKN,
-      QuestionModifier.ONLY_PU
+      QuestionModifier.ONLY_PU,
+      QuestionModifier.ACCEPT_D
     ].includes(mod))
     .map(mod => {
       switch (mod) {
@@ -101,6 +102,7 @@ export function getWantedTypesFromModifiers(modifiers: QuestionModifier[] | unde
         case QuestionModifier.ONLY_PKS: return 'pks';
         case QuestionModifier.ONLY_PKN: return 'pkn';
         case QuestionModifier.ONLY_PU: return 'pu';
+        case QuestionModifier.ACCEPT_D: return 'd';
         default: return null;
       }
     })
