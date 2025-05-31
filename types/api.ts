@@ -67,10 +67,11 @@ export interface PlayerData {
 }
 
 export interface GameData {
+  id?: string;
   difficulty: number;
   galaxy: number;
   questiontypes: number;
-  seed: string;
+  seed: number;
   version: string;
   expirationTime: string;
   questionCount: number;

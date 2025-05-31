@@ -11,6 +11,7 @@ import { galaxyImages } from '@/data/galaxyImages';
 
 // Import Galaxy names
 import { Galaxy } from '@/types/Galaxy';
+import { useGameContext } from '@/contexts/GameContext';
 
 // Galaxy names to map from index
 const galaxies: Galaxy[] = [
@@ -24,6 +25,7 @@ const galaxies: Galaxy[] = [
 export default function JoinGameScreen() {
   const [code, setCode] = useState('');
   const { joinGame, code: contextCode, config, leaveGame, author, players } = useMultiplayerGameContext();
+  const { newGame } = useGameContext();
   const router = useRouter();
   const params = useLocalSearchParams();
 
@@ -58,18 +60,17 @@ export default function JoinGameScreen() {
   };
 
   const handleStartExam = async () => {
-    if (difficulty && galaxy >= 0) {
+    if (config.difficulty && config.galaxy >= 0) {
       try {
-        const count = parseInt(questionCount);
-        if (isNaN(count) || count < 1 || count > 100) {
+        if (isNaN(config.questionCount) || config.questionCount < 1 || config.questionCount > 100) {
           alert('Please enter a valid number of questions (1-100)');
           return;
         };+
         newGame({
-            galaxy: galaxy,
-            difficulty: difficulty/100,
-            count: count,
-            questionTypesBitfield: questionTypes,
+            galaxy: config.galaxy,
+            difficulty: config.difficulty/100,
+            count: config.questionCount,
+            questionTypesBitfield: config.questiontypes,
         });
       } catch (error) {
         alert('Failed to start exam. Please try again.');

@@ -11,7 +11,7 @@ import { galaxyImages } from '@/data/galaxyImages';
 export default function CreateGameScreen() {
   const [difficulty, setDifficulty] = useState(50);
   const [galaxy, setGalaxy] = useState(0);
-  const [questionTypes, setQuestionTypes] = useState(0b111111);
+  const [questionTypes, setQuestionTypes] = useState(0b01101111);
   const [expirationTime, setExpirationTime] = useState(new Date(Date.now() + 30.5 * 60 * 1000)); // Default 30 minutes from now
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [isSeeded, setIsSeeded] = useState(true);
@@ -230,7 +230,7 @@ export default function CreateGameScreen() {
         {/* Question Types */}
         <View style={styles.section}>
           <ThemedText style={styles.label}>Typy otázek:</ThemedText>
-          {['Přiřazování členů', 'Přiřazování slov', 'Označování členů', 'Vybírání slova', 'Vybírání více slov', 'Vybírání s větou'].map((type, index) => (
+          {['Označování věty členy', 'Označování členů větou', 'Označování věty (jedno slovo)', 'Označování věty (všechny členy)', 'Vybírání bez věty', 'Vybírání s větou (více možností)', 'Vybírání s větou (jedna možnost)', 'Vybírání členu'].map((type, index) => (
             <View key={type} style={styles.switchRow}>
               <ThemedText style={styles.switchLabel}>{type}</ThemedText>
               <Switch

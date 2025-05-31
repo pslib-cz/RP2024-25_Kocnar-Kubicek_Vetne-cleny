@@ -9,7 +9,7 @@ import { galaxyImages } from '@/data/galaxyImages';
 export default function CreateGameScreen() {
   const [difficulty, setDifficulty] = useState(50);
   const [galaxy, setGalaxy] = useState(0);
-  const [questionTypes, setQuestionTypes] = useState(0b11111111);
+  const [questionTypes, setQuestionTypes] = useState(0b01101111);
   const [questionCount, setQuestionCount] = useState('10');
   const [isCustomCount, setIsCustomCount] = useState(false);
   const { newGame } = useGameContext();

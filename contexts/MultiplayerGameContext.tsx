@@ -12,13 +12,16 @@ export const MultiplayerGameProvider: React.FC<{ children: React.ReactNode }> = 
   const [config, setConfig] = useState<GameConfig>({
     difficulty: 0,
     galaxy: 0,
-    questiontypes: 10,
+    questiontypes: 0b11111111,
     expirationTime: new Date(Date.now() + 30 * 60 * 1000), // Default 30 minutes from now
     seeded: true,
     questionCount: 10, // Default number of questions
+    seed: undefined, // Default seed is undefined
   });
   const [players, setPlayers] = useState<Player[]>([]);
   const [author, setAuthor] = useState<Player | null>(null);
+  const [sessionId, setSessionId] = useState<string | null>(null);
+  const [gameId, setGameId] = useState<string | null>(null);
 
   const rocket = useRocket();
   const API = useAPI({
@@ -40,25 +43,34 @@ export const MultiplayerGameProvider: React.FC<{ children: React.ReactNode }> = 
       expirationTime: new Date(Date.now() + 30 * 60 * 1000), // Default 30 minutes from now
       seeded: true,
       questionCount: 10, // Default number of questions
+      seed: 0, // Default seed is undefined
     });
     setPlayers([]);
     setAuthor(null);
+    setSessionId(null);
+    setGameId(null);
   };
 
   const tryStartSession = async () => {
 
     console.log('Starting session...');
 
-    if(!code){
-      console.log('No game code provided');
+    if(!gameId){
+      console.log('No game ID provided');
       return;
     }
 
-    API.startSession(code)
+    const response = await API.startSession(gameId)
+    setSessionId(response.sessionId);
 
   }
 
   const tryUpdateSession = async (data : SessionUpdateRequest) => {
+
+    if(!sessionId) {
+      console.log('No session ID provided');
+      return;
+    }
 
     console.log('Updating session...');
 
@@ -67,7 +79,7 @@ export const MultiplayerGameProvider: React.FC<{ children: React.ReactNode }> = 
       return;
     }
 
-    API.updateSession(code, data)
+    API.updateSession(sessionId, data)
   }
 
   const joinGame = async (code: string) => {
@@ -83,12 +95,14 @@ export const MultiplayerGameProvider: React.FC<{ children: React.ReactNode }> = 
         questiontypes: response.game.questiontypes,
         expirationTime: new Date(response.game.expirationTime),
         seeded: response.game.seed !== undefined,
+        seed: parseInt(response.game.seed.toString(), 16),
         questionCount: response.game.questionCount,
       });
       
       // Set author and players
       setAuthor(response.author);
       setPlayers(response.players || []);
+      if(response.game.id) setGameId(response.game.id);
     } catch (error) {
       console.warn('Failed to join game:', error);
       throw error;

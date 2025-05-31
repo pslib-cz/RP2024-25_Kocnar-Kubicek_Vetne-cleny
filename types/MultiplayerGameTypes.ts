@@ -16,6 +16,7 @@ export interface GameConfig {
   expirationTime: Date; // Game expiration time
   seeded: boolean; // Whether to generate a seed for the game
   questionCount: number; // Number of questions in the game
+  seed?: number; // Optional seed for the game
 }
 
 export interface MultiplayerGameContextData {

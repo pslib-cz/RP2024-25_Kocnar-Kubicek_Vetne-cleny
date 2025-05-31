@@ -144,7 +144,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const dataUpdate = {
       score: isCorrect ? 1 : 0,
       correctAnswers: isCorrect ? 1 : 0,
-      completed: questions.length === 1,
+      completed: gameInfo.activeQuestionIndex >= questions.length - 1,
     };
 
     tryUpdateSession(dataUpdate);
