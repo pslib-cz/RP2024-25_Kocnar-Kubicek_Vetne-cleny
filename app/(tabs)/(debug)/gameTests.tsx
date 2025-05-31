@@ -28,7 +28,9 @@ const GameTests: React.FC = () => {
     navigation.push("games/game" as never)
     newGameWithQuestions([{
       SOURCE: [{text: "Test", type: "po"}, {text: "Test", type: "po"}, {text: "Test", type: "po"}, {text: "Test", type: "po"}],
-      TEMPLATE: [1,0,gameId]
+      TEMPLATE: [1,0,gameId],
+      INDEX: 1,
+      WANTED: "po"
     }], GameType.PRACTICE)
     resetLevelData()
   };

@@ -17,7 +17,7 @@ export const enum Game1Type {
 
 const BASIC_TYPES = ["po","př","pt","pks","pkn","pum","puč","puz"]
 
-export function GameOneUI(type: Game1Type, oneWord_INDEX: number = 0) {
+export function GameOneUI(type: Game1Type, oneWord_INDEX: number = 1) {
   const inverted = type === Game1Type.inverted;
   const allTypes = type === Game1Type.allTypes || type === Game1Type.oneWord;
   const oneWord = type === Game1Type.oneWord;
@@ -34,8 +34,6 @@ export function GameOneUI(type: Game1Type, oneWord_INDEX: number = 0) {
     }
 
     if (data) {
-      const typesInSentence = data.map(item => item.type);
-
       setPhraseButtons(
         data.map((item, index) => ({
           text: !inverted ? item.text : item.type,
@@ -48,6 +46,7 @@ export function GameOneUI(type: Game1Type, oneWord_INDEX: number = 0) {
       );
 
       if (allTypes) {
+        //const typesInSentence = data.map(item => item.type);
         //const uniqueTypesWithBasicTypes = Array.from(new Set([...typesInSentence, ...BASIC_TYPES]));
         //const types = getWordTypesByType(uniqueTypesWithBasicTypes as WordType[]);
 

@@ -58,9 +58,9 @@ export const Game: React.FC = () => {
       case QuestionType.SELECT_MULTIPLE:
         return Game2UI()
       case QuestionType.SELECT_MULTIPLE_W_SENTENCE:
-        return Game3UI()
+        return Game3UI(activeQuestion.WANTED)
       case QuestionType.SELECT_ONE_W_SENTENCE:
-        return Game3UI()
+        return Game3UI(activeQuestion.WANTED)
       // case QuestionType.SELECT_TYPE:
       //   return Game2UI(true)
       default:

@@ -6,8 +6,9 @@ import { useGameContext } from '@/contexts/GameContext';
 import { useLevelContext } from '@/contexts/levelContext';
 import { TargetTypeDisplay } from '../ui/games/TargetTypeDisplay';
 import { LargeGameButtonsGrid } from '../ui/games/LargeGameButtonsGrid';
+import { WordType } from '@/types/WordTypes';
 
-export function Game3UI() {
+export function Game3UI(wantedType : WordType | null = null) {
   const { data, onFinished } = useGameContext();
   const { options, setOptions, targetType, setTargetType, selectedOptions, setSelectedOptions } = useLevelContext();
 
@@ -17,7 +18,7 @@ export function Game3UI() {
 
     if (data) {
       setOptions(data);
-      setTargetType(data[Math.floor(Math.random() * data.length)].type);
+      setTargetType(wantedType ?? data[Math.floor(Math.random() * data.length)].type);
     }
   }, [data]);
 
