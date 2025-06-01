@@ -10,7 +10,7 @@ import ColorPicker from 'react-native-wheel-color-picker';
 import { rocket1, rocket2, rocket3, rocket4, rocket5 } from '@/data/rocketsImages';
 import { router } from 'expo-router';
 import AndroidSafeArea from '@/components/AndroidSafeArea';
-// Načtení SVG souboru jako text
+
 export const loadSvgAsset = async (assetModule: any): Promise<string | null> => {
   try {
     const asset = Asset.fromModule(assetModule);
@@ -24,7 +24,6 @@ export const loadSvgAsset = async (assetModule: any): Promise<string | null> => 
 };
 
 export default function ProfileEditScreen(): React.ReactElement {
-  // Use context instead of local state for rocket properties
   const {
     bodyColor,
     setBodyColor,
@@ -44,18 +43,15 @@ export default function ProfileEditScreen(): React.ReactElement {
   const [rocketSvgs, setRocketSvgs] = useState<string[]>([]);
   const [modifiedRocketSvgs, setModifiedRocketSvgs] = useState<string[]>([]);
 
-  // Načtení všech raket při spuštění komponenty
   useEffect(() => {
     const loadRockets = async () => {
       try {
-        // Načtení obsahu SVG souborů
         const svg1 = await loadSvgAsset(rocket1);
         const svg2 = await loadSvgAsset(rocket2);
         const svg3 = await loadSvgAsset(rocket3);
         const svg4 = await loadSvgAsset(rocket4);
         const svg5 = await loadSvgAsset(rocket5);
 
-        // Uložení SVG textů do stavu
         setRocketSvgs([svg1, svg2, svg3, svg4, svg5].filter(svg => svg !== null));
       } catch (error) {
         console.warn('Error loading rocket SVGs:', error);
@@ -65,12 +61,9 @@ export default function ProfileEditScreen(): React.ReactElement {
     loadRockets();
   }, []);
 
-  // Aktualizace barev raket při změně barvy nebo po načtení raket
   useEffect(() => {
     if (rocketSvgs.length > 0) {
-      // Modifikace SVG pro změnu barev
       const updatedSvgs = rocketSvgs.map(svg => {
-        // Nahrazení barvy v atributech fill pro elementy s id="body" a id="trail"
         let modifiedSvg = svg.replaceAll("_body_", bodyColor).replaceAll("_trail_", trailColor);
         return modifiedSvg;
       });
@@ -291,9 +284,9 @@ const styles = StyleSheet.create({
     marginTop: 30,
   },
   shapeOption: {
-    width: 120, // Increased from 60
-    height: 120, // Increased from 60
-    borderRadius: 60, // Adjusted to match the new size
+    width: 120,
+    height: 120,
+    borderRadius: 60,
     backgroundColor: '#1c1f3d',
     borderWidth: 2,
     borderColor: '#333',

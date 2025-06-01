@@ -8,13 +8,11 @@ import { Ionicons } from '@expo/vector-icons';
 import { NamedRocket } from '@/components/NamedRocket';
 import { PlayerRocket } from '@/components/PlayerRocket';
 import { galaxyImages } from '@/data/galaxyImages';
-
-// Import Galaxy names
-import { Galaxy } from '@/types/Galaxy';
 import { GameType, useGameContext } from '@/contexts/GameContext';
 import { ThemedText } from '@/components/ThemedText';
 import { galaxies } from '@/components/ArenaHeader';
 import AndroidSafeArea from '@/components/AndroidSafeArea';
+
 export default function JoinGameScreen() {
   const [code, setCode] = useState('');
   const { joinGame, code: contextCode, config, leaveGame, author, players } = useMultiplayerGameContext();
@@ -161,7 +159,6 @@ export default function JoinGameScreen() {
   }
 
   return (
-    // <TouchableWithoutFeedback onPress={dismissKeyboard}>
     <SafeAreaView style={[styles.safeArea, AndroidSafeArea.AndroidSafeArea]}>
       <View style={{ flexDirection: 'row', alignItems: 'center', marginHorizontal: 20, marginTop: 20 }}>
         <View style={{ flex: 1 }}>
@@ -214,7 +211,6 @@ export default function JoinGameScreen() {
           )}
       </View>
     </SafeAreaView>
-    // </TouchableWithoutFeedback>
   );
 }
 

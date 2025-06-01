@@ -16,7 +16,6 @@ import { LevelProvider } from '@/contexts/levelContext';
 import { FileSystemStuffProvider } from '@/contexts/FileSystemStuffContext';
 import { CommonMistakesProvider } from '@/contexts/CommonMistakesContext';
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {

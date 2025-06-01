@@ -26,7 +26,6 @@ const WordButton: React.FC<WordButtonProps> = ({ text, state, onClick, onLongPre
     [ButtonState.correct]: styles.correctButton,
   }
 
-  // Animated border for highlighted state
   const borderAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -128,11 +127,9 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   disabledButton: {
-    // backgroundColor: '#333',
     opacity: 0.25,
   },
   correctButton: {
-    // backgroundColor: '#2a9d8f',
     borderColor: '#2a9d8f',
     borderWidth: 3,
     paddingHorizontal: 10,

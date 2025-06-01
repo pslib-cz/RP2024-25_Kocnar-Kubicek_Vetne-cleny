@@ -38,7 +38,6 @@ export const TargetTypeDisplay = ({ text }: { text: string }) => {
 
 const styles = StyleSheet.create({
   container: {
-    // width: '100%',
     marginTop: 16,
     display: 'flex',
     flexDirection: 'row',
@@ -52,14 +51,5 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 24,
     fontWeight: 'bold',
-  },
-  wrapper: {
-    // flexGrow: 1,
-    // display: 'flex',
-    // flexDirection: 'row',
-    // flexWrap: 'wrap',
-    // alignItems: 'center',
-    // gap: 20,
-    // justifyContent: 'center',
   }
 });

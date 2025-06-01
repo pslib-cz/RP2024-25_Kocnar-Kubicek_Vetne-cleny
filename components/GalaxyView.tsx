@@ -3,7 +3,6 @@ import { View, Text, Image, StyleSheet, ScrollView } from 'react-native';
 import Svg, { Line } from 'react-native-svg';
 import { Rocket } from './Rocket';
 import { useGalaxyContext } from '@/contexts/GalaxyContext';
-import { useRouter } from 'expo-router';
 import planetNames from '@/data/planetnames.json';
 import { getPlanetImage } from '@/data/planetImages';
 

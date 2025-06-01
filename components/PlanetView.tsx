@@ -1,12 +1,9 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
 import Svg, { Polygon, Polyline } from 'react-native-svg';
-import { Image as RNImage } from 'react-native';
 import planetNames from '@/data/planetnames.json';
 import { useGalaxyContext } from '@/contexts/GalaxyContext';
-import { getPlanetImage } from '@/data/planetImages';
 
-// Seeded random generator
 const seededRandom = (seed: number) => {
   let value = seed % 2147483647;
   if (value <= 0) value += 2147483646;
@@ -18,10 +15,9 @@ const seededRandom = (seed: number) => {
 
 const HEXAGON_COUNT = 4;
 const PLANET_SIZE = 250;
-const HEXAGON_SIZE = 36; // slightly larger for clarity
+const HEXAGON_SIZE = 36;
 const HEXAGON_RADIUS = HEXAGON_SIZE * Math.sqrt(3) / 2;
 
-// Generate random, non-overlapping hexagon centers within the planet
 const getRandomHexagonCenters = (
   count: number,
   width: number,
@@ -32,8 +28,8 @@ const getRandomHexagonCenters = (
   const radius = width / 2;
   const centerX = width / 2;
   const centerY = height / 2;
-  const minDist = HEXAGON_SIZE * 2; // Increased for more spread
-  const maxDistFromCenter = radius - HEXAGON_SIZE * 0.5; // Reduced edge margin
+  const minDist = HEXAGON_SIZE * 2;
+  const maxDistFromCenter = radius - HEXAGON_SIZE * 0.5;
   const centers: { x: number; y: number }[] = [];
 
   let attempts = 0;
@@ -41,7 +37,7 @@ const getRandomHexagonCenters = (
     attempts++;
     // Random angle and distance from center
     const angle = random() * 2 * Math.PI;
-    const dist = (random() * 0.7 + 0.15) * maxDistFromCenter; // keep away from edge and center
+    const dist = (random() * 0.7 + 0.15) * maxDistFromCenter;
     const x = centerX + Math.cos(angle) * dist;
     const y = centerY + Math.sin(angle) * dist;
 

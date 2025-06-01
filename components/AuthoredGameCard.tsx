@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
-import { AuthoredGame, useAPI } from '@/hooks/useAPI';
+import { AuthoredGame } from '@/hooks/useAPI';
 import { galaxies } from '@/components/ArenaHeader';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { useRouter } from 'expo-router';
@@ -12,7 +12,6 @@ const isGameActive = (expirationTime: string) => {
 };
 
 export const AuthoredGameCard = ({ game }: { game: AuthoredGame }) => {
-  // Calculate if the game is active based on expiration time
   const active = isGameActive(game.expirationTime) && game.active;
 
   const router = useRouter();

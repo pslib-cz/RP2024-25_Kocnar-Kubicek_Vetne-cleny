@@ -11,12 +11,11 @@ import AndroidSafeArea from '@/components/AndroidSafeArea';
 export default function AboutPage() {
   const router = useRouter();
   const { loadedVersion, loadedSets } = useLoadedData();
-  // Get app version from expo-constants (avoid direct access to EmbeddedManifest.version)
   const appVersion =
     (Constants.expoConfig && typeof Constants.expoConfig === 'object' && 'version' in Constants.expoConfig && (Constants.expoConfig as any).version) ||
     (Constants.manifest2 && typeof Constants.manifest2 === 'object' && 'version' in Constants.manifest2 && (Constants.manifest2 as any).version) ||
     'neuvedeno';
-  // Get dataset version from imported JSON
+    
   const dsVersion = loadedVersion || datasetVersion.version || 'neuvedeno';
 
   return (

@@ -24,7 +24,6 @@ const styles1 = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    // marginBottom: 12,
     paddingLeft: 4,
   },
   indicatorContainer: {
