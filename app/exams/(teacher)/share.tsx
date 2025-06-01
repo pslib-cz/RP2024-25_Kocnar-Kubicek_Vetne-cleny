@@ -31,13 +31,14 @@ export default function ShareGameScreen() {
             <Text style={{color: 'white', fontSize: 16, marginLeft: 4}}>Zpět</Text>
           </TouchableOpacity>
         </View>
-        <Text style={[styles.title, {flex: 2, textAlign: 'center'}]}>Sdílej hru</Text>
+        <Text style={[styles.title, {flex: 2, textAlign: 'center'}]}>Sdílená hra</Text>
         <View style={{flex: 1}} />
       </View>
-      <Text style={styles.codeLabel}>Kód hry:</Text>
+      <View style={{borderWidth: 20, borderColor: 'white', borderRadius: 20}}>
+        <QRCode value={shareLink} size={250} />
+      </View>
+      <Text style={styles.codeLabel}>KÓD HRY:</Text>
       <Text style={styles.code}>{code}</Text>
-      <Text style={styles.infoText}>Your ID: {rocket.userId}</Text>
-      <QRCode value={shareLink} size={200} />
       <TouchableOpacity style={styles.cancelButton} onPress={handleCancel}>
         <Text style={styles.cancelButtonText}>Zrušit</Text>
       </TouchableOpacity>
@@ -54,18 +55,17 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   title: {
-    fontSize: 24,
+    fontSize: 32,
     fontWeight: 'bold',
     color: 'white',
-    marginBottom: 20,
   },
   codeLabel: {
-    fontSize: 18,
-    color: 'white',
-    marginBottom: 10,
+    fontSize: 16,
+    color: '#ccc',
+    marginTop: 20,
   },
   code: {
-    fontSize: 20,
+    fontSize: 64,
     fontWeight: 'bold',
     color: 'white',
     marginBottom: 20,

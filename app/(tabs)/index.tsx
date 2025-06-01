@@ -7,10 +7,19 @@ import { router } from 'expo-router';
 import { useGameContext } from '@/contexts/GameContext';
 import PlayfulButton from '@/components/ui/PlayfulButton';
 import { useGalaxyContext } from '@/contexts/GalaxyContext';
+import { useMultiplayerGameContext } from '@/contexts/MultiplayerGameContext';
+import { useFocusEffect } from '@react-navigation/native';
 
 const ArenaPlanet: React.FC = () => {
   const { newGameInArena } = useGameContext();
   const { selectedPlanet } = useGalaxyContext();
+  const { leaveGame } = useMultiplayerGameContext();
+
+  useFocusEffect(
+    React.useCallback(() => {
+      leaveGame();
+    }, [leaveGame])
+  );
 
   return (
     <SafeAreaView style={styles.safeArea}>

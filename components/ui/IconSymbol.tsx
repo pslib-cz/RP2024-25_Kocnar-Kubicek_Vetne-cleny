@@ -18,6 +18,8 @@ const MAPPING = {
   'wrench.and.screwdriver': 'build',
   'doc.text': 'description',
   'exclamationmark.triangle': 'warning',
+  'info.circle': 'info',
+  'clock.arrow.circlepath': 'schedule',
 } as Partial<
   Record<
     import('expo-symbols').SymbolViewProps['name'],

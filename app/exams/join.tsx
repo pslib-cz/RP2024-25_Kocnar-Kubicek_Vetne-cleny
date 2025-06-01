@@ -13,15 +13,7 @@ import { galaxyImages } from '@/data/galaxyImages';
 import { Galaxy } from '@/types/Galaxy';
 import { GameType, useGameContext } from '@/contexts/GameContext';
 import { ThemedText } from '@/components/ThemedText';
-
-// Galaxy names to map from index
-const galaxies: Galaxy[] = [
-  { name: "Všechny členy", planetCount: 25 },
-  { name: "Základní členy", planetCount: 8 },
-  { name: "Přívlastky", planetCount: 8 },
-  { name: "Přísl. určení", planetCount: 8 },
-  { name: "Doplňky", planetCount: 8 },
-];
+import { galaxies } from '@/components/ArenaHeader';
 
 export default function JoinGameScreen() {
   const [code, setCode] = useState('');

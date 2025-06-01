@@ -66,6 +66,7 @@ export default function TabLayout() {
         name="about"
         options={{
           title: 'O aplikaci',
+          tabBarActiveTintColor: '#ffffff',
           tabBarIcon: ({ color }) => <IconSymbol size={32} name="info.circle" color={color} />,
         }}
       />
