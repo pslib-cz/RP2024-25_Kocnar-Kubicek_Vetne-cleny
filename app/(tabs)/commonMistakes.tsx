@@ -8,12 +8,21 @@ import { WordSelectionOption } from '@/types/games/SelectionOption';
 import { router, useRouter } from 'expo-router';
 import React from 'react';
 import { Pressable, ScrollView, View } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
+import { useMultiplayerGameContext } from '@/contexts/MultiplayerGameContext';
 
 export default function CommonMistakes() {
   const { newGameWitMostCommonMistakes } = useGameContext()
   const { allMistakes } = useCommonMistakesContext();
+  const { leaveGame } = useMultiplayerGameContext();
 
   const [displayedSentence, setDisplayedSentence] = React.useState<WordSelectionOption[] | null>(null);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      leaveGame();
+    }, [leaveGame])
+  );
 
   const MistakeContainer = ({ mistake }: { mistake: CommonMistake }) => {
     return (
@@ -61,8 +70,7 @@ export default function CommonMistakes() {
         </ScrollView>
         <PlayfulButton
           title={"Procvičit chyby"}
-          //onPress={newGameWitMostCommonMistakes}
-          onPress={() => router.push('/(pages)/abbrlist')}
+          onPress={newGameWitMostCommonMistakes}
           disabled={allMistakes.length === 0}
         />
       </View>

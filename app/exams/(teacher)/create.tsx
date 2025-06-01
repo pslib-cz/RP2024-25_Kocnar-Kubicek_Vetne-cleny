@@ -22,6 +22,7 @@ export default function CreateGameScreen() {
   const router = useRouter();
 
   const questionCountPresets = [10, 15, 20, 25];
+  const [buttonText, setButtonText] = useState('Vytvořit test');
 
   const handlePresetSelect = (count: number) => {
     setQuestionCount(count.toString());
@@ -48,6 +49,7 @@ export default function CreateGameScreen() {
   };
 
   const handleStartExam = async () => {
+    setButtonText('Vytvářím test...');
     if (difficulty && galaxy >= 0) {
       try {
         const count = parseInt(questionCount);
@@ -67,6 +69,7 @@ export default function CreateGameScreen() {
         };
 
         await createGame(gameData);
+        setButtonText('Vytvořit test');
         router.push('/exams/share');
       } catch (error) {
         alert('Nepodařilo se vytvořit hru. Zkuste to znovu.');
@@ -270,7 +273,7 @@ export default function CreateGameScreen() {
 
         {/* Start Exam Button */}
         <TouchableOpacity style={styles.startButton} onPress={handleStartExam}>
-          <ThemedText style={styles.startButtonText}>Vytvořit test</ThemedText>
+          <ThemedText style={styles.startButtonText}>{buttonText}</ThemedText>
         </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
@@ -288,7 +291,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: 'white',
     textAlign: 'center',
-    marginBottom: 20,
   },
   section: {
     marginBottom: 20,

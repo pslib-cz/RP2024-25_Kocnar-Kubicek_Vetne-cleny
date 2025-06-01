@@ -14,6 +14,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { WordButtonsContainer } from '@/components/ui/games/WordButtonsContainer';
 import { ButtonState } from '@/components/ui/games/WordButton';
 import { useLevelContext } from '@/contexts/levelContext';
+import { NamedRocket } from '@/components/NamedRocket';
 
 // Helper to load SVG as string
 const loadSvgAsset = async (assetModule: any): Promise<string | null> => {
@@ -111,7 +112,7 @@ export default function OnboardingScreen() {
   // Responsive width
   const { width } = Dimensions.get('window');
 
-  const { gameIndex, setGameIndex, phraseButtons, setPhraseButtons, bottomButtons, setBottomButtons, handleHideTooltip, handleShowTooltip } = useLevelContext();
+  const { handleShowTooltip } = useLevelContext();
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#101223' }}>
@@ -303,13 +304,13 @@ export default function OnboardingScreen() {
           <View style={styles.paddedContainer}>
             <ThemedText type="title" style={{ marginBottom: 16, textAlign: 'center' }}>Herní režimy</ThemedText>
             <ThemedText style={{ marginBottom: 16, textAlign: 'center' }}>
-              V aplikaci najdeš různé typy her, ve kterých buď označuješ větné členy, nebo je vybíráš z nabídky. Každý herní režim ti pomůže procvičit jiné dovednosti.
+              V aplikaci najdeš různé typy her, každý ti pomůže procvičit jiné dovednosti.
             </ThemedText>
             <ThemedText style={{ marginBottom: 16, textAlign: 'center' }}>
               Zde můžeš vidět příklad hry, ve které budeš klikat na barevné zkratky větných členů dole, a tím postupně označovat větu.
             </ThemedText>
             <ThemedText style={{ marginBottom: 16, textAlign: 'center' }}>
-              Pokud si nebudeš jistý, co který zkratka znamená, můžeš na ni podržet prst a zobrazí se ti nápověda.
+              Pokud si nejsi jistý se zkratkami, můžeš na zkratce podržet prst a zobrazí se ti nápověda, nebo si můžeš přečíst seznam zkratek.
             </ThemedText>
           </View>
           <View style={{ width: '100%', alignItems: 'center', marginBottom: 24 }}>
@@ -317,6 +318,7 @@ export default function OnboardingScreen() {
             <WordButtonsContainer buttons={staticWordButtons2} showTooltip={true} longPress={(a, b) => handleShowTooltip(a.text, b)} onClick={() => { }} />
           </View>
           <View style={styles.bottomButtonContainer}>
+            <PlayfulButton title="Seznam zkratek" icon={<MaterialIcons name="info" size={24} color="white" />} onPress={() => router.push('/(pages)/abbrlist')} variant="secondary" style={{ height: 44 }} />
             <PlayfulButton title="Pokračovat" icon={<MaterialIcons name="sports-esports" size={24} color="white" />} onPress={() => goToPage(4)} />
           </View>
         </View>
@@ -331,6 +333,15 @@ export default function OnboardingScreen() {
             <ThemedText style={{ marginBottom: 16, textAlign: 'center' }}>
               Sleduj svůj pokrok a porovnej výsledky s ostatními!
             </ThemedText>
+            {/* User info section */}
+            <View style={styles.playerInfoContainer}>
+              <NamedRocket
+                width={60}
+                height={60}
+                containerStyle={styles.namedRocketContainer}
+                textStyle={styles.playerName}
+              />
+            </View>
           </View>
           <View style={styles.bottomButtonContainer}>
             <PlayfulButton title="Začít" icon={<MaterialIcons name="rocket-launch" size={24} color="white" />} onPress={() => router.replace('/')} />
@@ -485,6 +496,23 @@ const styles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'center',
     paddingHorizontal: 16,
+  },
+  playerInfoContainer: {
+    marginBottom: 24,
+  },
+  namedRocketContainer: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    borderWidth: 2,
+    borderColor: '#FF7733',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  playerName: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 
