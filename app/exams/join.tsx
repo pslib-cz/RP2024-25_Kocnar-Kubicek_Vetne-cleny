@@ -223,6 +223,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#101223',
     padding: 20,
+    marginBottom: 69,
   },
   scrollContent: {
     flexGrow: 1,
