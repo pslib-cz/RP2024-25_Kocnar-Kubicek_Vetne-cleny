@@ -120,7 +120,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (gameInfo.activeQuestionIndex >= questions.length) {
       setGameInfo((prev) => ({ ...prev, endTime: Date.now() })); // Set the end time
 
-      if (getSuccessRate() >= NEXT_LEVEL_TRESHOLD) {
+      if (getSuccessRate() >= NEXT_LEVEL_TRESHOLD && gameType == GameType.PRACTICE) {
         levelUp();
       }
 

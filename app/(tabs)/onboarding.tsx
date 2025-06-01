@@ -13,6 +13,7 @@ import PlayfulButton from '@/components/ui/PlayfulButton';
 import { MaterialIcons } from '@expo/vector-icons';
 import { WordButtonsContainer } from '@/components/ui/games/WordButtonsContainer';
 import { ButtonState } from '@/components/ui/games/WordButton';
+import { useLevelContext } from '@/contexts/levelContext';
 
 // Helper to load SVG as string
 const loadSvgAsset = async (assetModule: any): Promise<string | null> => {
@@ -109,6 +110,8 @@ export default function OnboardingScreen() {
 
   // Responsive width
   const { width } = Dimensions.get('window');
+
+  const { gameIndex, setGameIndex, phraseButtons, setPhraseButtons, bottomButtons, setBottomButtons, handleHideTooltip, handleShowTooltip } = useLevelContext();
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#101223' }}>
@@ -277,17 +280,17 @@ export default function OnboardingScreen() {
           <View style={styles.paddedContainer}>
             <ThemedText type="title" style={{ marginBottom: 16, textAlign: 'center' }}>Seznam se s Arénou!</ThemedText>
             <ThemedText style={{ marginBottom: 16, textAlign: 'center' }}>
-              Arena je prostor, ve kterém můžeš cestovat po galaxiích. V galaxiích můžeš procvičovat větné členy v různých úlohách a sbírat body za správné odpovědi. 
+              Aréna je prostor, ve kterém můžeš cestovat po galaxiích. V galaxiích můžeš procvičovat větné členy v různých úlohách a sbírat body za správné odpovědi.
             </ThemedText>
           </View>
           <Image
             source={require('../../assets/images/uni/2/celestial7.png')}
-            style={{ height: width * 0.6, borderRadius: 16, marginBottom: 24, zIndex: 1000, transform: [{ translateX: -width * 0.1}] }}
+            style={{ height: width * 0.6, borderRadius: 16, marginBottom: 24, zIndex: 1000, transform: [{ translateX: -width * 0.1 }] }}
             resizeMode="contain"
           />
           <Image
             source={require('../../assets/images/uni/4/celestial8.png')}
-            style={{ height: width * 0.6, borderRadius: 16, marginBottom: 24, transform: [{ translateX: width * 0.2}, { translateY: -width * 0.3 }] }}
+            style={{ height: width * 0.6, borderRadius: 16, marginBottom: 24, transform: [{ translateX: width * 0.2 }, { translateY: -width * 0.3 }] }}
             resizeMode="contain"
           />
           <View style={styles.bottomButtonContainer}>
@@ -303,12 +306,15 @@ export default function OnboardingScreen() {
               V aplikaci najdeš různé typy her, ve kterých buď označuješ větné členy, nebo je vybíráš z nabídky. Každý herní režim ti pomůže procvičit jiné dovednosti.
             </ThemedText>
             <ThemedText style={{ marginBottom: 16, textAlign: 'center' }}>
-                Zde můžeš vidět příklad hry, ve které budeš klikat na barevné zkratky větných členů dole, a tím postupně označovat větu.
+              Zde můžeš vidět příklad hry, ve které budeš klikat na barevné zkratky větných členů dole, a tím postupně označovat větu.
+            </ThemedText>
+            <ThemedText style={{ marginBottom: 16, textAlign: 'center' }}>
+              Pokud si nebudeš jistý, co který zkratka znamená, můžeš na ni podržet prst a zobrazí se ti nápověda.
             </ThemedText>
           </View>
           <View style={{ width: '100%', alignItems: 'center', marginBottom: 24 }}>
-            <WordButtonsContainer buttons={staticWordButtons1} showTooltip={false} longPress={() => {}} onClick={() => {}} />
-            <WordButtonsContainer buttons={staticWordButtons2} showTooltip={false} longPress={() => {}} onClick={() => {}} />
+            <WordButtonsContainer buttons={staticWordButtons1} showTooltip={false} longPress={() => { }} onClick={() => { }} />
+            <WordButtonsContainer buttons={staticWordButtons2} showTooltip={true} longPress={(a, b) => handleShowTooltip(a.text, b)} onClick={() => { }} />
           </View>
           <View style={styles.bottomButtonContainer}>
             <PlayfulButton title="Pokračovat" icon={<MaterialIcons name="sports-esports" size={24} color="white" />} onPress={() => goToPage(4)} />
@@ -323,9 +329,9 @@ export default function OnboardingScreen() {
               Vyzkoušej si testy nanečisto nebo se připoj ke zkoušce sdílené tvým učitelem!
             </ThemedText>
             <ThemedText style={{ marginBottom: 16, textAlign: 'center' }}>
-            Sleduj svůj pokrok a porovnej výsledky s ostatními!
+              Sleduj svůj pokrok a porovnej výsledky s ostatními!
             </ThemedText>
-                      </View>
+          </View>
           <View style={styles.bottomButtonContainer}>
             <PlayfulButton title="Začít" icon={<MaterialIcons name="rocket-launch" size={24} color="white" />} onPress={() => router.replace('/')} />
           </View>
