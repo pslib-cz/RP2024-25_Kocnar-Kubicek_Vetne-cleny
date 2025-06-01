@@ -148,7 +148,7 @@ export default function ProfileEditScreen(): React.ReactElement {
           <TextInput
             style={styles.nameInput}
             defaultValue={name}
-            onChangeText={(text) => setName(text.trim())}
+            onChangeText={(text) => setName(text.trim().slice(0, 32))}
             placeholderTextColor="#666"
           />
         </View>
