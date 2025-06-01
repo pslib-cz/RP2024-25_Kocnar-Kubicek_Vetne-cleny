@@ -72,7 +72,7 @@ export const useAPI = (userData?: Partial<APIUserData>) => {
   const { config } = useConfigContext();
   const API_URL = config.API_URL;
   const API_BACKUP_URL = config.API_BACKUP_URL;
-  const CLIENT_VERSION = '1.0.0'; // TODO: Get this from app config
+  const CLIENT_VERSION = '1.0.0'; 
 
   const data = { ...DEFAULT_USER_DATA, ...userData };
   const { secretKey, userId, name, bodyColor, trailColor, selectedRocketIndex } = data;

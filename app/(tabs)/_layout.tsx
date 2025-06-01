@@ -33,6 +33,7 @@ export default function TabLayout() {
         name="index"
         options={{
           title: 'Aréna',
+          tabBarActiveTintColor: '#a182ff',
           tabBarIcon: ({ color }) => <IconSymbol size={32} name="sparkles" color={color} />,
         }}
       />
@@ -41,28 +42,31 @@ export default function TabLayout() {
         name="exams"
         options={{
           title: 'Testy',
+          tabBarActiveTintColor: '#ffb163',
           tabBarIcon: ({ color }) => <IconSymbol size={32} name="doc.text" color={color} />,
         }}
       />
       <Tabs.Screen
         name="commonMistakes"
         options={{
-          title: 'Časté chyby',
-          tabBarIcon: ({ color }) => <IconSymbol size={32} name="exclamationmark.triangle" color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="(debug)/gameTests"
-        options={{
-          title: 'TESTOVACÍ',
-          tabBarIcon: ({ color }) => <IconSymbol size={32} name="wrench.and.screwdriver" color={color} />,
+          title: 'Pokrok',
+          tabBarActiveTintColor: '#6eff63',
+          tabBarIcon: ({ color }) => <IconSymbol size={32} name="clock.arrow.circlepath" color={color} />,
         }}
       />
       <Tabs.Screen
         name="tutorial"
         options={{
-          title: 'Návod',
+          title: 'Určování',
+          tabBarActiveTintColor: '#63b9ff',
           tabBarIcon: ({ color }) => <IconSymbol size={32} name="book" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="about"
+        options={{
+          title: 'O aplikaci',
+          tabBarIcon: ({ color }) => <IconSymbol size={32} name="info.circle" color={color} />,
         }}
       />
     </Tabs>

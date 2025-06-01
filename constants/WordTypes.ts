@@ -18,6 +18,11 @@ export const WordTypes: WordTypeExt[] = [
     color: '#50C878'  // Emerald green
   },
   {
+    name: 'předmět',
+    abbr: 'pt',
+    color: '#6C5CE7'  // Soft purple
+  },
+  {
     name: 'přívlastek shodný',
     abbr: 'pks',
     color: '#FF9F43'  // Warm orange
@@ -28,9 +33,9 @@ export const WordTypes: WordTypeExt[] = [
     color: '#FF4B4B'  // Coral red
   },
   {
-    name: 'předmět',
-    abbr: 'pt',
-    color: '#6C5CE7'  // Soft purple
+    name: 'doplněk',
+    abbr: 'd',
+    color: '#D63031'  // Bright red
   },
   {
     name: 'příslovečné určení místa',
@@ -50,32 +55,27 @@ export const WordTypes: WordTypeExt[] = [
   {
     name: 'příslovečné určení míry',
     abbr: 'pu míry',
-    color: '#81ECEC'  // Turquoise
+    color: '#5ec9c9'  // Turquoise
   },
   {
     name: 'příslovečné určení příčiny',
     abbr: 'pu příčiny',
-    color: '#B2BEC3'  // Cool gray
-  },
-  {
-    name: 'doplněk',
-    abbr: 'd',
-    color: '#D63031'  // Bright red
+    color: '#afb925'  // Cool gray
   },
   {
     name: 'příslovečné určení účelu',
     abbr: 'pu účelu',
-    color: '#FFB142'  // Light orange
+    color: '#9e455d'  // Light orange
   },
   {
     name: 'příslovečné určení podmínky',
     abbr: 'pu podmínky',
-    color: '#FFB142'  // Light orange
+    color: '#569742'  // Light orange
   },
   {
     name: 'příslovečné určení přípustky',
     abbr: 'pu přípustky',
-    color: '#FFB142'  // Light orange
+    color: '#485d96'  // Light orange
   }
 ]
 
