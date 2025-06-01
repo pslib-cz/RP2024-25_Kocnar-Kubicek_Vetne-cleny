@@ -23,7 +23,7 @@ import * as Haptics from 'expo-haptics';
 type PlayfulButtonProps = {
   title: string;
   onPress: () => void;
-  variant?: 'primary' | 'secondary' | 'danger' | 'success';
+  variant?: 'primary' | 'secondary' | 'danger' | 'success' | 'gray';
   icon?: React.ReactNode;
   style?: StyleProp<ViewStyle>;
   textStyle?: StyleProp<TextStyle>;
@@ -47,7 +47,8 @@ export default function PlayfulButton({
     primary: ['#4A5BD2', '#8A56E8'] as const,
     secondary: ['#9D4EDD', '#C77DFF'] as const,
     danger: ['#E63946', '#FF758F'] as const,
-    success: ['#2A9D8F', '#57CC99'] as const
+    success: ['#2A9D8F', '#57CC99'] as const,
+    gray: ['#555555', '#707070'] as const,
   };
 
   const handlePressIn = () => {
@@ -103,8 +104,6 @@ export default function PlayfulButton({
     </Animated.View>
   );
 }
-
-const { width } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   buttonContainer: {

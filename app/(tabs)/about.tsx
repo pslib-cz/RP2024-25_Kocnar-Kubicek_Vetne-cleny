@@ -50,10 +50,10 @@ export default function AboutPage() {
             style={styles.button}
           />
           <PlayfulButton
-            title="TESTOVACÍ"
-            icon={<MaterialIcons name="rocket-launch" size={22} color="white" />}
+            title="DEVELOPER MENU"
             onPress={() => router.push('/(pages)/(debug)/gameTests')}
             style={styles.button}
+            variant="gray"
           />
         </View>
       </ScrollView>

@@ -10,7 +10,7 @@ import { Galaxy } from '@/types/Galaxy';
 import { galaxyImages } from '@/data/galaxyImages';
 
 // Galaxy names and planet counts
-export const galaxies : Galaxy[] = [
+export const galaxies: Galaxy[] = [
   { name: "Všechny členy", planetCount: 25 },
   { name: "Základní členy", planetCount: 8 },
   { name: "Přívlastky", planetCount: 8 },
@@ -19,155 +19,155 @@ export const galaxies : Galaxy[] = [
 ];
 
 interface ArenaHeaderProps {
-    onBackPress?: () => void; // Optional back button handler
+  onBackPress?: () => void; // Optional back button handler
 }
 
 const ArenaHeader: React.FC<ArenaHeaderProps> = ({ onBackPress }) => {
-    const { selectedGalaxy, setSelectedGalaxy } = useGalaxyContext();
-    const [showSelectModal, setShowSelectModal] = useState(false);
+  const { selectedGalaxy, setSelectedGalaxy } = useGalaxyContext();
+  const [showSelectModal, setShowSelectModal] = useState(false);
 
-    const handleGalaxyChange = (galaxyIndex: number) => {
-        setSelectedGalaxy(galaxyIndex);
-        setShowSelectModal(false);
-    };
+  const handleGalaxyChange = (galaxyIndex: number) => {
+    setSelectedGalaxy(galaxyIndex);
+    setShowSelectModal(false);
+  };
 
-    return (
-        <View style={styles.container}>
-            {/* Header */}
-            <View style={styles.header}>
-                <TouchableOpacity style={{ maxWidth: "50%", overflow: "hidden" }} onPress={() => router.push('/profile')}>
-                    <NamedRocket />
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={[styles.galaxyButton]}
-                    onPress={() => setShowSelectModal(!showSelectModal)}
+  return (
+    <View style={styles.container}>
+      {/* Header */}
+      <View style={styles.header}>
+        <TouchableOpacity style={{ maxWidth: "50%", overflow: "hidden" }} onPress={() => router.push('/profile')}>
+          <NamedRocket />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.galaxyButton]}
+          onPress={() => setShowSelectModal(!showSelectModal)}
+        >
+          <Image source={galaxyImages[selectedGalaxy]} style={styles.galaxyIcon} />
+          <ThemedText
+            style={[
+              styles.headerTitle,
+            ]}
+          >
+            {galaxies[selectedGalaxy].name}
+          </ThemedText>
+        </TouchableOpacity>
+      </View>
+
+      {/* Galaxy Selector - only show when modal is active */}
+      {showSelectModal && (
+        <View style={styles.galaxySelectorContainer}>
+          <View style={styles.galaxySelector}>
+            {galaxies.map((galaxy, index) => (
+              <TouchableOpacity
+                key={`galaxy-${index}`}
+                style={[
+                  styles.galaxyButton,
+                  selectedGalaxy === index && styles.galaxyButtonSelected,
+                ]}
+                onPress={() => handleGalaxyChange(index)}
+              >
+                <Image source={galaxyImages[index]} style={styles.galaxyIcon} />
+                <ThemedText
+                  style={[
+                    styles.headerTitle,
+                    selectedGalaxy === index && styles.galaxyButtonTextSelected,
+                  ]}
                 >
-                    <Image source={galaxyImages[selectedGalaxy]} style={styles.galaxyIcon} />
-                    <ThemedText
-                        style={[
-                            styles.headerTitle,
-                        ]}
-                    >
-                        {galaxies[selectedGalaxy].name}
-                    </ThemedText>
-                </TouchableOpacity>
-            </View>
-
-            {/* Galaxy Selector - only show when modal is active */}
-            {showSelectModal && (
-                <View style={styles.galaxySelectorContainer}>
-                    <View style={styles.galaxySelector}>
-                        {galaxies.map((galaxy, index) => (
-                            <TouchableOpacity
-                                key={`galaxy-${index}`}
-                                style={[
-                                    styles.galaxyButton,
-                                    selectedGalaxy === index && styles.galaxyButtonSelected,
-                                ]}
-                                onPress={() => handleGalaxyChange(index)}
-                            >
-                                <Image source={galaxyImages[index]} style={styles.galaxyIcon} />
-                                <ThemedText
-                                    style={[
-                                        styles.headerTitle,
-                                        selectedGalaxy === index && styles.galaxyButtonTextSelected,
-                                    ]}
-                                >
-                                    {galaxy.name}
-                                </ThemedText>
-                            </TouchableOpacity>
-                        ))}
-                    </View>
-                </View>
-            )}
-
-            {/* Back Button */}
-            {onBackPress && (
-                <TouchableOpacity onPress={onBackPress} style={styles.backButton}>
-                    <Ionicons name="chevron-back" size={24} color="white" />
-                    <Text style={styles.backButtonText}>Zpět</Text>
-                </TouchableOpacity>
-            )}
+                  {galaxy.name}
+                </ThemedText>
+              </TouchableOpacity>
+            ))}
+          </View>
         </View>
-    );
+      )}
+
+      {/* Back Button */}
+      {onBackPress && (
+        <TouchableOpacity onPress={onBackPress} style={styles.backButton}>
+          <Ionicons name="chevron-back" size={24} color="white" />
+          <Text style={styles.backButtonText}>Zpět</Text>
+        </TouchableOpacity>
+      )}
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({
-    container: {
-        zIndex: 1000,
-    },
-    header: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        padding: 8,
-        borderBottomWidth: 1,
-        borderBottomColor: '#333',
-    },
-    backButton: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        paddingHorizontal: 20,
-        paddingVertical: 10,
-        alignSelf: 'flex-start',
-        padding: 8,
-        borderWidth: 1,
-        borderTopWidth: 0,
-        borderLeftWidth: 0,
-        borderColor: '#333',
-        backgroundColor: '#101223',
-        minWidth: 100,
-        justifyContent: 'center',
-        position: 'absolute',
-        top: 66,
-        left: 0,
-        zIndex: 1,
-    },
-    backButtonText: {
-        color: 'white',
-        fontSize: 16,
-        marginLeft: 4,
-        paddingRight: 4,
-    },
-    headerTitle: {
-        fontSize: 18,
-        color: '#ffffff',
-    },
-    galaxySelectorContainer: {
-        position: 'absolute',
-        top: 66,
-        right: 0,
-        zIndex: 1,
-        backgroundColor: '#101223',
-        borderWidth: 1,
-        borderTopWidth: 0,
-        borderRightWidth: 0,
-        borderColor: '#333',
-    },
-    galaxySelector: {
-        flexDirection: 'column',
-        padding: 8,
-        paddingTop: 0,
-    },
-    galaxyButton: {
-        alignItems: 'center',
-        display: 'flex',
-        flexDirection: 'row-reverse',
-        marginHorizontal: 10,
-    },
-    galaxyButtonSelected: {
-        display: "none",
-        borderBottomWidth: 2,
-        borderBottomColor: '#6200ee',
-    },
-    galaxyIcon: {
-        width: 64,
-        height: 40,
-        marginBottom: 5,
-    },
-    galaxyButtonTextSelected: {
-        color: '#ffffff',
-    },
+  container: {
+    zIndex: 1000,
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: '#333',
+  },
+  backButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    alignSelf: 'flex-start',
+    padding: 8,
+    borderWidth: 1,
+    borderTopWidth: 0,
+    borderLeftWidth: 0,
+    borderColor: '#333',
+    backgroundColor: '#101223',
+    minWidth: 100,
+    justifyContent: 'center',
+    position: 'absolute',
+    top: 66,
+    left: 0,
+    zIndex: 1,
+  },
+  backButtonText: {
+    color: 'white',
+    fontSize: 16,
+    marginLeft: 4,
+    paddingRight: 4,
+  },
+  headerTitle: {
+    fontSize: 18,
+    color: '#ffffff',
+  },
+  galaxySelectorContainer: {
+    position: 'absolute',
+    top: 66,
+    right: 0,
+    zIndex: 1,
+    backgroundColor: '#101223',
+    borderWidth: 1,
+    borderTopWidth: 0,
+    borderRightWidth: 0,
+    borderColor: '#333',
+  },
+  galaxySelector: {
+    flexDirection: 'column',
+    padding: 8,
+    paddingTop: 0,
+  },
+  galaxyButton: {
+    alignItems: 'center',
+    display: 'flex',
+    flexDirection: 'row-reverse',
+    marginHorizontal: 10,
+  },
+  galaxyButtonSelected: {
+    display: "none",
+    borderBottomWidth: 2,
+    borderBottomColor: '#6200ee',
+  },
+  galaxyIcon: {
+    width: 64,
+    height: 40,
+    marginBottom: 5,
+  },
+  galaxyButtonTextSelected: {
+    color: '#ffffff',
+  },
 });
 
 export default ArenaHeader;

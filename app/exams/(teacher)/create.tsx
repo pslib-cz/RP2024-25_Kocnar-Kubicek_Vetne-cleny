@@ -14,7 +14,14 @@ export default function CreateGameScreen() {
   const [galaxy, setGalaxy] = useState(0);
   const [questionTypes, setQuestionTypes] = useState(0b01101111);
   const [expirationTime, setExpirationTime] = useState(new Date(Date.now() + 30.5 * 60 * 1000)); // Default 30 minutes from now
-  const [showDatePicker, setShowDatePicker] = useState(false);
+
+  enum DatePickerState {
+    DATE,
+    TIME,
+    HIDDEN
+  }
+
+  const [showDatePicker, setShowDatePicker] = useState<DatePickerState>(DatePickerState.HIDDEN);
   const [isSeeded, setIsSeeded] = useState(true);
   const [questionCount, setQuestionCount] = useState('10');
   const [isCustomCount, setIsCustomCount] = useState(false);
@@ -36,7 +43,7 @@ export default function CreateGameScreen() {
     const diff = date.getTime() - Date.now();
     const minutes = Math.floor(diff / (1000 * 60));
     const hours = Math.floor(minutes / 60);
-    
+
     if (hours > 0) {
       return `(za ${hours} hodin${hours === 1 ? 'u' : hours >= 2 && hours <= 4 ? 'y' : ''})`;
     }
@@ -77,23 +84,51 @@ export default function CreateGameScreen() {
     }
   };
 
-  const onDateChange = (event: any, selectedDate?: Date) => {
+  const onDateChangeIOS = (event: any, selectedDate?: Date) => {
     if (selectedDate) {
       setExpirationTime(selectedDate);
     }
   };
 
+  const onDateChangeAndroid_DATE = (event: any, selectedDate?: Date) => {
+    if (event.type === 'dismissed') {
+      setShowDatePicker(DatePickerState.HIDDEN);
+      return;
+    }
+    else if (event.type === 'set') {
+      setShowDatePicker(DatePickerState.TIME);
+
+      if (selectedDate) {
+        setExpirationTime(selectedDate);
+      }
+    }
+  };
+
+    const onDateChangeAndroid_TIME = (event: any, selectedDate?: Date) => {
+    if (event.type === 'dismissed') {
+      setShowDatePicker(DatePickerState.HIDDEN);
+      return;
+    }
+    else if (event.type === 'set') {
+      setShowDatePicker(DatePickerState.HIDDEN);
+
+      if (selectedDate) {
+        setExpirationTime(selectedDate);
+      }
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
-      <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 20}}>
-        <View style={{flex: 1}}>
-          <TouchableOpacity style={{flexDirection: 'row', alignItems: 'center'}} onPress={() => router.back()}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 20 }}>
+        <View style={{ flex: 1 }}>
+          <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }} onPress={() => router.back()}>
             <Ionicons name="chevron-back" size={24} color="white" />
-            <ThemedText style={{color: 'white', fontSize: 16, marginLeft: 4}}>Zpět</ThemedText>
+            <ThemedText style={{ color: 'white', fontSize: 16, marginLeft: 4 }}>Zpět</ThemedText>
           </TouchableOpacity>
         </View>
-        <ThemedText type="title" style={[styles.title, {flex: 2, textAlign: 'center'}]}>Sdílený test</ThemedText>
-        <View style={{flex: 1}} />
+        <ThemedText type="title" style={[styles.title, { flex: 2, textAlign: 'center' }]}>Sdílený test</ThemedText>
+        <View style={{ flex: 1 }} />
       </View>
       <ScrollView contentContainerStyle={styles.scrollContainer} showsVerticalScrollIndicator={false}>
         {/* Question Count Selection */}
@@ -177,9 +212,9 @@ export default function CreateGameScreen() {
         {/* Expiration Time Selection */}
         <View style={styles.section}>
           <ThemedText style={styles.label}>Čas vypršení:</ThemedText>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.datePickerButton}
-            onPress={() => setShowDatePicker(!showDatePicker)}
+            onPress={() => setShowDatePicker((state) => state === DatePickerState.HIDDEN ? DatePickerState.DATE : DatePickerState.HIDDEN)}
           >
             <ThemedText style={styles.datePickerText}>
               {expirationTime.toLocaleString('cs-CZ', {
@@ -193,16 +228,38 @@ export default function CreateGameScreen() {
               {getTimeDifference(expirationTime)}
             </ThemedText>
           </TouchableOpacity>
-          {showDatePicker && (
-            <DateTimePicker
-              value={expirationTime}
-              mode="datetime"
-              display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-              locale="cs-CZ" 
-              onChange={onDateChange}
-              minimumDate={new Date(Date.now() + 5 * 60 * 1000)} // Minimum 5 minutes from now
-              maximumDate={new Date(Date.now() + 14 * 24 * 60 * 60 * 1000)} // Maximum 7 days from now
-            />
+          {showDatePicker != DatePickerState.HIDDEN && (
+            Platform.OS === 'ios' ?
+              <DateTimePicker
+                value={expirationTime}
+                mode="datetime"
+                display={'spinner'}
+                locale="cs-CZ"
+                onChange={onDateChangeIOS}
+                minimumDate={new Date(Date.now() + 5 * 60 * 1000)} // Minimum 5 minutes from now
+                maximumDate={new Date(Date.now() + 14 * 24 * 60 * 60 * 1000)} // Maximum 7 days from now
+              />
+              :
+              showDatePicker == DatePickerState.DATE ?
+              <DateTimePicker
+                value={expirationTime}
+                mode="date"
+                display={'default'}
+                locale="cs-CZ"
+                onChange={onDateChangeAndroid_DATE}
+                minimumDate={new Date(Date.now() + 5 * 60 * 1000)} // Minimum 5 minutes from now
+                maximumDate={new Date(Date.now() + 14 * 24 * 60 * 60 * 1000)} // Maximum 7 days from now
+              />
+              :
+              <DateTimePicker
+                value={expirationTime}
+                mode="time"
+                display={'default'}
+                locale="cs-CZ"
+                onChange={onDateChangeAndroid_TIME}
+                minimumDate={new Date(Date.now() + 5 * 60 * 1000)} // Minimum 5 minutes from now
+                maximumDate={new Date(Date.now() + 14 * 24 * 60 * 60 * 1000)} // Maximum 7 days from now
+              />
           )}
         </View>
 
