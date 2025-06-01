@@ -18,7 +18,6 @@ export const FeedbackOverlay: React.FC<OverlayProps> = ({
   const displayMessage = isCorrect ? "Dobrá práce!" : "To není dobře!";
   const displayIcon = isCorrect ? "checkmark-circle" : "close-circle";
   
-  // Colors based on answer correctness
   const themeColor = isCorrect ? "#8CC83C" : "#FF4B4B";
   
   const slideAnim = useRef(new Animated.Value(Dimensions.get('window').height)).current;
@@ -26,11 +25,9 @@ export const FeedbackOverlay: React.FC<OverlayProps> = ({
 
   useEffect(() => {
     if (state != GameState.pending) {
-      // Reset position before animating in
       slideAnim.setValue(Dimensions.get('window').height);
       fadeAnim.setValue(0);
       
-      // Animate in
       Animated.parallel([
         Animated.timing(slideAnim, {
           toValue: 0,
@@ -99,7 +96,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: 'rgba(28, 41, 43, 0.97)', // Dark background like Duolingo
+    backgroundColor: 'rgba(28, 41, 43, 0.97)',
     justifyContent: 'center',
     alignItems: 'center',
     zIndex: 1000,
