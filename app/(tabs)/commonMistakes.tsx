@@ -7,10 +7,10 @@ import { CommonMistake } from '@/types/CommonMistake';
 import { WordSelectionOption } from '@/types/games/SelectionOption';
 import { router, useRouter } from 'expo-router';
 import React from 'react';
-import { Pressable, ScrollView, View } from 'react-native';
+import { Pressable, SafeAreaView, ScrollView, View } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { useMultiplayerGameContext } from '@/contexts/MultiplayerGameContext';
-
+import AndroidSafeArea from '@/components/AndroidSafeArea';
 export default function CommonMistakes() {
   const { newGameWitMostCommonMistakes } = useGameContext()
   const { allMistakes } = useCommonMistakesContext();
@@ -51,7 +51,7 @@ export default function CommonMistakes() {
   }
 
   return (
-    <View style={{ flex: 1, padding: 16, paddingTop: 48, gap: 16, justifyContent: 'center', backgroundColor: '#101223' }}>
+    <SafeAreaView style={[AndroidSafeArea.AndroidSafeArea, { flex: 1, paddingHorizontal: 16, gap: 16, justifyContent: 'center', backgroundColor: '#101223' }]}>
       <SentenceDetailModal
         visible={displayedSentence !== null}
         onClose={() => { setDisplayedSentence(null) }}
@@ -74,7 +74,7 @@ export default function CommonMistakes() {
           disabled={allMistakes.length === 0}
         />
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
 

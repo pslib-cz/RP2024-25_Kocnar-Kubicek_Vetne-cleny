@@ -1,10 +1,11 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView } from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
 import { useRouter } from 'expo-router';
 import { useMultiplayerGameContext } from '@/contexts/MultiplayerGameContext';
 import { useRocket } from '@/contexts/RocketContext';
 import { Ionicons } from '@expo/vector-icons';
+import AndroidSafeArea from '@/components/AndroidSafeArea';
 
 export default function ShareGameScreen() {
   const router = useRouter();
@@ -23,7 +24,7 @@ export default function ShareGameScreen() {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={[styles.container, AndroidSafeArea.AndroidSafeArea]}>
       <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 20}}>
         <View style={{flex: 1}}>
           <TouchableOpacity style={{flexDirection: 'row', alignItems: 'center'}} onPress={() => router.back()}>
@@ -42,7 +43,7 @@ export default function ShareGameScreen() {
       <TouchableOpacity style={styles.cancelButton} onPress={handleCancel}>
         <Text style={styles.cancelButtonText}>Zrušit</Text>
       </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   );
 }
 

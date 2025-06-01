@@ -15,7 +15,7 @@ import { WordButtonsContainer } from '@/components/ui/games/WordButtonsContainer
 import { ButtonState } from '@/components/ui/games/WordButton';
 import { useLevelContext } from '@/contexts/levelContext';
 import { NamedRocket } from '@/components/NamedRocket';
-
+import AndroidSafeArea from '@/components/AndroidSafeArea';
 // Helper to load SVG as string
 const loadSvgAsset = async (assetModule: any): Promise<string | null> => {
   try {
@@ -115,7 +115,7 @@ export default function OnboardingScreen() {
   const { handleShowTooltip } = useLevelContext();
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#101223' }}>
+    <SafeAreaView style={[AndroidSafeArea.AndroidSafeArea, { flex: 1, backgroundColor: '#101223' }]}>
       <StatusBar barStyle="light-content" />
       <PagerView
         style={{ flex: 1 }}

@@ -3,12 +3,13 @@ import { View, StyleSheet, SafeAreaView } from 'react-native';
 import GalaxyView from '@/components/GalaxyView';
 import ArenaHeader from '@/components/ArenaHeader';
 import { useRouter } from 'expo-router';
+import AndroidSafeArea from '@/components/AndroidSafeArea';
 
 const ArenaGalaxies: React.FC = () => {
   const router = useRouter(); // Initialize navigation
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={[styles.safeArea, AndroidSafeArea.AndroidSafeArea]}>
       <View style={styles.container}>
         <ArenaHeader
           onBackPress={() => router.back()} // Pass back button handler
@@ -23,7 +24,6 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: '#101223',
-    paddingTop: 20,
   },
   container: {
     flex: 1,

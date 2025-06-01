@@ -9,7 +9,7 @@ import { SvgXml } from 'react-native-svg';
 import ColorPicker from 'react-native-wheel-color-picker';
 import { rocket1, rocket2, rocket3, rocket4, rocket5 } from '@/data/rocketsImages';
 import { router } from 'expo-router';
-
+import AndroidSafeArea from '@/components/AndroidSafeArea';
 // Načtení SVG souboru jako text
 export const loadSvgAsset = async (assetModule: any): Promise<string | null> => {
   try {
@@ -93,7 +93,7 @@ export default function ProfileEditScreen(): React.ReactElement {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[AndroidSafeArea.AndroidSafeArea, styles.container]}>
       <StatusBar barStyle="light-content" />
 
       {/* Header */}

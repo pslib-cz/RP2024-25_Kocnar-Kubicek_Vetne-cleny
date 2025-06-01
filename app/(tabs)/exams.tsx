@@ -1,15 +1,15 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, SafeAreaView } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useRocket } from '@/contexts/RocketContext';
 import PlayfulButton from '@/components/ui/PlayfulButton';
-
+import AndroidSafeArea from '@/components/AndroidSafeArea';
 const TestSelection = () => {
   const router = useRouter();
   const { teacherMode } = useRocket();
 
   return (
-    <View style={styles.background}>
+    <SafeAreaView style={[AndroidSafeArea.AndroidSafeArea, styles.background]}>
       <View style={styles.card}>
         <Text style={styles.title}>Testy</Text>
         <View style={styles.buttonContainer}>
@@ -44,7 +44,7 @@ const TestSelection = () => {
           />
         </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 

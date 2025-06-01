@@ -56,7 +56,7 @@ export default function CreateGameScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container]}>
       <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 20}}>
         <View style={{flex: 1}}>
           <TouchableOpacity style={{flexDirection: 'row', alignItems: 'center'}} onPress={() => router.back()}>
@@ -204,14 +204,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#101223',
-    padding: 20,
+    paddingHorizontal: 20,
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     color: 'white',
     textAlign: 'center',
-    marginBottom: 20,
+    marginVertical: 10,
   },
   section: {
     marginBottom: 20,

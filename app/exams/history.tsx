@@ -7,7 +7,6 @@ import { ThemedText } from '@/components/ThemedText';
 import { useRocket } from '@/contexts/RocketContext';
 import { galaxies } from '@/components/ArenaHeader';
 import { useRouter } from 'expo-router';
-
 interface SessionInfo {
   id: string;
   gameId: string;
@@ -150,7 +149,7 @@ export default function HistoryScreen() {
 
   if (error) {
     return (
-      <SafeAreaView style={styles.safeArea}>
+      <SafeAreaView style={[styles.safeArea]}>
         <View style={styles.centered}>
           <ThemedText style={styles.errorText}>{error}</ThemedText>
           <TouchableOpacity style={styles.retryButton} onPress={fetchSessions}>
@@ -162,7 +161,7 @@ export default function HistoryScreen() {
   }
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={[styles.safeArea]}>
       <View style={styles.container}>
         <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 20}}>
           <View style={{flex: 1}}>
@@ -207,7 +206,6 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   title: {
-    marginBottom: 20,
     color: '#fff',
   },
   listContainer: {

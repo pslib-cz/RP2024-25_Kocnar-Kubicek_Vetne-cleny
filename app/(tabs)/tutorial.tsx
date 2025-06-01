@@ -8,6 +8,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import AndroidSafeArea from '@/components/AndroidSafeArea';
 
 export default function Tutorial() {
   const { usedNodes, currentNode, AddNode, reset } = useTutorial();
@@ -24,7 +25,7 @@ export default function Tutorial() {
   // });
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, AndroidSafeArea.AndroidSafeArea]}>
 
       {/* {returnTo && (
         <TouchableOpacity

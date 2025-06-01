@@ -9,7 +9,6 @@ import PlayfulButton from '@/components/ui/PlayfulButton';
 import { useGalaxyContext } from '@/contexts/GalaxyContext';
 import { useMultiplayerGameContext } from '@/contexts/MultiplayerGameContext';
 import { useFocusEffect } from '@react-navigation/native';
-
 const ArenaPlanet: React.FC = () => {
   const { newGameInArena } = useGameContext();
   const { selectedPlanet } = useGalaxyContext();
@@ -22,7 +21,7 @@ const ArenaPlanet: React.FC = () => {
   );
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={[styles.safeArea]}>
       <ArenaHeader />
       <View style={styles.container}>
         <TouchableOpacity

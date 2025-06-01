@@ -14,7 +14,7 @@ import { Galaxy } from '@/types/Galaxy';
 import { GameType, useGameContext } from '@/contexts/GameContext';
 import { ThemedText } from '@/components/ThemedText';
 import { galaxies } from '@/components/ArenaHeader';
-
+import AndroidSafeArea from '@/components/AndroidSafeArea';
 export default function JoinGameScreen() {
   const [code, setCode] = useState('');
   const { joinGame, code: contextCode, config, leaveGame, author, players } = useMultiplayerGameContext();
@@ -80,8 +80,8 @@ export default function JoinGameScreen() {
 
   return (
     <TouchableWithoutFeedback onPress={dismissKeyboard}>
-      <SafeAreaView style={styles.safeArea}>
-        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 20 }}>
+      <SafeAreaView style={[styles.safeArea, AndroidSafeArea.AndroidSafeArea]}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', marginHorizontal: 20, marginTop: 20 }}>
           <View style={{ flex: 1 }}>
             <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }} onPress={() => router.back()}>
               <Ionicons name="chevron-back" size={24} color="white" />
@@ -93,7 +93,7 @@ export default function JoinGameScreen() {
         <View style={styles.container}>
           {!contextCode ? (
             <View style={styles.joinContainer}>
-              <Text style={styles.title}>Připojit se ke hře</Text>
+              <ThemedText style={styles.title} type="title">Připojit se ke hře</ThemedText>
 
               {/* User info section */}
               <View style={styles.playerInfoContainer}>
@@ -128,11 +128,11 @@ export default function JoinGameScreen() {
           ) : (
             <ScrollView contentContainerStyle={styles.scrollContent}>
               <View style={styles.gameInfoContainer}>
-                <Text style={styles.title}>Detaily hry</Text>
+                <ThemedText style={styles.title} type="title">Detaily hry</ThemedText>
 
                 {/* User info section */}
                 <View style={styles.playerInfoCard}>
-                  <Text style={styles.playerInfoTitle}>Tvoje raketa</Text>
+                  <ThemedText style={styles.playerInfoTitle}>Tvoje raketa</ThemedText>
                   <NamedRocket
                     width={70}
                     height={70}
@@ -144,7 +144,7 @@ export default function JoinGameScreen() {
                 {/* Game author section */}
                 {author && (
                   <View style={styles.playerInfoCard}>
-                    <Text style={styles.playerInfoTitle}>Autor hry</Text>
+                    <ThemedText style={styles.playerInfoTitle}>Autor hry</ThemedText>
                     <PlayerRocket
                       player={author}
                       width={70}
@@ -156,7 +156,7 @@ export default function JoinGameScreen() {
                 {/* Players section */}
                 {players && players.length > 0 && (
                   <View style={styles.playerInfoCard}>
-                    <Text style={styles.playerInfoTitle}>Účastníci ({players.length})</Text>
+                    <ThemedText style={styles.playerInfoTitle}>Účastníci ({players.length})</ThemedText>
                     <View style={styles.playersList}>
                       {players.map(player => (
                         <PlayerRocket
@@ -173,18 +173,18 @@ export default function JoinGameScreen() {
 
                 <View style={styles.infoCard}>
                   <View style={styles.infoRow}>
-                    <Text style={styles.infoLabel}>Kód hry:</Text>
-                    <Text style={styles.infoValue}>{contextCode}</Text>
+                    <ThemedText style={styles.infoLabel}>Kód hry:</ThemedText>
+                    <ThemedText style={styles.infoValue}>{contextCode}</ThemedText>
                   </View>
                   <View style={styles.infoRow}>
-                    <Text style={styles.infoLabel}>Obtížnost:</Text>
-                    <Text style={styles.infoValue}>{config.difficulty}%</Text>
+                    <ThemedText style={styles.infoLabel}>Obtížnost:</ThemedText>
+                    <ThemedText style={styles.infoValue}>{config.difficulty}%</ThemedText>
                   </View>
                   <View style={styles.infoRow}>
-                    <Text style={styles.infoLabel}>Galaxie:</Text>
+                    <ThemedText style={styles.infoLabel}>Galaxie:</ThemedText>
                     <View style={styles.galaxyInfo}>
                       <Image source={galaxyImages[config.galaxy]} style={styles.galaxyIcon} />
-                      <Text style={styles.infoValue}>{galaxies[config.galaxy].name}</Text>
+                      <ThemedText style={styles.infoValue}>{galaxies[config.galaxy].name}</ThemedText>
                     </View>
                   </View>
                 </View>

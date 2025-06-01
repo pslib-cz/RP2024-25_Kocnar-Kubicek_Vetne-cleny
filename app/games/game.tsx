@@ -16,6 +16,7 @@ import { GeneratorParam, QuestionModifier, QuestionType } from "@/constants/ques
 import { hints } from "@/constants/GameHints";
 import { FeedbackOverlay } from "@/components/modals/FeedbackOverlay";
 import HintModal from "@/components/modals/HintModal";
+import AndroidSafeArea from "@/components/AndroidSafeArea";
 
 export const Game: React.FC = () => {
   const { gameState, activeQuestion, questions, gameInfo } = useGameContext();
@@ -117,7 +118,7 @@ export const Game: React.FC = () => {
   }
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={[styles.container, AndroidSafeArea.AndroidSafeArea]}>
       <HintModal
         visible={hintActive} 
         onClose={() => {setHintActive(false)}}
@@ -148,20 +149,21 @@ export const Game: React.FC = () => {
       >
         {gameContent()}
       </Animated.View>
-    </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   headerWrapper: {
     flexDirection: 'row',
+    paddingTop: 16,
     gap: 12,
   },
   container: {
     flex: 1,
     backgroundColor: '#101223',
     paddingHorizontal: 20,
-    paddingVertical: 56,
+    paddingBottom: 56,
     gap: 40,
     justifyContent: 'space-between',
     alignItems: 'center',

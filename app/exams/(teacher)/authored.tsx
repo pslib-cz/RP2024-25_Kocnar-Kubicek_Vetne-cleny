@@ -16,7 +16,6 @@ export default function AuthoredGamesPage() {
   const api = useAPI({ userId, secretKey });
   const [games, setGames] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [fetchGamesFn, setFetchGamesFn] = useState<() => void>(() => () => {});
   const router = useRouter();
 
   // Function to check if a game is still active based on expiration time
@@ -26,28 +25,28 @@ export default function AuthoredGamesPage() {
     return now < expiration;
   };
 
-  useEffect(() => {
-    const fetchGames = async () => {
-      try {
-        const data = await api.getAuthoredGames();
-        setGames(data);
-      } catch (error) {
-        console.warn('Failed to fetch authored games:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  // Move fetchGames outside useEffect so it can be reused
+  const fetchGames = async () => {
+    setLoading(true);
+    try {
+      const data = await api.getAuthoredGames();
+      setGames(data);
+    } catch (error) {
+      console.warn('Failed to fetch authored games:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchGames();
-    // Expose fetchGames for refresh button
-    setFetchGamesFn(() => fetchGames);
   }, []);
 
   if (loading) {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#0000ff" />
+          <ActivityIndicator size="large" color="#ffffff" />
         </View>
       </SafeAreaView>
     );
@@ -71,7 +70,7 @@ export default function AuthoredGamesPage() {
               underlayColor="transparent"
               color="#fff"
               size={24}
-              onPress={fetchGamesFn}
+              onPress={fetchGames}
               accessibilityLabel="Obnovit seznam her"
               style={{padding: 0}}
             />
@@ -166,7 +165,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: 'bold',
   },
   emptyMessage: {
