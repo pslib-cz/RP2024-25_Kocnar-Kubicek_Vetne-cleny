@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, ScrollView, ActivityIndicator, StyleSheet, TouchableOpacity } from 'react-native';
-import { useAPI } from '@/hooks/useAPI';
+import { AuthoredGame, useAPI } from '@/hooks/useAPI';
 import { useEffect, useState } from 'react';
 import { useRocket } from '@/contexts/RocketContext';
 import { galaxies } from '@/components/ArenaHeader';
@@ -11,10 +11,9 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { ThemedText } from '@/components/ThemedText';
 
 export default function AuthoredGamesPage() {
-    
   const { userId, secretKey } = useRocket();
   const api = useAPI({ userId, secretKey });
-  const [games, setGames] = useState<any[]>([]);
+  const [games, setGames] = useState<AuthoredGame[]>([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
@@ -55,15 +54,15 @@ export default function AuthoredGamesPage() {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
-        <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 16}}>
-          <View style={{flex: 1}}>
-            <TouchableOpacity style={{flexDirection: 'row', alignItems: 'center'}} onPress={() => router.back()}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 16 }}>
+          <View style={{ flex: 1 }}>
+            <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }} onPress={() => router.back()}>
               <Ionicons name="chevron-back" size={24} color="#fff" />
-              <Text style={{color: '#fff', fontSize: 16, marginLeft: 4}}>Zpět</Text>
+              <Text style={{ color: '#fff', fontSize: 16, marginLeft: 4 }}>Zpět</Text>
             </TouchableOpacity>
           </View>
-          <ThemedText type="title" style={[styles.title, {flex: 2, textAlign: 'center'}]}>Moje vytvořené hry</ThemedText>
-          <View style={{flex: 1, alignItems: 'flex-end'}}>
+          <ThemedText type="title" style={[styles.title, { flex: 2, textAlign: 'center' }]}>Moje vytvořené hry</ThemedText>
+          <View style={{ flex: 1, alignItems: 'flex-end' }}>
             <MaterialIcons.Button
               name="refresh"
               backgroundColor="transparent"
@@ -72,7 +71,7 @@ export default function AuthoredGamesPage() {
               size={24}
               onPress={fetchGames}
               accessibilityLabel="Obnovit seznam her"
-              style={{padding: 0}}
+              style={{ padding: 0 }}
             />
           </View>
         </View>
@@ -93,7 +92,7 @@ export default function AuthoredGamesPage() {
                     </Text>
                   </View>
                   <View style={[
-                    styles.statusBadge, 
+                    styles.statusBadge,
                     active ? styles.activeStatus : styles.inactiveStatus
                   ]}>
                     <Text style={styles.statusText}>
@@ -114,10 +113,10 @@ export default function AuthoredGamesPage() {
                   <View style={styles.detail}>
                     <MaterialIcons name="numbers" size={18} color="#AB47BC" style={{ marginRight: 4 }} />
                     <Text>{game.questionCount} otázek</Text>
-                  </View>    
+                  </View>
                   <View style={styles.detail}>
-                      <MaterialIcons name="casino" size={18} color="#26A69A" style={{ marginRight: 4 }} />
-                      <Text>{game.seeded ? 'Stejné otázky' : 'Různé otázky'}</Text>
+                    <MaterialIcons name="casino" size={18} color="#26A69A" style={{ marginRight: 4 }} />
+                    <Text>{game.seeded ? 'Stejné otázky' : 'Různé otázky'}</Text>
                   </View>
                   <View style={styles.detail}>
                     <MaterialIcons name="hourglass-empty" size={18} color="#FF7043" style={{ marginRight: 4 }} />
@@ -130,7 +129,7 @@ export default function AuthoredGamesPage() {
                   {game.sessions.map((session: any) => (
                     <View key={session.id} style={styles.sessionRow}>
                       <View style={styles.playerInfo}>
-                        <View 
+                        <View
                           style={[
                             styles.playerColor,
                             { backgroundColor: session.player.bodyColor }

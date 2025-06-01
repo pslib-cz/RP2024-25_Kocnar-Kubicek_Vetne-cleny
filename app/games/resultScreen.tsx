@@ -70,8 +70,8 @@ const PracticeCompleteScreen = () => {
         </Text>
 
         <View style={styles.statsContainer}>
-          <ResultStuff text="Time" value={`${getDuration()}s`} color="#6272A4" />
-          <ResultStuff text="Success rate" value={`${successRate.toFixed(2)}%`} color={successRateColor} />
+          <ResultStuff text="Čas" value={`${getDuration()}s`} color="#6272A4" />
+          <ResultStuff text="Úspěšnost" value={`${successRate.toFixed(2)}%`} color={successRateColor} />
         </View>
 
         {/* <Button title={successRate >= NEXT_LEVEL_TRESHOLD ? "Další level" : "Zkusit znovu"} filled={true} onPress={newGameWithCount} /> */}
