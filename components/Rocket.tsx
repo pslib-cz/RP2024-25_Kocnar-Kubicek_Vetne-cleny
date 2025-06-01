@@ -17,7 +17,6 @@ export const Rocket = ({ style, width = 100, height = 100 }: RocketProps) => {
   const [rocketSvgs, setRocketSvgs] = useState<string[]>([]);
   const [modifiedRocketSvg, setModifiedRocketSvg] = useState<string | null>(null);
 
-  // Load rocket SVGs
   useEffect(() => {
     const loadRockets = async () => {
       try {
@@ -36,7 +35,6 @@ export const Rocket = ({ style, width = 100, height = 100 }: RocketProps) => {
     loadRockets();
   }, []);
 
-  // Update the rocket SVG with the selected colors
   useEffect(() => {
     if (rocketSvgs.length > 0 && selectedRocketIndex < rocketSvgs.length) {
       const svg = rocketSvgs[selectedRocketIndex];

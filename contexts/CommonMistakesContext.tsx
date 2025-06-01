@@ -92,10 +92,6 @@ export const CommonMistakesProvider = ({ children }: { children: ReactNode }) =>
 
   };
 
-  // const getMistakesAsSentences = (): WordSelectionOption[][] => {
-  //   return allMistakes.map((m) => m.question.SOURCE);
-  // };
-
   return (
     <CommonMistakesContext.Provider value={{ allMistakes, updateMistakes }}>
       {children}

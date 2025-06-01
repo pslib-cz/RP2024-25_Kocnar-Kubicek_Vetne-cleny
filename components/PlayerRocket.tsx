@@ -27,7 +27,6 @@ export const PlayerRocket = ({
   const [rocketSvgs, setRocketSvgs] = useState<string[]>([]);
   const [modifiedRocketSvg, setModifiedRocketSvg] = useState<string | null>(null);
 
-  // Load rocket SVGs
   useEffect(() => {
     const loadRockets = async () => {
       try {
@@ -46,7 +45,6 @@ export const PlayerRocket = ({
     loadRockets();
   }, []);
 
-  // Update the rocket SVG with the player colors
   useEffect(() => {
     if (rocketSvgs.length > 0 && player.selectedRocketIndex < rocketSvgs.length) {
       const svg = rocketSvgs[player.selectedRocketIndex];

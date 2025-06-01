@@ -9,7 +9,6 @@ import { ThemedText } from '@/components/ThemedText';
 import { Galaxy } from '@/types/Galaxy';
 import { galaxyImages } from '@/data/galaxyImages';
 
-// Galaxy names and planet counts
 export const galaxies: Galaxy[] = [
   { name: "Všechny členy", planetCount: 25 },
   { name: "Základní členy", planetCount: 8 },
@@ -19,7 +18,7 @@ export const galaxies: Galaxy[] = [
 ];
 
 interface ArenaHeaderProps {
-  onBackPress?: () => void; // Optional back button handler
+  onBackPress?: () => void;
 }
 
 const ArenaHeader: React.FC<ArenaHeaderProps> = ({ onBackPress }) => {

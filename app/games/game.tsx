@@ -1,13 +1,11 @@
 import { SafeAreaView } from "react-native-safe-area-context";
-import React, { act, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Alert, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useGameContext } from "@/contexts/GameContext";
-import { Text } from "react-native-svg";
 import { useRouter } from "expo-router";
 import Animated, { SlideInRight, SlideOutLeft } from 'react-native-reanimated';
 import RocketProgressBar from "@/components/ui/games/ProgressBar";
 import { Game1Type, GameOneUI } from "@/components/games/game1";
-// import { GameRoute } from "@/constants/gameRoute";
 import { Game2UI } from "@/components/games/game2";
 import { Game3UI } from "@/components/games/game3";
 import { ThemedText } from "@/components/ThemedText";
@@ -43,27 +41,6 @@ export const Game: React.FC = () => {
   useBackspaceIntercept(() => {
     leaveAlert()
   });
-
-  useEffect(() => {
-    console.log("Active question modifiers " + activeQuestion?.TEMPLATE[GeneratorParam.QUESTION_TYPE]);
-
-    if (activeQuestion?.TEMPLATE && activeQuestion?.TEMPLATE[GeneratorParam.QUESTION_MODIFIER]) {
-      console.log("Question modifiers:");
-      const modifiers = activeQuestion.TEMPLATE[GeneratorParam.QUESTION_MODIFIER];
-      
-      // If it's an array of modifiers
-      if (Array.isArray(modifiers)) {
-        for (const modifier of modifiers) {
-          console.log(`- ${QuestionModifier[modifier]}`);
-        }
-      } 
-      // If it's a single modifier value
-      else {
-        console.log(`- ${QuestionModifier[modifiers]}`);
-      }
-    }
-
-  }, [activeQuestion]);
 
   const gameContent = () => {
     switch (activeQuestion?.TEMPLATE[GeneratorParam.QUESTION_TYPE]) {
@@ -172,23 +149,19 @@ const styles = StyleSheet.create({
   },
   container1: {
     flex: 1,
-    // backgroundColor: '#101223',
     gap: 32,
-    // paddingVertical: 4,
     justifyContent: 'space-around',
     alignItems: 'center',
     width: '100%',
   },
   button: {
-    backgroundColor: '#1E1E5F', // Dark blue color from the image
-    // paddingVertical: 12,
+    backgroundColor: '#1E1E5F',
     aspectRatio: 1,
     height: 40,
-    // paddingHorizontal: 8,
-    borderRadius: 24, // Rounded corners
+    borderRadius: 24,
     alignItems: 'center',
     justifyContent: 'center',
-    maxWidth: 300, // Maximum width
+    maxWidth: 300,
     color: 'white',
     fontWeight: 'bold',
   },

@@ -38,7 +38,6 @@ export const updateLoadedSets = (ls : any, lts:any, lv:any) => {
   loadedVersion = lv;
 }
 
-// New hook: useLoadedData
 export function useLoadedData() {
   return { loadedSets, loadedTypeSets, loadedVersion };
 }
@@ -50,7 +49,6 @@ export const useWordsByType = (
   seed: number = Math.random()
 ): WordSelectionOption[] => {
   return useMemo(() => {
-    // Convert single type to array
     const typeArray = Array.isArray(types) ? types : [types];
     
     // Get all words from requested types
@@ -60,17 +58,14 @@ export const useWordsByType = (
       allWords = [...allWords, ...typeWords.map((word: string) => ({ type, text: word }))];
     });
 
-    // Remove blacklisted words
     allWords = allWords.filter(word => !blacklist.includes(word.text));
 
-    // Use seed to shuffle array
     const shuffled = [...allWords];
     for (let i = shuffled.length - 1; i > 0; i--) {
       const j = Math.floor((seed * (i + 1)) % (i + 1));
       [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
     }
 
-    // Return requested count
     return shuffled.slice(0, count);
   }, [count, types, blacklist, seed]);
 };

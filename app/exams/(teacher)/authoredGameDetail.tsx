@@ -28,7 +28,7 @@ const formatDuration = (startTime: string, endTime?: string | null) => {
   const start = new Date(startTime);
   const end = endTime ? new Date(endTime) : new Date();
   const duration = Math.floor((end.getTime() - start.getTime()) / 1000 / 60); // minutes
-  
+
   if (duration < 60) {
     return `${duration} min`;
   }
@@ -43,7 +43,7 @@ const AuthoredGameDetail = () => {
   const { userId, secretKey } = useRocket();
   const api = useAPI({ userId, secretKey });
   const { gameId } = route.params;
-  
+
   const [game, setGame] = useState<AuthoredGame | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -102,7 +102,7 @@ const AuthoredGameDetail = () => {
   const completedSessions = game.sessions.filter(session => session.completed);
   const activeSessions = game.sessions.filter(session => !session.completed);
 
-  const averageScore = completedSessions.length > 0 
+  const averageScore = completedSessions.length > 0
     ? Math.round(completedSessions.reduce((sum, session) => sum + session.correctAnswers, 0) / completedSessions.length / game.questionCount * 100)
     : 0;
 
@@ -134,18 +134,18 @@ const AuthoredGameDetail = () => {
       <ScrollView style={styles.scrollView}>
         {/* Game Status Header */}
         <View style={styles.statusHeader}>
-          <View>
+          <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
             <Text style={styles.gameCode}>Kód: {game.code}</Text>
-            <Text style={styles.gameId}>ID: {game.id}</Text>
+            <View style={[
+              styles.statusBadge,
+              active ? styles.activeStatus : styles.inactiveStatus
+            ]}>
+              <Text style={styles.statusText}>
+                {active ? 'Aktivní' : 'Ukončeno'}
+              </Text>
+            </View>
           </View>
-          <View style={[
-            styles.statusBadge,
-            active ? styles.activeStatus : styles.inactiveStatus
-          ]}>
-            <Text style={styles.statusText}>
-              {active ? 'Aktivní' : 'Ukončeno'}
-            </Text>
-          </View>
+          <Text style={styles.gameId}>ID: {game.id}</Text>
         </View>
 
         {/* Game Details Section */}
@@ -157,31 +157,31 @@ const AuthoredGameDetail = () => {
               <Text style={styles.detailLabel}>Obtížnost</Text>
               <Text style={styles.detailValue}>{game.difficulty}%</Text>
             </View>
-            
+
             <View style={styles.detailItem}>
               <MaterialIcons name="public" size={20} color="#42A5F5" />
               <Text style={styles.detailLabel}>Galaxie</Text>
               <Text style={styles.detailValue}>{galaxies[game.galaxy]?.name || 'Neznámá'}</Text>
             </View>
-            
+
             <View style={styles.detailItem}>
               <MaterialIcons name="numbers" size={20} color="#AB47BC" />
               <Text style={styles.detailLabel}>Otázky</Text>
               <Text style={styles.detailValue}>{game.questionCount}</Text>
             </View>
-            
+
             <View style={styles.detailItem}>
               <MaterialIcons name="category" size={20} color="#66BB6A" />
               <Text style={styles.detailLabel}>Typy otázek</Text>
               <Text style={styles.detailValue}>{game.questiontypes}</Text>
             </View>
-            
+
             <View style={styles.detailItem}>
               <MaterialIcons name="casino" size={20} color="#26A69A" />
               <Text style={styles.detailLabel}>Seed</Text>
               <Text style={styles.detailValue}>{game.seed ? 'Ano' : 'Ne'}</Text>
             </View>
-            
+
             <View style={styles.detailItem}>
               <MaterialIcons name="code" size={20} color="#FF7043" />
               <Text style={styles.detailLabel}>Verze</Text>
@@ -205,7 +205,7 @@ const AuthoredGameDetail = () => {
               <MaterialIcons name="hourglass-empty" size={18} color="#FF7043" />
               <Text style={styles.timeLabel}>Vyprší:</Text>
               <Text style={styles.timeValue}>
-                {game.expirationTime 
+                {game.expirationTime
                   ? new Date(game.expirationTime).toLocaleString('cs-CZ')
                   : 'Bez expirace'
                 }
@@ -240,7 +240,7 @@ const AuthoredGameDetail = () => {
         {/* Players Section */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Hráči ({game.sessions.length})</Text>
-          
+
           {activeSessions.length > 0 && (
             <>
               <Text style={styles.subsectionTitle}>Aktivní hráči ({activeSessions.length})</Text>
@@ -257,9 +257,9 @@ const AuthoredGameDetail = () => {
                       <View>
                         <Text style={styles.playerName}>{session.player.name}</Text>
                         <Text style={styles.playerMeta}>
-                          Začal: {new Date(session.startedAt).toLocaleString('cs-CZ', { 
-                            dateStyle: 'short', 
-                            timeStyle: 'short' 
+                          Začal: {new Date(session.startedAt).toLocaleString('cs-CZ', {
+                            dateStyle: 'short',
+                            timeStyle: 'short'
                           })}
                         </Text>
                       </View>
@@ -275,48 +275,48 @@ const AuthoredGameDetail = () => {
               ))}
             </>
           )}
-          
+
           {completedSessions.length > 0 && (
             <>
               <Text style={styles.subsectionTitle}>Dokončené hry ({completedSessions.length})</Text>
               {completedSessions
                 .sort((a, b) => b.correctAnswers - a.correctAnswers)
                 .map((session, index) => (
-                <View key={session.id} style={styles.playerCard}>
-                  <View style={styles.playerHeader}>
-                    <View style={styles.playerInfo}>
-                      <View
-                        style={[
-                          styles.playerColor,
-                          { backgroundColor: session.player.bodyColor }
-                        ]}
-                      />
-                      <View>
-                        <Text style={styles.playerName}>
-                          {index < 3 && ['🥇', '🥈', '🥉'][index]} {session.player.name}
+                  <View key={session.id} style={styles.playerCard}>
+                    <View style={styles.playerHeader}>
+                      <View style={styles.playerInfo}>
+                        <View
+                          style={[
+                            styles.playerColor,
+                            { backgroundColor: session.player.bodyColor }
+                          ]}
+                        />
+                        <View>
+                          <Text style={styles.playerName}>
+                            {index < 3 && ['🥇', '🥈', '🥉'][index]} {session.player.name}
+                          </Text>
+                          <Text style={styles.playerMeta}>
+                            Dokončeno: {session.endedAt ? new Date(session.endedAt).toLocaleString('cs-CZ', {
+                              dateStyle: 'short',
+                              timeStyle: 'short'
+                            }) : 'Neznámo'}
+                          </Text>
+                        </View>
+                      </View>
+                      <View style={styles.scoreInfo}>
+                        <Text style={styles.score}>
+                          {session.correctAnswers}/{game.questionCount}
                         </Text>
-                        <Text style={styles.playerMeta}>
-                          Dokončeno: {session.endedAt ? new Date(session.endedAt).toLocaleString('cs-CZ', { 
-                            dateStyle: 'short', 
-                            timeStyle: 'short' 
-                          }) : 'Neznámo'}
+                        <Text style={styles.percentage}>
+                          {Math.round((session.correctAnswers / game.questionCount) * 100)}%
                         </Text>
                       </View>
                     </View>
-                    <View style={styles.scoreInfo}>
-                      <Text style={styles.score}>
-                        {session.correctAnswers}/{game.questionCount}
-                      </Text>
-                      <Text style={styles.percentage}>
-                        {Math.round((session.correctAnswers / game.questionCount) * 100)}%
-                      </Text>
-                    </View>
+                    <Text style={styles.playDuration}>
+                      Doba hry: {formatDuration(session.startedAt, session.endedAt)}
+                    </Text>
                   </View>
-                  <Text style={styles.playDuration}>
-                    Doba hry: {formatDuration(session.startedAt, session.endedAt)}
-                  </Text>
-                </View>
-              ))}
+                ))}
             </>
           )}
         </View>
@@ -369,7 +369,6 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   statusHeader: {
-    flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
     marginBottom: 16,

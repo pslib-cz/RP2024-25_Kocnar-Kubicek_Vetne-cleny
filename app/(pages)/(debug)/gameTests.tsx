@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
 import ArenaHeader from '@/components/ArenaHeader';
-// import { GameRoute } from '@/constants/gameRoute';
 import { GameType, useGameContext } from '@/contexts/GameContext';
 import { useRouter } from 'expo-router';
 import { useLevelContext } from '@/contexts/levelContext';
@@ -34,8 +33,6 @@ const GameTests: React.FC = () => {
     }], GameType.PRACTICE)
     resetLevelData()
   };
-
-  //console.log("GameTests rendered with games:", games, typeof games[0].id);
 
   return (
     <View style={styles.container}>
