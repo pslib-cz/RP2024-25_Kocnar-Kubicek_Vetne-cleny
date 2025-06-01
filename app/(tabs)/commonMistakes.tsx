@@ -32,7 +32,7 @@ export default function CommonMistakes() {
           { opacity: pressed ? 0.7 : 1 }
         ]}
       >
-        <View style={{ flexDirection: 'row', alignItems: 'flex-start', marginBottom: 8, backgroundColor: '#222', borderRadius: 12, padding: 16, shadowColor: '#000', shadowOpacity: 0.1, shadowRadius: 6, width: 320 }}>
+        <View style={{ flexDirection: 'row', alignItems: 'flex-start', marginBottom: 8, backgroundColor: '#1c1f3d', borderRadius: 12, padding: 16, shadowColor: '#000', shadowOpacity: 0.1, shadowRadius: 6, width: 320 }}>
           <ThemedText style={{ fontSize: 18, marginRight: 8 }}>❌</ThemedText>
           <ThemedText style={{ flex: 1, color: '#fff', fontSize: 16 }}>
             {mistake.question.SOURCE.map((part: { text: string }) => part.text).join(' ')}

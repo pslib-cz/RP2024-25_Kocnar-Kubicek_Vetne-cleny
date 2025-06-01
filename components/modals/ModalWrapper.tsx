@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
   modalContainer: {
     width: '85%',
     height: '45%',
-    backgroundColor: '#1E1E1E',
+    backgroundColor: '#1c1f3d',
     borderRadius: 12,
     overflow: 'hidden',
     elevation: 5,
@@ -129,12 +129,10 @@ const styles = StyleSheet.create({
     borderColor: '#333',
   },
   header: {
-    backgroundColor: '#2D2D2D',
+    backgroundColor: '#1c1f3d',
     paddingVertical: 16,
     paddingHorizontal: 20,
     alignItems: 'center',
-    borderBottomWidth: 1,
-    borderBottomColor: '#333',
   },
   title: {
     color: '#FFFFFF',
@@ -149,8 +147,7 @@ const styles = StyleSheet.create({
   footer: {
     padding: 12,
     alignItems: 'center',
-    borderTopWidth: 1,
-    borderTopColor: '#333',
+
   },
   closeButton: {
     backgroundColor: '#007AFF',

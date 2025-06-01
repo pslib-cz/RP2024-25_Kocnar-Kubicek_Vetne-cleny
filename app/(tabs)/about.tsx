@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
   },
   infoBlock: {
     width: '100%',
-    backgroundColor: '#181a2f',
+    backgroundColor: '#1c1f3d',
     borderRadius: 16,
     padding: 20,
     marginBottom: 32,

@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
     alignItems: 'stretch',
   },
   card: {
-    backgroundColor: '#181A2A',
+    backgroundColor: '#1c1f3d',
     borderRadius: 24,
     padding: 28,
     shadowColor: '#000',
