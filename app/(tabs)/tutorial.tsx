@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#333',
   },
   questionSection: {
-    marginVertical: 40,
+    marginVertical: 10,
     width: '100%',
     flexGrow: 5,
   },

@@ -55,7 +55,7 @@ const styles1 = StyleSheet.create({
   },
   questionText: {
     color: '#FFF',
-    fontSize: 16,
+    fontSize: 14,
     marginRight: 10,
   },
   answerYes: {
