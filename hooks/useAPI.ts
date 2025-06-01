@@ -18,6 +18,8 @@ import {
   APIErrorResponse,
 } from '@/types/api';
 import { useConfigContext } from '@/contexts/ConfigContext';
+import Constants from 'expo-constants';
+import { loadedVersion } from './useData';
 
 const NO_AUTH_ENDPOINTS = ['/health', '/players/create', '/players/upsert'];
 
@@ -76,7 +78,12 @@ export const useAPI = (userData?: Partial<APIUserData>) => {
   const { config } = useConfigContext();
   const API_URL = config.API_URL;
   const API_BACKUP_URL = config.API_BACKUP_URL;
-  const CLIENT_VERSION = '1.0.0'; 
+  const appVersion =
+  (Constants.expoConfig && typeof Constants.expoConfig === 'object' && 'version' in Constants.expoConfig && (Constants.expoConfig as any).version) ||
+  (Constants.manifest2 && typeof Constants.manifest2 === 'object' && 'version' in Constants.manifest2 && (Constants.manifest2 as any).version) ||
+  'neuvedeno';
+    const dsVersion = loadedVersion || 'v0' ;
+    const CLIENT_VERSION = `${appVersion}-${dsVersion}`;
 
   const data = { ...DEFAULT_USER_DATA, ...userData };
   const { secretKey, userId, name, bodyColor, trailColor, selectedRocketIndex } = data;
