@@ -78,136 +78,144 @@ export default function JoinGameScreen() {
     Keyboard.dismiss();
   };
 
-  return (
-    <TouchableWithoutFeedback onPress={dismissKeyboard}>
-      <SafeAreaView style={[styles.safeArea, AndroidSafeArea.AndroidSafeArea]}>
-        <View style={{ flexDirection: 'row', alignItems: 'center', marginHorizontal: 20, marginTop: 20 }}>
-          <View style={{ flex: 1 }}>
-            <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }} onPress={() => router.back()}>
-              <Ionicons name="chevron-back" size={24} color="white" />
-              <Text style={{ color: 'white', fontSize: 16, marginLeft: 4 }}>Zpět</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={{ flex: 1 }} />
-        </View>
-        <View style={styles.container}>
-          {!contextCode ? (
-            <View style={styles.joinContainer}>
-              <ThemedText style={styles.title} type="title">Připojit se ke hře</ThemedText>
+  const JoinGameDetail = () => {
+    return (
+      <ScrollView contentContainerStyle={[styles.scrollContent, { alignItems: 'center', justifyContent: 'center', gap: 30, paddingVertical: 20, }]}>
+        {/* <View style={styles.gameInfoContainer}> */}
+        <ThemedText style={styles.title} type="title">Detaily hry</ThemedText>
 
-              {/* User info section */}
-              <View style={styles.playerInfoContainer}>
-                <NamedRocket
+        {/* User info section */}
+        <View style={styles.playerInfoCard}>
+          <ThemedText style={styles.playerInfoTitle}>Tvoje raketa</ThemedText>
+          <NamedRocket
+            width={70}
+            height={70}
+            containerStyle={styles.namedRocketContainer}
+            textStyle={styles.playerName}
+          />
+        </View>
+
+        {/* Game author section */}
+        {author && (
+          <View style={styles.playerInfoCard}>
+            <ThemedText style={styles.playerInfoTitle}>Autor hry</ThemedText>
+            <PlayerRocket
+              player={author}
+              width={70}
+              height={70}
+            />
+          </View>
+        )}
+
+        {/* Players section */}
+        {players && players.length > 0 && (
+          <View style={styles.playerInfoCard}>
+            <ThemedText style={styles.playerInfoTitle}>Účastníci ({players.length})</ThemedText>
+            <View style={styles.playersList}>
+              {players.map(player => (
+                <PlayerRocket
+                  key={player.id}
+                  player={player}
                   width={60}
                   height={60}
-                  containerStyle={styles.namedRocketContainer}
-                  textStyle={styles.playerName}
+                  containerStyle={styles.playerItem}
                 />
-              </View>
+              ))}
+            </View>
+          </View>
+        )}
 
-              <View style={styles.inputContainer}>
-                <TextInput
-                  style={styles.input}
-                  placeholder="Zadejte kód hry"
-                  placeholderTextColor="#888"
-                  value={code}
-                  onChangeText={setCode}
-                  keyboardType="numeric"
-                  returnKeyType="done"
-                  onSubmitEditing={dismissKeyboard}
-                  blurOnSubmit={true}
-                />
-              </View>
-              <PlayfulButton
-                title="Připojit se"
-                icon={<Ionicons name="game-controller" size={24} color="white" />}
-                onPress={() => handleJoinGame()}
-                variant="primary"
+        <View style={styles.infoCard}>
+          <View style={styles.infoRow}>
+            <ThemedText style={styles.infoLabel}>Kód hry:</ThemedText>
+            <ThemedText style={styles.infoValue}>{contextCode}</ThemedText>
+          </View>
+          <View style={styles.infoRow}>
+            <ThemedText style={styles.infoLabel}>Obtížnost:</ThemedText>
+            <ThemedText style={styles.infoValue}>{config.difficulty}%</ThemedText>
+          </View>
+          <View style={styles.infoRow}>
+            <ThemedText style={styles.infoLabel}>Galaxie:</ThemedText>
+            <View style={styles.galaxyInfo}>
+              <Image source={galaxyImages[config.galaxy]} style={styles.galaxyIcon} />
+              <ThemedText style={styles.infoValue}>{galaxies[config.galaxy].name}</ThemedText>
+            </View>
+          </View>
+        </View>
+        <View style={styles.buttonContainer}>
+          <PlayfulButton
+            title="Opustit hru"
+            icon={<Ionicons name="exit-outline" size={24} color="white" />}
+            onPress={handleCancel}
+            variant="danger"
+          />
+          <PlayfulButton
+            title="Začít hru"
+            icon={<Ionicons name="rocket" size={24} color="white" />}
+            onPress={handleStartExam}
+            variant="success"
+          />
+        </View>
+        {/* </View> */}
+      </ScrollView>
+    )
+  }
+
+  return (
+    // <TouchableWithoutFeedback onPress={dismissKeyboard}>
+    <SafeAreaView style={[styles.safeArea, AndroidSafeArea.AndroidSafeArea]}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', marginHorizontal: 20, marginTop: 20 }}>
+        <View style={{ flex: 1 }}>
+          <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }} onPress={() => router.back()}>
+            <Ionicons name="chevron-back" size={24} color="white" />
+            <Text style={{ color: 'white', fontSize: 16, marginLeft: 4 }}>Zpět</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={{ flex: 1 }} />
+      </View>
+      <View style={styles.container}>
+        {!contextCode ? (
+          <TouchableWithoutFeedback onPress={dismissKeyboard}>
+            <View style={styles.joinContainer}>
+            <ThemedText style={styles.title} type="title">Připojit se ke hře</ThemedText>
+
+            {/* User info section */}
+            <View style={styles.playerInfoContainer}>
+              <NamedRocket
+                width={60}
+                height={60}
+                containerStyle={styles.namedRocketContainer}
+                textStyle={styles.playerName}
               />
             </View>
-          ) : (
-            <ScrollView contentContainerStyle={styles.scrollContent}>
-              <View style={styles.gameInfoContainer}>
-                <ThemedText style={styles.title} type="title">Detaily hry</ThemedText>
 
-                {/* User info section */}
-                <View style={styles.playerInfoCard}>
-                  <ThemedText style={styles.playerInfoTitle}>Tvoje raketa</ThemedText>
-                  <NamedRocket
-                    width={70}
-                    height={70}
-                    containerStyle={styles.namedRocketContainer}
-                    textStyle={styles.playerName}
-                  />
-                </View>
-
-                {/* Game author section */}
-                {author && (
-                  <View style={styles.playerInfoCard}>
-                    <ThemedText style={styles.playerInfoTitle}>Autor hry</ThemedText>
-                    <PlayerRocket
-                      player={author}
-                      width={70}
-                      height={70}
-                    />
-                  </View>
-                )}
-
-                {/* Players section */}
-                {players && players.length > 0 && (
-                  <View style={styles.playerInfoCard}>
-                    <ThemedText style={styles.playerInfoTitle}>Účastníci ({players.length})</ThemedText>
-                    <View style={styles.playersList}>
-                      {players.map(player => (
-                        <PlayerRocket
-                          key={player.id}
-                          player={player}
-                          width={60}
-                          height={60}
-                          containerStyle={styles.playerItem}
-                        />
-                      ))}
-                    </View>
-                  </View>
-                )}
-
-                <View style={styles.infoCard}>
-                  <View style={styles.infoRow}>
-                    <ThemedText style={styles.infoLabel}>Kód hry:</ThemedText>
-                    <ThemedText style={styles.infoValue}>{contextCode}</ThemedText>
-                  </View>
-                  <View style={styles.infoRow}>
-                    <ThemedText style={styles.infoLabel}>Obtížnost:</ThemedText>
-                    <ThemedText style={styles.infoValue}>{config.difficulty}%</ThemedText>
-                  </View>
-                  <View style={styles.infoRow}>
-                    <ThemedText style={styles.infoLabel}>Galaxie:</ThemedText>
-                    <View style={styles.galaxyInfo}>
-                      <Image source={galaxyImages[config.galaxy]} style={styles.galaxyIcon} />
-                      <ThemedText style={styles.infoValue}>{galaxies[config.galaxy].name}</ThemedText>
-                    </View>
-                  </View>
-                </View>
-                <View style={styles.buttonContainer}>
-                  <PlayfulButton
-                    title="Opustit hru"
-                    icon={<Ionicons name="exit-outline" size={24} color="white" />}
-                    onPress={handleCancel}
-                    variant="danger"
-                  />
-                  <PlayfulButton
-                    title="Začít hru"
-                    icon={<Ionicons name="rocket" size={24} color="white" />}
-                    onPress={handleStartExam}
-                    variant="success"
-                  />
-                </View>
-              </View>
-            </ScrollView>
+            <View style={styles.inputContainer}>
+              <TextInput
+                style={styles.input}
+                placeholder="Zadejte kód hry"
+                placeholderTextColor="#888"
+                value={code}
+                onChangeText={setCode}
+                keyboardType="numeric"
+                returnKeyType="done"
+                onSubmitEditing={dismissKeyboard}
+                blurOnSubmit={true}
+              />
+            </View>
+            <PlayfulButton
+              title="Připojit se"
+              icon={<Ionicons name="game-controller" size={24} color="white" />}
+              onPress={() => handleJoinGame()}
+              variant="primary"
+            />
+            </View>
+          </TouchableWithoutFeedback>
+        ) : (
+            <JoinGameDetail />
           )}
-        </View>
-      </SafeAreaView>
-    </TouchableWithoutFeedback>
+      </View>
+    </SafeAreaView>
+    // </TouchableWithoutFeedback>
   );
 }
 
@@ -253,12 +261,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     backgroundColor: 'rgba(74, 91, 210, 0.1)',
   },
-  gameInfoContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 30,
-    paddingVertical: 20,
-  },
+  // gameInfoContainer: {
+  //   alignItems: 'center',
+  //   justifyContent: 'center',
+  //   gap: 30,
+  //   paddingVertical: 20,
+  // },
   infoCard: {
     width: '90%',
     backgroundColor: 'rgba(74, 91, 210, 0.1)',

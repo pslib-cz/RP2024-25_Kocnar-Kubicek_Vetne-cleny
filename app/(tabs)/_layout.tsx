@@ -28,15 +28,6 @@ export default function TabLayout() {
         },        
       }}>
       <Tabs.Screen
-        name="index"
-        options={{
-          title: 'Aréna',
-          tabBarActiveTintColor: '#a182ff',
-          tabBarIcon: ({ color }) => <IconSymbol size={32} name="sparkles" color={color} />,
-        }}
-      />
-
-      <Tabs.Screen
         name="exams"
         options={{
           title: 'Testy',
@@ -50,6 +41,14 @@ export default function TabLayout() {
           title: 'Pokrok',
           tabBarActiveTintColor: '#6eff63',
           tabBarIcon: ({ color }) => <IconSymbol size={32} name="clock.arrow.circlepath" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="index"
+        options={{
+          title: 'Aréna',
+          tabBarActiveTintColor: '#a182ff',
+          tabBarIcon: ({ color }) => <IconSymbol size={32} name="sparkles" color={color} />,
         }}
       />
       <Tabs.Screen

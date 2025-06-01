@@ -39,7 +39,7 @@ const DEFAULT_USER_DATA: APIUserData = {
   selectedRocketIndex: 0,
 };
 
-interface AuthoredGame {
+export interface AuthoredGame {
   id: string;
   code: number;
   difficulty: number;
@@ -50,6 +50,8 @@ interface AuthoredGame {
   active: boolean;
   expirationTime: string;
   createdAt: string;
+  questionCount: number;
+  seeded: boolean;
   sessions: Array<{
     id: string;
     playerId: string;
