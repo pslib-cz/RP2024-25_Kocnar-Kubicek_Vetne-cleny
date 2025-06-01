@@ -1,47 +1,18 @@
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
-import { RouteProp, useRoute, useNavigation } from '@react-navigation/native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, ScrollView, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { RouteProp, useRoute } from '@react-navigation/native';
+import { useRouter } from 'expo-router';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { Ionicons } from '@expo/vector-icons';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import { ThemedText } from '@/components/ThemedText';
+import { AuthoredGame, useAPI } from '@/hooks/useAPI';
+import { useRocket } from '@/contexts/RocketContext';
 import { galaxies } from '@/components/ArenaHeader';
-
-interface AuthoredGame {
-  id: string;
-  code: number;
-  difficulty: number;
-  galaxy: number;
-  questiontypes: number;
-  version: string;
-  seed: string | null;
-  active: boolean;
-  expirationTime: string;
-  createdAt: string;
-  questionCount: number;
-  authorId: string;
-  sessions: Array<{
-    id: string;
-    playerId: string;
-    gameId: string;
-    score: number;
-    correctAnswers: number;
-    completed: boolean;
-    startedAt: string;
-    endedAt: string | null;
-    player: {
-      id: string;
-      name: string;
-      bodyColor: string;
-      trailColor: string;
-      selectedRocketIndex: number;
-      clientVersion: string;
-      levels: string;
-      secretKey: string;
-    };
-  }>;
-}
 
 type RootStackParamList = {
   AuthoredGameDetail: {
-    gameParam: AuthoredGame;
+    gameId: string;
   };
 };
 
@@ -53,7 +24,7 @@ const isGameActive = (expirationTime: string, active: boolean) => {
   return now < expiration && active;
 };
 
-const formatDuration = (startTime: string, endTime?: string) => {
+const formatDuration = (startTime: string, endTime?: string | null) => {
   const start = new Date(startTime);
   const end = endTime ? new Date(endTime) : new Date();
   const duration = Math.floor((end.getTime() - start.getTime()) / 1000 / 60); // minutes
@@ -68,12 +39,64 @@ const formatDuration = (startTime: string, endTime?: string) => {
 
 const AuthoredGameDetail = () => {
   const route = useRoute<AuthoredGameDetailRouteProp>();
-  const navigation = useNavigation();
-  const { gameParam } = route.params;
-  const game : AuthoredGame = typeof gameParam === "string" ? JSON.parse(gameParam) as AuthoredGame : gameParam;
+  const router = useRouter();
+  const { userId, secretKey } = useRocket();
+  const api = useAPI({ userId, secretKey });
+  const { gameId } = route.params;
+  
+  const [game, setGame] = useState<AuthoredGame | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  console.log('Game Detail:', game);
-  console.log('Game Sessions:', game.sessions);
+  const fetchGame = async () => {
+    setLoading(true);
+    try {
+      const games = await api.getAuthoredGames();
+
+      console.log('Fetched games:', games.length);
+      console.log('Looking for game with ID:', gameId);
+
+      const currentGame = games.find(g => g.id === gameId);
+      setGame(currentGame || null);
+    } catch (error) {
+      console.warn('Failed to fetch game details:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchGame();
+  }, [gameId]);
+
+  if (loading) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#ffffff" />
+        </View>
+      </SafeAreaView>
+    );
+  }
+
+  if (!game) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <View style={styles.header}>
+          <View style={{ flex: 1 }}>
+            <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }} onPress={() => router.back()}>
+              <Ionicons name="chevron-back" size={24} color="#fff" />
+              <Text style={{ color: '#fff', fontSize: 16, marginLeft: 4 }}>Zpět</Text>
+            </TouchableOpacity>
+          </View>
+          <ThemedText type="title" style={[styles.title, { flex: 2, textAlign: 'center' }]}>Hra nenalezena</ThemedText>
+          <View style={{ flex: 1 }} />
+        </View>
+        <View style={styles.errorContainer}>
+          <Text style={styles.errorText}>Hra s tímto ID nebyla nalezena</Text>
+        </View>
+      </SafeAreaView>
+    );
+  }
 
   const active = isGameActive(game.expirationTime, game.active);
   const completedSessions = game.sessions.filter(session => session.completed);
@@ -83,29 +106,34 @@ const AuthoredGameDetail = () => {
     ? Math.round(completedSessions.reduce((sum, session) => sum + session.correctAnswers, 0) / completedSessions.length / game.questionCount * 100)
     : 0;
 
-  const handleShareGame = () => {
-    Alert.alert('Sdílet hru', `Kód hry: ${game.code}`);
-  };
-
-  const handleDeleteGame = () => {
-    Alert.alert(
-      'Smazat hru',
-      'Opravdu chcete smazat tuto hru? Tato akce je nevratná.',
-      [
-        { text: 'Zrušit', style: 'cancel' },
-        { text: 'Smazat', style: 'destructive', onPress: () => {
-          // Handle delete logic here
-          navigation.goBack();
-        }}
-      ]
-    );
-  };
-
   return (
-    <ScrollView style={styles.container}>
-      {/* Header Section */}
+    <SafeAreaView style={styles.container}>
+      {/* Header */}
       <View style={styles.header}>
-        <View style={styles.headerTop}>
+        <View style={{ flex: 1 }}>
+          <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }} onPress={() => router.back()}>
+            <Ionicons name="chevron-back" size={24} color="#fff" />
+            <Text style={{ color: '#fff', fontSize: 16, marginLeft: 4 }}>Zpět</Text>
+          </TouchableOpacity>
+        </View>
+        <ThemedText type="title" style={[styles.title, { flex: 2, textAlign: 'center' }]}>Detail hry</ThemedText>
+        <View style={{ flex: 1, alignItems: 'flex-end' }}>
+          <MaterialIcons.Button
+            name="refresh"
+            backgroundColor="transparent"
+            underlayColor="transparent"
+            color="#fff"
+            size={24}
+            onPress={fetchGame}
+            accessibilityLabel="Obnovit detail hry"
+            style={{ padding: 0 }}
+          />
+        </View>
+      </View>
+
+      <ScrollView style={styles.scrollView}>
+        {/* Game Status Header */}
+        <View style={styles.statusHeader}>
           <View>
             <Text style={styles.gameCode}>Kód: {game.code}</Text>
             <Text style={styles.gameId}>ID: {game.id}</Text>
@@ -120,219 +148,234 @@ const AuthoredGameDetail = () => {
           </View>
         </View>
 
-        <View style={styles.actionButtons}>
-          <TouchableOpacity style={styles.shareButton} onPress={handleShareGame}>
-            <MaterialIcons name="share" size={20} color="#fff" />
-            <Text style={styles.buttonText}>Sdílet</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.deleteButton} onPress={handleDeleteGame}>
-            <MaterialIcons name="delete" size={20} color="#fff" />
-            <Text style={styles.buttonText}>Smazat</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-
-      {/* Game Details Section */}
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Detaily hry</Text>
-        <View style={styles.detailsGrid}>
-          <View style={styles.detailItem}>
-            <MaterialIcons name="speed" size={20} color="#F9A825" />
-            <Text style={styles.detailLabel}>Obtížnost</Text>
-            <Text style={styles.detailValue}>{game.difficulty}%</Text>
-          </View>
-          
-          <View style={styles.detailItem}>
-            <MaterialIcons name="public" size={20} color="#42A5F5" />
-            <Text style={styles.detailLabel}>Galaxie</Text>
-            <Text style={styles.detailValue}>{galaxies[game.galaxy]?.name || 'Neznámá'}</Text>
-          </View>
-          
-          <View style={styles.detailItem}>
-            <MaterialIcons name="numbers" size={20} color="#AB47BC" />
-            <Text style={styles.detailLabel}>Otázky</Text>
-            <Text style={styles.detailValue}>{game.questionCount}</Text>
-          </View>
-          
-          <View style={styles.detailItem}>
-            <MaterialIcons name="category" size={20} color="#66BB6A" />
-            <Text style={styles.detailLabel}>Typy otázek</Text>
-            <Text style={styles.detailValue}>{game.questiontypes}</Text>
-          </View>
-          
-          <View style={styles.detailItem}>
-            <MaterialIcons name="casino" size={20} color="#26A69A" />
-            <Text style={styles.detailLabel}>Seed</Text>
-            <Text style={styles.detailValue}>{game.seed ? 'Ano' : 'Ne'}</Text>
-          </View>
-          
-          <View style={styles.detailItem}>
-            <MaterialIcons name="code" size={20} color="#FF7043" />
-            <Text style={styles.detailLabel}>Verze</Text>
-            <Text style={styles.detailValue}>{game.version}</Text>
+        {/* Game Details Section */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Detaily hry</Text>
+          <View style={styles.detailsGrid}>
+            <View style={styles.detailItem}>
+              <MaterialIcons name="speed" size={20} color="#F9A825" />
+              <Text style={styles.detailLabel}>Obtížnost</Text>
+              <Text style={styles.detailValue}>{game.difficulty}%</Text>
+            </View>
+            
+            <View style={styles.detailItem}>
+              <MaterialIcons name="public" size={20} color="#42A5F5" />
+              <Text style={styles.detailLabel}>Galaxie</Text>
+              <Text style={styles.detailValue}>{galaxies[game.galaxy]?.name || 'Neznámá'}</Text>
+            </View>
+            
+            <View style={styles.detailItem}>
+              <MaterialIcons name="numbers" size={20} color="#AB47BC" />
+              <Text style={styles.detailLabel}>Otázky</Text>
+              <Text style={styles.detailValue}>{game.questionCount}</Text>
+            </View>
+            
+            <View style={styles.detailItem}>
+              <MaterialIcons name="category" size={20} color="#66BB6A" />
+              <Text style={styles.detailLabel}>Typy otázek</Text>
+              <Text style={styles.detailValue}>{game.questiontypes}</Text>
+            </View>
+            
+            <View style={styles.detailItem}>
+              <MaterialIcons name="casino" size={20} color="#26A69A" />
+              <Text style={styles.detailLabel}>Seed</Text>
+              <Text style={styles.detailValue}>{game.seed ? 'Ano' : 'Ne'}</Text>
+            </View>
+            
+            <View style={styles.detailItem}>
+              <MaterialIcons name="code" size={20} color="#FF7043" />
+              <Text style={styles.detailLabel}>Verze</Text>
+              <Text style={styles.detailValue}>{game.version}</Text>
+            </View>
           </View>
         </View>
-      </View>
 
-      {/* Time Information Section */}
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Časové informace</Text>
-        <View style={styles.timeInfo}>
-          <View style={styles.timeItem}>
-            <MaterialIcons name="event" size={18} color="#4CAF50" />
-            <Text style={styles.timeLabel}>Vytvořeno:</Text>
-            <Text style={styles.timeValue}>
-              {new Date(game.createdAt).toLocaleString('cs-CZ')}
-            </Text>
-          </View>
-          <View style={styles.timeItem}>
-            <MaterialIcons name="hourglass-empty" size={18} color="#FF7043" />
-            <Text style={styles.timeLabel}>Vyprší:</Text>
-            <Text style={styles.timeValue}>
-              {game.expirationTime 
-                ? new Date(game.expirationTime).toLocaleString('cs-CZ')
-                : 'Bez expirace'
-              }
-            </Text>
+        {/* Time Information Section */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Časové informace</Text>
+          <View style={styles.timeInfo}>
+            <View style={styles.timeItem}>
+              <MaterialIcons name="event" size={18} color="#4CAF50" />
+              <Text style={styles.timeLabel}>Vytvořeno:</Text>
+              <Text style={styles.timeValue}>
+                {new Date(game.createdAt).toLocaleString('cs-CZ')}
+              </Text>
+            </View>
+            <View style={styles.timeItem}>
+              <MaterialIcons name="hourglass-empty" size={18} color="#FF7043" />
+              <Text style={styles.timeLabel}>Vyprší:</Text>
+              <Text style={styles.timeValue}>
+                {game.expirationTime 
+                  ? new Date(game.expirationTime).toLocaleString('cs-CZ')
+                  : 'Bez expirace'
+                }
+              </Text>
+            </View>
           </View>
         </View>
-      </View>
 
-      {/* Statistics Section */}
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Statistiky</Text>
-        <View style={styles.statsGrid}>
-          <View style={styles.statItem}>
-            <Text style={styles.statNumber}>{game.sessions.length}</Text>
-            <Text style={styles.statLabel}>Celkem hráčů</Text>
-          </View>
-          <View style={styles.statItem}>
-            <Text style={styles.statNumber}>{completedSessions.length}</Text>
-            <Text style={styles.statLabel}>Dokončeno</Text>
-          </View>
-          <View style={styles.statItem}>
-            <Text style={styles.statNumber}>{activeSessions.length}</Text>
-            <Text style={styles.statLabel}>Aktivních</Text>
-          </View>
-          <View style={styles.statItem}>
-            <Text style={styles.statNumber}>{averageScore}%</Text>
-            <Text style={styles.statLabel}>Průměrné skóre</Text>
+        {/* Statistics Section */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Statistiky</Text>
+          <View style={styles.statsGrid}>
+            <View style={styles.statItem}>
+              <Text style={styles.statNumber}>{game.sessions.length}</Text>
+              <Text style={styles.statLabel}>Celkem hráčů</Text>
+            </View>
+            <View style={styles.statItem}>
+              <Text style={styles.statNumber}>{completedSessions.length}</Text>
+              <Text style={styles.statLabel}>Dokončeno</Text>
+            </View>
+            <View style={styles.statItem}>
+              <Text style={styles.statNumber}>{activeSessions.length}</Text>
+              <Text style={styles.statLabel}>Aktivních</Text>
+            </View>
+            <View style={styles.statItem}>
+              <Text style={styles.statNumber}>{averageScore}%</Text>
+              <Text style={styles.statLabel}>Průměrné skóre</Text>
+            </View>
           </View>
         </View>
-      </View>
 
-      {/* Players Section */}
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Hráči ({game.sessions.length})</Text>
-        
-        {activeSessions.length > 0 && (
-          <>
-            <Text style={styles.subsectionTitle}>Aktivní hráči ({activeSessions.length})</Text>
-            {activeSessions.map((session) => (
-              <View key={session.id} style={styles.playerCard}>
-                <View style={styles.playerHeader}>
-                  <View style={styles.playerInfo}>
-                    <View
-                      style={[
-                        styles.playerColor,
-                        { backgroundColor: session.player.bodyColor }
-                      ]}
-                    />
-                    <View>
-                      <Text style={styles.playerName}>{session.player.name}</Text>
-                      <Text style={styles.playerMeta}>
-                        Začal: {new Date(session.startedAt).toLocaleString('cs-CZ', { 
-                          dateStyle: 'short', 
-                          timeStyle: 'short' 
-                        })}
+        {/* Players Section */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Hráči ({game.sessions.length})</Text>
+          
+          {activeSessions.length > 0 && (
+            <>
+              <Text style={styles.subsectionTitle}>Aktivní hráči ({activeSessions.length})</Text>
+              {activeSessions.map((session) => (
+                <View key={session.id} style={styles.playerCard}>
+                  <View style={styles.playerHeader}>
+                    <View style={styles.playerInfo}>
+                      <View
+                        style={[
+                          styles.playerColor,
+                          { backgroundColor: session.player.bodyColor }
+                        ]}
+                      />
+                      <View>
+                        <Text style={styles.playerName}>{session.player.name}</Text>
+                        <Text style={styles.playerMeta}>
+                          Začal: {new Date(session.startedAt).toLocaleString('cs-CZ', { 
+                            dateStyle: 'short', 
+                            timeStyle: 'short' 
+                          })}
+                        </Text>
+                      </View>
+                    </View>
+                    <View style={styles.playingBadge}>
+                      <Text style={styles.playingText}>Hraje</Text>
+                    </View>
+                  </View>
+                  <Text style={styles.playDuration}>
+                    Doba hry: {formatDuration(session.startedAt)}
+                  </Text>
+                </View>
+              ))}
+            </>
+          )}
+          
+          {completedSessions.length > 0 && (
+            <>
+              <Text style={styles.subsectionTitle}>Dokončené hry ({completedSessions.length})</Text>
+              {completedSessions
+                .sort((a, b) => b.correctAnswers - a.correctAnswers)
+                .map((session, index) => (
+                <View key={session.id} style={styles.playerCard}>
+                  <View style={styles.playerHeader}>
+                    <View style={styles.playerInfo}>
+                      <View
+                        style={[
+                          styles.playerColor,
+                          { backgroundColor: session.player.bodyColor }
+                        ]}
+                      />
+                      <View>
+                        <Text style={styles.playerName}>
+                          {index < 3 && ['🥇', '🥈', '🥉'][index]} {session.player.name}
+                        </Text>
+                        <Text style={styles.playerMeta}>
+                          Dokončeno: {session.endedAt ? new Date(session.endedAt).toLocaleString('cs-CZ', { 
+                            dateStyle: 'short', 
+                            timeStyle: 'short' 
+                          }) : 'Neznámo'}
+                        </Text>
+                      </View>
+                    </View>
+                    <View style={styles.scoreInfo}>
+                      <Text style={styles.score}>
+                        {session.correctAnswers}/{game.questionCount}
+                      </Text>
+                      <Text style={styles.percentage}>
+                        {Math.round((session.correctAnswers / game.questionCount) * 100)}%
                       </Text>
                     </View>
                   </View>
-                  <View style={styles.playingBadge}>
-                    <Text style={styles.playingText}>Hraje</Text>
-                  </View>
+                  <Text style={styles.playDuration}>
+                    Doba hry: {formatDuration(session.startedAt, session.endedAt)}
+                  </Text>
                 </View>
-                <Text style={styles.playDuration}>
-                  Doba hry: {formatDuration(session.startedAt)}
-                </Text>
-              </View>
-            ))}
-          </>
-        )}
-        
-        {completedSessions.length > 0 && (
-          <>
-            <Text style={styles.subsectionTitle}>Dokončené hry ({completedSessions.length})</Text>
-            {completedSessions
-              .sort((a, b) => b.correctAnswers - a.correctAnswers)
-              .map((session, index) => (
-              <View key={session.id} style={styles.playerCard}>
-                <View style={styles.playerHeader}>
-                  <View style={styles.playerInfo}>
-                    <View
-                      style={[
-                        styles.playerColor,
-                        { backgroundColor: session.player.bodyColor }
-                      ]}
-                    />
-                    <View>
-                      <Text style={styles.playerName}>
-                        {index < 3 && ['🥇', '🥈', '🥉'][index]} {session.player.name}
-                      </Text>
-                      <Text style={styles.playerMeta}>
-                        Dokončeno: {new Date(session.endedAt).toLocaleString('cs-CZ', { 
-                          dateStyle: 'short', 
-                          timeStyle: 'short' 
-                        })}
-                      </Text>
-                    </View>
-                  </View>
-                  <View style={styles.scoreInfo}>
-                    <Text style={styles.score}>
-                      {session.correctAnswers}/{game.questionCount}
-                    </Text>
-                    <Text style={styles.percentage}>
-                      {Math.round((session.correctAnswers / game.questionCount) * 100)}%
-                    </Text>
-                  </View>
-                </View>
-                <Text style={styles.playDuration}>
-                  Doba hry: {formatDuration(session.startedAt, session.endedAt)}
-                </Text>
-              </View>
-            ))}
-          </>
-        )}
-      </View>
-
-      {/* Technical Details Section */}
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Technické detaily</Text>
-        <View style={styles.techDetails}>
-          <Text style={styles.techItem}>Seed: {game.seed}</Text>
-          <Text style={styles.techItem}>Game ID: {game.id}</Text>
+              ))}
+            </>
+          )}
         </View>
-      </View>
-    </ScrollView>
+
+        {/* Technical Details Section */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Technické detaily</Text>
+          <View style={styles.techDetails}>
+            <Text style={styles.techItem}>Seed: {game.seed || 'Není nastaven'}</Text>
+            <Text style={styles.techItem}>Game ID: {game.id}</Text>
+            <Text style={styles.techItem}>Author ID: {game.authorId}</Text>
+          </View>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0F1419',
+    backgroundColor: '#101223',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 16,
+  },
+  errorText: {
+    color: '#888',
+    textAlign: 'center',
+    fontSize: 16,
   },
   header: {
-    backgroundColor: '#1E2235',
+    flexDirection: 'row',
+    alignItems: 'center',
     padding: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: '#2A3049',
   },
-  headerTop: {
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  scrollView: {
+    padding: 16,
+  },
+  statusHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
     marginBottom: 16,
+    backgroundColor: '#1E2235',
+    padding: 16,
+    borderRadius: 8,
   },
   gameCode: {
     fontSize: 24,
@@ -360,39 +403,11 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#fff',
   },
-  actionButtons: {
-    flexDirection: 'row',
-    gap: 12,
-  },
-  shareButton: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#42A5F5',
-    paddingVertical: 12,
-    borderRadius: 8,
-    gap: 8,
-  },
-  deleteButton: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#EF5350',
-    paddingVertical: 12,
-    borderRadius: 8,
-    gap: 8,
-  },
-  buttonText: {
-    color: '#fff',
-    fontWeight: '600',
-  },
   section: {
     backgroundColor: '#1E2235',
-    margin: 16,
+    marginBottom: 16,
     padding: 16,
-    borderRadius: 12,
+    borderRadius: 8,
   },
   sectionTitle: {
     fontSize: 18,
