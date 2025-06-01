@@ -34,8 +34,8 @@ const DEFAULT_USER_DATA: APIUserData = {
   secretKey: '',
   userId: '',
   name: 'Uživatel',
-  bodyColor: '#FF7733',
-  trailColor: '#F7D795',
+  bodyColor: '#ffffff',
+  trailColor: '#cf33ff',
   selectedRocketIndex: 0,
 };
 

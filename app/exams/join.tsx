@@ -45,7 +45,7 @@ export default function JoinGameScreen() {
     try {
       await leaveGame();
       setCode('');
-      router.push('/exams');
+      router.replace('/exams');
     } catch (error) {
       console.warn('Error leaving game:', error);
       alert('Nepodařilo se opustit hru. Zkuste to prosím znovu.');

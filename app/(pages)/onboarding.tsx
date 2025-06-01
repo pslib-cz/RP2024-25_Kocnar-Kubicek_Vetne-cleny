@@ -16,6 +16,7 @@ import { ButtonState } from '@/components/ui/games/WordButton';
 import { useLevelContext } from '@/contexts/levelContext';
 import { NamedRocket } from '@/components/NamedRocket';
 import AndroidSafeArea from '@/components/AndroidSafeArea';
+import { PlayerRocket } from '@/components/PlayerRocket';
 // Helper to load SVG as string
 const loadSvgAsset = async (assetModule: any): Promise<string | null> => {
   try {
@@ -336,8 +337,33 @@ export default function OnboardingScreen() {
             {/* User info section */}
             <View style={styles.playerInfoContainer}>
               <NamedRocket
-                width={60}
-                height={60}
+                containerStyle={styles.namedRocketContainer}
+                textStyle={styles.playerName}
+              />
+              
+              <PlayerRocket
+                player={
+                    {
+                        id: "a",
+                        name: 'Karel',
+                        bodyColor: "#cfc",
+                        trailColor: "#8f2",
+                        selectedRocketIndex: 3,
+                    }
+                }
+                containerStyle={styles.namedRocketContainer}
+                textStyle={styles.playerName}
+              />
+              <PlayerRocket
+                player={
+                    {
+                        id: "a",
+                        name: 'Paní Kovářová',
+                        bodyColor: "#f8c",
+                        trailColor: "#fff",
+                        selectedRocketIndex: 2,
+                    }
+                }
                 containerStyle={styles.namedRocketContainer}
                 textStyle={styles.playerName}
               />
@@ -448,15 +474,17 @@ const styles = StyleSheet.create({
   },
   cancelButton: {
     flex: 1,
-    backgroundColor: '#333',
     padding: 12,
     borderRadius: 6,
     marginRight: 8,
     alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#4A5BD2',
+    boxSizing: 'border-box',
   },
   confirmButton: {
     flex: 1,
-    backgroundColor: '#FF7733',
+    backgroundColor: '#4A5BD2',
     padding: 12,
     borderRadius: 6,
     marginLeft: 8,
@@ -478,14 +506,14 @@ const styles = StyleSheet.create({
     height: 80,
     margin: 8,
     borderRadius: 12,
-    backgroundColor: '#1A1A1A',
+    backgroundColor: '#101223',
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 2,
     borderColor: 'transparent',
   },
   selectedRocketOption: {
-    borderColor: '#FF7733',
+    borderColor: '#4A5BD2',
   },
   bottomButtonContainer: {
     position: 'absolute',
@@ -501,13 +529,14 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   namedRocketContainer: {
-    width: 60,
-    height: 60,
     borderRadius: 30,
     borderWidth: 2,
-    borderColor: '#FF7733',
+    borderColor: '#4A5BD2',
+    backgroundColor: '#101223',
     justifyContent: 'center',
+    padding: 10,
     alignItems: 'center',
+    marginVertical: 10,
   },
   playerName: {
     color: 'white',
