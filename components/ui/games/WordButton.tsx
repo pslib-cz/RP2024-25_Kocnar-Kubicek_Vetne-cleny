@@ -117,13 +117,15 @@ const styles = StyleSheet.create({
     borderColor: '#333',
     borderWidth: 1,
     borderRadius: 5,
-    paddingHorizontal: 10,
-    paddingVertical: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
   },
   highlightedButton: {
     backgroundColor: 'transparent',
     borderColor: '#ffffff',
     borderWidth: 3,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
   },
   disabledButton: {
     // backgroundColor: '#333',
@@ -133,6 +135,8 @@ const styles = StyleSheet.create({
     // backgroundColor: '#2a9d8f',
     borderColor: '#2a9d8f',
     borderWidth: 3,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
   },
   buttonText: {
     color: 'white',

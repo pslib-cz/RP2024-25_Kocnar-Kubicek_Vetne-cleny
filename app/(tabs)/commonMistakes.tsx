@@ -5,7 +5,7 @@ import { useCommonMistakesContext } from '@/contexts/CommonMistakesContext';
 import { useGameContext } from '@/contexts/GameContext';
 import { CommonMistake } from '@/types/CommonMistake';
 import { WordSelectionOption } from '@/types/games/SelectionOption';
-import { useRouter } from 'expo-router';
+import { router, useRouter } from 'expo-router';
 import React from 'react';
 import { Pressable, ScrollView, View } from 'react-native';
 
@@ -61,7 +61,8 @@ export default function CommonMistakes() {
         </ScrollView>
         <PlayfulButton
           title={"Procvičit chyby"}
-          onPress={newGameWitMostCommonMistakes}
+          //onPress={newGameWitMostCommonMistakes}
+          onPress={() => router.push('/(pages)/abbrlist')}
           disabled={allMistakes.length === 0}
         />
       </View>
