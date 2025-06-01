@@ -147,7 +147,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   footer: {
-    padding: 20,
+    padding: 12,
     alignItems: 'center',
     borderTopWidth: 1,
     borderTopColor: '#333',

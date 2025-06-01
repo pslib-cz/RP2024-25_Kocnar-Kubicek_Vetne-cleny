@@ -96,7 +96,7 @@ export const Game: React.FC = () => {
         ]} 
         onPress={() => {setHintActive(true)}}
       >
-        <ThemedText type="defaultSemiBold">?</ThemedText>
+        <ThemedText type="defaultSemiBold" style={{fontWeight: 900}}>?</ThemedText>
       </TouchableOpacity>
     )
   }
@@ -111,13 +111,13 @@ export const Game: React.FC = () => {
           leaveAlert()
         }}
       >
-        <ThemedText type="defaultSemiBold">X</ThemedText>
+        <ThemedText type="defaultSemiBold" style={{fontWeight: 900}}>X</ThemedText>
       </TouchableOpacity>
     )
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <HintModal
         visible={hintActive} 
         onClose={() => {setHintActive(false)}}
@@ -148,25 +148,20 @@ export const Game: React.FC = () => {
       >
         {gameContent()}
       </Animated.View>
-    </SafeAreaView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   headerWrapper: {
-    // width: '100%',
-    // display: 'flex',
     flexDirection: 'row',
-    // alignItems: 'center',
     gap: 12,
-    // flexShrink: 1,
-    // zIndex: 1,
   },
   container: {
     flex: 1,
     backgroundColor: '#101223',
     paddingHorizontal: 20,
-    paddingVertical: 24,
+    paddingVertical: 56,
     gap: 40,
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -177,8 +172,9 @@ const styles = StyleSheet.create({
   container1: {
     flex: 1,
     // backgroundColor: '#101223',
-    gap: 24,
-    justifyContent: 'space-between',
+    gap: 32,
+    // paddingVertical: 4,
+    justifyContent: 'space-around',
     alignItems: 'center',
     width: '100%',
   },
@@ -187,7 +183,7 @@ const styles = StyleSheet.create({
     // paddingVertical: 12,
     aspectRatio: 1,
     height: 40,
-    paddingHorizontal: 16,
+    // paddingHorizontal: 8,
     borderRadius: 24, // Rounded corners
     alignItems: 'center',
     justifyContent: 'center',

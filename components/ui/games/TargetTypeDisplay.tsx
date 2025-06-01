@@ -9,10 +9,10 @@ export const TargetTypeDisplay = ({ text }: { text: string }) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.wrapper}>
+      <View>
         <Text style={styles.title}>{text}</Text>
       </View>
-      <View style={styles.wrapper}>
+      <View style={{justifyContent: 'flex-start'}}>
         {
           targetType &&
           <Tooltip
@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    // gap: 0,
+    gap: 12,
     zIndex: 100,
     flexWrap: 'wrap',
   },
@@ -53,12 +53,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   wrapper: {
-    flexGrow: 1,
-    display: 'flex',
-    flexDirection: 'row',
+    // flexGrow: 1,
+    // display: 'flex',
+    // flexDirection: 'row',
     // flexWrap: 'wrap',
     // alignItems: 'center',
     // gap: 20,
-    justifyContent: 'center',
+    // justifyContent: 'center',
   }
 });

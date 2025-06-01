@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     borderRadius: 24, // Rounded corners
     alignItems: 'center',
-    justifyContent: 'center',
+    // justifyContent: 'center',
     width: '100%',
     maxWidth: 300, // Maximum width
   },
