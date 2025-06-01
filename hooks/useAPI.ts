@@ -66,6 +66,8 @@ export interface AuthoredGame {
       bodyColor: string;
       trailColor: string;
       selectedRocketIndex: number;
+      clientVersion: string;
+      levels: string;
     };
   }>;
 }
