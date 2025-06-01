@@ -527,6 +527,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'center',
     paddingHorizontal: 16,
+    marginBottom: 24,
   },
   playerInfoContainer: {
     marginBottom: 24,
