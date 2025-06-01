@@ -89,7 +89,7 @@ export default function OnboardingScreen() {
 
   // Sync local name to context
   useEffect(() => {
-    setName(localName.trim());
+    setName(localName.trim().slice(0, 32));
   }, [localName, setName]);
 
   // Color picker logic
@@ -139,6 +139,9 @@ export default function OnboardingScreen() {
             </ThemedText>
             <ThemedText type="default" style={{ marginBottom: 16, textAlign: 'center', fontSize: 18 }}>
               Před tím, než začneš, musíš si nastavit svůj profil a naučit se používat aplikaci.
+            </ThemedText>
+            <ThemedText type="default" style={{ marginBottom: 16, textAlign: 'center', fontSize: 18 }}>
+              Stisknutím tlačítka "Pokračovat" souhlasíš s <ThemedText type="defaultSemiBold" style={{ color: '#4A5BD2' }} onPress={() => router.push('/(pages)/gdpr')}>Zásadami ochrany osobních údajů</ThemedText>. Údaje jsou použity pro zobrazení výsledků hry a vašeho profilu v rámci sdílených her.
             </ThemedText>
           </View>
           <View style={styles.bottomButtonContainer}>

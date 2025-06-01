@@ -50,6 +50,13 @@ export default function AboutPage() {
             style={styles.button}
           />
           <PlayfulButton
+            title="Zásady ochrany osobních údajů"
+            icon={<MaterialIcons name="privacy-tip" size={22} color="white" />}
+            onPress={() => router.push('/(pages)/gdpr')}
+            style={styles.button}
+            variant="gray"
+          />
+          <PlayfulButton
             title="DEVELOPER MENU"
             onPress={() => router.push('/(pages)/(debug)/gameTests')}
             style={styles.button}
@@ -128,7 +135,6 @@ const styles = StyleSheet.create({
     gap: 16,
   },
   button: {
-    width: 220,
     marginVertical: 4,
   },
 });

@@ -12,7 +12,7 @@ import { Ionicons } from '@expo/vector-icons';
 export default function CreateGameScreen() {
   const [difficulty, setDifficulty] = useState(50);
   const [galaxy, setGalaxy] = useState(0);
-  const [questionTypes, setQuestionTypes] = useState(0b01101111);
+  const [questionTypes, setQuestionTypes] = useState(0b01111111);
   const [expirationTime, setExpirationTime] = useState(new Date(Date.now() + 30.5 * 60 * 1000)); // Default 30 minutes from now
 
   enum DatePickerState {

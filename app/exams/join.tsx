@@ -95,36 +95,6 @@ export default function JoinGameScreen() {
           />
         </View>
 
-        {/* Game author section */}
-        {author && (
-          <View style={styles.playerInfoCard}>
-            <ThemedText style={styles.playerInfoTitle}>Autor hry</ThemedText>
-            <PlayerRocket
-              player={author}
-              width={70}
-              height={70}
-            />
-          </View>
-        )}
-
-        {/* Players section */}
-        {players && players.length > 0 && (
-          <View style={styles.playerInfoCard}>
-            <ThemedText style={styles.playerInfoTitle}>Účastníci ({players.length})</ThemedText>
-            <View style={styles.playersList}>
-              {players.map(player => (
-                <PlayerRocket
-                  key={player.id}
-                  player={player}
-                  width={60}
-                  height={60}
-                  containerStyle={styles.playerItem}
-                />
-              ))}
-            </View>
-          </View>
-        )}
-
         <View style={styles.infoCard}>
           <View style={styles.infoRow}>
             <ThemedText style={styles.infoLabel}>Kód hry:</ThemedText>
@@ -157,6 +127,35 @@ export default function JoinGameScreen() {
           />
         </View>
         {/* </View> */}
+        
+        {/* Game author section */}
+        {author && (
+          <View style={styles.playerInfoCard}>
+            <ThemedText style={styles.playerInfoTitle}>Autor hry</ThemedText>
+            <PlayerRocket
+              player={author}
+              width={70}
+              height={70}
+            />
+          </View>
+        )}
+        {/* Players section */}
+        {players && players.length > 0 && (
+          <View style={styles.playerInfoCard}>
+            <ThemedText style={styles.playerInfoTitle}>Účastníci ({players.length})</ThemedText>
+            <View style={styles.playersList}>
+              {players.map(player => (
+                <PlayerRocket
+                  key={player.id}
+                  player={player}
+                  width={60}
+                  height={60}
+                  containerStyle={styles.playerItem}
+                />
+              ))}
+            </View>
+          </View>
+        )}
       </ScrollView>
     )
   }
@@ -299,7 +298,6 @@ const styles = StyleSheet.create({
   buttonContainer: {
     width: '100%',
     gap: 15,
-    marginTop: 10,
   },
   galaxyInfo: {
     flexDirection: 'row',
