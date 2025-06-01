@@ -18,11 +18,13 @@ export const AuthoredGameCard = ({ game }: { game: AuthoredGame }) => {
   const router = useRouter();
 
   return (
-    <Pressable onPressOut={
-      () =>     router.push({
-      pathname: `/exams/(teacher)/authoredGameDetail` as never,
-      params: { gameParam: JSON.stringify(game) }
-    })
+    <Pressable onPress={
+      () => {
+        router.push({
+          pathname: `/exams/(teacher)/authoredGameDetail` as never,
+          params: { gameId: game.id }
+        })
+      }
     } key={game.id} style={styles.card}>
       <View style={styles.cardHeader}>
         <View>
