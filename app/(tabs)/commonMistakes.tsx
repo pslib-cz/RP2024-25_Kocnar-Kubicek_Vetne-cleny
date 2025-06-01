@@ -57,7 +57,7 @@ export default function CommonMistakes() {
         onClose={() => { setDisplayedSentence(null) }}
         sentence={displayedSentence}
       />
-      <View style={{ marginBottom: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', flexGrow: 1 }}>
+      <View style={{ marginBottom: 16, marginHorizontal: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', flexGrow: 1 }}>
         <ThemedText type="title" style={{ marginBottom: 16, marginTop: 16, textAlign: 'center' }}>Nejčastější chyby</ThemedText>
         <ScrollView style={{ height: 10 }}>
           {allMistakes.length === 0 ? (

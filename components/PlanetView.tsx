@@ -179,7 +179,6 @@ const styles = StyleSheet.create({
   planetContentContainer: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center', // Added to center the planet vertically
     marginTop: 40, // 
   },
   planetImage: {

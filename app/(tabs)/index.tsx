@@ -40,11 +40,7 @@ const ArenaPlanet: React.FC = () => {
               onPress={newGameInArena}
               variant="primary"
             />
-            <PlayfulButton
-              title="Nejčastější chyby"
-              onPress={() => router.push('/commonMistakes')}
-              variant="secondary"
-            />
+
           </View>
         </View>
 

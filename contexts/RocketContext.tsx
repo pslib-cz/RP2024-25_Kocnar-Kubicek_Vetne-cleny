@@ -7,6 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Crypto from 'expo-crypto';
 import { useAPI } from '@/hooks/useAPI';
 import { useGalaxyContext } from './GalaxyContext';
+import { router } from 'expo-router';
 
 interface RocketContextType {
   bodyColor: string;
@@ -16,7 +17,7 @@ interface RocketContextType {
   selectedRocketIndex: number;
   setSelectedRocketIndex: React.Dispatch<React.SetStateAction<number>>;
   name: string;
-  setName: React.Dispatch<React.SetStateAction<string>>;
+  setName: (nameInput: string) => void;
   teacherMode: boolean;
   setTeacherMode: React.Dispatch<React.SetStateAction<boolean>>;
   userId: string;
@@ -46,10 +47,16 @@ export const RocketProvider = ({ children }: RocketProviderProps) => {
   const [bodyColor, setBodyColor] = useState(() => randomLightGray());
   const [trailColor, setTrailColor] = useState(() => randomSaturatedColor());
   const [selectedRocketIndex, setSelectedRocketIndex] = useState(0);
-  const [name, setName] = useState('');
+  const [name, setNameRaw] = useState('');
   const [teacherMode, setTeacherMode] = useState(false);
   const [userId, setUserId] = useState<string>('');
   const [secretKey, setSecretKey] = useState<string>('');
+
+  const setName = (nameInput: string) => {
+    if (nameInput && nameInput !== '') {
+      setNameRaw(nameInput);
+    }
+  };
   
   const { activePlanets } = useGalaxyContext();
   
@@ -111,6 +118,10 @@ export const RocketProvider = ({ children }: RocketProviderProps) => {
         const savedRocketIndex = await AsyncStorage.getItem('user_profile_rocket_index');
         const savedName = await AsyncStorage.getItem('user_profile_name');
         const savedTeacherMode = await AsyncStorage.getItem('user_profile_teacher_mode');
+
+        if (!savedName || savedName === '') {
+            router.push('/(pages)/onboarding');
+        }
 
         if (savedBodyColor) setBodyColor(savedBodyColor);
         if (savedTrailColor) setTrailColor(savedTrailColor);
