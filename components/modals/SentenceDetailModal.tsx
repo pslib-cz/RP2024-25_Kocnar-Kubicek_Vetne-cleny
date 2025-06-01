@@ -33,7 +33,7 @@ const SentenceDetailModal: React.FC<SentenceDetailModalProps> = ({
         text: item.text,
         type: item.type,
         drawType: true,
-        state: ButtonState.correct
+        state: ButtonState.default
       }))
     )      
   }, [sentence]);

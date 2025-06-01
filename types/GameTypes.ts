@@ -1,8 +1,8 @@
 import { WordSelectionOption } from "./games/SelectionOption";
 import { GameState } from "./gameState";
 import { WordButtonType } from "./games/WordButtonType";
-import { Question } from "@/hooks/QuestionsGenerator/useQuestionGenerator";
 import { GameType } from "@/contexts/GameContext";
+import { Question } from "./Question";
 
 export interface ActiveGameInfo {
   activeQuestionIndex: number;
@@ -17,7 +17,7 @@ export interface ActiveGameInfo {
 }
 
 export interface GameContextData {
-  newGame: (config: any) => void;
+  newGame: (config: any, gameType : GameType) => void;
   newGameInArena: () => void;
   onFinished: (isCorrect: boolean) => void;
   getDuration: () => number;

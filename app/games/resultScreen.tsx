@@ -13,8 +13,8 @@ const PracticeCompleteScreen = () => {
   const { newGameInArena, gameType, newGameWitMostCommonMistakes } = useGameContext();
   const { code } = useMultiplayerGameContext();
 
-  const ResultStuff = ({text, value, color} : {text : string, value : string, color : string}) => {
-    return(
+  const ResultStuff = ({ text, value, color }: { text: string, value: string, color: string }) => {
+    return (
       <View style={[styles.statBox, { backgroundColor: color }]}>
         <View style={styles.iconContainer}>
           <FontAwesome name="bolt" size={24} color="white" />
@@ -26,7 +26,7 @@ const PracticeCompleteScreen = () => {
   }
 
   const successRate = getSuccessRate();
-  
+
   // Calculate color from red (10%) to green (90%)
   const getSuccessRateColor = (rate: number) => {
     // Clamp rate between 10 and 90
@@ -46,16 +46,16 @@ const PracticeCompleteScreen = () => {
   const resultScreenPractice = () => {
     return (
       <View style={styles.container}>
-        <PlanetView displayName={false}/>
+        <PlanetView displayName={false} />
 
         <Text style={styles.title}>{successRate >= NEXT_LEVEL_TRESHOLD ? "Úroveň dokončena!" : "Úroveň nesplněna!"}</Text>
-        <Text style={{color: "white", marginBottom: 16}}>Pro odemčení další úrovně je nutné mít úspěšnost alespoň {NEXT_LEVEL_TRESHOLD}%</Text>
+        <Text style={{ color: "white", marginBottom: 16 }}>Pro odemčení další úrovně je nutné mít úspěšnost alespoň {NEXT_LEVEL_TRESHOLD}%</Text>
 
         <View style={styles.statsContainer}>
           <ResultStuff text="Čas" value={`${getDuration()}s`} color="#6272A4" />
           <ResultStuff text="Úspěšnost" value={`${successRate.toFixed(2)}%`} color={successRateColor} />
         </View>
-  
+
         <Button title={successRate >= NEXT_LEVEL_TRESHOLD ? "Další level" : "Zkusit znovu"} filled={true} onPress={newGameInArena} />
         <Button title="Domů" filled={false} onPress={() => navigation.navigate('/' as never)} />
       </View>
@@ -73,7 +73,7 @@ const PracticeCompleteScreen = () => {
           <ResultStuff text="Time" value={`${getDuration()}s`} color="#6272A4" />
           <ResultStuff text="Success rate" value={`${successRate.toFixed(2)}%`} color={successRateColor} />
         </View>
-  
+
         {/* <Button title={successRate >= NEXT_LEVEL_TRESHOLD ? "Další level" : "Zkusit znovu"} filled={true} onPress={newGameWithCount} /> */}
         <Button title="Domů" filled={false} onPress={() => navigation.navigate('/' as never)} />
       </View>
@@ -88,23 +88,29 @@ const PracticeCompleteScreen = () => {
         </Text>
 
         <View style={styles.statsContainer}>
-          <ResultStuff text="Time" value={`${getDuration()}s`} color="#6272A4" />
-          <ResultStuff text="Success rate" value={`${successRate.toFixed(2)}%`} color={successRateColor} />
+          <ResultStuff text="Čas" value={`${getDuration()}s`} color="#6272A4" />
+          <ResultStuff text="Úspešnost" value={`${successRate.toFixed(2)}%`} color={successRateColor} />
         </View>
-  
+
         <Button title={"Zkusit znovu"} filled={true} onPress={newGameWitMostCommonMistakes} />
         <Button title="Domů" filled={false} onPress={() => navigation.navigate('/' as never)} />
       </View>
     )
   }
 
-  if (gameType == GameType.TEST) return resultScreenMultiplayer();
-  if (gameType == GameType.COMMON_MISTAKES) return commonMistakesScreen();
-  return resultScreenPractice();
+  switch (gameType) {
+    case GameType.TEST:
+      return resultScreenMultiplayer();
+    case GameType.TEST_PRACTICE:
+      return resultScreenMultiplayer();
+    case GameType.COMMON_MISTAKES:
+      return commonMistakesScreen();
+    default:
+      return resultScreenPractice();
+  }
 };
 
-function Button({ title, filled, onPress } : { title: string, filled: boolean, onPress: () => void })
-{
+function Button({ title, filled, onPress }: { title: string, filled: boolean, onPress: () => void }) {
   return (
     <TouchableOpacity
       style={[

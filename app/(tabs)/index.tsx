@@ -1,6 +1,5 @@
 import ArenaHeader from '@/components/ArenaHeader';
 import PlanetView from '@/components/PlanetView';
-import BigassButton from '@/components/ui/BigassButton';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import React from 'react';
 import { StyleSheet, View, TouchableOpacity, Text } from 'react-native';
@@ -23,28 +22,19 @@ const ArenaPlanet: React.FC = () => {
         >
           <PlanetView displayName={false}/>
         </TouchableOpacity>
-        {/* <BigassButton
-          title={"Další cvičení"}
-          bgEmoji="🚀"
-          onPress={newGameInArena}
-        /> */}
-        {/* <PlayfulButton
-          title={"Další cvičení"}
-          onPress={newGameInArena}
-        /> */}
         <View style={styles.card}>
           <Text style={{ color: '#fff', fontSize: 24, fontWeight: 'bold', marginBottom: 16 }}>
             {selectedPlanet.name}
           </Text>
           <View style={styles.buttonContainer}>
             <PlayfulButton
-              title="Nanečisto"
+              title="Další cvičení"
               onPress={newGameInArena}
               variant="primary"
             />
             <PlayfulButton
-              title="Připojit se"
-              onPress={newGameInArena}
+              title="Nejčastější chyby"
+              onPress={() => router.push('/commonMistakes')}
               variant="secondary"
             />
           </View>

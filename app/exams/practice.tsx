@@ -3,7 +3,7 @@ import { View, StyleSheet, TouchableOpacity, Switch, ScrollView, Image, TextInpu
 import { ThemedText } from '@/components/ThemedText';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Slider from '@react-native-community/slider';
-import { useGameContext } from '@/contexts/GameContext';
+import { GameType, useGameContext } from '@/contexts/GameContext';
 import { galaxyImages } from '@/data/galaxyImages';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
@@ -45,7 +45,7 @@ export default function CreateGameScreen() {
             difficulty: difficulty/100,
             count: count,
             questionTypesBitfield: questionTypes,
-        });
+        }, GameType.TEST_PRACTICE);
       } catch (error) {
         alert('Nepodařilo se spustit cvičení. Zkuste to znovu.');
         console.warn('Error starting exam:', error);

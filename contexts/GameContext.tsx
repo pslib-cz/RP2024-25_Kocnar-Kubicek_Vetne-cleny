@@ -11,15 +11,17 @@ import { useGalaxyContext } from './GalaxyContext';
 import { useCommonMistakesContext } from './CommonMistakesContext';
 // import { generateRandomGameLevels, generateRandomMistakesLevels } from './utils/GameDataGenerator';
 // import { GameLevel } from '@/types/games/GameLevel';
-import { Question, useQuestionGenerator } from '@/hooks/QuestionsGenerator/useQuestionGenerator';
 import { Galaxy, GeneratorParam, QuestionType } from '@/constants/questionGeneratorParams';
+import { questionGenerator } from '@/utils/QuestionsGenerator/questionGenerator';
+import { Question } from '@/types/Question';
 
 const GameContext = createContext<GameContextData | undefined>(undefined);
 
 export enum GameType {
   PRACTICE,
   TEST,
-  COMMON_MISTAKES
+  COMMON_MISTAKES,
+  TEST_PRACTICE
 }
 
 export const NEXT_LEVEL_TRESHOLD = 0.75 * 100;
@@ -65,10 +67,10 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
       count: LEVELS_COUNT,
       seed: Math.floor(Math.random() * 1000000),
       questionTypesBitfield: (1 << questionTypeOptions.length) - 1,
-    });
+    }, GameType.PRACTICE);
   }
 
-  const newGame = (config: typeof gameConfig) => {
+  const newGame = (config: typeof gameConfig, gameType : GameType) => {
     if (!config.seed) config.seed = Math.floor(Math.random() * 1000000);
     if (!config.questionTypesBitfield) config.questionTypesBitfield = (1 << questionTypeOptions.length) - 1;
 
@@ -77,7 +79,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setGameConfig(config);
     setCorrectAnswersCount(0);
 
-    newGameWithQuestions(useQuestionGenerator(config), code ? GameType.TEST : GameType.PRACTICE);
+    newGameWithQuestions(questionGenerator(config), gameType);
   }
 
   const newGameWitMostCommonMistakes = () => {

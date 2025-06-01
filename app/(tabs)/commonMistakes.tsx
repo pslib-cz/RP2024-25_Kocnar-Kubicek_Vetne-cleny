@@ -1,6 +1,5 @@
 import SentenceDetailModal from '@/components/modals/SentenceDetailModal';
 import { ThemedText } from '@/components/ThemedText';
-import BigassButton from '@/components/ui/BigassButton';
 import PlayfulButton from '@/components/ui/PlayfulButton';
 import { useCommonMistakesContext } from '@/contexts/CommonMistakesContext';
 import { useGameContext } from '@/contexts/GameContext';
@@ -13,7 +12,6 @@ import { Pressable, ScrollView, View } from 'react-native';
 export default function CommonMistakes() {
   const { newGameWitMostCommonMistakes } = useGameContext()
   const { allMistakes } = useCommonMistakesContext();
-  const router = useRouter()
 
   const [displayedSentence, setDisplayedSentence] = React.useState<WordSelectionOption[] | null>(null);
 
@@ -50,20 +48,19 @@ export default function CommonMistakes() {
         onClose={() => { setDisplayedSentence(null) }}
         sentence={displayedSentence}
       />
-      {/* <BigassButton title='⛷️ Procvičování' bgEmoji='⛷️' onPress={newGameWitMostCommonMistakes} enabled={allMistakes.length != 0}/> */}
       <View style={{ marginBottom: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', flexGrow: 1 }}>
         <ThemedText type="title" style={{ marginBottom: 16, marginTop: 16, textAlign: 'center' }}>Nejčastější chyby</ThemedText>
         <ScrollView style={{ height: 10 }}>
           {allMistakes.length === 0 ? (
             <ThemedText style={{ color: '#888' }}>Žádné chyby zatím nejsou zaznamenány.</ThemedText>
           ) : (
-            allMistakes.map((mistake, idx) => (
+            allMistakes.sort((a, b) => b.mistakeCount - a.mistakeCount).slice(0, 12).map((mistake, idx) => (
               <MistakeContainer key={idx} mistake={mistake} />
             ))
           )}
         </ScrollView>
         <PlayfulButton
-          title={"Další cvičení"}
+          title={"Procvičit chyby"}
           onPress={newGameWitMostCommonMistakes}
           disabled={allMistakes.length === 0}
         />

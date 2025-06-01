@@ -4,6 +4,7 @@ import { WordSelectionOption } from "@/types/games/SelectionOption";
 import { useMemo } from "react";
 import { applyDataSourceModifiers, applyOnlyTypeModifiers, getWantedTypesFromModifiers, isTypeAllowed, isValidTemplate, seededShuffle } from "./questionGeneratorUtils";
 import { WordType } from "@/types/WordTypes";
+import { Question } from "@/types/Question";
 
 // Utility: Map QuestionType enum to bit positions
 const QUESTION_TYPE_VALUES = Object.values(QuestionType).filter(v => typeof v === 'number') as number[];
@@ -24,14 +25,7 @@ const QUESTION_TYPE_VALUES = Object.values(QuestionType).filter(v => typeof v ==
  * @returns Array of generated questions based on the input parameters
  */
 
-export type Question = {
-  SOURCE: WordSelectionOption[];
-  TEMPLATE: typeof questionGeneratorParams[number][number];
-  WANTED?: WordType;
-  INDEX?: number;
-}
-
-export function useQuestionGenerator({
+export function questionGenerator({
   galaxy,
   difficulty,
   seed,

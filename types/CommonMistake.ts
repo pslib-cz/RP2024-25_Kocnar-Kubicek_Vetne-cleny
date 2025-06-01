@@ -1,5 +1,4 @@
-import { Question } from "@/hooks/QuestionsGenerator/useQuestionGenerator";
-import { WordSelectionOption } from "./games/SelectionOption";
+import { Question } from "./Question";
 
 export interface CommonMistake {
   question: Question,

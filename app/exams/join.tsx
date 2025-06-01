@@ -11,7 +11,7 @@ import { galaxyImages } from '@/data/galaxyImages';
 
 // Import Galaxy names
 import { Galaxy } from '@/types/Galaxy';
-import { useGameContext } from '@/contexts/GameContext';
+import { GameType, useGameContext } from '@/contexts/GameContext';
 import { ThemedText } from '@/components/ThemedText';
 
 // Galaxy names to map from index
@@ -66,13 +66,13 @@ export default function JoinGameScreen() {
         if (isNaN(config.questionCount) || config.questionCount < 1 || config.questionCount > 100) {
           alert('Prosím zadejte platný počet otázek (1-100)');
           return;
-        };+
-        newGame({
+        }; +
+          newGame({
             galaxy: config.galaxy,
-            difficulty: config.difficulty/100,
+            difficulty: config.difficulty / 100,
             count: config.questionCount,
             questionTypesBitfield: config.questiontypes,
-        });
+          }, GameType.TEST);
       } catch (error) {
         alert('Nepodařilo se spustit cvičení. Zkuste to znovu.');
         console.warn('Error starting exam:', error);
@@ -89,30 +89,30 @@ export default function JoinGameScreen() {
   return (
     <TouchableWithoutFeedback onPress={dismissKeyboard}>
       <SafeAreaView style={styles.safeArea}>
-        <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 20}}>
-          <View style={{flex: 1}}>
-            <TouchableOpacity style={{flexDirection: 'row', alignItems: 'center'}} onPress={() => router.back()}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 20 }}>
+          <View style={{ flex: 1 }}>
+            <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }} onPress={() => router.back()}>
               <Ionicons name="chevron-back" size={24} color="white" />
-              <Text style={{color: 'white', fontSize: 16, marginLeft: 4}}>Zpět</Text>
+              <Text style={{ color: 'white', fontSize: 16, marginLeft: 4 }}>Zpět</Text>
             </TouchableOpacity>
           </View>
-          <View style={{flex: 1}} />
+          <View style={{ flex: 1 }} />
         </View>
         <View style={styles.container}>
           {!contextCode ? (
             <View style={styles.joinContainer}>
               <Text style={styles.title}>Připojit se ke hře</Text>
-              
+
               {/* User info section */}
               <View style={styles.playerInfoContainer}>
-                <NamedRocket 
-                  width={60} 
-                  height={60} 
+                <NamedRocket
+                  width={60}
+                  height={60}
                   containerStyle={styles.namedRocketContainer}
                   textStyle={styles.playerName}
                 />
               </View>
-              
+
               <View style={styles.inputContainer}>
                 <TextInput
                   style={styles.input}
@@ -137,40 +137,40 @@ export default function JoinGameScreen() {
             <ScrollView contentContainerStyle={styles.scrollContent}>
               <View style={styles.gameInfoContainer}>
                 <Text style={styles.title}>Detaily hry</Text>
-                
+
                 {/* User info section */}
                 <View style={styles.playerInfoCard}>
                   <Text style={styles.playerInfoTitle}>Tvoje raketa</Text>
-                  <NamedRocket 
-                    width={70} 
-                    height={70} 
+                  <NamedRocket
+                    width={70}
+                    height={70}
                     containerStyle={styles.namedRocketContainer}
                     textStyle={styles.playerName}
                   />
                 </View>
-                
+
                 {/* Game author section */}
                 {author && (
                   <View style={styles.playerInfoCard}>
                     <Text style={styles.playerInfoTitle}>Autor hry</Text>
-                    <PlayerRocket 
+                    <PlayerRocket
                       player={author}
-                      width={70} 
+                      width={70}
                       height={70}
                     />
                   </View>
                 )}
-                
+
                 {/* Players section */}
                 {players && players.length > 0 && (
                   <View style={styles.playerInfoCard}>
                     <Text style={styles.playerInfoTitle}>Účastníci ({players.length})</Text>
                     <View style={styles.playersList}>
                       {players.map(player => (
-                        <PlayerRocket 
+                        <PlayerRocket
                           key={player.id}
                           player={player}
-                          width={60} 
+                          width={60}
                           height={60}
                           containerStyle={styles.playerItem}
                         />
@@ -178,7 +178,7 @@ export default function JoinGameScreen() {
                     </View>
                   </View>
                 )}
-                
+
                 <View style={styles.infoCard}>
                   <View style={styles.infoRow}>
                     <Text style={styles.infoLabel}>Kód hry:</Text>
