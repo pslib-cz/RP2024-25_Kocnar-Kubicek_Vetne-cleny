@@ -66,19 +66,17 @@ export const MultiplayerGameProvider: React.FC<{ children: React.ReactNode }> = 
   }
 
   const tryUpdateSession = async (data : SessionUpdateRequest) => {
-
     if(!sessionId) {
       console.log('No session ID provided');
       return;
     }
-
-    console.log('Updating session...');
 
     if(!code){
       console.log('No game code provided');
       return;
     }
 
+    console.log('Updating session...');
     API.updateSession(sessionId, data)
   }
 

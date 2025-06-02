@@ -194,7 +194,7 @@ export default function CreateGameScreen() {
           </View>
           <Slider
             style={styles.slider}
-            minimumValue={0}
+            minimumValue={5}
             maximumValue={100}
             step={5}
             value={difficulty}
