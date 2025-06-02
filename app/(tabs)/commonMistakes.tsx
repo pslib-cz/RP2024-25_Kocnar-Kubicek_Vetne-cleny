@@ -61,7 +61,7 @@ export default function CommonMistakes() {
         <ThemedText type="title" style={{ marginBottom: 16, marginTop: 16, textAlign: 'center' }}>Nejčastější chyby</ThemedText>
         <ScrollView style={{ height: 10 }}>
           {allMistakes.length === 0 ? (
-            <ThemedText style={{ color: '#888' }}>Žádné chyby zatím nejsou zaznamenány.</ThemedText>
+            <ThemedText style={{ color: '#888' }}>Ještě jsi neudělal žádnou chybu.</ThemedText>
           ) : (
             allMistakes.sort((a, b) => b.mistakeCount - a.mistakeCount).slice(0, 12).map((mistake, idx) => (
               <MistakeContainer key={idx} mistake={mistake} />

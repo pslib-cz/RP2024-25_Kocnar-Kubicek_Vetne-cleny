@@ -55,7 +55,7 @@ export default function AuthoredGamesPage() {
               <Text style={{ color: '#fff', fontSize: 16, marginLeft: 4 }}>Zpět</Text>
             </TouchableOpacity>
           </View>
-          <ThemedText type="title" style={[styles.title, { flex: 2, textAlign: 'center' }]}>Moje vytvořené hry</ThemedText>
+          <ThemedText type="title" style={[styles.title, { flex: 2, textAlign: 'center' }]}>Mé vytvořené hry</ThemedText>
           <View style={{ flex: 1, alignItems: 'flex-end' }}>
             <MaterialIcons.Button
               name="refresh"

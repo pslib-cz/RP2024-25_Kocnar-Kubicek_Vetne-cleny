@@ -31,7 +31,7 @@ const TestSelection = () => {
                 variant="success"
               />
               <PlayfulButton
-                title="Moje vytvořené hry"
+                title="Mé vytvořené hry"
                 onPress={() => router.push('/exams/(teacher)/authored')}
                 variant="secondary"
               />

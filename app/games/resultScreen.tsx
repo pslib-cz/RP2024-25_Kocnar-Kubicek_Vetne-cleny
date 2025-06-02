@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
-import { FontAwesome } from '@expo/vector-icons';
+import { FontAwesome, MaterialIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { GameType, NEXT_LEVEL_TRESHOLD, useGameContext } from '@/contexts/GameContext';
 import PlanetView from '@/components/PlanetView';
@@ -13,11 +13,11 @@ const PracticeCompleteScreen = () => {
   const { newGameInArena, gameType, newGameWitMostCommonMistakes } = useGameContext();
   const { code } = useMultiplayerGameContext();
 
-  const ResultStuff = ({ text, value, color }: { text: string, value: string, color: string }) => {
+  const ResultStuff = ({ text, value, color, icon }: { text: string, value: string, color: string, icon: 'timer' | 'star' }) => {
     return (
       <View style={[styles.statBox, { backgroundColor: color }]}>
         <View style={styles.iconContainer}>
-          <FontAwesome name="bolt" size={24} color="white" />
+          <MaterialIcons name={icon} size={24} color="white" />
         </View>
         <Text style={styles.statLabel}>{text}</Text>
         <Text style={styles.statValue}>{value}</Text>
@@ -49,11 +49,11 @@ const PracticeCompleteScreen = () => {
         <PlanetView displayName={false} />
 
         <Text style={styles.title}>{successRate >= NEXT_LEVEL_TRESHOLD ? "Úroveň dokončena!" : "Úroveň nesplněna!"}</Text>
-        <Text style={{ color: "white", marginBottom: 16 }}>Pro odemčení další úrovně je nutné mít úspěšnost alespoň {NEXT_LEVEL_TRESHOLD}%</Text>
+        <Text style={{ color: "white", marginBottom: 16, textAlign: "center" }}>Pro cestu na další misi je nutné mít úspěšnost alespoň {NEXT_LEVEL_TRESHOLD}%.</Text>
 
         <View style={styles.statsContainer}>
-          <ResultStuff text="Čas" value={`${getDuration()}s`} color="#6272A4" />
-          <ResultStuff text="Úspěšnost" value={`${successRate.toFixed(2)}%`} color={successRateColor} />
+          <ResultStuff text="Čas" value={`${getDuration()}s`} color="#6272A4" icon="timer" />
+          <ResultStuff text="Úspěšnost" value={`${successRate.toFixed(2)}%`} color={successRateColor} icon="star" />
         </View>
 
         <Button title={successRate >= NEXT_LEVEL_TRESHOLD ? "Další level" : "Zkusit znovu"} filled={true} onPress={newGameInArena} />
@@ -70,8 +70,8 @@ const PracticeCompleteScreen = () => {
         </Text>
 
         <View style={styles.statsContainer}>
-          <ResultStuff text="Čas" value={`${getDuration()}s`} color="#6272A4" />
-          <ResultStuff text="Úspěšnost" value={`${successRate.toFixed(2)}%`} color={successRateColor} />
+          <ResultStuff text="Čas" value={`${getDuration()}s`} color="#6272A4" icon="timer" />
+          <ResultStuff text="Úspěšnost" value={`${successRate.toFixed(2)}%`} color={successRateColor} icon="star" />
         </View>
 
         {/* <Button title={successRate >= NEXT_LEVEL_TRESHOLD ? "Další level" : "Zkusit znovu"} filled={true} onPress={newGameWithCount} /> */}
@@ -88,8 +88,8 @@ const PracticeCompleteScreen = () => {
         </Text>
 
         <View style={styles.statsContainer}>
-          <ResultStuff text="Čas" value={`${getDuration()}s`} color="#6272A4" />
-          <ResultStuff text="Úspešnost" value={`${successRate.toFixed(2)}%`} color={successRateColor} />
+          <ResultStuff text="Čas" value={`${getDuration()}s`} color="#6272A4" icon="timer" />
+          <ResultStuff text="Úspešnost" value={`${successRate.toFixed(2)}%`} color={successRateColor} icon="star" />
         </View>
 
         <Button title={"Zkusit znovu"} filled={true} onPress={newGameWitMostCommonMistakes} />
@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 32,
     fontWeight: 'bold',
-    color: '#F1FA8C',
+    color: '#fff',
     marginBottom: 30,
     marginTop: 30,
   },
