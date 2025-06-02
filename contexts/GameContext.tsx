@@ -29,7 +29,7 @@ const LEVELS_COUNT = 3;
 const questionTypeOptions = Object.entries(QuestionType).filter(([k, v]) => typeof v === 'number');
 
 export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { tryStartSession, tryUpdateSession, code } = useMultiplayerGameContext();
+  const { tryStartSession, tryUpdateSession } = useMultiplayerGameContext();
   const { resetLevelData } = useLevelContext();
   const { updateMistakes, allMistakes } = useCommonMistakesContext();
   const { levelUp } = useGalaxyContext();
@@ -139,6 +139,9 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   /// on level finished, not limited to the whole game
   const onFinished = (isCorrect: boolean) => {
+
+    console.log("Question finished: ", isCorrect, activeQuestion);
+
     if (!activeQuestion) return;
     updateMistakes(activeQuestion, isCorrect);
     setGameState(isCorrect ? GameState.correct : GameState.incorrect)

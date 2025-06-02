@@ -52,7 +52,7 @@ export default function RootLayout() {
                         <Stack.Screen name="games/game" />
                         {/* <Stack.Screen name="tutorial" /> */}
                       </Stack>
-                      <StatusBar style="auto" />
+                      <StatusBar style="light" translucent backgroundColor='transparent' />
                     </ThemeProvider>
                   </GameProvider>
                 </CommonMistakesProvider>
