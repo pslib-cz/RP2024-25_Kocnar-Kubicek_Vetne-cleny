@@ -1,8 +1,8 @@
 import React from 'react';
-import { 
-  StyleSheet, 
-  Text, 
-  TouchableOpacity, 
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
   View,
   StyleProp,
   ViewStyle,
@@ -10,10 +10,10 @@ import {
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRocket } from '@/contexts/RocketContext';
-import Animated, { 
-  useSharedValue, 
-  useAnimatedStyle, 
-  withSpring, 
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withSpring,
   withTiming,
   Easing
 } from 'react-native-reanimated';
@@ -29,9 +29,9 @@ type PlayfulButtonProps = {
   disabled?: boolean;
 };
 
-export default function PlayfulButton({ 
-  title, 
-  onPress, 
+export default function PlayfulButton({
+  title,
+  onPress,
   variant = 'primary',
   icon,
   style,

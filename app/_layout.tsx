@@ -25,7 +25,7 @@ export default function RootLayout() {
     Outfit: require('../assets/fonts/Outfit.ttf'),
     PT: require('../assets/fonts/PT.ttf'),
   });
-  
+
   useEffect(() => {
     if (loaded) {
       SplashScreen.hideAsync();
@@ -35,33 +35,39 @@ export default function RootLayout() {
   if (!loaded) {
     return null;
   }
-  
+
+  const GameProviders: React.FC<React.PropsWithChildren> = ({ children }) => {
+    return (
+      <LevelProvider>
+        <MultiplayerGameProvider>
+          <CommonMistakesProvider>
+            <GameProvider>
+              {children}
+            </GameProvider>
+          </CommonMistakesProvider>
+        </MultiplayerGameProvider>
+      </LevelProvider>
+    );
+  }
+
   return (
     <ConfigProvider>
       <FileSystemStuffProvider>
         <GalaxyProvider>
           <RocketProvider>
-            <LevelProvider>
-              <MultiplayerGameProvider>
-                <CommonMistakesProvider>
-                  <GameProvider>
-                    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-                      <Stack screenOptions={{ headerShown: false }}>
-                        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-                        <Stack.Screen name="+not-found" />
-                        <Stack.Screen name="games/game" />
-                        {/* <Stack.Screen name="tutorial" /> */}
-                      </Stack>
-                      <StatusBar style="light" translucent backgroundColor='transparent' />
-                    </ThemeProvider>
-                  </GameProvider>
-                </CommonMistakesProvider>
-              </MultiplayerGameProvider>
-            </LevelProvider>
-          </RocketProvider>
-        </GalaxyProvider>
-      </FileSystemStuffProvider>
-    </ConfigProvider>
+            <GameProviders>
+              <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+                <Stack screenOptions={{ headerShown: false }}>
+                  <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                  <Stack.Screen name="+not-found" />
+                  <Stack.Screen name="games/game" />
+                </Stack>
+                <StatusBar style="light" translucent backgroundColor='transparent' />
+              </ThemeProvider>
+            </GameProviders>
+          </RocketProvider >
+        </GalaxyProvider >
+      </FileSystemStuffProvider >
+    </ConfigProvider >
   );
 }
-  

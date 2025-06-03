@@ -13,9 +13,9 @@ const RocketProgressBar: React.FC<RocketProgressBarProps> = ({
   progress = 0.33,
   height = 40,
 }) => {
-  const normalizedProgress = Math.min(Math.max(progress, 0), 1);  
+  const normalizedProgress = Math.min(Math.max(progress, 0), 1);
   const animatedProgress = useRef(new Animated.Value(0)).current;
-  
+
   useEffect(() => {
 
     Animated.timing(animatedProgress, {
@@ -24,7 +24,7 @@ const RocketProgressBar: React.FC<RocketProgressBarProps> = ({
       useNativeDriver: false,
     }).start();
   }, [normalizedProgress]);
-  
+
   const progressWidth = animatedProgress.interpolate({
     inputRange: [0, 1],
     outputRange: ['5%', '100%'],
@@ -49,9 +49,9 @@ const RocketProgressBar: React.FC<RocketProgressBarProps> = ({
           />
         </Animated.View>
 
-        <Animated.View style={{ 
-          width: progressWidth, 
-          height, 
+        <Animated.View style={{
+          width: progressWidth,
+          height,
           position: 'absolute',
           left: 0,
         }}>
@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: -65,
     top: '-75%',
-    transform: [{ rotate: '90deg' }, {scale: 0.7}],
+    transform: [{ rotate: '90deg' }, { scale: 0.7 }],
   },
 });
 

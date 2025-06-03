@@ -8,14 +8,12 @@ import { TargetTypeDisplay } from '../ui/games/TargetTypeDisplay';
 import { LargeGameButtonsGrid } from '../ui/games/LargeGameButtonsGrid';
 import { WordType } from '@/types/WordTypes';
 
-export function Game3UI(wantedType : WordType | null = null) {
+export function Game3UI(wantedType: WordType | null = null) {
   const { data, onFinished } = useGameContext();
   const { options, setOptions, targetType, setTargetType, selectedOptions, setSelectedOptions } = useLevelContext();
 
   // ! this is the only allowed useEffect in the games and can only contain the data as dependency
   useEffect(() => {
-    console.log("GameOneUI useEffect triggered with data: ", data);
-
     if (data) {
       setOptions(data);
       setTargetType(wantedType ?? data[Math.floor(Math.random() * data.length)].type);
@@ -35,7 +33,7 @@ export function Game3UI(wantedType : WordType | null = null) {
   }
 
   function IsValid(): boolean {
-    for (const item of selectedOptions) {      
+    for (const item of selectedOptions) {
       if (!targetType?.type) throw new Error("Target type is not set");
       if (item.type !== targetType?.type)
         return false;
@@ -48,22 +46,22 @@ export function Game3UI(wantedType : WordType | null = null) {
       <View>
         {
           data ?
-          <>
-            <TargetTypeDisplay text='Které slovo ve větě je ' />
+            <>
+              <TargetTypeDisplay text='Které slovo ve větě je ' />
+              <Text style={styles.exampleText}>
+                {data.map(option => option.text).join(' ')}
+              </Text>
+            </>
+            :
             <Text style={styles.exampleText}>
-              {data.map(option => option.text).join(' ')}
+              Načítání dat...
             </Text>
-          </>
-        :
-        <Text style={styles.exampleText}>
-          Načítání dat...
-        </Text>
         }
       </View>
-      <LargeGameButtonsGrid 
-        options={options} 
-        selectedOptions={selectedOptions} 
-        handleSelect={handleSelect} 
+      <LargeGameButtonsGrid
+        options={options}
+        selectedOptions={selectedOptions}
+        handleSelect={handleSelect}
       />
       <ContinueButton onClick={handleContinue} enabled={selectedOptions.length > 0} />
     </>

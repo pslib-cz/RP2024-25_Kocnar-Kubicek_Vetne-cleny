@@ -10,9 +10,9 @@ interface TooltipProps {
 }
 
 export const Tooltip: React.FC<TooltipProps> = ({ visible, message, children, onRequestClose, top = true }) => {
-  
-  const style : ViewStyle = top ? { bottom: '100%' } : { top: '120%' };
-  
+
+  const style: ViewStyle = top ? { bottom: '100%' } : { top: '120%' };
+
   return (
     <View style={{ position: 'relative', zIndex: 1000 }}>
       {children}

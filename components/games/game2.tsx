@@ -7,14 +7,12 @@ import { TargetTypeDisplay } from '../ui/games/TargetTypeDisplay';
 import { LargeGameButtonsGrid } from '../ui/games/LargeGameButtonsGrid';
 import { WordType } from '@/types/WordTypes';
 
-export function Game2UI(wantedType : WordType | null = null) {
+export function Game2UI(wantedType: WordType | null = null) {
   const { data, onFinished } = useGameContext();
   const { options, setOptions, targetType, setTargetType, selectedOptions, setSelectedOptions } = useLevelContext();
 
   // ! this is the only allowed useEffect in the games and can only contain the data as dependency
   useEffect(() => {
-    console.log("GameOneUI2 useEffect triggered with data: ", data);
-
     if (!data) {
       console.log("Data not initialized yet");
       return;
@@ -52,10 +50,10 @@ export function Game2UI(wantedType : WordType | null = null) {
   return (
     <>
       <TargetTypeDisplay text='Vyber' />
-      <LargeGameButtonsGrid 
-        options={options} 
-        selectedOptions={selectedOptions} 
-        handleSelect={handleSelect} 
+      <LargeGameButtonsGrid
+        options={options}
+        selectedOptions={selectedOptions}
+        handleSelect={handleSelect}
       />
       <ContinueButton onClick={handleContinue} enabled={selectedOptions.length > 0} />
     </>

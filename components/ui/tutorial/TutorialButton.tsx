@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, StyleSheet, TouchableOpacity } from 'react-native';
 
-export default function TutorialButton({title, filled, onPress} : {title : string, filled : boolean, onPress : () => void}) {
+export default function TutorialButton({ title, filled, onPress }: { title: string, filled: boolean, onPress: () => void }) {
   return (
     <TouchableOpacity style={filled ? styles.buttonYes : styles.buttonNo} onPress={onPress}>
       <Text style={styles.buttonText}>{title}</Text>

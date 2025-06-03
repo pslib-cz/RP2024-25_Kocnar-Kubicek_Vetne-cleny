@@ -2,11 +2,10 @@ import React, { useEffect } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { WordButtonType } from '@/types/games/WordButtonType';
 import { useGameContext } from '@/contexts/GameContext';
-import { getWordTypesByType, WordTypes } from '@/constants/WordTypes';
+import { WordTypes } from '@/constants/WordTypes';
 import { useLevelContext } from '@/contexts/levelContext';
 import { WordButtonsContainer } from '../ui/games/WordButtonsContainer';
 import { ButtonState } from '../ui/games/WordButton';
-import { WordType } from '@/types/WordTypes';
 import { GeneratorParam, QuestionModifier } from '@/constants/questionGeneratorParams';
 
 export const enum Game1Type {
@@ -15,8 +14,6 @@ export const enum Game1Type {
   allTypes = 2,
   oneWord = 3
 }
-
-const BASIC_TYPES = ["po", "př", "pt", "pks", "pkn", "pum", "puč", "puz"]
 
 const filterData = (data: WordButtonType[], modifiers: QuestionModifier[]) => {
   if (modifiers.length == 0) return data;
@@ -107,8 +104,6 @@ export function GameOneUI(type: Game1Type, oneWord_INDEX: number = 1) {
 
   // ! this is the only allowed useEffect in the games and can only contain the data as dependency
   useEffect(() => {
-    console.log("GameOneUI useEffect triggered with data: ", data);
-
     if (oneWord) {
       setGameIndex(oneWord_INDEX);
     }

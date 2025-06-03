@@ -14,12 +14,12 @@ interface RocketProps {
   containerStyle?: StyleProp<ViewStyle>;
 }
 
-export const NamedRocket = ({ 
-  style, 
-  width = 50, 
-  height = 50, 
-  textStyle, 
-  containerStyle 
+export const NamedRocket = ({
+  style,
+  width = 50,
+  height = 50,
+  textStyle,
+  containerStyle
 }: RocketProps) => {
   const { bodyColor, trailColor, selectedRocketIndex, name } = useRocket();
   const [rocketSvgs, setRocketSvgs] = useState<string[]>([]);
@@ -55,13 +55,13 @@ export const NamedRocket = ({
 
   if (!modifiedRocketSvg) return null;
 
-return (
+  return (
     <View style={[styles.container, containerStyle]}>
-        <SvgXml xml={modifiedRocketSvg} width={width} height={height} style={[{transform: [{rotate: "45deg"}]}, style]} />
-        <Text style={[styles.headerTitle, textStyle]}>{name}</Text>
+      <SvgXml xml={modifiedRocketSvg} width={width} height={height} style={[{ transform: [{ rotate: "45deg" }] }, style]} />
+      <Text style={[styles.headerTitle, textStyle]}>{name}</Text>
     </View>
-);
-  
+  );
+
 };
 
 const styles = StyleSheet.create({

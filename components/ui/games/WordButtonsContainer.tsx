@@ -7,49 +7,49 @@ import { ThemedText } from "@/components/ThemedText";
 import { useLevelContext } from "@/contexts/levelContext";
 
 export const WordButtonsContainer = (
-  {buttons, showTooltip, longPress, onClick} : 
-  {
-    buttons : WordButtonType[] | undefined, 
-    showTooltip : boolean, 
-    longPress: (button: WordButtonType, index : number) => void,
-    onClick: (button: WordButtonType, index: number) => void
-  }
+  { buttons, showTooltip, longPress, onClick }:
+    {
+      buttons: WordButtonType[] | undefined,
+      showTooltip: boolean,
+      longPress: (button: WordButtonType, index: number) => void,
+      onClick: (button: WordButtonType, index: number) => void
+    }
 ) => {
 
   const { tooltip, handleHideTooltip } = useLevelContext();
 
-  return(
+  return (
     <>
-    {
-      buttons ?
-      <View style={styles.phraseContainer}>
-        {
-          buttons.map((button, index) => {
-            return (
-              <Tooltip
-                key={index}
-                visible={showTooltip && tooltip.visible && tooltip.index === index}
-                message={tooltip.message}
-                onRequestClose={handleHideTooltip}
-              >
-                <WordButton
-                  text={button.text}
-                  state={button.state}
-                  type={button.type}
-                  drawType={button.drawType}
-                  onLongPress={() => longPress(button, index)}
-                  onClick={() => onClick(button, index)}
-                />
-              </Tooltip>
-            );
-          })
-        }
-      </View>
-      :
-      <View style={styles.phraseContainer}>
-        <ThemedText>Loading...</ThemedText>
-      </View>
-    }
+      {
+        buttons ?
+          <View style={styles.phraseContainer}>
+            {
+              buttons.map((button, index) => {
+                return (
+                  <Tooltip
+                    key={index}
+                    visible={showTooltip && tooltip.visible && tooltip.index === index}
+                    message={tooltip.message}
+                    onRequestClose={handleHideTooltip}
+                  >
+                    <WordButton
+                      text={button.text}
+                      state={button.state}
+                      type={button.type}
+                      drawType={button.drawType}
+                      onLongPress={() => longPress(button, index)}
+                      onClick={() => onClick(button, index)}
+                    />
+                  </Tooltip>
+                );
+              })
+            }
+          </View>
+          :
+          <View style={styles.phraseContainer}>
+            <ThemedText>Loading...</ThemedText>
+          </View>
+      }
     </>
   )
 }

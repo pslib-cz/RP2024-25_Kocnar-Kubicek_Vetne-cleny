@@ -3,14 +3,13 @@ import React from "react"
 import { ScrollView, StyleSheet, Text, View } from "react-native"
 import { LargeGameButton } from "./LargeGameButton"
 
-
 type LargeGameButtonsGridProps = {
   options?: WordSelectionOption[];
   selectedOptions: WordSelectionOption[];
   handleSelect: (option: WordSelectionOption) => void;
 };
 
-export const LargeGameButtonsGrid: React.FC<LargeGameButtonsGridProps> = ({options, selectedOptions, handleSelect}) => {
+export const LargeGameButtonsGrid: React.FC<LargeGameButtonsGridProps> = ({ options, selectedOptions, handleSelect }) => {
   return (
     <ScrollView style={{ width: '100%' }}>
       <View style={[styles.grid, { marginBottom: 40 }]}>
@@ -23,7 +22,7 @@ export const LargeGameButtonsGrid: React.FC<LargeGameButtonsGridProps> = ({optio
               onPress={() => handleSelect(option)}
             />
           ))
-        :
+          :
           <Text style={{ textAlign: 'center', width: '100%' }}>
             Načítání dat...
           </Text>

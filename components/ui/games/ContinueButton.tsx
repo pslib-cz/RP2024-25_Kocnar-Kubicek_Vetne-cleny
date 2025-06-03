@@ -1,14 +1,14 @@
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 
-const ContinueButton = ({ onClick, enabled }: { onClick: () => void, enabled : boolean }) => {
+const ContinueButton = ({ onClick, enabled }: { onClick: () => void, enabled: boolean }) => {
   return (
     <TouchableOpacity
       style={[
-        styles.button, 
+        styles.button,
         !enabled && styles.buttonDisabled
-      ]} 
-      onPress={onClick} 
+      ]}
+      onPress={onClick}
       disabled={!enabled}
     >
       <Text style={styles.buttonText}>POTVRDIT</Text>

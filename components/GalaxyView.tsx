@@ -24,7 +24,7 @@ const GalaxyView: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      <ScrollView 
+      <ScrollView
         ref={scrollViewRef}
         style={styles.planetScroll}
         showsVerticalScrollIndicator={false}// Redirect on touch
@@ -50,28 +50,28 @@ const GalaxyView: React.FC = () => {
             const index = planetsInGalaxy - revIndex - 1; // Reverse index for display
             const planetName = planetNames[selectedGalaxy][index] || `Planet ${index + 1}`;
             const isActive = index === activePlanetIndex;
-            
+
             return (
-              <View 
-                key={`planet-${index}`} 
+              <View
+                key={`planet-${index}`}
                 style={styles.planetItem}
               >
                 {/* Timeline index number positioned next to the planet */}
                 <View style={styles.timelineIndexContainer}>
-                  <Text style={[styles.timelineNumber, isActive && {color: "#eee"}]}>{planetsInGalaxy - revIndex}</Text>
+                  <Text style={[styles.timelineNumber, isActive && { color: "#eee" }]}>{planetsInGalaxy - revIndex}</Text>
                   {isActive && (
                     <Rocket width={50} height={50} style={styles.rocketIcon} />
                   )}
                 </View>
-                
+
                 <View style={styles.planetContentContainer}>
                   <Image
                     source={getPlanetImage(selectedGalaxy, index)}
                     style={[
-                      styles.planetImage, 
-                      { 
-                        width: index === planetsInGalaxy-1 ? 250 : ((120 + (index * 31547  % 4) * 20) * (isActive ? 1.5 : 1)), 
-                        height:  index === planetsInGalaxy-1 ? 250 : ((120 + (index * 31547  % 4) * 20) * (isActive ? 1.5 : 1)), 
+                      styles.planetImage,
+                      {
+                        width: index === planetsInGalaxy - 1 ? 250 : ((120 + (index * 31547 % 4) * 20) * (isActive ? 1.5 : 1)),
+                        height: index === planetsInGalaxy - 1 ? 250 : ((120 + (index * 31547 % 4) * 20) * (isActive ? 1.5 : 1)),
                       }
                     ]}
                   />
@@ -176,7 +176,7 @@ const styles = StyleSheet.create({
   },
   rocketContainer: {
     position: 'absolute',
-    left: 0, 
+    left: 0,
     zIndex: 2,
   },
   rocketIcon: {

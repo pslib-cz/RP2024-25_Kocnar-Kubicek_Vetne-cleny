@@ -1,8 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
-const QuestionRow = ({question, answer} : {question : string, answer : string}) => {
-
+const QuestionRow = ({ question, answer }: { question: string, answer: string }) => {
   const answerStyle = answer === 'ANO' ? styles1.answerYes : styles1.answerNo;
 
   return (
@@ -32,12 +31,6 @@ const styles1 = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     position: 'relative',
-  },
-  verticalLine: {
-    position: 'absolute',
-    width: 1,
-    height: '100%',
-    backgroundColor: '#333',
   },
   dot: {
     width: 8,

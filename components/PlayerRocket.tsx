@@ -15,12 +15,12 @@ interface PlayerRocketProps {
   showId?: boolean;
 }
 
-export const PlayerRocket = ({ 
+export const PlayerRocket = ({
   player,
-  style, 
-  width = 50, 
-  height = 50, 
-  textStyle, 
+  style,
+  width = 50,
+  height = 50,
+  textStyle,
   containerStyle,
   showId = false
 }: PlayerRocketProps) => {
@@ -59,7 +59,7 @@ export const PlayerRocket = ({
 
   return (
     <View style={[styles.container, containerStyle]}>
-      <SvgXml xml={modifiedRocketSvg} width={width} height={height} style={[{transform: [{rotate: "45deg"}]}, style]} />
+      <SvgXml xml={modifiedRocketSvg} width={width} height={height} style={[{ transform: [{ rotate: "45deg" }] }, style]} />
       <View style={styles.playerInfo}>
         <Text style={[styles.playerName, textStyle]}>{player.name}</Text>
         {showId && <Text style={styles.playerId}>{player.id.substring(0, 8)}...</Text>}
