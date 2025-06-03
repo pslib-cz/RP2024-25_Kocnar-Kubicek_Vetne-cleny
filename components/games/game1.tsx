@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { WordButtonType } from '@/types/games/WordButtonType';
 import { useGameContext } from '@/contexts/GameContext';
 import { getWordTypesByType, WordTypes } from '@/constants/WordTypes';
@@ -181,7 +181,9 @@ export function GameOneUI(type: Game1Type, oneWord_INDEX: number = 1) {
 
   return (
     <>
-      <View></View>
+      <View>
+        <Text style={styles.title}>{inverted ? "Přiřaď slova ke slovním druhům" : "Přiřaď slovní druhy ke slovům"}</Text>
+      </View>
       <WordButtonsContainer buttons={phraseButtons}
         showTooltip={inverted}
         longPress={(button, index) => { inverted && handleShowTooltip(button.text, index) }}
@@ -195,3 +197,11 @@ export function GameOneUI(type: Game1Type, oneWord_INDEX: number = 1) {
     </>
   );
 };
+
+const styles = StyleSheet.create({
+  title: {
+    color: '#fff',
+    fontSize: 24,
+    fontWeight: 'bold',
+  }
+});

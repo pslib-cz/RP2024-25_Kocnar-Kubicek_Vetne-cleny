@@ -38,7 +38,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="commonMistakes"
         options={{
-          title: 'Pokrok',
+          title: 'Chyby',
           tabBarActiveTintColor: '#6eff63',
           tabBarIcon: ({ color }) => <IconSymbol size={32} name="clock.arrow.circlepath" color={color} />,
         }}
