@@ -53,8 +53,8 @@ export default function Tutorial() {
       </View>
 
       <View style={styles.mainContent}>
+        <Text style={styles.subHeading}>Odpovídáním přijdeš na větný člen slova.</Text>
         <Text style={styles.mainHeading}>{currentNode.node.title}</Text>
-        <Text style={styles.subHeading}>{currentNode.node.description}</Text>
       </View>
 
       <View style={styles.buttonContainer}>
@@ -117,9 +117,10 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   subHeading: {
-    color: '#777',
+    color: '#bbb',
     fontSize: 16,
     textAlign: 'center',
+    marginBottom: 10,
   },
   buttonContainer: {
     flexDirection: 'row',
