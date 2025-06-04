@@ -140,6 +140,8 @@ export function GameOneUI(type: Game1Type, oneWord_INDEX: number = 1) {
   const onBottomButtonClicked = (bottomButton: WordButtonType) => {
     if (gameState == GameState.showingAnswers) return;
 
+    handleHideTooltip();
+
     if (!phraseButtons || !data || !bottomButtons) {
       console.warn("Phrase buttons or data or bottomButtons not initialized yet");
       return;
@@ -206,7 +208,7 @@ export function GameOneUI(type: Game1Type, oneWord_INDEX: number = 1) {
       <WordButtonsContainer buttons={bottomButtons}
         showTooltip={!inverted && gameState != GameState.showingAnswers}
         longPress={(button, index) => { !inverted && handleShowTooltip(button.text, index) }}
-        onClick={(button) => { onBottomButtonClicked(button); handleHideTooltip(); }}
+        onClick={(button) => { onBottomButtonClicked(button); }}
         forceDrawTypeAnd={gameState == GameState.showingAnswers}
       />
     </>
