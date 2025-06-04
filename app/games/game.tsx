@@ -1,6 +1,6 @@
 import { SafeAreaView } from "react-native-safe-area-context";
-import React from "react";
-import { Alert, StyleSheet, TouchableOpacity, View } from 'react-native';
+import React, { Suspense } from "react";
+import { ActivityIndicator, Alert, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useGameContext } from "@/contexts/GameContext";
 import { useRouter } from "expo-router";
 import Animated, { SlideInRight, SlideOutLeft } from 'react-native-reanimated';
@@ -115,7 +115,7 @@ export const Game: React.FC = () => {
         exiting={SlideOutLeft.duration(500)}
         style={ styles.container1 }
       >
-        {gameContent()}
+          {gameContent()}
       </Animated.View>
     </SafeAreaView>
   );
@@ -141,8 +141,9 @@ const styles = StyleSheet.create({
   },
   container1: {
     flex: 1,
-    gap: 32,
-    justifyContent: 'space-around',
+    paddingTop: 16,
+    gap: 16,
+    justifyContent: 'space-evenly',
     alignItems: 'center',
     width: '100%',
   },
