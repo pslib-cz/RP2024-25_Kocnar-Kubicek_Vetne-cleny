@@ -3,17 +3,12 @@ import { View, Text, TouchableOpacity, StyleSheet, Animated, Dimensions } from '
 import { Ionicons } from '@expo/vector-icons';
 import { GameState } from '@/types/gameState';
 import { useGameContext } from '@/contexts/GameContext';
+import { GameType } from '@/types/GameType';
 
-interface OverlayProps {
-  state: GameState;
-}
-
-export const FeedbackOverlay: React.FC<OverlayProps> = ({ 
-  state, 
-}) => { 
-  const { nextQuestion } = useGameContext();
-
-  const isCorrect = state == GameState.correct;
+export const FeedbackOverlay: React.FC = () => { 
+  const { nextQuestion, gameState, gameType, setGameState } = useGameContext();
+  
+  const isCorrect = gameState == GameState.correct;
 
   const displayMessage = isCorrect ? "Dobrá práce!" : "To není dobře!";
   const displayIcon = isCorrect ? "checkmark-circle" : "close-circle";
@@ -24,8 +19,12 @@ export const FeedbackOverlay: React.FC<OverlayProps> = ({
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    if (state != GameState.pending) {
-      slideAnim.setValue(Dimensions.get('window').height);
+    if (gameState != GameState.pending) {
+      const height = gameState == GameState.showingAnswers ? 
+        Dimensions.get('window').height / 3 : 
+        Dimensions.get('window').height;
+
+      slideAnim.setValue(height);
       fadeAnim.setValue(0);
       
       Animated.parallel([
@@ -55,9 +54,9 @@ export const FeedbackOverlay: React.FC<OverlayProps> = ({
         })
       ]).start();
     }
-  }, [state]);
+  }, [gameState]);
 
-  if (state == GameState.pending) return null;
+  if (gameState == GameState.pending) return null;
 
   return (
     <Animated.View 
@@ -70,12 +69,15 @@ export const FeedbackOverlay: React.FC<OverlayProps> = ({
       ]}
     >
       <View style={styles.container}>
-        <View style={styles.header}>
-          <Ionicons name={displayIcon} size={32} color={themeColor} style={styles.icon} />
-          <Text style={[styles.headerText, { color: themeColor }]}>
-            {displayMessage}
-          </Text>
-        </View>
+        {
+          gameState != GameState.showingAnswers &&
+          <View style={styles.header}>
+            <Ionicons name={displayIcon} size={32} color={themeColor} style={styles.icon} />
+            <Text style={[styles.headerText, { color: themeColor }]}>
+              {displayMessage}
+            </Text>
+          </View>
+        }
         
         <TouchableOpacity 
           style={[styles.continueButton, { backgroundColor: themeColor }]} 
@@ -84,6 +86,16 @@ export const FeedbackOverlay: React.FC<OverlayProps> = ({
         >
           <Text style={styles.buttonText}>Další otázka</Text>
         </TouchableOpacity>
+        {
+          !isCorrect && gameType != GameType.TEST &&
+          <TouchableOpacity 
+            style={[styles.continueButton, { backgroundColor: themeColor }]} 
+            onPress={() => setGameState(GameState.showingAnswers)}
+            activeOpacity={0.8}
+          >
+            <Text style={styles.buttonText}>Správné odpovědi</Text>
+          </TouchableOpacity>
+        }
       </View>
     </Animated.View>
   );

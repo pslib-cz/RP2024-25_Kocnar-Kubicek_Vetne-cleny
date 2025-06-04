@@ -1,5 +1,5 @@
 import { SafeAreaView } from "react-native-safe-area-context";
-import React, { useEffect } from "react";
+import React from "react";
 import { Alert, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useGameContext } from "@/contexts/GameContext";
 import { useRouter } from "expo-router";
@@ -10,13 +10,13 @@ import { Game2UI } from "@/components/games/game2";
 import { Game3UI } from "@/components/games/game3";
 import { ThemedText } from "@/components/ThemedText";
 import { useBackspaceIntercept } from "@/hooks/useBackspaceIntercept";
-import { GeneratorParam, QuestionModifier, QuestionType } from "@/constants/questionGeneratorParams";
+import { GeneratorParam, QuestionType } from "@/constants/questionGeneratorParams";
 import { hints } from "@/constants/GameHints";
 import { FeedbackOverlay } from "@/components/modals/FeedbackOverlay";
 import HintModal from "@/components/modals/HintModal";
 
 export const Game: React.FC = () => {
-  const { gameState, activeQuestion, questions, gameInfo } = useGameContext();
+  const { activeQuestion, questions, gameInfo } = useGameContext();
 
   const router = useRouter(); 
   const [hintActive, setHintActive] = React.useState(false);
@@ -68,9 +68,7 @@ export const Game: React.FC = () => {
   const HelpButton = () => {
     return (
       <TouchableOpacity
-        style={[
-          styles.button
-        ]} 
+        style={[styles.button]} 
         onPress={() => {setHintActive(true)}}
       >
         <ThemedText type="defaultSemiBold" style={{fontWeight: 900}}>?</ThemedText>
@@ -81,12 +79,8 @@ export const Game: React.FC = () => {
   const CloseButton = () => {
     return (
       <TouchableOpacity
-        style={[
-          styles.button
-        ]} 
-        onPress={() => {
-          leaveAlert()
-        }}
+        style={[styles.button]} 
+        onPress={leaveAlert}
       >
         <ThemedText type="defaultSemiBold" style={{fontWeight: 900}}>X</ThemedText>
       </TouchableOpacity>
@@ -103,9 +97,7 @@ export const Game: React.FC = () => {
           "No hints available for this question."
         }
       />
-      <FeedbackOverlay
-        state={gameState}
-      />
+      <FeedbackOverlay/>
       <View style={[styles.headerWrapper]}>
         <View style={{ flexShrink: 1}}>
           <HelpButton />

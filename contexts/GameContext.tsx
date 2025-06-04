@@ -1,28 +1,18 @@
-import React, { act, createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 import { ActiveGameInfo, GameContextData } from '../types/GameTypes';
-import { usePathname, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { WordSelectionOption } from '@/types/games/SelectionOption';
-import { useData } from '@/hooks/useData';
 import { GameState } from '@/types/gameState';
-// import { GameRoute } from '@/constants/gameRoute';
 import { useMultiplayerGameContext } from './MultiplayerGameContext';
 import { useLevelContext } from './levelContext';
 import { useGalaxyContext } from './GalaxyContext';
 import { useCommonMistakesContext } from './CommonMistakesContext';
-// import { generateRandomGameLevels, generateRandomMistakesLevels } from './utils/GameDataGenerator';
-// import { GameLevel } from '@/types/games/GameLevel';
-import { Galaxy, GeneratorParam, QuestionType } from '@/constants/questionGeneratorParams';
+import { Galaxy, QuestionType } from '@/constants/questionGeneratorParams';
 import { questionGenerator } from '@/utils/QuestionsGenerator/questionGenerator';
 import { Question } from '@/types/Question';
+import { GameType } from '@/types/GameType';
 
 const GameContext = createContext<GameContextData | undefined>(undefined);
-
-export enum GameType {
-  PRACTICE,
-  TEST,
-  COMMON_MISTAKES,
-  TEST_PRACTICE
-}
 
 export const NEXT_LEVEL_TRESHOLD = 0.75 * 100;
 const LEVELS_COUNT = 3;
@@ -187,6 +177,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
         newGameWitMostCommonMistakes,
         gameType,
         newGameWithQuestions,
+        setGameState,
         data: activeQuestion?.SOURCE as WordSelectionOption[] | undefined,
       }}
     >

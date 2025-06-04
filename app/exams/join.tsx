@@ -8,10 +8,11 @@ import { Ionicons } from '@expo/vector-icons';
 import { NamedRocket } from '@/components/NamedRocket';
 import { PlayerRocket } from '@/components/PlayerRocket';
 import { galaxyImages } from '@/data/galaxyImages';
-import { GameType, useGameContext } from '@/contexts/GameContext';
+import { useGameContext } from '@/contexts/GameContext';
 import { ThemedText } from '@/components/ThemedText';
 import { galaxies } from '@/components/ArenaHeader';
 import AndroidSafeArea from '@/components/AndroidSafeArea';
+import { GameType } from '@/types/GameType';
 
 export default function JoinGameScreen() {
   const [code, setCode] = useState('');

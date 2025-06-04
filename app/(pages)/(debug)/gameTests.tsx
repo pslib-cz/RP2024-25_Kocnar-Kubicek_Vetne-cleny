@@ -1,10 +1,11 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
 import ArenaHeader from '@/components/ArenaHeader';
-import { GameType, useGameContext } from '@/contexts/GameContext';
+import { useGameContext } from '@/contexts/GameContext';
 import { useRouter } from 'expo-router';
 import { useLevelContext } from '@/contexts/levelContext';
 import { QuestionType } from '@/constants/questionGeneratorParams';
+import { GameType } from '@/types/GameType';
 
 const games : {id : QuestionType, name: string}[] = [
   {id: QuestionType.MARK_WORDS, name: 'Mark Words'},

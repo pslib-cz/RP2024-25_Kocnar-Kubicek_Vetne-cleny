@@ -3,10 +3,11 @@ import { View, StyleSheet, TouchableOpacity, Switch, ScrollView, Image, TextInpu
 import { ThemedText } from '@/components/ThemedText';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Slider from '@react-native-community/slider';
-import { GameType, useGameContext } from '@/contexts/GameContext';
+import { useGameContext } from '@/contexts/GameContext';
 import { galaxyImages } from '@/data/galaxyImages';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
+import { GameType } from '@/types/GameType';
 
 export default function CreateGameScreen() {
   const [difficulty, setDifficulty] = useState(50);

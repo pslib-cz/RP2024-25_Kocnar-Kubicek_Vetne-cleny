@@ -3,5 +3,6 @@ export enum GameState
 {
   pending,
   correct,
-  incorrect
+  incorrect,
+  showingAnswers
 }

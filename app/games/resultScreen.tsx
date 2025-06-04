@@ -2,9 +2,10 @@ import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { FontAwesome, MaterialIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { GameType, NEXT_LEVEL_TRESHOLD, useGameContext } from '@/contexts/GameContext';
+import { NEXT_LEVEL_TRESHOLD, useGameContext } from '@/contexts/GameContext';
 import PlanetView from '@/components/PlanetView';
 import { useMultiplayerGameContext } from '@/contexts/MultiplayerGameContext';
+import { GameType } from '@/types/GameType';
 
 const PracticeCompleteScreen = () => {
   const navigation = useRouter();

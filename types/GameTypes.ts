@@ -34,5 +34,6 @@ export interface GameContextData {
   newGameWitMostCommonMistakes: () => void;
   gameType: GameType;
   data: WordSelectionOption[] | undefined;
+  setGameState: (state: GameState) => void;
   newGameWithQuestions: (questions: Question[], type : GameType) => void;
 }
