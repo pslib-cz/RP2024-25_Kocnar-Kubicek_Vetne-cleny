@@ -2,9 +2,7 @@ import React from 'react';
 import { SvgXml } from 'react-native-svg';
 import { useRocket } from '@/contexts/RocketContext';
 import { useState, useEffect } from 'react';
-import { loadSvgAsset } from '@/app/(pages)/profile';
 import { StyleProp, ViewStyle } from 'react-native';
-import { rocket1, rocket2, rocket3, rocket4, rocket5 } from '@/data/rocketsImages';
 
 interface RocketProps {
   style?: StyleProp<ViewStyle>;
@@ -13,27 +11,8 @@ interface RocketProps {
 }
 
 export const Rocket = ({ style, width = 100, height = 100 }: RocketProps) => {
-  const { bodyColor, trailColor, selectedRocketIndex } = useRocket();
-  const [rocketSvgs, setRocketSvgs] = useState<string[]>([]);
+  const { bodyColor, trailColor, selectedRocketIndex, rocketSvgs } = useRocket();
   const [modifiedRocketSvg, setModifiedRocketSvg] = useState<string | null>(null);
-
-  useEffect(() => {
-    const loadRockets = async () => {
-      try {
-        const svg1 = await loadSvgAsset(rocket1);
-        const svg2 = await loadSvgAsset(rocket2);
-        const svg3 = await loadSvgAsset(rocket3);
-        const svg4 = await loadSvgAsset(rocket4);
-        const svg5 = await loadSvgAsset(rocket5);
-
-        setRocketSvgs([svg1, svg2, svg3, svg4, svg5].filter(svg => svg !== null));
-      } catch (error) {
-        console.warn('Error loading rocket SVGs:', error);
-      }
-    };
-
-    loadRockets();
-  }, []);
 
   useEffect(() => {
     if (rocketSvgs.length > 0 && selectedRocketIndex < rocketSvgs.length) {

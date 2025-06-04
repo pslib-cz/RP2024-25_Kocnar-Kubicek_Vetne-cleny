@@ -8,6 +8,8 @@ import * as Crypto from 'expo-crypto';
 import { useAPI } from '@/hooks/useAPI';
 import { useGalaxyContext } from './GalaxyContext';
 import { router } from 'expo-router';
+import { loadSvgAsset } from '@/app/(pages)/profile';
+import { rocket1, rocket2, rocket3, rocket4, rocket5 } from '@/data/rocketsImages';
 
 interface RocketContextType {
   bodyColor: string;
@@ -23,6 +25,7 @@ interface RocketContextType {
   userId: string;
   secretKey: string;
   syncPlayerData: () => Promise<void>;
+  rocketSvgs: string[];
 }
 
 const RocketContext = createContext<RocketContextType | null>(null);
@@ -51,6 +54,26 @@ export const RocketProvider = ({ children }: RocketProviderProps) => {
   const [teacherMode, setTeacherMode] = useState(false);
   const [userId, setUserId] = useState<string>('');
   const [secretKey, setSecretKey] = useState<string>('');
+
+  const [rocketSvgs, setRocketSvgs] = useState<string[]>([]);
+
+  useEffect(() => {
+    const loadRockets = async () => {
+      try {
+        const svg1 = await loadSvgAsset(rocket1);
+        const svg2 = await loadSvgAsset(rocket2);
+        const svg3 = await loadSvgAsset(rocket3);
+        const svg4 = await loadSvgAsset(rocket4);
+        const svg5 = await loadSvgAsset(rocket5);
+
+        setRocketSvgs([svg1, svg2, svg3, svg4, svg5].filter(svg => svg !== null));
+      } catch (error) {
+        console.warn('Error loading rocket SVGs:', error);
+      }
+    };
+
+    loadRockets();
+  }, []);
 
   const setName = (nameInput: string) => {
     if (nameInput && nameInput !== '') {
@@ -179,6 +202,7 @@ export const RocketProvider = ({ children }: RocketProviderProps) => {
         userId,
         secretKey,
         syncPlayerData,
+        rocketSvgs
       }}
     >
       {children}
