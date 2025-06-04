@@ -207,6 +207,7 @@ export function GameOneUI(type: Game1Type, oneWord_INDEX: number = 1) {
         showTooltip={!inverted && gameState != GameState.showingAnswers}
         longPress={(button, index) => { !inverted && handleShowTooltip(button.text, index) }}
         onClick={(button) => { onBottomButtonClicked(button); handleHideTooltip(); }}
+        forceDrawTypeAnd={gameState == GameState.showingAnswers}
       />
     </>
   );
