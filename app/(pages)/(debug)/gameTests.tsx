@@ -14,7 +14,6 @@ const games : {id : QuestionType, name: string}[] = [
   {id: QuestionType.SELECT_MULTIPLE, name: 'Select Multiple'},
   {id: QuestionType.SELECT_MULTIPLE_W_SENTENCE, name: 'Select Multiple with Sentence'},
   {id: QuestionType.SELECT_ONE_W_SENTENCE, name: 'Select One with Sentence'},
-  {id: QuestionType.SELECT_TYPE, name: 'Select Type'},
 ]
 
 const GameTests: React.FC = () => {
