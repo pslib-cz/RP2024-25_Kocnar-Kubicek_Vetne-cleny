@@ -7,6 +7,7 @@ import { useLevelContext } from '@/contexts/levelContext';
 import { WordButtonsContainer } from '../ui/games/WordButtonsContainer';
 import { ButtonState } from '../ui/games/WordButton';
 import { GeneratorParam, QuestionModifier } from '@/constants/questionGeneratorParams';
+import { GameState } from '@/types/gameState';
 
 export const enum Game1Type {
   normal = 0,
@@ -47,7 +48,7 @@ export function GameOneUI(type: Game1Type, oneWord_INDEX: number = 1) {
   const allTypes = type === Game1Type.allTypes || type === Game1Type.oneWord;
   const oneWord = type === Game1Type.oneWord;
 
-  const { onFinished, data, activeQuestion } = useGameContext();
+  const { onFinished, data, activeQuestion, gameState } = useGameContext();
   const { gameIndex, setGameIndex, phraseButtons, setPhraseButtons, bottomButtons, setBottomButtons, handleHideTooltip, handleShowTooltip } = useLevelContext();
 
   const modifiers: QuestionModifier[] = activeQuestion?.TEMPLATE[GeneratorParam.QUESTION_MODIFIER] as QuestionModifier[] ?? [];
@@ -137,6 +138,8 @@ export function GameOneUI(type: Game1Type, oneWord_INDEX: number = 1) {
   }, [data]);
 
   const onBottomButtonClicked = (bottomButton: WordButtonType) => {
+    if (gameState == GameState.showingAnswers) return;
+
     if (!phraseButtons || !data || !bottomButtons) {
       console.warn("Phrase buttons or data or bottomButtons not initialized yet");
       return;
@@ -174,18 +177,34 @@ export function GameOneUI(type: Game1Type, oneWord_INDEX: number = 1) {
     setPhraseButtons(updatedPhraseButtons);
   };
 
+  const handlePhraseButtonClick = (button: WordButtonType, index: number) => {
+    if (gameState == GameState.showingAnswers) {
+      if (!inverted) {
+        handleShowTooltip(button.type || "", index)
+      }
+      else if (inverted) {
+        handleShowTooltip(button.text, index)
+      }
+    }
+
+    if (inverted) {
+      handleShowTooltip(button.type || "", index)
+    }
+  }
+
   return (
     <>
       <View>
         <Text style={styles.title}>{inverted ? "Přiřaď slova ke slovním druhům" : "Přiřaď slovní druhy ke slovům"}</Text>
       </View>
       <WordButtonsContainer buttons={phraseButtons}
-        showTooltip={inverted}
-        longPress={(button, index) => { inverted && handleShowTooltip(button.text, index) }}
-        onClick={(button, index) => { inverted && handleShowTooltip(button.text, index) }}
+        showTooltip={inverted || gameState == GameState.showingAnswers}
+        longPress={handlePhraseButtonClick}
+        onClick={handlePhraseButtonClick}
+        forceDrawTypeAnd={gameState == GameState.showingAnswers}
       />
       <WordButtonsContainer buttons={bottomButtons}
-        showTooltip={!inverted}
+        showTooltip={!inverted && gameState != GameState.showingAnswers}
         longPress={(button, index) => { !inverted && handleShowTooltip(button.text, index) }}
         onClick={(button) => { onBottomButtonClicked(button); handleHideTooltip(); }}
       />

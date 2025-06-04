@@ -1,8 +1,7 @@
 import { WordSelectionOption } from "./games/SelectionOption";
 import { GameState } from "./gameState";
-import { WordButtonType } from "./games/WordButtonType";
-import { GameType } from "@/contexts/GameContext";
 import { Question } from "./Question";
+import { GameType } from "./GameType";
 
 export interface ActiveGameInfo {
   activeQuestionIndex: number;

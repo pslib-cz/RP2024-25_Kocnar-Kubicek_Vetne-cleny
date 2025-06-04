@@ -6,9 +6,10 @@ import { useLevelContext } from '@/contexts/levelContext';
 import { TargetTypeDisplay } from '../ui/games/TargetTypeDisplay';
 import { LargeGameButtonsGrid } from '../ui/games/LargeGameButtonsGrid';
 import { WordType } from '@/types/WordTypes';
+import { GameState } from '@/types/gameState';
 
 export function Game2UI(wantedType: WordType | null = null) {
-  const { data, onFinished } = useGameContext();
+  const { data, onFinished, gameState } = useGameContext();
   const { options, setOptions, targetType, setTargetType, selectedOptions, setSelectedOptions } = useLevelContext();
 
   // ! this is the only allowed useEffect in the games and can only contain the data as dependency
@@ -52,8 +53,9 @@ export function Game2UI(wantedType: WordType | null = null) {
       <TargetTypeDisplay text='Vyber' />
       <LargeGameButtonsGrid
         options={options}
-        selectedOptions={selectedOptions}
+        selectedOptions={gameState != GameState.showingAnswers ? selectedOptions : []}
         handleSelect={handleSelect}
+        correctType={gameState == GameState.showingAnswers ? targetType?.type : null}
       />
       <ContinueButton onClick={handleContinue} enabled={selectedOptions.length > 0} />
     </>

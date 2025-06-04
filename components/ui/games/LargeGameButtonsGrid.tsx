@@ -1,15 +1,34 @@
 import { WordSelectionOption } from "@/types/games/SelectionOption"
 import React from "react"
 import { ScrollView, StyleSheet, Text, View } from "react-native"
-import { LargeGameButton } from "./LargeGameButton"
+import { LargeGameButton, LargeGameButtonStyle } from "./LargeGameButton"
 
 type LargeGameButtonsGridProps = {
   options?: WordSelectionOption[];
   selectedOptions: WordSelectionOption[];
   handleSelect: (option: WordSelectionOption) => void;
+  correctType?: string | null;
 };
 
-export const LargeGameButtonsGrid: React.FC<LargeGameButtonsGridProps> = ({ options, selectedOptions, handleSelect }) => {
+export const LargeGameButtonsGrid: React.FC<LargeGameButtonsGridProps> = ({ options, selectedOptions, handleSelect, correctType = null }) => {
+
+  const getButtonStyle = (option: WordSelectionOption) : LargeGameButtonStyle => {
+
+    if (correctType) {
+      if (option.type === correctType) {
+        return LargeGameButtonStyle.correct;
+      }
+      else{
+        return LargeGameButtonStyle.incorrect;
+      }
+    }
+
+    if (selectedOptions.includes(option)) {
+      return LargeGameButtonStyle.selected;
+    }
+    return LargeGameButtonStyle.default;
+  }
+
   return (
     <ScrollView style={{ width: '100%' }}>
       <View style={[styles.grid, { marginBottom: 40 }]}>
@@ -18,7 +37,7 @@ export const LargeGameButtonsGrid: React.FC<LargeGameButtonsGridProps> = ({ opti
             <LargeGameButton
               key={index}
               text={option.text}
-              selected={selectedOptions.includes(option)}
+              style={getButtonStyle(option)}
               onPress={() => handleSelect(option)}
             />
           ))

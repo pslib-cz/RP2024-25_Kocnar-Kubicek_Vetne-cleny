@@ -1,14 +1,37 @@
 import React from "react";
 import { TouchableOpacity, StyleSheet, Text } from "react-native";
 
-export const LargeGameButton = ({ text, selected, onPress }: { text: string; selected: boolean; onPress: () => void }) => {
+export enum LargeGameButtonStyle {
+  default,
+  selected,
+  correct,
+  incorrect,
+}
+
+export const LargeGameButton = (
+  { text, style, onPress }: 
+  { text: string; style: LargeGameButtonStyle; onPress: () => void }
+) => {
 
   if (!text || text.length === 0)
     console.warn("LargeGameButton received an empty text prop.");
 
+  const getButtonStyle = () => {
+    switch (style) {
+      case LargeGameButtonStyle.selected:
+        return styles.selectedOption;
+      case LargeGameButtonStyle.correct:
+        return styles.correctOption;
+      case LargeGameButtonStyle.incorrect:
+        return styles.incorrectOption;
+      default:
+        return null;
+    }
+  };
+
   return (
     <TouchableOpacity
-      style={[styles.option, selected && styles.selectedOption]}
+      style={[styles.option, getButtonStyle()]}
       onPress={onPress}
       activeOpacity={0.7}
     >
@@ -31,6 +54,14 @@ const styles = StyleSheet.create({
   selectedOption: {
     borderColor: '#6266f1',
     backgroundColor: 'rgba(98, 102, 241, 0.1)',
+  },
+  correctOption: {
+    borderColor: '#22c55e',
+    backgroundColor: 'rgba(34, 197, 94, 0.1)',
+  },
+  incorrectOption: {
+    borderColor: '#ef4444',
+    backgroundColor: 'rgba(239, 68, 68, 0.1)',
   },
   optionText: {
     color: '#fff',

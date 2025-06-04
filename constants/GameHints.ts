@@ -1,6 +1,5 @@
 import { QuestionType } from "./questionGeneratorParams";
 
-
 export const hints: Record<QuestionType, string[]> = {
   [QuestionType.MARK_WORDS]: [
     "Přiřad správné členy ke slovům z věty. ",

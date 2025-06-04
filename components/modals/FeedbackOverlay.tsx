@@ -5,31 +5,31 @@ import { GameState } from '@/types/gameState';
 import { useGameContext } from '@/contexts/GameContext';
 import { GameType } from '@/types/GameType';
 
-export const FeedbackOverlay: React.FC = () => { 
+export const FeedbackOverlay: React.FC = () => {
   const { nextQuestion, gameState, gameType, setGameState } = useGameContext();
-  
+
   const isCorrect = gameState == GameState.correct;
 
   const displayMessage = isCorrect ? "Dobrá práce!" : "To není dobře!";
   const displayIcon = isCorrect ? "checkmark-circle" : "close-circle";
-  
+
   const themeColor = isCorrect ? "#8CC83C" : "#FF4B4B";
-  
+
   const slideAnim = useRef(new Animated.Value(Dimensions.get('window').height)).current;
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     if (gameState != GameState.pending) {
-      const height = gameState == GameState.showingAnswers ? 
-        Dimensions.get('window').height / 3 : 
-        Dimensions.get('window').height;
+      const height = gameState == GameState.showingAnswers ?
+        Dimensions.get('window').height - 120 :
+        0;
 
-      slideAnim.setValue(height);
+      slideAnim.setValue(Dimensions.get('window').height);
       fadeAnim.setValue(0);
-      
+
       Animated.parallel([
         Animated.timing(slideAnim, {
-          toValue: 0,
+          toValue: height,
           duration: 300,
           useNativeDriver: true,
         }),
@@ -59,7 +59,7 @@ export const FeedbackOverlay: React.FC = () => {
   if (gameState == GameState.pending) return null;
 
   return (
-    <Animated.View 
+    <Animated.View
       style={[
         styles.overlay,
         {
@@ -78,24 +78,27 @@ export const FeedbackOverlay: React.FC = () => {
             </Text>
           </View>
         }
-        
-        <TouchableOpacity 
-          style={[styles.continueButton, { backgroundColor: themeColor }]} 
-          onPress={() => nextQuestion()}
-          activeOpacity={0.8}
-        >
-          <Text style={styles.buttonText}>Další otázka</Text>
-        </TouchableOpacity>
-        {
-          !isCorrect && gameType != GameType.TEST &&
-          <TouchableOpacity 
-            style={[styles.continueButton, { backgroundColor: themeColor }]} 
-            onPress={() => setGameState(GameState.showingAnswers)}
+
+        <View>
+          <TouchableOpacity
+            style={[styles.continueButton, { backgroundColor: themeColor }]}
+            onPress={() => nextQuestion()}
             activeOpacity={0.8}
           >
-            <Text style={styles.buttonText}>Správné odpovědi</Text>
+            <Text style={styles.buttonText}>Další otázka</Text>
           </TouchableOpacity>
-        }
+          {
+            !isCorrect && gameType != GameType.TEST && gameState != GameState.showingAnswers &&
+            <TouchableOpacity
+              style={[styles.continueButton, { backgroundColor: "gray" }]}
+              onPress={() => setGameState(GameState.showingAnswers)}
+              activeOpacity={0.8}
+            >
+              <Text style={styles.buttonText}>Správné odpovědi</Text>
+            </TouchableOpacity>
+          }
+        </View>
+
       </View>
     </Animated.View>
   );
@@ -117,11 +120,12 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     justifyContent: 'space-between',
-    paddingTop: 100,
+    paddingTop: 32,
     paddingBottom: 75,
     paddingHorizontal: 20,
   },
   header: {
+    paddingTop: 80,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -140,6 +144,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginHorizontal: 20,
+    marginBottom: 20,
   },
   buttonText: {
     color: '#1C292B',

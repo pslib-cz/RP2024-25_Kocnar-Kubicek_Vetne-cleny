@@ -26,7 +26,7 @@ const GameTests: React.FC = () => {
   const handleGameSelect = (gameId: QuestionType) => {
     navigation.push("games/game" as never)
     newGameWithQuestions([{
-      SOURCE: [{text: "Test", type: "po"}, {text: "Test", type: "po"}, {text: "Test", type: "po"}, {text: "Test", type: "po"}],
+      SOURCE: [{text: "Test", type: "po"}, {text: "Test pu", type: "pu přípustky"}, {text: "Test", type: "po"}, {text: "Test", type: "po"}],
       TEMPLATE: [1,0,gameId],
       INDEX: 1,
       WANTED: "pu přípustky"

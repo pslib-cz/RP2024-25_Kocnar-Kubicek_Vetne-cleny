@@ -6,14 +6,16 @@ import WordButton from "./WordButton";
 import { ThemedText } from "@/components/ThemedText";
 import { useLevelContext } from "@/contexts/levelContext";
 
+interface WordButtonsContainerProps {
+  buttons: WordButtonType[] | undefined,
+  showTooltip: boolean,
+  longPress: (button: WordButtonType, index: number) => void,
+  onClick: (button: WordButtonType, index: number) => void,
+  forceDrawTypeAnd? : boolean
+};
+
 export const WordButtonsContainer = (
-  { buttons, showTooltip, longPress, onClick }:
-    {
-      buttons: WordButtonType[] | undefined,
-      showTooltip: boolean,
-      longPress: (button: WordButtonType, index: number) => void,
-      onClick: (button: WordButtonType, index: number) => void
-    }
+  { buttons, showTooltip, longPress, onClick, forceDrawTypeAnd = false }: WordButtonsContainerProps
 ) => {
 
   const { tooltip, handleHideTooltip } = useLevelContext();
@@ -27,7 +29,7 @@ export const WordButtonsContainer = (
               buttons.map((button, index) => {
                 return (
                   <Tooltip
-                    key={index}
+                    key={index + (forceDrawTypeAnd ? 1 : 0)}
                     visible={showTooltip && tooltip.visible && tooltip.index === index}
                     message={tooltip.message}
                     onRequestClose={handleHideTooltip}
@@ -36,7 +38,7 @@ export const WordButtonsContainer = (
                       text={button.text}
                       state={button.state}
                       type={button.type}
-                      drawType={button.drawType}
+                      drawType={button.drawType || forceDrawTypeAnd}
                       onLongPress={() => longPress(button, index)}
                       onClick={() => onClick(button, index)}
                     />
