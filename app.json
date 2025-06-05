@@ -21,9 +21,6 @@
       }
     },
     "android": {
-      "versionCode": 2,
-      "compileSdkVersion": 26,
-      "targetSdkVersion": 26,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/icons/adaptive-icon.png",
         "backgroundColor": "#101223"
@@ -50,7 +47,17 @@
         }
       ],
       "expo-asset",
-      "expo-font"
+      "expo-font",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "compileSdkVersion": 26,
+            "targetSdkVersion": 26,
+            "versionCode": 2
+          }
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true
