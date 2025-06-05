@@ -40,10 +40,8 @@ const ArenaPlanet: React.FC = () => {
               onPress={newGameInArena}
               variant="primary"
             />
-
           </View>
         </View>
-
       </View>
     </SafeAreaView>
   );
@@ -85,6 +83,7 @@ const styles = StyleSheet.create({
     maxWidth: 380,
     width: '90%',
     alignItems: 'center',
+    marginBottom: 16
   },
 });
 
