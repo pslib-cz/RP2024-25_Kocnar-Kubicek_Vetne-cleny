@@ -9,7 +9,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { AuthoredGame, useAPI } from '@/hooks/useAPI';
 import { useRocket } from '@/contexts/RocketContext';
 import { galaxies } from '@/components/ArenaHeader';
-
+import { PlayerRocket } from '@/components/PlayerRocket';
 type RootStackParamList = {
   AuthoredGameDetail: {
     gameId: string;
@@ -248,12 +248,23 @@ const AuthoredGameDetail = () => {
                 <View key={session.id} style={styles.playerCard}>
                   <View style={styles.playerHeader}>
                     <View style={styles.playerInfo}>
-                      <View
-                        style={[
-                          styles.playerColor,
-                          { backgroundColor: session.player.bodyColor }
-                        ]}
-                      />
+                    <View
+                          style={[
+                            styles.playerColor
+                          ]}
+                        >
+                          <PlayerRocket
+                            player={session.player}
+                            width={32}
+                            height={32}
+                            showText={false}
+                            containerStyle={{
+                              backgroundColor: "transparent",
+                              borderRadius: 16,
+                              padding: 4
+                            }}
+                          />
+                        </View>
                       <View>
                         <Text style={styles.playerName}>{session.player.name}</Text>
                         <Text style={styles.playerMeta}>
@@ -287,10 +298,21 @@ const AuthoredGameDetail = () => {
                       <View style={styles.playerInfo}>
                         <View
                           style={[
-                            styles.playerColor,
-                            { backgroundColor: session.player.bodyColor }
+                            styles.playerColor
                           ]}
-                        />
+                        >
+                          <PlayerRocket
+                            player={session.player}
+                            width={32}
+                            height={32}
+                            showText={false}
+                            containerStyle={{
+                              backgroundColor: "transparent",
+                              borderRadius: 16,
+                              padding: 4
+                            }}
+                          />
+                        </View>
                         <View>
                           <Text style={styles.playerName}>
                             {index < 3 && ['🥇', '🥈', '🥉'][index]} {session.player.name}
@@ -499,10 +521,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   playerColor: {
-    width: 16,
-    height: 16,
+
     borderRadius: 8,
-    marginRight: 12,
   },
   playerName: {
     fontSize: 16,

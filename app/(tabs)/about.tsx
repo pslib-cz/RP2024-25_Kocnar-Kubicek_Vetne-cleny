@@ -55,12 +55,12 @@ export default function AboutPage() {
             style={styles.button}
             variant="gray"
           />
-          <PlayfulButton
+          {/* <PlayfulButton
             title="DEVELOPER MENU"
             onPress={() => router.push('/(pages)/(debug)/gameTests')}
             style={styles.button}
             variant="gray"
-          />
+          /> */}
         </View>
       </ScrollView>
     </SafeAreaView>

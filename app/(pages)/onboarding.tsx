@@ -360,7 +360,7 @@ export default function OnboardingScreen() {
               <PlayerRocket
                 player={
                     {
-                        id: "a",
+                        id: "b",
                         name: 'Paní Kovářová',
                         bodyColor: "#f8c",
                         trailColor: "#fff",

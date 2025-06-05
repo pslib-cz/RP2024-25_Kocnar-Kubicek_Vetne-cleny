@@ -44,13 +44,12 @@ export default function RootLayout() {
             <LevelProvider>
               <MultiplayerGameProvider>
                 <CommonMistakesProvider>
-                  <GameProvider>Add commentMore actions
+                  <GameProvider>
                     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
                       <Stack screenOptions={{ headerShown: false }}>
                         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
                         <Stack.Screen name="+not-found" />
                         <Stack.Screen name="games/game" />
-                        {/* <Stack.Screen name="tutorial" /> */}
                       </Stack>
                       <StatusBar style="light" translucent backgroundColor='transparent' />
                     </ThemeProvider>

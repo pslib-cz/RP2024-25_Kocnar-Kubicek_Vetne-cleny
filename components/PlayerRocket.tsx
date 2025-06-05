@@ -12,6 +12,7 @@ interface PlayerRocketProps {
   textStyle?: StyleProp<TextStyle>;
   containerStyle?: StyleProp<ViewStyle>;
   showId?: boolean;
+  showText?: boolean;
 }
 
 export const PlayerRocket = ({
@@ -21,7 +22,8 @@ export const PlayerRocket = ({
   height = 50,
   textStyle,
   containerStyle,
-  showId = false
+  showId = false,
+  showText = true
 }: PlayerRocketProps) => {
   const [modifiedRocketSvg, setModifiedRocketSvg] = useState<string | null>(null);
   const { rocketSvgs } = useRocket();
@@ -41,10 +43,10 @@ export const PlayerRocket = ({
   return (
     <View style={[styles.container, containerStyle]}>
       <SvgXml xml={modifiedRocketSvg} width={width} height={height} style={[{ transform: [{ rotate: "45deg" }] }, style]} />
-      <View style={styles.playerInfo}>
+      {showText && <View style={styles.playerInfo}>
         <Text style={[styles.playerName, textStyle]}>{player.name}</Text>
         {showId && <Text style={styles.playerId}>{player.id.substring(0, 8)}...</Text>}
-      </View>
+      </View>}
     </View>
   );
 };
