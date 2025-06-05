@@ -143,7 +143,7 @@ export const RocketProvider = ({ children }: RocketProviderProps) => {
         const savedTeacherMode = await AsyncStorage.getItem('user_profile_teacher_mode');
 
         if (!savedName || savedName === '') {
-            router.replace('/(pages)/onboarding');
+            router.push('/(pages)/onboarding');
         }
 
         if (savedBodyColor) setBodyColor(savedBodyColor);
