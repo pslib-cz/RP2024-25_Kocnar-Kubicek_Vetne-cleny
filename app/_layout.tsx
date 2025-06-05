@@ -62,7 +62,7 @@ export default function RootLayout() {
                   <Stack.Screen name="+not-found" />
                   <Stack.Screen name="games/game" />
                 </Stack>
-                <StatusBar style="light" translucent backgroundColor='transparent' />
+                <StatusBar/>
               </ThemeProvider>
             </GameProviders>
           </RocketProvider >
