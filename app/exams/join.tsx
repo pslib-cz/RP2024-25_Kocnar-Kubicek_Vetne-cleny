@@ -173,7 +173,7 @@ export default function JoinGameScreen() {
       <View style={styles.container}>
         {!contextCode ? (
           <TouchableWithoutFeedback onPress={dismissKeyboard}>
-            <View style={styles.joinContainer}>
+            <View style={[styles.joinContainer, { marginBottom: 69 }]}>
             <ThemedText style={styles.title} type="title">Připojit se ke hře</ThemedText>
 
             {/* User info section */}
@@ -224,7 +224,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#101223',
     padding: 20,
-    marginBottom: 69,
   },
   scrollContent: {
     flexGrow: 1,
