@@ -15,7 +15,7 @@ import { GameType } from '@/types/GameType';
 const GameContext = createContext<GameContextData | undefined>(undefined);
 
 export const NEXT_LEVEL_TRESHOLD = 0.75 * 100;
-const LEVELS_COUNT = 3;
+const LEVELS_COUNT = 8;
 const questionTypeOptions = Object.entries(QuestionType).filter(([k, v]) => typeof v === 'number');
 
 export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
