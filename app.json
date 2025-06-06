@@ -21,6 +21,7 @@
       }
     },
     "android": {
+      "versionCode": 4,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/icons/adaptive-icon.png",
         "backgroundColor": "#101223"
@@ -47,15 +48,7 @@
         }
       ],
       "expo-asset",
-      "expo-font",
-      [
-        "expo-build-properties",
-        {
-          "android": {
-            "versionCode": 3
-          }
-        }
-      ]
+      "expo-font"
     ],
     "experiments": {
       "typedRoutes": true

@@ -15,12 +15,10 @@ import React from 'react';
 import { LevelProvider } from '@/contexts/levelContext';
 import { FileSystemStuffProvider } from '@/contexts/FileSystemStuffContext';
 import { CommonMistakesProvider } from '@/contexts/CommonMistakesContext';
-import * as NavigationBar from 'expo-navigation-bar';
 
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-  NavigationBar.setBackgroundColorAsync("transparent");
 
   const colorScheme = useColorScheme();
   const [loaded] = useFonts({
