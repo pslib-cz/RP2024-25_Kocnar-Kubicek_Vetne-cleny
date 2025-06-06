@@ -76,7 +76,7 @@ const PracticeCompleteScreen = () => {
         </View>
 
         {/* <Button title={successRate >= NEXT_LEVEL_TRESHOLD ? "Další level" : "Zkusit znovu"} filled={true} onPress={newGameWithCount} /> */}
-        <Button title="Domů" filled={false} onPress={() => navigation.navigate('/' as never)} />
+        <Button title="Domů" filled={false} onPress={() => navigation.replace('/' as never)} />
       </View>
     )
   }
@@ -94,7 +94,7 @@ const PracticeCompleteScreen = () => {
         </View>
 
         <Button title={"Zkusit znovu"} filled={true} onPress={newGameWitMostCommonMistakes} />
-        <Button title="Domů" filled={false} onPress={() => navigation.navigate('/' as never)} />
+        <Button title="Domů" filled={false} onPress={() => navigation.replace('/' as never)} />
       </View>
     )
   }
