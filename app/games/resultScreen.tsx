@@ -54,11 +54,11 @@ const PracticeCompleteScreen = () => {
 
         <View style={styles.statsContainer}>
           <ResultStuff text="Čas" value={`${getDuration()}s`} color="#6272A4" icon="timer" />
-          <ResultStuff text="Úspěšnost" value={`${successRate.toFixed(2)}%`} color={successRateColor} icon="star" />
+          <ResultStuff text="Úspěšnost" value={`${successRate.toFixed(1)}%`} color={successRateColor} icon="star" />
         </View>
 
         <Button title={successRate >= NEXT_LEVEL_TRESHOLD ? "Další level" : "Zkusit znovu"} filled={true} onPress={newGameInArena} />
-        <Button title="Domů" filled={false} onPress={() => navigation.navigate('/' as never)} />
+        <Button title="Domů" filled={false} onPress={() => navigation.replace('/' as never)} />
       </View>
     )
   }
