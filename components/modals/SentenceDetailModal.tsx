@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Dimensions, Animated, Modal } from 'react-native';
 import ModalWrapper from './ModalWrapper';
 import { WordSelectionOption } from '@/types/games/SelectionOption';
 import { WordButtonsContainer } from '../ui/games/WordButtonsContainer';
@@ -22,7 +21,7 @@ const SentenceDetailModal: React.FC<SentenceDetailModalProps> = ({
   sentence = undefined,
   closeButtonText = "Chápu",
 }) => {
-  const { handleShowTooltip } = useLevelContext();
+  const { handleShowTooltip, handleHideTooltip } = useLevelContext();
   const [buttons, setButtons] = useState<WordButtonType[]>([]);
   
   useEffect(() => {
@@ -40,7 +39,10 @@ const SentenceDetailModal: React.FC<SentenceDetailModalProps> = ({
 
 
   return (
-    <ModalWrapper visible={visible} onClose={onClose} title={title} closeButtonText={closeButtonText}>
+    <ModalWrapper visible={visible} onClose={() => {
+      onClose();
+      handleHideTooltip();
+    }} title={title} closeButtonText={closeButtonText}>
       <WordButtonsContainer
         buttons={buttons}
         showTooltip={true}

@@ -57,7 +57,7 @@ export function Game2UI(wantedType: WordType | null = null) {
         handleSelect={handleSelect}
         correctType={gameState == GameState.showingAnswers ? targetType?.type : null}
       />
-      <ContinueButton onClick={handleContinue} enabled={selectedOptions.length > 0} />
+      <ContinueButton onClick={handleContinue} enabled={selectedOptions.length > 0 && gameState != GameState.showingAnswers} />
     </>
   );
 };
