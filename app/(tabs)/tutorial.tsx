@@ -1,42 +1,16 @@
-import QuestionRow from '@/components/ui/tutorial/QuestionRow';
-import TutorialButton from '@/components/ui/tutorial/TutorialButton';
-import PlayfulButton from '@/components/ui/PlayfulButton';
-import { useBackspaceIntercept } from '@/hooks/useBackspaceIntercept';
-import { useTutorial } from '@/hooks/useTutorial';
-import { Ionicons } from '@expo/vector-icons';
-import { useLocalSearchParams, useRouter } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
+import QuestionRow from '@/components/ui/tutorial/QuestionRow'
+import PlayfulButton from '@/components/ui/PlayfulButton'
+import { useTutorial } from '@/hooks/useTutorial'
+import { StatusBar } from 'expo-status-bar'
 import React from 'react';
-import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, View } from 'react-native'
 import AndroidSafeArea from '@/components/AndroidSafeArea';
 
 export default function Tutorial() {
   const { usedNodes, currentNode, AddNode, reset } = useTutorial();
-  const router = useRouter();
-  // const { returnTo } = useLocalSearchParams();
-
-  // useBackspaceIntercept(() => {
-  //   if (returnTo) {
-  //     router.push(returnTo as never);
-  //   }
-  //   else {
-  //     router.back();
-  //   }
-  // });
 
   return (
     <SafeAreaView style={[styles.container, AndroidSafeArea.AndroidSafeArea]}>
-
-      {/* {returnTo && (
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => router.push(returnTo as never)}
-        >
-          <Ionicons name="arrow-back" size={24} color="white" />
-          <Text style={styles.backText}>Zpět ke hře</Text>
-        </TouchableOpacity>
-      )} */}
-
       <StatusBar style="light" />
       <View style={styles.verticalLine} />
 

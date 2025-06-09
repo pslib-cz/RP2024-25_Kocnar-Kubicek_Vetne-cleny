@@ -1,9 +1,16 @@
 import { TutorialNode } from "@/types/tutorialNode";
 
 // leaf nodes
-const privlastek: TutorialNode = {
+const privlastekShodny: TutorialNode = {
   isResult: true,
-  title: "PŘÍVLASTEK",
+  title: "PŘÍVLASTEK SHODNÝ",
+  description: "",
+  yesNode: null,
+  noNode: null
+};
+const privlastekNeshodny: TutorialNode = {
+  isResult: true,
+  title: "PŘÍVLASTEK NESHODNÝ",
   description: "",
   yesNode: null,
   noNode: null
@@ -132,17 +139,17 @@ const doplnujeDejKdeKam: TutorialNode = {
 
 const shodujeSeSPodstatnymJmenem: TutorialNode = {
   isResult: false,
-  title: "SHODUJE SE S PODSTATNÝM JMÉNEM? PADÁ S NÍM. KDO? CO?",
+  title: "SHODUJE SE S PODSTATNÝM JMÉNEM? (PÁD, ČÍSLO, ROD)",
   description: "",
-  yesNode: doplnek,
-  noNode: predmet
+  yesNode: privlastekShodny,
+  noNode: privlastekNeshodny
 };
 
 const zavisiSlovoNaPrisudku: TutorialNode = {
   isResult: false,
   title: "ZÁVISÍ SLOVO NA PŘÍSUDKU? PTÁME SE PÁDOVÝMI OTÁZKAMI 2.-7.?",
   description: "",
-  yesNode: shodujeSeSPodstatnymJmenem,
+  yesNode: predmet,
   noNode: doplnujeDejKdeKam
 };
 
@@ -150,7 +157,7 @@ const urcujeSlovoVlastnost: TutorialNode = {
   isResult: false,
   title: "URČUJE SLOVO VLASTNOST PODSTATNÉHO JMÉNA? PTÁME SE JAKÝ? KTERÝ? ČÍ?",
   description: "",
-  yesNode: privlastek,
+  yesNode: shodujeSeSPodstatnymJmenem,
   noNode: zavisiSlovoNaPrisudku
 };
 
