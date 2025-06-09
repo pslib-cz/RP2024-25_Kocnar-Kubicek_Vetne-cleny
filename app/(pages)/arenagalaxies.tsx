@@ -6,13 +6,13 @@ import { useRouter } from 'expo-router';
 import AndroidSafeArea from '@/components/AndroidSafeArea';
 
 const ArenaGalaxies: React.FC = () => {
-  const router = useRouter(); // Initialize navigation
+  const router = useRouter();
 
   return (
     <SafeAreaView style={[styles.safeArea, AndroidSafeArea.AndroidSafeArea]}>
       <View style={styles.container}>
         <ArenaHeader
-          onBackPress={() => router.back()} // Pass back button handler
+          onBackPress={() => router.back()}
         />
         <GalaxyView />
       </View>

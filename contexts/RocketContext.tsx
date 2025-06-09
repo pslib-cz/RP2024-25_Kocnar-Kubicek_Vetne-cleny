@@ -179,10 +179,7 @@ export const RocketProvider = ({ children }: RocketProviderProps) => {
 
   // Only sync when levels or user preferences change (except during initial load)
   useEffect(() => {
-    // Skip if no user data yet
     if (!userId || !secretKey) return;
-    
-    // Sync with server
     syncWithServer();
   }, [activePlanets, userId, secretKey, bodyColor, trailColor, selectedRocketIndex, name]);
 

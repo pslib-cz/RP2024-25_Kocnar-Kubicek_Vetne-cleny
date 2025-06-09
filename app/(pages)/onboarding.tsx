@@ -17,7 +17,7 @@ import { useLevelContext } from '@/contexts/levelContext';
 import { NamedRocket } from '@/components/NamedRocket';
 import AndroidSafeArea from '@/components/AndroidSafeArea';
 import { PlayerRocket } from '@/components/PlayerRocket';
-// Helper to load SVG as string
+
 const loadSvgAsset = async (assetModule: any): Promise<string | null> => {
   try {
     const asset = Asset.fromModule(assetModule);
@@ -44,7 +44,6 @@ export default function OnboardingScreen() {
     setName,
   } = useRocket();
 
-  // Rocket SVG logic
   const [rocketSvgs, setRocketSvgs] = useState<string[]>([]);
   const [modifiedRocketSvgs, setModifiedRocketSvgs] = useState<string[]>([]);
   const [colorPickerVisible, setColorPickerVisible] = useState(false);
@@ -92,7 +91,6 @@ export default function OnboardingScreen() {
     setName(localName.trim().slice(0, 32));
   }, [localName, setName]);
 
-  // Color picker logic
   const openColorPicker = (type: 'body' | 'trail') => {
     setCurrentPickingFor(type);
     setColorPickerVisible(true);
@@ -110,9 +108,7 @@ export default function OnboardingScreen() {
     setPage(idx);
   };
 
-  // Responsive width
   const { width } = Dimensions.get('window');
-
   const { handleShowTooltip } = useLevelContext();
 
   return (

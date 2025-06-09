@@ -5,9 +5,8 @@ import PlayfulButton from '@/components/ui/PlayfulButton';
 import AndroidSafeArea from '@/components/AndroidSafeArea';
 import { useRouter } from 'expo-router';
 
-// Proměnné pro název aplikace a kontakt
 const APP_NAME = 'Větná dráha';
-const CONTACT_EMAIL = 'tomas.kubicek.022@pslib.cz'; // Změň dle potřeby
+const CONTACT_EMAIL = 'tomas.kubicek.022@pslib.cz';
 
 export default function GDPRPage() {
   const router = useRouter();
