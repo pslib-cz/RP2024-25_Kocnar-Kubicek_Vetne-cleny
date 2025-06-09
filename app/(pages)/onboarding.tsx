@@ -343,29 +343,29 @@ export default function OnboardingScreen() {
                 containerStyle={styles.namedRocketContainer}
                 textStyle={styles.playerName}
               />
-              
+
               <PlayerRocket
                 player={
-                    {
-                        id: "a",
-                        name: 'Karel',
-                        bodyColor: "#cfc",
-                        trailColor: "#8f2",
-                        selectedRocketIndex: 3,
-                    }
+                  {
+                    id: "a",
+                    name: 'Karel',
+                    bodyColor: "#cfc",
+                    trailColor: "#8f2",
+                    selectedRocketIndex: 3,
+                  }
                 }
                 containerStyle={styles.namedRocketContainer}
                 textStyle={styles.playerName}
               />
               <PlayerRocket
                 player={
-                    {
-                        id: "b",
-                        name: 'Paní Kovářová',
-                        bodyColor: "#f8c",
-                        trailColor: "#fff",
-                        selectedRocketIndex: 2,
-                    }
+                  {
+                    id: "b",
+                    name: 'Paní Kovářová',
+                    bodyColor: "#f8c",
+                    trailColor: "#fff",
+                    selectedRocketIndex: 2,
+                  }
                 }
                 containerStyle={styles.namedRocketContainer}
                 textStyle={styles.playerName}
@@ -424,6 +424,9 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   nameContainer: {
+    // this is bad solution, but it was fast and is good enough for now
+    zIndex: 999,
+    backgroundColor: '#101223',
     width: '100%',
     marginTop: 30,
   },

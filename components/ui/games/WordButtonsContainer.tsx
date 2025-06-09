@@ -17,7 +17,6 @@ interface WordButtonsContainerProps {
 export const WordButtonsContainer = (
   { buttons, showTooltip, longPress, onClick, forceDrawTypeAnd = false }: WordButtonsContainerProps
 ) => {
-
   const { tooltip, handleHideTooltip } = useLevelContext();
 
   return (
