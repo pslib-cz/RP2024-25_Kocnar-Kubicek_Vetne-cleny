@@ -197,7 +197,7 @@ export function GameOneUI(type: Game1Type, oneWord_INDEX: number = 1) {
   return (
     <>
       <View>
-        <Text style={styles.title}>{inverted ? "Přiřaď slova ke slovním druhům" : "Přiřaď slovní druhy ke slovům"}</Text>
+        <Text style={styles.title}>{inverted ? "Přiřaď slova k větným členům" : "Přiřaď větné členy ke slovům"}</Text>
       </View>
       <WordButtonsContainer buttons={phraseButtons}
         showTooltip={inverted || gameState == GameState.showingAnswers}
