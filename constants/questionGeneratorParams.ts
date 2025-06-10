@@ -101,7 +101,7 @@ export let questionGeneratorParams = [
   [
     [0, DataSource.PK, QuestionType.SELECT_TYPE, [], [QuestionModifier.ONLY_PKS, QuestionModifier.ONLY_PKN]],
     [1, DataSource.PK, QuestionType.SELECT_MULTIPLE, [], [QuestionModifier.ONLY_PKS, QuestionModifier.ONLY_PKN]],
-    [0, DataSource.ALL, QuestionType.MARK_TYPE_ONE_WORD, [DataSourceModifier.SENTENCE_CONTAINS_PK], [QuestionModifier.ONLY_PKS, QuestionModifier.ONLY_PKN]],
+    [1, DataSource.ALL, QuestionType.MARK_TYPE_ONE_WORD, [DataSourceModifier.SENTENCE_CONTAINS_PK], [QuestionModifier.ONLY_PKS, QuestionModifier.ONLY_PKN]],
     [1, DataSource.ALL, QuestionType.MARK_WORDS, [DataSourceModifier.SENTENCE_CONTAINS_PK]],
     [1, DataSource.ALL, /*QuestionType.SELECT_ONE_W_SENTENCE*/ QuestionType.SELECT_MULTIPLE_W_SENTENCE, [DataSourceModifier.SENTENCE_CONTAINS_PK], [QuestionModifier.ONLY_PKS, QuestionModifier.ONLY_PKN]],
   ],
@@ -109,7 +109,7 @@ export let questionGeneratorParams = [
   [
     [0, DataSource.PU, QuestionType.SELECT_TYPE, [], [QuestionModifier.ONLY_PU]],
     [1, DataSource.PU, QuestionType.SELECT_MULTIPLE, [], [QuestionModifier.ONLY_PU]],
-    [0, DataSource.ALL, QuestionType.MARK_TYPE_ONE_WORD, [DataSourceModifier.SENTENCE_CONTAINS_PU], [QuestionModifier.ONLY_PU]],
+    [1, DataSource.ALL, QuestionType.MARK_TYPE_ONE_WORD, [DataSourceModifier.SENTENCE_CONTAINS_PU], [QuestionModifier.ONLY_PU]],
     [1, DataSource.ALL, QuestionType.MARK_WORDS, [DataSourceModifier.SENTENCE_CONTAINS_PU]],
     [1, DataSource.ALL, /*QuestionType.SELECT_ONE_W_SENTENCE*/ QuestionType.SELECT_MULTIPLE_W_SENTENCE, [DataSourceModifier.SENTENCE_CONTAINS_PU], [QuestionModifier.ONLY_PU]],
   ],

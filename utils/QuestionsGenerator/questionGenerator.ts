@@ -139,7 +139,22 @@ export function questionGenerator({
         questionType === QuestionType.MARK_TYPE_ONE_WORD ||
         questionType === QuestionType.SELECT_TYPE
       ) {
-        out.INDEX = (sentence.length > 0) ? (seed * (idx + 1)) % sentence.length : 0;
+        if (questionModifiers?.includes(QuestionModifier.ONLY_PKN) && questionModifiers?.includes(QuestionModifier.ONLY_PKS)) {
+            const availableIndexes = sentence.map((item: any, index: number) => (item[1] === 'pkn' || item[1] === 'pks') ? index : null).filter(a => a !== null);
+            console.log("Available indexes: ", availableIndexes);
+            out.INDEX = (availableIndexes.length > 0) ? availableIndexes[(seed * (idx + 1)) % availableIndexes.length] : 0;
+        } else if (questionModifiers?.includes(QuestionModifier.ONLY_PKN)) {
+            const availableIndexes = sentence.map((item: any, index: number) => (item[1] === 'pkn') ? index : null).filter(a => a !== null);
+            out.INDEX = (availableIndexes.length > 0) ? availableIndexes[(seed * (idx + 1)) % availableIndexes.length] : 0;
+        } else if (questionModifiers?.includes(QuestionModifier.ONLY_PKS)) {
+            const availableIndexes = sentence.map((item: any, index: number) => (item[1] === 'pks') ? index : null).filter(a => a !== null);
+            out.INDEX = (availableIndexes.length > 0) ? availableIndexes[(seed * (idx + 1)) % availableIndexes.length] : 0;
+        } else if (questionModifiers?.includes(QuestionModifier.ONLY_PU))    {
+            const availableIndexes = sentence.map((item: any, index: number) => (item[1].startsWith('pu')) ? index : null).filter(a => a !== null);
+            out.INDEX = (availableIndexes.length > 0) ? availableIndexes[(seed * (idx + 1)) % availableIndexes.length] : 0;
+        } else {
+          out.INDEX = (sentence.length > 0) ? (seed * (idx + 1)) % sentence.length : 0;
+        }
       }
       // For SELECT_MULTIPLE_W_SENTENCE and SELECT_ONE_W_SENTENCE, add WANTED
       if (
