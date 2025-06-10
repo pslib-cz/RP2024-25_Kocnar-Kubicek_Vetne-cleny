@@ -40,10 +40,15 @@ export function Game2UI(wantedType: WordType | null = null) {
     console.log("Target type: ", targetType);
     console.log("Selected options: ", selectedOptions);
 
-    for (const item of selectedOptions) {
-      if (!targetType?.type) throw new Error("Target type is not set");
-      if (item.type !== targetType?.type)
+    for (const item of data?? []){
+      if (item.type !== targetType?.type){
+        if (selectedOptions.includes(item)) {
+          return false;
+        }
+      }
+      else if (!selectedOptions.includes(item)) {
         return false;
+      }
     }
     return true;
   }
