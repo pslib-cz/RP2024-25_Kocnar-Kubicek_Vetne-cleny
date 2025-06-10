@@ -34,10 +34,15 @@ export function Game3UI(wantedType: WordType | null = null) {
   }
 
   function IsValid(): boolean {
-    for (const item of selectedOptions) {
-      if (!targetType?.type) throw new Error("Target type is not set");
-      if (item.type !== targetType?.type)
+    for (const item of data?? []){
+      if (item.type !== targetType?.type){
+        if (selectedOptions.includes(item)) {
+          return false;
+        }
+      }
+      else if (!selectedOptions.includes(item)) {
         return false;
+      }
     }
     return true;
   }
@@ -50,7 +55,7 @@ export function Game3UI(wantedType: WordType | null = null) {
             <>
               <TargetTypeDisplay text='Které slovo ve větě je ' />
               <Text style={styles.exampleText}>
-                {data.map(option => option.text).join(' ')}
+                {data.map(option => option.text.replaceAll(/\([^)]*\)/g, '')).join(' ')}
               </Text>
             </>
             :

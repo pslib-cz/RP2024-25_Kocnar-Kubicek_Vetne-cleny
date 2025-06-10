@@ -2,6 +2,7 @@ import React, { createContext, useContext, ReactNode, useEffect } from 'react';
 import { useAPI } from '@/hooks/useAPI';
 import { loadedVersion, loadLatestData_Local, updateLoadedSets } from '@/hooks/useData';
 import * as FileSystem from 'expo-file-system';
+import { useNetworkState } from 'expo-network';
 
 interface FileSystemStuffContextValue {
 
@@ -12,6 +13,7 @@ const FileSystemStuffContext = createContext<FileSystemStuffContextValue | undef
 export const FileSystemStuffProvider = ({ children }: { children: ReactNode }) => {
 
   const { get } = useAPI();
+  const state = useNetworkState()
 
   useEffect(() => {
     // try to fetch data from the server on /sets/sets.json, /sets/types.json and /sets/version.json
@@ -57,7 +59,7 @@ export const FileSystemStuffProvider = ({ children }: { children: ReactNode }) =
     };
 
     fetchAndStoreData();
-  }, []);
+  }, [state.isInternetReachable]);
 
   return (
     <FileSystemStuffContext.Provider value={{}}>

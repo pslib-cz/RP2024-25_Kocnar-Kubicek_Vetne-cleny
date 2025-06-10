@@ -102,7 +102,6 @@ export function GameOneUI(type: Game1Type, oneWord_INDEX: number = 1) {
     }))
   }
 
-
   // ! this is the only allowed useEffect in the games and can only contain the data as dependency
   useEffect(() => {
     if (oneWord) {
@@ -220,5 +219,6 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 24,
     fontWeight: 'bold',
+    textAlign: 'center',
   }
 });

@@ -57,7 +57,7 @@ export default function CreateGameScreen() {
 
   const handleStartExam = async () => {
     setButtonText('Vytvářím test...');
-    if (difficulty && galaxy >= 0) {
+    if (galaxy >= 0) {
       try {
         const count = parseInt(questionCount);
         if (isNaN(count) || count < 1 || count > 100) {
@@ -194,7 +194,7 @@ export default function CreateGameScreen() {
           </View>
           <Slider
             style={styles.slider}
-            minimumValue={5}
+            minimumValue={0}
             maximumValue={100}
             step={5}
             value={difficulty}
