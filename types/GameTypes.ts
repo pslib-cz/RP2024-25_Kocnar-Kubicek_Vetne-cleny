@@ -18,7 +18,7 @@ export interface ActiveGameInfo {
 export interface GameContextData {
   newGame: (config: any, gameType : GameType) => void;
   newGameInArena: () => void;
-  onFinished: (isCorrect: boolean) => void;
+  onFinished: (correctPercentage : number) => void;
   getDuration: () => number;
   getSuccessRate: () => number;
   gameState: GameState;

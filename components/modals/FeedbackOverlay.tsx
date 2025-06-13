@@ -5,15 +5,36 @@ import { GameState } from '@/types/gameState';
 import { useGameContext } from '@/contexts/GameContext';
 import { GameType } from '@/types/GameType';
 
+interface DisplayMessage {
+  message: string;
+  icon: 'checkmark-circle' | 'close-circle' | 'information-circle';
+  themeColor: string;
+}
+
+const GetDisplayMessage = (gameState: GameState) : DisplayMessage => {
+  switch (gameState) {    
+    case GameState.partiallyCorrect:
+      return { message: "Byl si blízko", icon: "information-circle", themeColor: "#FF9F1C" };
+    case GameState.correct:
+      return { message: "Dobrá práce!", icon: "checkmark-circle", themeColor: "#8CC83C" };
+    case GameState.incorrect:
+      return { message: "To není dobře!", icon: "close-circle", themeColor: "#FF4B4B" };
+    default:
+      return { message: "Invalid state", icon: "close-circle", themeColor: "#FF4B4B" };
+  }
+}
+
 export const FeedbackOverlay: React.FC = () => {
   const { nextQuestion, gameState, gameType, setGameState } = useGameContext();
 
-  const isCorrect = gameState == GameState.correct;
+  //const isCorrect = gameState == GameState.correct;
 
-  const displayMessage = isCorrect ? "Dobrá práce!" : "To není dobře!";
-  const displayIcon = isCorrect ? "checkmark-circle" : "close-circle";
+  //const displayMessage = isCorrect ? "Dobrá práce!" : "To není dobře!";
+  //const displayIcon = isCorrect ? "checkmark-circle" : "close-circle";
 
-  const themeColor = isCorrect ? "#8CC83C" : "#FF4B4B";
+  //const themeColor = isCorrect ? "#8CC83C" : "#FF4B4B";
+
+  const displayMessage = GetDisplayMessage(gameState);
 
   const slideAnim = useRef(new Animated.Value(Dimensions.get('window').height)).current;
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -72,23 +93,23 @@ export const FeedbackOverlay: React.FC = () => {
         {
           gameState != GameState.showingAnswers &&
           <View style={styles.header}>
-            <Ionicons name={displayIcon} size={32} color={themeColor} style={styles.icon} />
-            <Text style={[styles.headerText, { color: themeColor }]}>
-              {displayMessage}
+            <Ionicons name={displayMessage.icon} size={32} color={displayMessage.themeColor} style={styles.icon} />
+            <Text style={[styles.headerText, { color: displayMessage.themeColor }]}>
+              {displayMessage.message}
             </Text>
           </View>
         }
 
         <View>
           <TouchableOpacity
-            style={[styles.continueButton, { backgroundColor: themeColor }]}
+            style={[styles.continueButton, { backgroundColor: displayMessage.themeColor }]}
             onPress={() => nextQuestion()}
             activeOpacity={0.8}
           >
             <Text style={styles.buttonText}>Další otázka</Text>
           </TouchableOpacity>
           {
-            !isCorrect && gameType != GameType.TEST && gameState != GameState.showingAnswers &&
+            gameState !== GameState.correct && gameType != GameType.TEST && gameState != GameState.showingAnswers &&
             <TouchableOpacity
               style={[styles.continueButton, { backgroundColor: "gray" }]}
               onPress={() => setGameState(GameState.showingAnswers)}

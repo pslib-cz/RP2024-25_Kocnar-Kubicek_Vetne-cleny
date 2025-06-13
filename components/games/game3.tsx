@@ -33,18 +33,17 @@ export function Game3UI(wantedType: WordType | null = null) {
     onFinished(IsValid())
   }
 
-  function IsValid(): boolean {
-    for (const item of data?? []){
-      if (item.type !== targetType?.type){
-        if (selectedOptions.includes(item)) {
-          return false;
-        }
-      }
-      else if (!selectedOptions.includes(item)) {
-        return false;
+  function IsValid(): number {
+    let correctCount = 0;
+    for (const selected of selectedOptions) {
+      const selectedItem = data?.find(item => item === selected);
+      if (selectedItem && selectedItem.type === targetType?.type) {
+        correctCount++;
       }
     }
-    return true;
+
+    // This function should return the count of correct answers instead of true/false
+    return correctCount;
   }
 
   return (

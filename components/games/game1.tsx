@@ -152,7 +152,7 @@ export function GameOneUI(type: Game1Type, oneWord_INDEX: number = 1) {
     const updatedPhraseButtons = [...phraseButtons];
 
     if (oneWord) {
-      onFinished(data[gameIndex].type === bottomButton.type)
+      onFinished(data[gameIndex].type === bottomButton.type ? 1 : 0);
       return;
     }
 
@@ -178,12 +178,12 @@ export function GameOneUI(type: Game1Type, oneWord_INDEX: number = 1) {
         updatedPhraseButtons[nextIndex].state = ButtonState.highlighted;
 
       if (updatedPhraseButtons.every(button => button.state === ButtonState.correct || button.state === ButtonState.disabled))
-        onFinished(true)
+        onFinished(1)
 
       setGameIndex(nextIndex);
     }
     else
-      onFinished(false)
+      onFinished(updatedPhraseButtons.filter(button => button.state === ButtonState.correct).length / updatedPhraseButtons.length);
 
     setBottomButtons([...bottomButtons]);
     setPhraseButtons(updatedPhraseButtons);

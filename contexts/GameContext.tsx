@@ -128,13 +128,14 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }
 
   /// on level finished, not limited to the whole game
-  const onFinished = (isCorrect: boolean) => {
+  const onFinished = (correctPercentage : number) => {
+    const isCorrect = correctPercentage >= 1;
 
     console.log("Question finished: ", isCorrect, activeQuestion);
 
     if (!activeQuestion) return;
     updateMistakes(activeQuestion, isCorrect);
-    setGameState(isCorrect ? GameState.correct : GameState.incorrect)
+    setGameState(isCorrect ? GameState.correct : correctPercentage > .5 ? GameState.partiallyCorrect : GameState.incorrect)
 
     setCorrectAnswersCount((prev) => prev + (isCorrect ? 1 : 0));
 
