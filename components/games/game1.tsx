@@ -93,7 +93,7 @@ export function GameOneUI(type: Game1Type, oneWord_INDEX: number = 1) {
     })).sort(() => Math.random() - 0.5)
   }
 
-  const AllTypesBottomButtons = (data: WordButtonType[]): WordButtonType[] => {
+  const AllTypesBottomButtons = (): WordButtonType[] => {
     return WordTypes.map((i) => ({
       text: i.abbr,
       type: i.abbr,
@@ -127,7 +127,7 @@ export function GameOneUI(type: Game1Type, oneWord_INDEX: number = 1) {
         setPhraseButtons(NormalPhraseButtons(data));
 
         if (allTypes) {
-          setBottomButtons(AllTypesBottomButtons(data));
+          setBottomButtons(AllTypesBottomButtons());
         }
         else {
           setBottomButtons(NormalBottomButtons(data));
@@ -163,7 +163,14 @@ export function GameOneUI(type: Game1Type, oneWord_INDEX: number = 1) {
       console.log("Correct answer for game index:", gameIndex, "button:", updatedPhraseButtons[gameIndex]);
       updatedPhraseButtons[gameIndex].state = ButtonState.correct;
 
-      const nextIndex = updatedPhraseButtons.findIndex(button => button.state !== ButtonState.correct);
+      let nextIndex = updatedPhraseButtons.findIndex((button, idx) => 
+        idx > gameIndex && button.state !== ButtonState.correct && button.state !== ButtonState.disabled
+      );      
+      if (nextIndex === -1) {
+        nextIndex = updatedPhraseButtons.findIndex((button) => 
+          button.state !== ButtonState.correct && button.state !== ButtonState.disabled
+        );
+      }
 
       console.log("Next index:", nextIndex);
 
