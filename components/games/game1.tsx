@@ -163,13 +163,17 @@ export function GameOneUI(type: Game1Type, oneWord_INDEX: number = 1) {
       console.log("Correct answer for game index:", gameIndex, "button:", updatedPhraseButtons[gameIndex]);
       updatedPhraseButtons[gameIndex].state = ButtonState.correct;
 
-      if (gameIndex < bottomButtons.length - 1 && updatedPhraseButtons[gameIndex + 1])
-        updatedPhraseButtons[gameIndex + 1].state = ButtonState.highlighted;
+      const nextIndex = updatedPhraseButtons.findIndex(button => button.state !== ButtonState.correct);
 
-      if (gameIndex === phraseButtons.length - 1)
+      console.log("Next index:", nextIndex);
+
+      if (updatedPhraseButtons[nextIndex])
+        updatedPhraseButtons[nextIndex].state = ButtonState.highlighted;
+
+      if (updatedPhraseButtons.every(button => button.state === ButtonState.correct || button.state === ButtonState.disabled))
         onFinished(true)
 
-      setGameIndex(gameIndex + 1);
+      setGameIndex(nextIndex);
     }
     else
       onFinished(false)
@@ -178,7 +182,7 @@ export function GameOneUI(type: Game1Type, oneWord_INDEX: number = 1) {
     setPhraseButtons(updatedPhraseButtons);
   };
 
-  const handlePhraseButtonClick = (button: WordButtonType, index: number) => {
+  const handlePhraseButtonLongClick = (button: WordButtonType, index: number) => {
     if (gameState == GameState.showingAnswers) {
       if (!inverted) {
         handleShowTooltip(button.type || "", index)
@@ -193,6 +197,26 @@ export function GameOneUI(type: Game1Type, oneWord_INDEX: number = 1) {
     }
   }
 
+  const handlePhraseButtonClick = (button: WordButtonType, index: number) => {
+    if (gameState == GameState.showingAnswers) return;
+    
+    // Check if phraseButtons exists before spreading
+    if (!phraseButtons) return;
+    if (button.state == ButtonState.correct) return;
+
+    // set the selected button to highlighted state
+    setGameIndex(index);
+    const updatedPhraseButtons = [...phraseButtons];
+    updatedPhraseButtons.forEach((btn, i) => {
+      if (btn == button)
+        btn.state = ButtonState.highlighted;
+      else if (btn.state == ButtonState.highlighted)
+        btn.state = ButtonState.default;
+      
+    });
+    setPhraseButtons(updatedPhraseButtons);
+  };
+
   return (
     <>
       <View>
@@ -200,7 +224,7 @@ export function GameOneUI(type: Game1Type, oneWord_INDEX: number = 1) {
       </View>
       <WordButtonsContainer buttons={phraseButtons}
         showTooltip={inverted || gameState == GameState.showingAnswers}
-        longPress={handlePhraseButtonClick}
+        longPress={handlePhraseButtonLongClick}
         onClick={handlePhraseButtonClick}
         forceDrawTypeAnd={gameState == GameState.showingAnswers}
       />

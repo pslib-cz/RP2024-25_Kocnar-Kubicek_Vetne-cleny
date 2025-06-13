@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     alignItems: 'center',
-    gap: 20,
+    gap: "6%",
     justifyContent: 'space-between',
   }
 });
