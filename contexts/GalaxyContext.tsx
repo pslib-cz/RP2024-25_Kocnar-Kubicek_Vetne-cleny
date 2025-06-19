@@ -5,7 +5,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getPlanetImage } from '@/data/planetImages';
-import { Image as RNImage } from 'react-native';
+import { Alert, Image as RNImage } from 'react-native';
 import planetNames from '@/data/planetnames.json';
 
 type GalaxyContextType = {
@@ -63,7 +63,7 @@ const getPlanetDisplaySize = (type: string) => {
 };
 
 
-const DEBUG_RESET_PROGRESS = true; // Set to true to reset progress for debugging
+const DEBUG_RESET_PROGRESS = false; // Set to true to reset progress for debugging
 
 export const GalaxyProvider: React.FC<GalaxyProviderProps> = ({
   children
@@ -74,6 +74,7 @@ export const GalaxyProvider: React.FC<GalaxyProviderProps> = ({
   const [loading, setLoading] = useState(true); // Track loading state
 
   if (DEBUG_RESET_PROGRESS) {
+    Alert.alert("Reset progress mode is enabled")
     useEffect(() => {
       setTimeout(() => {
         setActivePlanets([0, 0, 0, 0, 0]);
