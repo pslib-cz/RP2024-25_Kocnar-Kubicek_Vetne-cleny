@@ -1,10 +1,11 @@
 import React, { useRef, useEffect } from 'react';
-import { View, Text, Image, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import Svg, { Line } from 'react-native-svg';
 import { Rocket } from './Rocket';
 import { useGalaxyContext } from '@/contexts/GalaxyContext';
 import planetNames from '@/data/planetnames.json';
 import { getPlanetImage } from '@/data/planetImages';
+import { router } from 'expo-router';
 
 const GalaxyView: React.FC = () => {
   const { selectedGalaxy, activePlanets } = useGalaxyContext();
@@ -21,6 +22,51 @@ const GalaxyView: React.FC = () => {
       }, 50);
     }
   }, [activePlanetIndex, planetsInGalaxy]);
+
+  const Planet = ({ revIndex }: { revIndex: number }) => {
+    const index = planetsInGalaxy - revIndex - 1; // Reverse index for display
+    const planetName = planetNames[selectedGalaxy][index] || `Planet ${index + 1}`;
+    const isActive = index === activePlanetIndex;
+
+    return (
+      <TouchableOpacity 
+        style={styles.planetItem}
+        disabled={!isActive}
+        onPress={() => {
+          if (!isActive) {
+            Alert.alert("You have yet to unlock this planet!");
+          }
+          else{
+            router.back()
+          }
+        }}>
+        {/* Timeline index number positioned next to the planet */}
+        <View style={styles.timelineIndexContainer}>
+          <Text style={[styles.timelineNumber, isActive && { color: "#eee" }]}>{planetsInGalaxy - revIndex}</Text>
+          {isActive && (
+            <Rocket width={50} height={50} style={styles.rocketIcon} />
+          )}
+        </View>
+
+        <View style={styles.planetContentContainer}>
+          <Image
+            source={getPlanetImage(selectedGalaxy, index)}
+            style={[
+              styles.planetImage,
+              {
+                width: index === planetsInGalaxy - 1 ? 250 : ((120 + (index * 31547 % 4) * 20) * (isActive ? 1.5 : 1)),
+                height: index === planetsInGalaxy - 1 ? 250 : ((120 + (index * 31547 % 4) * 20) * (isActive ? 1.5 : 1)),
+              }
+            ]}
+          />
+          <Text style={[
+            styles.planetName,
+            isActive && styles.activePlanetName
+          ]}>{planetName}</Text>
+        </View>
+      </TouchableOpacity>
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -47,41 +93,7 @@ const GalaxyView: React.FC = () => {
         <View style={styles.planetsContainer}>
           {/* Display planets */}
           {Array.from({ length: planetsInGalaxy }).map((_, revIndex) => {
-            const index = planetsInGalaxy - revIndex - 1; // Reverse index for display
-            const planetName = planetNames[selectedGalaxy][index] || `Planet ${index + 1}`;
-            const isActive = index === activePlanetIndex;
-
-            return (
-              <View
-                key={`planet-${index}`}
-                style={styles.planetItem}
-              >
-                {/* Timeline index number positioned next to the planet */}
-                <View style={styles.timelineIndexContainer}>
-                  <Text style={[styles.timelineNumber, isActive && { color: "#eee" }]}>{planetsInGalaxy - revIndex}</Text>
-                  {isActive && (
-                    <Rocket width={50} height={50} style={styles.rocketIcon} />
-                  )}
-                </View>
-
-                <View style={styles.planetContentContainer}>
-                  <Image
-                    source={getPlanetImage(selectedGalaxy, index)}
-                    style={[
-                      styles.planetImage,
-                      {
-                        width: index === planetsInGalaxy - 1 ? 250 : ((120 + (index * 31547 % 4) * 20) * (isActive ? 1.5 : 1)),
-                        height: index === planetsInGalaxy - 1 ? 250 : ((120 + (index * 31547 % 4) * 20) * (isActive ? 1.5 : 1)),
-                      }
-                    ]}
-                  />
-                  <Text style={[
-                    styles.planetName,
-                    isActive && styles.activePlanetName
-                  ]}>{planetName}</Text>
-                </View>
-              </View>
-            );
+            return <Planet key={revIndex} revIndex={revIndex} />;
           })}
         </View>
       </ScrollView>
