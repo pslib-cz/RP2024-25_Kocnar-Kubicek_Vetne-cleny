@@ -9,10 +9,26 @@ import PlayfulButton from '@/components/ui/PlayfulButton';
 import { useGalaxyContext } from '@/contexts/GalaxyContext';
 import { useMultiplayerGameContext } from '@/contexts/MultiplayerGameContext';
 import { useFocusEffect } from '@react-navigation/native';
+import { ThemedText } from '@/components/ThemedText';
 const ArenaPlanet: React.FC = () => {
   const { newGameInArena } = useGameContext();
-  const { selectedPlanet } = useGalaxyContext();
+  const { selectedPlanet, selectedGalaxy } = useGalaxyContext();
   const { leaveGame } = useMultiplayerGameContext();
+
+  const translatePlanetType = (planetType: string) => {
+    switch (planetType) {
+      case 'ring':
+        return 'Plynný obr';
+      case 'sun':
+        return 'Hvězda';
+      case 'hole':
+        return 'Černá díra';
+      case 'normal':
+        return 'Planeta';
+      default:
+        return planetType;
+    }
+  }
 
   useFocusEffect(
     React.useCallback(() => {
@@ -31,9 +47,10 @@ const ArenaPlanet: React.FC = () => {
           <PlanetView displayName={false}/>
         </TouchableOpacity>
         <View style={styles.card}>
-          <Text style={{ color: '#fff', fontSize: 24, fontWeight: 'bold', marginBottom: 16 }}>
-            {selectedPlanet.name}
-          </Text>
+          <View style={{ marginBottom: 12, flexDirection: 'column', alignItems: 'center', width: '100%', gap: 4 }}>
+            <ThemedText type="subtitle" style={{ fontSize: 16, color: '#888' }}>{translatePlanetType(selectedPlanet.planetType)} • {selectedPlanet.planetIndex+1}/{selectedGalaxy==0?25:8}</ThemedText>
+            <ThemedText type="title">{selectedPlanet.name}</ThemedText>
+          </View>
           <View style={styles.buttonContainer}>
             <PlayfulButton
               title="Další cvičení"
