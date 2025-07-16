@@ -51,18 +51,6 @@ export function Game2UI(wantedType: WordType | null = null) {
 
     // This function should return the count of correct answers instead of true/false
     return correctCount;
-
-    // for (const item of data?? []){
-    //   if (item.type !== targetType?.type){
-    //     if (selectedOptions.includes(item)) {
-    //       return false;
-    //     }
-    //   }
-    //   else if (!selectedOptions.includes(item)) {
-    //     return false;
-    //   }
-    // }
-    // return true;
   }
 
   return (

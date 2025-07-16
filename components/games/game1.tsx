@@ -194,7 +194,7 @@ export function GameOneUI(type: Game1Type, oneWord_INDEX: number = 1) {
       if (!inverted) {
         handleShowTooltip(button.type || "", index)
       }
-      else if (inverted) {
+      else {
         handleShowTooltip(button.text, index)
       }
     }
@@ -206,12 +206,8 @@ export function GameOneUI(type: Game1Type, oneWord_INDEX: number = 1) {
 
   const handlePhraseButtonClick = (button: WordButtonType, index: number) => {
     if (gameState == GameState.showingAnswers) return;
-    
-    // Check if phraseButtons exists before spreading
-    if (!phraseButtons) return;
-    if (button.state == ButtonState.correct) return;
+    if (!phraseButtons || button.state == ButtonState.correct) return;
 
-    // set the selected button to highlighted state
     setGameIndex(index);
     const updatedPhraseButtons = [...phraseButtons];
     updatedPhraseButtons.forEach((btn, i) => {
