@@ -16,6 +16,7 @@ type GalaxyContextType = {
   activeLevelIndex: number[]; // Array of active levels for each galaxy
   setActiveLevelIndex: (index: number[]) => void;
   selectedPlanet: SelectedPlanet; // Optional selected planet object
+  getSelectedGalaxyPlanetData: (planetIndex: number) => SelectedPlanet; // Function to get planet data by index
 };
 
 interface SelectedPlanet {
@@ -170,6 +171,22 @@ export const GalaxyProvider: React.FC<GalaxyProviderProps> = ({
     };
   }
 
+  const getSelectedGalaxyPlanetData = (planetIndex: number): SelectedPlanet => {
+    const imageSource = getPlanetImage(selectedGalaxy, planetIndex);
+    const { width, height } = RNImage.resolveAssetSource(imageSource);
+    const planetList = planetNames[selectedGalaxy];
+
+    return { 
+      planetIndex, 
+      imageSource, 
+      size: { width, height },
+      name: planetList[planetIndex],
+      planetType: getPlanetType(width, height, planetIndex),
+      displaySize: getPlanetDisplaySize(getPlanetType(width, height, planetIndex)),
+      seed: selectedGalaxy * 100 + activePlanets[selectedGalaxy] + 12
+    };
+  }
+
   return (
     <GalaxyContext.Provider value={{
       selectedGalaxy,
@@ -178,7 +195,8 @@ export const GalaxyProvider: React.FC<GalaxyProviderProps> = ({
       levelUp,
       activeLevelIndex,
       setActiveLevelIndex,
-      selectedPlanet: getSelectedPlanet()
+      selectedPlanet: getSelectedPlanet(),
+      getSelectedGalaxyPlanetData
     }}>
       {children}
     </GalaxyContext.Provider>

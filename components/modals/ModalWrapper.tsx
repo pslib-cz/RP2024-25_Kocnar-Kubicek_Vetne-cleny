@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Dimensions, Animated} from 'react-native';
 
 interface ModalWrapperProps {
@@ -18,6 +18,19 @@ const ModalWrapper: React.FC<ModalWrapperProps> = ({
 }) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const scaleAnim = useRef(new Animated.Value(0.8)).current;
+
+  const [cachedTitle, setCachedTitle] = useState<string>(title);
+  const [cachedCloseButtonText, setCachedCloseButtonText] = useState<string>(closeButtonText);
+  const [cachedChildren, setCachedChildren] = useState<React.ReactNode | null>(null);
+
+  // cache whole data, including the children, to avoid re-rendering when the visible is set to true
+  useEffect(() => {
+    if (visible) {      
+      setCachedTitle(title);
+      setCachedCloseButtonText(closeButtonText);
+      setCachedChildren(children);
+    }
+  }, [visible]);
 
   useEffect(() => {
     if (visible) {
@@ -75,16 +88,16 @@ const ModalWrapper: React.FC<ModalWrapperProps> = ({
         ]}
       >
         <View style={styles.header}>
-          <Text style={styles.title}>{title}</Text>
+          <Text style={styles.title}>{cachedTitle}</Text>
         </View>
         
         <View style={styles.content}>
-          {children}
+          {cachedChildren}
         </View>
         
         <View style={styles.footer}>
           <TouchableOpacity style={styles.closeButton} onPress={onClose}>
-            <Text style={styles.closeButtonText}>{closeButtonText}</Text>
+            <Text style={styles.closeButtonText}>{cachedCloseButtonText}</Text>
           </TouchableOpacity>
         </View>
       </Animated.View>
@@ -102,7 +115,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.7)',
     justifyContent: 'center',
     alignItems: 'center',
-    zIndex: 1000,
+    zIndex: 999999999, // the fact that 1000 does not work is disgusting
   },
   overlayTouchable: {
     position: 'absolute',

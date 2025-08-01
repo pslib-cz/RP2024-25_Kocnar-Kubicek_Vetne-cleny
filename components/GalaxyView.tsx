@@ -6,8 +6,9 @@ import { useGalaxyContext } from '@/contexts/GalaxyContext';
 import planetNames from '@/data/planetnames.json';
 import { getPlanetImage } from '@/data/planetImages';
 import { router } from 'expo-router';
+import PlanetDetailModal from './modals/PlanetDetailModal';
 
-const GalaxyView: React.FC = () => {
+const GalaxyView: React.FC<{ setOpenedIndex: React.Dispatch<React.SetStateAction<number | undefined>> }> = ({ setOpenedIndex }) => {
   const { selectedGalaxy, activePlanets } = useGalaxyContext();
   const activePlanetIndex = activePlanets[selectedGalaxy];
   const planetsInGalaxy = selectedGalaxy === 0 ? 25 : 8;
@@ -31,10 +32,9 @@ const GalaxyView: React.FC = () => {
     return (
       <TouchableOpacity 
         style={styles.planetItem}
-        disabled={!isActive}
         onPress={() => {
           if (!isActive) {
-            Alert.alert("You have yet to unlock this planet!");
+            setOpenedIndex(index);
           }
           else{
             router.back()
