@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Dimensions, Animated, Modal } from 'react-native';
 import ModalWrapper from './ModalWrapper';
 import { useGalaxyContext } from '@/contexts/GalaxyContext';
+import Planet from '../Planet';
 
 interface PlanetDetailModal {
   visible: boolean;
@@ -14,17 +15,17 @@ const PlanetDetailModal: React.FC<PlanetDetailModal> = ({
   visible,
   onClose,
   id = 0,
-  closeButtonText = "Chápu",
+  closeButtonText = "Ok",
 }) => {
-  const { getSelectedGalaxyPlanetData } = useGalaxyContext();
+  const { getSelectedGalaxyPlanetData, activeLevelIndex, selectedGalaxy, planetsInGalaxy } = useGalaxyContext();
 
   const planetData = getSelectedGalaxyPlanetData(id);
 
   return (
     <ModalWrapper visible={visible} onClose={onClose} title={planetData.name} closeButtonText={closeButtonText}>
       <Text style={styles.message}>{planetData.planetType}</Text>
-      <Text style={styles.message}>K odemčení této planety ti ještě chybí:</Text>
-      <Text style={styles.message}>věci</Text>
+      <Planet revIndex={planetsInGalaxy - id - 1} showText={false} height={125} width={125} />
+      <Text style={styles.message}>K odemčení této planety ti chybí ještě {id * 4 - activeLevelIndex[selectedGalaxy]} úrovní</Text>
     </ModalWrapper>
   );
 };

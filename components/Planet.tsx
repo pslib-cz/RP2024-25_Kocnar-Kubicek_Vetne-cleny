@@ -1,62 +1,63 @@
-import React, { useRef, useEffect } from 'react';
-import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
-import Svg, { Line } from 'react-native-svg';
+import React from 'react';
+import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { Rocket } from './Rocket';
 import { useGalaxyContext } from '@/contexts/GalaxyContext';
 import planetNames from '@/data/planetnames.json';
 import { getPlanetImage } from '@/data/planetImages';
 import { router } from 'expo-router';
-import PlanetDetailModal from './modals/PlanetDetailModal';
-import Planet from './Planet';
 
-const GalaxyView: React.FC<{ setOpenedIndex: React.Dispatch<React.SetStateAction<number | undefined>> }> = ({ setOpenedIndex }) => {
+const Planet: React.FC<{ revIndex: number, showText?: boolean, onOpen?: (id: number) => void, width?: number, height?: number}> = ({ revIndex, showText = true, onOpen, width, height }) => {
   const { selectedGalaxy, planetsInGalaxy, activePlanetIndex } = useGalaxyContext();
 
-  const scrollViewRef = useRef<ScrollView>(null);
-
-  useEffect(() => {
-    if (activePlanetIndex !== undefined && scrollViewRef.current) {
-      setTimeout(() => {
-        const estimatedPosition = (planetsInGalaxy - activePlanetIndex - 1) * 230;
-        scrollViewRef.current?.scrollTo({ y: estimatedPosition, animated: false });
-      }, 50);
-    }
-  }, [activePlanetIndex, planetsInGalaxy]);
-
-  
+  const index = planetsInGalaxy - revIndex - 1; // Reverse index for display
+  const planetName = planetNames[selectedGalaxy][index] || `Planet ${index + 1}`;
+  const isActive = index === activePlanetIndex;
 
   return (
-    <View style={styles.container}>
-      <ScrollView
-        ref={scrollViewRef}
-        style={styles.planetScroll}
-        showsVerticalScrollIndicator={false}// Redirect on touch
-      >
-        {/* Vertical timeline using SVG */}
-        <View style={styles.timelineContainer}>
-          <Svg height={10000} width={40} >
-            <Line
-              x1={20}
-              y1={0}
-              x2={20}
-              y2={10000}
-              stroke="#555"
-              strokeWidth={1.5}
-              strokeDasharray="20"
-            />
-          </Svg>
+    <TouchableOpacity
+      style={styles.planetItem}
+      disabled={onOpen === undefined}
+      onPress={() => {
+        if (!isActive) {
+          onOpen?.(index);
+        }
+        else{
+          router.back()
+        }
+      }}>
+      {/* Timeline index number positioned next to the planet */}
+      {
+        showText &&
+        <View style={styles.timelineIndexContainer}>
+          <Text style={[styles.timelineNumber, isActive && { color: "#eee" }]}>{planetsInGalaxy - revIndex}</Text>
+          {isActive && (
+            <Rocket width={50} height={50} style={styles.rocketIcon} />
+          )}
         </View>
+      }
 
-        <View style={styles.planetsContainer}>
-          {/* Display planets */}
-          {Array.from({ length: planetsInGalaxy }).map((_, revIndex) => {
-            return <Planet key={revIndex} revIndex={revIndex} onOpen={setOpenedIndex} />;
-          })}
-        </View>
-      </ScrollView>
-    </View>
+      <View style={styles.planetContentContainer}>
+        <Image
+          source={getPlanetImage(selectedGalaxy, index)}
+          style={[
+            styles.planetImage,
+            {
+              width: width ? width : index === planetsInGalaxy - 1 ? 250 : ((120 + (index * 31547 % 4) * 20) * (isActive ? 1.5 : 1)),
+              height: height ? height : index === planetsInGalaxy - 1 ? 250 : ((120 + (index * 31547 % 4) * 20) * (isActive ? 1.5 : 1)),
+            }
+          ]}
+        />
+        {
+          showText &&        
+          <Text style={[
+            styles.planetName,
+            isActive && styles.activePlanetName
+          ]}>{planetName}</Text>
+        }
+      </View>
+    </TouchableOpacity>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -157,4 +158,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default GalaxyView;
+export default Planet;

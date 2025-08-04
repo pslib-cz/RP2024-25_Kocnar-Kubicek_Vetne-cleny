@@ -8,7 +8,6 @@ import PlanetDetailModal from '@/components/modals/PlanetDetailModal';
 
 const ArenaGalaxies: React.FC = () => {
   const router = useRouter();
-
   const [openedIndex, setOpenedIndex] = React.useState<number | undefined>(undefined);
 
   return (
