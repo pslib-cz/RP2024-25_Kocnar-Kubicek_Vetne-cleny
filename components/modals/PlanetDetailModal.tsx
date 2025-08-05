@@ -21,11 +21,13 @@ const PlanetDetailModal: React.FC<PlanetDetailModal> = ({
 
   const planetData = getSelectedGalaxyPlanetData(id);
 
+  const missingLevels = id * 4 - activeLevelIndex[selectedGalaxy];
+
   return (
     <ModalWrapper visible={visible} onClose={onClose} title={planetData.name} closeButtonText={closeButtonText}>
       <Text style={styles.message}>{planetData.planetType}</Text>
       <Planet revIndex={planetsInGalaxy - id - 1} showText={false} height={125} width={125} />
-      <Text style={styles.message}>K odemčení této planety ti chybí ještě {id * 4 - activeLevelIndex[selectedGalaxy]} úrovní</Text>
+      <Text style={styles.message}>K odemčení této planety ti chybí ještě {missingLevels} {missingLevels == 1 ? "úroveň" : (missingLevels >= 2 && missingLevels <= 4) ? "úrovně" : "úrovní"}</Text>
     </ModalWrapper>
   );
 };

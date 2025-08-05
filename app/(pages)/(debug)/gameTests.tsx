@@ -6,6 +6,7 @@ import { useRouter } from 'expo-router';
 import { useLevelContext } from '@/contexts/levelContext';
 import { QuestionType } from '@/constants/questionGeneratorParams';
 import { GameType } from '@/types/GameType';
+import PlayfulButton from '@/components/ui/PlayfulButton';
 
 const games : {id : QuestionType, name: string}[] = [
   {id: QuestionType.MARK_WORDS, name: 'Mark Words'},
@@ -42,12 +43,10 @@ const GameTests: React.FC = () => {
         data={games}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
-          <TouchableOpacity
-            style={styles.gameButton}
-            onPress={() => handleGameSelect(item.id as QuestionType)}
-          >
-            <Text style={styles.gameButtonText}>{item.name}</Text>
-          </TouchableOpacity>
+          <PlayfulButton
+            onPress={() => handleGameSelect(item.id)}
+            title={item.name}
+          />
         )}
       />
       <TouchableOpacity
@@ -79,12 +78,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginBottom: 10,
     alignItems: 'center',
-  },
-  gameButtonText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
+  }
 });
 
 export default GameTests;

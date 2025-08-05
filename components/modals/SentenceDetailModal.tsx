@@ -37,7 +37,6 @@ const SentenceDetailModal: React.FC<SentenceDetailModalProps> = ({
     )      
   }, [sentence]);
 
-
   return (
     <ModalWrapper visible={visible} onClose={() => {
       onClose();

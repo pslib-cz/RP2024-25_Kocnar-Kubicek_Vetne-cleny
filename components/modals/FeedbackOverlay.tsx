@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { GameState } from '@/types/gameState';
 import { useGameContext } from '@/contexts/GameContext';
 import { GameType } from '@/types/GameType';
+import PlayfulButton from '../ui/PlayfulButton';
 
 interface DisplayMessage {
   message: string;
@@ -26,13 +27,6 @@ const GetDisplayMessage = (gameState: GameState) : DisplayMessage => {
 
 export const FeedbackOverlay: React.FC = () => {
   const { nextQuestion, gameState, gameType, setGameState } = useGameContext();
-
-  //const isCorrect = gameState == GameState.correct;
-
-  //const displayMessage = isCorrect ? "Dobrá práce!" : "To není dobře!";
-  //const displayIcon = isCorrect ? "checkmark-circle" : "close-circle";
-
-  //const themeColor = isCorrect ? "#8CC83C" : "#FF4B4B";
 
   const displayMessage = GetDisplayMessage(gameState);
 
@@ -101,22 +95,18 @@ export const FeedbackOverlay: React.FC = () => {
         }
 
         <View>
-          <TouchableOpacity
-            style={[styles.continueButton, { backgroundColor: displayMessage.themeColor }]}
+          <PlayfulButton
             onPress={() => nextQuestion()}
-            activeOpacity={0.8}
-          >
-            <Text style={styles.buttonText}>Další otázka</Text>
-          </TouchableOpacity>
+            title='Další otázka'
+            variant='danger'
+          />
           {
             gameState !== GameState.correct && gameType != GameType.TEST && gameState != GameState.showingAnswers &&
-            <TouchableOpacity
-              style={[styles.continueButton, { backgroundColor: "gray" }]}
+            <PlayfulButton
               onPress={() => setGameState(GameState.showingAnswers)}
-              activeOpacity={0.8}
-            >
-              <Text style={styles.buttonText}>Správné odpovědi</Text>
-            </TouchableOpacity>
+              title='Správné odpovědi'
+              variant='gray'
+            />
           }
         </View>
 

@@ -30,7 +30,7 @@ const ModalWrapper: React.FC<ModalWrapperProps> = ({
       setCachedCloseButtonText(closeButtonText);
       setCachedChildren(children);
     }
-  }, [visible]);
+  }, [visible, title, closeButtonText, children]);
 
   useEffect(() => {
     if (visible) {
