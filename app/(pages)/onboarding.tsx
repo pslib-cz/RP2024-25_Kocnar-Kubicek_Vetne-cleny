@@ -383,7 +383,7 @@ const GamesInfo = ({
           Zde můžeš vidět příklad hry, ve které budeš klikat na barevné zkratky větných členů dole, a tím postupně označovat větu.
         </ThemedText>
         <ThemedText style={{ marginBottom: 16, textAlign: 'center' }}>
-          Pokud si nejsi jistý se zkratkami, můžeš na zkratce podržet prst a zobrazí se ti nápověda, nebo si můžeš přečíst seznam zkratek.
+          Na každé zkratce můžeš podržet prst pro zobrazení nápovědy.
         </ThemedText>
       </View>
       <View style={{ width: '100%', alignItems: 'center' }}>
