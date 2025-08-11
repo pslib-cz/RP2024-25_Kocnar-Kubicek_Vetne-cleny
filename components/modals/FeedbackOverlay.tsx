@@ -157,11 +157,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     marginBottom: 20,
   },
-  buttonText: {
-    color: '#1C292B',
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
   navigationBar: {
     flexDirection: 'row',
     justifyContent: 'space-between',

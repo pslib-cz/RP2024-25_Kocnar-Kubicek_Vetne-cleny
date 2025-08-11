@@ -187,14 +187,14 @@ export default function ProfileEditScreen(): React.ReactElement {
                 style={styles.cancelButton}
                 onPress={() => setColorPickerVisible(false)}
               >
-                <ThemedText type="defaultSemiBold" style={styles.buttonText}>Zrušit</ThemedText>
+                <ThemedText type="defaultSemiBold" style={styles.colorpickerButtonText}>Zrušit</ThemedText>
               </TouchableOpacity>
 
               <TouchableOpacity
                 style={styles.confirmButton}
                 onPress={() => setColorPickerVisible(false)}
               >
-                <ThemedText type="defaultSemiBold" style={styles.buttonText}>Potvrdit</ThemedText>
+                <ThemedText type="defaultSemiBold" style={styles.colorpickerButtonText}>Potvrdit</ThemedText>
               </TouchableOpacity>
             </View>
           </View>
@@ -379,7 +379,7 @@ const styles = StyleSheet.create({
     marginLeft: 8,
     alignItems: 'center',
   },
-  buttonText: {
+  colorpickerButtonText: {
     color: 'white',
     fontSize: 16,
     fontWeight: 'bold',

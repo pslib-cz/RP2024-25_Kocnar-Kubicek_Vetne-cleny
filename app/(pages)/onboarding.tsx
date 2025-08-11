@@ -278,13 +278,13 @@ const ProfileSetup = ({
                 style={styles.cancelButton}
                 onPress={() => setColorPickerVisible(false)}
               >
-                <ThemedText type="defaultSemiBold" style={[styles.buttonText, { paddingHorizontal: 16 }]}>Zrušit</ThemedText>
+                <ThemedText type="defaultSemiBold" style={[styles.colorpickerButtonText, { paddingHorizontal: 16 }]}>Zrušit</ThemedText>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.confirmButton}
                 onPress={() => setColorPickerVisible(false)}
               >
-                <ThemedText type="defaultSemiBold" style={[styles.buttonText, { paddingHorizontal: 16 }]}>Potvrdit</ThemedText>
+                <ThemedText type="defaultSemiBold" style={[styles.colorpickerButtonText, { paddingHorizontal: 16 }]}>Potvrdit</ThemedText>
               </TouchableOpacity>
             </View>
           </View>
@@ -567,7 +567,7 @@ const styles = StyleSheet.create({
     marginLeft: 8,
     alignItems: 'center',
   },
-  buttonText: {
+  colorpickerButtonText: {
     color: 'white',
     fontSize: 16,
     fontWeight: 'bold',
