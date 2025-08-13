@@ -8,6 +8,7 @@ import Constants from 'expo-constants';
 import datasetVersion from '@/data/sheets/version.json';
 import { useLoadedData } from '@/hooks/useData';
 import AndroidSafeArea from '@/components/AndroidSafeArea';
+
 export default function AboutPage() {
   const router = useRouter();
   const { loadedVersion, loadedSets } = useLoadedData();
@@ -15,8 +16,10 @@ export default function AboutPage() {
     (Constants.expoConfig && typeof Constants.expoConfig === 'object' && 'version' in Constants.expoConfig && (Constants.expoConfig as any).version) ||
     (Constants.manifest2 && typeof Constants.manifest2 === 'object' && 'version' in Constants.manifest2 && (Constants.manifest2 as any).version) ||
     'neuvedeno';
-    
+
   const dsVersion = loadedVersion || datasetVersion.version || 'neuvedeno';
+
+  let pressedCount = 0; // not supposed to be a state
 
   return (
     <SafeAreaView style={[styles.safeArea, AndroidSafeArea.AndroidSafeArea]}>
@@ -31,7 +34,13 @@ export default function AboutPage() {
           <ThemedText style={styles.label}>Autor datových sad:</ThemedText>
           <ThemedText style={styles.value}>Romana Wágnerová</ThemedText>
           <ThemedText style={styles.label}>Verze aplikace:</ThemedText>
-          <ThemedText style={styles.value}>{appVersion}</ThemedText>
+          <ThemedText style={styles.value} onPress={() => {
+            if ((pressedCount + 1) >= 3) {
+              router.push('/(pages)/(debug)/gameTests');
+              pressedCount = 0;
+            }
+            pressedCount++;
+          }}>{appVersion}</ThemedText>
           <ThemedText style={styles.label}>Verze datové sady:</ThemedText>
           <ThemedText style={styles.value}>{dsVersion} ({loadedSets.flat().length} vět)</ThemedText>
         </View>
