@@ -98,15 +98,15 @@ export const FeedbackOverlay: React.FC = () => {
           <PlayfulButton
             onPress={() => nextQuestion()}
             title='Další otázka'
-            variant='danger'
+            variant='custom'
+            customColors={[displayMessage.themeColor, displayMessage.themeColor]}
           />
           {
             gameState !== GameState.correct && gameType != GameType.TEST && gameState != GameState.showingAnswers &&
             <PlayfulButton
               onPress={() => setGameState(GameState.showingAnswers)}
               title='Správné odpovědi'
-              variant='custom'
-              customColors={[displayMessage.themeColor, displayMessage.themeColor]}              
+              variant='gray'
             />
           }
         </View>

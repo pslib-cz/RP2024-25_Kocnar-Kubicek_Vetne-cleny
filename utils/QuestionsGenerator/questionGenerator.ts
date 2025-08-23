@@ -38,7 +38,6 @@ export function questionGenerator({
   count: number,
   questionTypesBitfield: number
 }) {
-  // Get loaded data
   const { loadedSets, loadedTypeSets } = useLoadedData();
   // Get templates for the selected galaxy
   const templates = questionGeneratorParams[galaxy];

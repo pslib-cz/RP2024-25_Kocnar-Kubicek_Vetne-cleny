@@ -20,6 +20,7 @@ export default function AboutPage() {
   const dsVersion = loadedVersion || datasetVersion.version || 'neuvedeno';
 
   let pressedCount = 0; // not supposed to be a state
+  const [devEnabled, setDevEnabled] = React.useState(false);
 
   return (
     <SafeAreaView style={[styles.safeArea, AndroidSafeArea.AndroidSafeArea]}>
@@ -36,8 +37,7 @@ export default function AboutPage() {
           <ThemedText style={styles.label}>Verze aplikace:</ThemedText>
           <ThemedText style={styles.value} onPress={() => {
             if ((pressedCount + 1) >= 3) {
-              router.push('/(pages)/(debug)/gameTests');
-              pressedCount = 0;
+              setDevEnabled(true);
             }
             pressedCount++;
           }}>{appVersion}</ThemedText>
@@ -64,12 +64,15 @@ export default function AboutPage() {
             style={styles.button}
             variant="gray"
           />
-          <PlayfulButton
-            title="DEVELOPER MENU"
-            onPress={() => router.push('/(pages)/(debug)/gameTests')}
-            style={styles.button}
-            variant="gray"
-          />
+          {
+            devEnabled &&
+            <PlayfulButton
+              title="DEVELOPER MENU"
+              onPress={() => router.push('/(pages)/(debug)/gameTests')}
+              style={styles.button}
+              variant="gray"
+            />
+          }
         </View>
       </ScrollView>
     </SafeAreaView>

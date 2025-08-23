@@ -226,13 +226,13 @@ export function GameOneUI(type: Game1Type, oneWord_INDEX: number = 1) {
         <Text style={styles.title}>{inverted ? "Přiřaď slova k větným členům" : "Přiřaď větné členy ke slovům"}</Text>
       </View>
       <WordButtonsContainer buttons={phraseButtons}
-        showTooltip={inverted || gameState == GameState.showingAnswers}
+        showTooltip={inverted}
         longPress={handlePhraseButtonLongClick}
         onClick={handlePhraseButtonClick}
         forceDrawTypeAnd={gameState == GameState.showingAnswers}
       />
       <WordButtonsContainer buttons={bottomButtons}
-        showTooltip={!inverted && gameState != GameState.showingAnswers}
+        showTooltip={!inverted}
         longPress={(button, index) => { !inverted && handleShowTooltip(button.text, index) }}
         onClick={(button) => { onBottomButtonClicked(button); }}
         forceDrawTypeAnd={gameState == GameState.showingAnswers}
