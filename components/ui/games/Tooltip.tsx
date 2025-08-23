@@ -16,16 +16,15 @@ export const Tooltip: React.FC<TooltipProps> = ({ visible, message, children, on
   return (
     <View style={{ position: 'relative', zIndex: 1000 }}>
       {children}
-      {visible && (
-        <Pressable
-          style={StyleSheet.absoluteFill}
-          onPress={onRequestClose}
-        >
-          <View style={[styles.tooltipContainer, style]} pointerEvents="box-none">
-            <Text style={styles.tooltipText}>{message}</Text>
-          </View>
-        </Pressable>
-      )}
+      <Pressable
+        style={[{position: "absolute", top: 0, bottom: 0, right: 0, left: 0 }, { opacity: visible ? 1 : 0 }]}
+        onPress={onRequestClose}
+        pointerEvents={visible ? 'auto' : 'none'}
+      >
+        <View style={[styles.tooltipContainer, style]} pointerEvents="box-none">
+          <Text style={styles.tooltipText}>{message}</Text>
+        </View>
+      </Pressable>
     </View>
   );
 };

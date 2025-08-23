@@ -22,11 +22,12 @@ import * as Haptics from 'expo-haptics';
 type PlayfulButtonProps = {
   title: string;
   onPress: () => void;
-  variant?: 'primary' | 'secondary' | 'danger' | 'success' | 'gray';
+  variant?: 'primary' | 'secondary' | 'danger' | 'success' | 'gray' | 'custom';
   icon?: React.ReactNode;
   style?: StyleProp<ViewStyle>;
   textStyle?: StyleProp<TextStyle>;
   disabled?: boolean;
+  customColors?: [string, string];
 };
 
 export default function PlayfulButton({
@@ -36,7 +37,8 @@ export default function PlayfulButton({
   icon,
   style,
   textStyle,
-  disabled = false
+  disabled = false,
+  customColors = ['#4A5BD2', '#8A56E8']
 }: PlayfulButtonProps) {
   const rocket = useRocket();
   const scale = useSharedValue(1);
@@ -48,6 +50,7 @@ export default function PlayfulButton({
     danger: ['#E63946', '#FF758F'] as const,
     success: ['#2A9D8F', '#57CC99'] as const,
     gray: ['#555555', '#707070'] as const,
+    custom: customColors,
   };
 
   const handlePressIn = () => {
