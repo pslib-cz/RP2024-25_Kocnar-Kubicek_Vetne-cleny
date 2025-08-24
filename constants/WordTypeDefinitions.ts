@@ -1,6 +1,6 @@
 import { WordType } from "@/types/WordTypes";
 
-interface WordTypeExplanation {
+export interface WordTypeExplanation {
   name: string;
   abbr?: WordType;
   color?: string;
@@ -11,7 +11,7 @@ interface WordTypeExplanation {
   types?: WordTypeTypeExplanation[];
 }
 
-interface WordTypeTypeExplanation{
+export interface WordTypeTypeExplanation{
   name: string;
   explanation: string[];
   abbr?: WordType;
@@ -19,7 +19,7 @@ interface WordTypeTypeExplanation{
   examples: Example[];
 }
 
-interface Example{
+export interface Example{
   sentence: string;
   highlightedSection: string;
   explanation?: string;
@@ -52,7 +52,7 @@ export const WordTypes: WordTypeExplanation[] = [
       {
         name: 'Nevyjádřený',
         explanation: [
-          "není ve větě přímo vyjádřen, ale známe ho z kontextu nebo předešlé věty"
+          "není ve větě přímo vyjádřen, ale známe ho z kontextu nebo předešlé věty"
         ],
         examples: [
           {
