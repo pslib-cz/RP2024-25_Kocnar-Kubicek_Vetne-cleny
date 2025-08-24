@@ -82,8 +82,8 @@ export const useAPI = (userData?: Partial<APIUserData>) => {
   (Constants.expoConfig && typeof Constants.expoConfig === 'object' && 'version' in Constants.expoConfig && (Constants.expoConfig as any).version) ||
   (Constants.manifest2 && typeof Constants.manifest2 === 'object' && 'version' in Constants.manifest2 && (Constants.manifest2 as any).version) ||
   'neuvedeno';
-    const dsVersion = loadedVersion || 'v0' ;
-    const CLIENT_VERSION = `${appVersion}-${dsVersion}`;
+  const dsVersion = loadedVersion || 'v0' ;
+  const CLIENT_VERSION = `${appVersion}-${dsVersion}`;
 
   const data = { ...DEFAULT_USER_DATA, ...userData };
   const { secretKey, userId, name, bodyColor, trailColor, selectedRocketIndex } = data;

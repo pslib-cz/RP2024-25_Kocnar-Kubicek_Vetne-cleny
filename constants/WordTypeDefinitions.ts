@@ -164,7 +164,7 @@ export const WordTypes: WordTypeExplanation[] = [
             highlightedSection: "krásná"
           },
           {
-            sentence: "s krásnou ženou,",
+            sentence: "s krásnou ženou",
             highlightedSection: "s krásnou"
           }
         ]
