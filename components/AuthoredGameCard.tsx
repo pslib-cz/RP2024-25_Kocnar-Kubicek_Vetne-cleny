@@ -57,7 +57,7 @@ export const AuthoredGameCard = ({ game }: { game: AuthoredGame }) => {
         </View>
         <View style={styles.detail}>
           <MaterialIcons name="casino" size={18} color="#26A69A" style={{ marginRight: 4 }} />
-          <Text style={{ color: "white" }}>{game.seeded ? 'Stejné otázky' : 'Různé otázky'}</Text>
+          <Text style={{ color: "white" }}>{game.seed ? 'Stejné otázky' : 'Různé otázky'}</Text>
         </View>
         <View style={styles.detail}>
           <MaterialIcons name="hourglass-empty" size={18} color="#FF7043" style={{ marginRight: 4 }} />
