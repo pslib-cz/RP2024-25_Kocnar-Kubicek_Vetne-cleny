@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { View, Text, StyleSheet, ScrollView, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
@@ -10,6 +10,10 @@ import { AuthoredGame, useAPI } from '@/hooks/useAPI';
 import { useRocket } from '@/contexts/RocketContext';
 import { galaxies } from '@/components/ArenaHeader';
 import { PlayerRocket } from '@/components/PlayerRocket';
+import { questionGenerator } from '@/utils/QuestionsGenerator/questionGenerator';
+import { useLoadedData } from '@/hooks/useData';
+import { Question } from '@/types/Question';
+import Constants from 'expo-constants';
 type RootStackParamList = {
   AuthoredGameDetail: {
     gameId: string;
@@ -37,15 +41,24 @@ const formatDuration = (startTime: string, endTime?: string | null) => {
   return `${hours}h ${minutes}min`;
 };
 
+const appVersion =
+(Constants.expoConfig && typeof Constants.expoConfig === 'object' && 'version' in Constants.expoConfig && (Constants.expoConfig as any).version) ||
+(Constants.manifest2 && typeof Constants.manifest2 === 'object' && 'version' in Constants.manifest2 && (Constants.manifest2 as any).version) ||
+'neuvedeno';
+
 const AuthoredGameDetail = () => {
-  const route = useRoute<AuthoredGameDetailRouteProp>();
-  const router = useRouter();
-  const { userId, secretKey } = useRocket();
-  const api = useAPI({ userId, secretKey });
-  const { gameId } = route.params;
+    const route = useRoute<AuthoredGameDetailRouteProp>();
+    const router = useRouter();
+    const { userId, secretKey } = useRocket();
+    const api = useAPI({ userId, secretKey });
+    const { gameId } = route.params;
+    const { loadedVersion } = useLoadedData();
+    const getClientVersion = () => `${appVersion}-${loadedVersion || 'v0' }`;
 
   const [game, setGame] = useState<AuthoredGame | null>(null);
   const [loading, setLoading] = useState(true);
+  const [questions, setQuestions] = useState<Question[]>([]);
+  const [questionsLoading, setQuestionsLoading] = useState(false);
 
   const fetchGame = async () => {
     setLoading(true);
@@ -64,9 +77,54 @@ const AuthoredGameDetail = () => {
     }
   };
 
+  const generateQuestions = useCallback(async () => {
+    if (!game || !game.seed) return;
+    
+    // Compare game version with current client version
+    if (game.version !== getClientVersion()) return;
+    
+    console.log('Generating questions for game:', game.id);
+    
+    setQuestionsLoading(true);
+    try {
+      // Convert string seed to number for the question generator
+      const seedNumber = parseInt(game.seed) || 0;
+      
+      const generatedQuestions = questionGenerator({
+        galaxy: game.galaxy,
+        difficulty: game.difficulty / 100, // Convert from percentage to 0-1 range
+        seed: seedNumber,
+        count: game.questionCount,
+        questionTypesBitfield: game.questiontypes
+      });
+      
+      setQuestions(generatedQuestions);
+    } catch (error) {
+      console.warn('Failed to generate questions:', error);
+      setQuestions([]);
+    } finally {
+      setQuestionsLoading(false);
+    }
+  }, [game]);
+
   useEffect(() => {
     fetchGame();
   }, [gameId]);
+
+  useEffect(() => {
+    if (game && game.seed) {
+      // Compare game version with current client version
+      const currentClientVersion = getClientVersion();
+      console.log('Version comparison:', {
+        gameVersion: game.version,
+        currentClientVersion,
+        matches: game.version === currentClientVersion
+      });
+      if (game.version === currentClientVersion) {
+        generateQuestions();
+      }
+    }
+  }, [game, generateQuestions]);
 
   if (loading) {
     return (
@@ -349,9 +407,66 @@ const AuthoredGameDetail = () => {
           <View style={styles.techDetails}>
             <Text style={styles.techItem}>Seed: {game.seed || 'Není nastaven'}</Text>
             <Text style={styles.techItem}>Game ID: {game.id}</Text>
-            <Text style={styles.techItem}>Author ID: {game.authorId}</Text>
+            <Text style={styles.techItem}>Verze: {game.version}</Text>
           </View>
         </View>
+
+        {/* Questions Section - Only show if game is seeded and has same version */}
+        {game.seed && game.version === getClientVersion() && (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Otázky hry</Text>
+            {questionsLoading ? (
+              <View style={styles.questionsLoadingContainer}>
+                <ActivityIndicator size="small" color="#42A5F5" />
+                <Text style={styles.questionsLoadingText}>Generuji otázky...</Text>
+              </View>
+            ) : questions.length > 0 ? (
+              <View style={styles.questionsContainer}>
+                {questions.map((question, index) => (
+                  <View key={index} style={styles.questionCard}>
+                    <View style={styles.questionHeader}>
+                      <Text style={styles.questionNumber}>Otázka {index + 1}</Text>
+                      <Text style={styles.questionType}>
+                        {question.TEMPLATE[2] === 0 ? 'Označ slova' :
+                         question.TEMPLATE[2] === 1 ? 'Označ typy' :
+                         question.TEMPLATE[2] === 2 ? 'Označ typ slova' :
+                         question.TEMPLATE[2] === 3 ? 'Označ slova (všechny typy)' :
+                         question.TEMPLATE[2] === 4 ? 'Výběr více slov' :
+                         question.TEMPLATE[2] === 5 ? 'Výběr více slov ve větě' :
+                         question.TEMPLATE[2] === 6 ? 'Výběr jednoho slova' :
+                         question.TEMPLATE[2] === 7 ? 'Výběr typu' : 'Neznámý typ'}
+                      </Text>
+                    </View>
+                    
+                    {/* Display the sentence/words */}
+                    <View style={styles.questionContent}>
+                      {question.SOURCE.map((word, wordIndex) => (
+                        <View key={wordIndex} style={styles.wordItem}>
+                          <Text style={styles.wordText}>{word.text}</Text>
+                          <Text style={styles.wordType}>{word.type}</Text>
+                        </View>
+                      ))}
+                    </View>
+                    
+                    {/* Show additional info if available */}
+                    {question.WANTED && (
+                      <Text style={styles.questionInfo}>
+                        Hledaný typ: <Text style={styles.highlightedText}>{question.WANTED}</Text>
+                      </Text>
+                    )}
+                    {question.INDEX !== undefined && (
+                      <Text style={styles.questionInfo}>
+                        Index slova: <Text style={styles.highlightedText}>{question.INDEX + 1}</Text>
+                      </Text>
+                    )}
+                  </View>
+                ))}
+              </View>
+            ) : (
+              <Text style={styles.noQuestionsText}>Nepodařilo se vygenerovat otázky</Text>
+            )}
+          </View>
+        )}
       </ScrollView>
     </SafeAreaView>
   );
@@ -568,6 +683,89 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#aaa',
     fontFamily: 'monospace',
+  },
+  // Questions section styles
+  questionsLoadingContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    padding: 16,
+  },
+  questionsLoadingText: {
+    color: '#42A5F5',
+    fontSize: 14,
+  },
+  questionsContainer: {
+    gap: 12,
+  },
+  questionCard: {
+    backgroundColor: '#2A3049',
+    padding: 16,
+    borderRadius: 8,
+    borderLeftWidth: 4,
+    borderLeftColor: '#42A5F5',
+  },
+  questionHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  questionNumber: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#fff',
+  },
+  questionType: {
+    fontSize: 12,
+    color: '#42A5F5',
+    textAlign: 'right',
+    flex: 1,
+    marginLeft: 8,
+  },
+  questionContent: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+    marginBottom: 8,
+  },
+  wordItem: {
+    backgroundColor: '#1E2235',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 4,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  wordText: {
+    fontSize: 14,
+    color: '#fff',
+    fontWeight: '500',
+  },
+  wordType: {
+    fontSize: 10,
+    color: '#42A5F5',
+    backgroundColor: '#2A3049',
+    paddingHorizontal: 4,
+    paddingVertical: 2,
+    borderRadius: 2,
+  },
+  questionInfo: {
+    fontSize: 12,
+    color: '#aaa',
+    marginTop: 4,
+  },
+  highlightedText: {
+    color: '#42A5F5',
+    fontWeight: '600',
+  },
+  noQuestionsText: {
+    color: '#888',
+    textAlign: 'center',
+    fontSize: 14,
+    fontStyle: 'italic',
   },
 });
 

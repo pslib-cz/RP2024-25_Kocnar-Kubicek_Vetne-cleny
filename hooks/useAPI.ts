@@ -19,7 +19,7 @@ import {
 } from '@/types/api';
 import { useConfigContext } from '@/contexts/ConfigContext';
 import Constants from 'expo-constants';
-import { loadedVersion } from './useData';
+import { useLoadedData } from './useData';
 
 const NO_AUTH_ENDPOINTS = ['/health', '/players/create', '/players/upsert'];
 
@@ -76,14 +76,14 @@ export interface AuthoredGame {
 
 export const useAPI = (userData?: Partial<APIUserData>) => {
   const { config } = useConfigContext();
+  const { loadedVersion } = useLoadedData();
   const API_URL = config.API_URL;
   const API_BACKUP_URL = config.API_BACKUP_URL;
   const appVersion =
   (Constants.expoConfig && typeof Constants.expoConfig === 'object' && 'version' in Constants.expoConfig && (Constants.expoConfig as any).version) ||
   (Constants.manifest2 && typeof Constants.manifest2 === 'object' && 'version' in Constants.manifest2 && (Constants.manifest2 as any).version) ||
   'neuvedeno';
-  const dsVersion = loadedVersion || 'v0' ;
-  const CLIENT_VERSION = `${appVersion}-${dsVersion}`;
+  const getClientVersion = () => `${appVersion}-${loadedVersion || 'v0' }`;
 
   const data = { ...DEFAULT_USER_DATA, ...userData };
   const { secretKey, userId, name, bodyColor, trailColor, selectedRocketIndex } = data;
@@ -182,7 +182,7 @@ export const useAPI = (userData?: Partial<APIUserData>) => {
       bodyColor,
       trailColor,
       selectedRocketIndex,
-      clientVersion: CLIENT_VERSION,
+      clientVersion: getClientVersion(),
       secretKey,
     };
     return post<PlayerCreateResponse>('/players/create', payload);
@@ -195,7 +195,7 @@ export const useAPI = (userData?: Partial<APIUserData>) => {
       trailColor,
       selectedRocketIndex,
       levels,
-      clientVersion: CLIENT_VERSION,
+      clientVersion: getClientVersion(),
     };
     const options: RequestInit = {
       method: 'POST',
@@ -219,7 +219,7 @@ export const useAPI = (userData?: Partial<APIUserData>) => {
       bodyColor,
       trailColor,
       selectedRocketIndex,
-      clientVersion: CLIENT_VERSION,
+      clientVersion: getClientVersion(),
     };
     return patch<PlayerInfo>('/players/sync', payload);
   };
@@ -237,7 +237,7 @@ export const useAPI = (userData?: Partial<APIUserData>) => {
       difficulty,
       galaxy,
       questiontypes,
-      version: CLIENT_VERSION,
+      version: getClientVersion(),
       expirationTime,
       seeded,
       questionCount,
@@ -248,7 +248,7 @@ export const useAPI = (userData?: Partial<APIUserData>) => {
   const joinGame = async (code: number): Promise<GameJoinResponse> => {
     const payload: GameJoinRequest = {
       code,
-      version: CLIENT_VERSION,
+      version: getClientVersion(),
     };
     return post<GameJoinResponse>('/games/join', payload);
   };
