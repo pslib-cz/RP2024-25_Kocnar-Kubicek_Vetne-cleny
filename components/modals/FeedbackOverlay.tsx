@@ -26,7 +26,7 @@ const GetDisplayMessage = (gameState: GameState) : DisplayMessage => {
 }
 
 export const FeedbackOverlay: React.FC = () => {
-  const { nextQuestion, gameState, gameType, setGameState } = useGameContext();
+  const { nextQuestion, gameState, gameType, setGameState, gameInfo, questions } = useGameContext();
 
   const displayMessage = GetDisplayMessage(gameState);
 
@@ -97,7 +97,7 @@ export const FeedbackOverlay: React.FC = () => {
         <View>
           <PlayfulButton
             onPress={() => nextQuestion()}
-            title='Další otázka'
+            title={gameInfo.activeQuestionIndex > questions.length - 1 ? 'Zobrazit výsledky' : 'Další otázka'}
             variant='custom'
             customColors={[displayMessage.themeColor, displayMessage.themeColor]}
           />

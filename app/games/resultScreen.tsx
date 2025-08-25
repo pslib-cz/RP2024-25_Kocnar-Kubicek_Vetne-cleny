@@ -59,8 +59,14 @@ const PracticeCompleteScreen = () => {
           <ResultStuff text="Úspěšnost" value={`${successRate.toFixed(1)}%`} color={successRateColor} icon="star" />
         </View>
 
-        <PlayfulButton title={successRate >= NEXT_LEVEL_TRESHOLD ? "Další level" : "Zkusit znovu"} onPress={newGameInArena} />
-        <PlayfulButton title="Domů" onPress={() => navigation.replace('/' as never)} />
+        <View style={styles.buttonContainer}>
+          <View style={[styles.buttonWrapper, { flex: 3 }]}>
+            <PlayfulButton variant='custom' title={successRate >= NEXT_LEVEL_TRESHOLD ? "Další mise" : "Zkusit znovu"} onPress={newGameInArena} customColors={[successRateColor, successRateColor]} />
+          </View>
+          <View style={[styles.buttonWrapper, { flex: 2 }]}>
+            <PlayfulButton title="Domů" onPress={() => navigation.replace('/' as never)} />
+          </View>
+        </View>
       </SafeAreaView>
     )
   }
@@ -174,6 +180,15 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 18,
     fontWeight: 'bold',
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    gap: 10,
+  },
+  buttonWrapper: {
+    flex: 1,
   },
 });
 
