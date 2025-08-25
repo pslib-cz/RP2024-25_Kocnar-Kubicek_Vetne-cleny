@@ -25,6 +25,11 @@ export interface Example{
   explanation?: string;
 }
 
+export function GetWordTypeByAbbr(abbr: string): WordTypeExplanation | undefined {
+  return WordTypes.find(wt => wt.abbr === abbr) 
+    ?? WordTypes.find(wt => wt.types?.some(t => t.abbr === abbr));
+}
+
 export const WordTypes: WordTypeExplanation[] = [
   {
     name: 'podmět',

@@ -11,7 +11,7 @@ interface WordButtonsContainerProps {
   showTooltip: boolean,
   longPress: (button: WordButtonType, index: number) => void,
   onClick: (button: WordButtonType, index: number) => void,
-  forceDrawTypeAnd? : boolean
+  forceDrawTypeAnd?: boolean
 };
 
 export const WordButtonsContainer = (
@@ -19,38 +19,39 @@ export const WordButtonsContainer = (
 ) => {
   const { tooltip, handleHideTooltip } = useLevelContext();
 
+  if (!buttons) {
+    return (
+      <View style={styles.phraseContainer}>
+        <ThemedText>Loading...</ThemedText>
+      </View>
+    )
+  }
+
   return (
     <>
-      {
-        buttons ?
-          <View style={styles.phraseContainer}>
-            {
-              buttons.map((button, index) => {
-                return (
-                  <Tooltip
-                    key={index + (forceDrawTypeAnd ? 1 : 0)}
-                    visible={showTooltip && tooltip.visible && tooltip.index === index}
-                    message={tooltip.message}
-                    onRequestClose={handleHideTooltip}
-                  >
-                    <WordButton
-                      text={button.text}
-                      state={button.state}
-                      type={button.type}
-                      drawType={button.drawType || forceDrawTypeAnd}
-                      onLongPress={() => longPress(button, index)}
-                      onClick={() => onClick(button, index)}
-                    />
-                  </Tooltip>
-                );
-              })
-            }
-          </View>
-          :
-          <View style={styles.phraseContainer}>
-            <ThemedText>Loading...</ThemedText>
-          </View>
-      }
+      <View style={styles.phraseContainer}>
+        {
+          buttons.map((button, index) => {
+            return (
+              <Tooltip
+                key={index + (forceDrawTypeAnd ? 1 : 0)}
+                visible={showTooltip && tooltip.visible && tooltip.index === index}
+                message={tooltip.message}
+                onRequestClose={handleHideTooltip}
+              >
+                <WordButton
+                  text={button.text}
+                  state={button.state}
+                  type={button.type}
+                  drawType={button.drawType || forceDrawTypeAnd}
+                  onLongPress={() => longPress(button, index)}
+                  onClick={() => onClick(button, index)}
+                />
+              </Tooltip>
+            );
+          })
+        }
+      </View>
     </>
   )
 }

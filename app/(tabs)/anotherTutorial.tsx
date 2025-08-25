@@ -123,7 +123,7 @@ const AnimatedBulletPoint = React.memo(({ text, delay = 0, isVisible }: { text: 
 });
 
 // Separate component for word type cards
-const WordTypeCard = React.memo(({ wordType, index, expandedItems, onToggleExpanded }: { 
+export const WordTypeCard = React.memo(({ wordType, index, expandedItems, onToggleExpanded }: { 
   wordType: any, 
   index: number, 
   expandedItems: Set<string>, 
