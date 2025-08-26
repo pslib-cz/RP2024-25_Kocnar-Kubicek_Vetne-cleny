@@ -17,10 +17,11 @@ const styles = StyleSheet.create({
 type PageWrapperProps = {
   children: React.ReactNode;
   style?: ViewStyle;
+  padding?: boolean;
 };
 
-const PageWrapper: React.FC<PageWrapperProps> = ({ children, style }) => (
-  <SafeAreaView style={[styles.safeArea, styles.AndroidSafeArea, style]}>
+const PageWrapper: React.FC<PageWrapperProps> = ({ children, style, padding }) => (
+  <SafeAreaView style={[styles.safeArea, styles.AndroidSafeArea, style, padding && { padding: 16 }]}>
     {children}
   </SafeAreaView>
 );

@@ -15,13 +15,12 @@ import PlayfulButton from "@/components/ui/PlayfulButton";
 import { useLevelContext } from "@/contexts/levelContext";
 import { WordSelectionOption } from "@/types/games/SelectionOption";
 import { WordType } from "@/types/WordTypes";
-import { types } from "@babel/core";
 import React, { useCallback, useEffect, useState } from "react";
-import { LayoutAnimation, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { LayoutAnimation } from "react-native";
 import { WordTypeCard } from "./anotherTutorial";
-import { GetWordTypeByAbbr, WordTypes } from "@/constants/WordTypeDefinitions";
+import { GetWordTypeByAbbr } from "@/constants/WordTypeDefinitions";
 import PageWrapper from "@/components/PageWrapper";
+import ModalWrapper from "@/components/modals/ModalWrapper";
 
 export default function SentenceExample() {
 
@@ -56,9 +55,7 @@ export default function SentenceExample() {
 
   const [typeIndex, setTypeIndex] = React.useState(0)
 
-  const [incorrectType, setIncorrectType] = React.useState<string | null>(null)
-
-  const [correctType, setCorrectType] = React.useState<string | null>(null)
+  const [incorrectType, setIncorrectType] = React.useState<string[] | null>(null)
 
   const [buttons, setButtons] = useState<{ text: string; type: WordType; drawType: boolean; state: ButtonState }[]>([]);
 
@@ -109,7 +106,7 @@ export default function SentenceExample() {
   }, []);
 
   return (
-    <PageWrapper>
+    <PageWrapper padding>
       <ThemedText>{explanations[typeIndex]}</ThemedText>
       <WordButtonsContainer
         buttons={buttons}
@@ -117,9 +114,6 @@ export default function SentenceExample() {
         longPress={() => { }}
         onClick={(button, index) => {
           if (button.type === targetType?.type) {
-
-            setCorrectType(targetType?.type ?? null)
-
             let newIndex = typeIndex
             while (newIndex++ < typesOrder.length && sentence.find(item => item.type === typesOrder[newIndex]) === undefined) { }
 
@@ -137,56 +131,60 @@ export default function SentenceExample() {
             });
 
           } else {
-            alert('Wrong! This is ' + button.type + ', but the correct target is ' + targetType?.type)
-
-            setIncorrectType(targetType?.type ?? null)
-            setCorrectType(null)
+            setIncorrectType([targetType?.type || "", button.text, button.type || ""])
           }
         }}
       />
-      <TargetTypeDisplay text='Vyber' />
-
       {
         targetType?.type &&
-        <WordTypeCard
-          wordType={GetWordTypeByAbbr(targetType?.type)}
-          index={0}
-          expandedItems={expandedItems}
-          onToggleExpanded={toggleExpanded}
+        <>
+          <TargetTypeDisplay text='Vyber' />
+          <WordTypeCard
+            wordType={GetWordTypeByAbbr(targetType?.type)}
+            index={0}
+            expandedItems={expandedItems}
+            onToggleExpanded={toggleExpanded}
+          />
+          <PlayfulButton
+            title="Potřebuju poradit"
+            onPress={() => {
+              alert('This will display tutorial sooner or later')
+            }}
+          />
+        </>
+      }
+      {
+        !targetType?.type &&
+        <>
+          <ThemedText>Tutoriál dokončen</ThemedText>
+          <PlayfulButton
+            title="Zkusit znovu"
+            onPress={() => {
+              setTypeIndex(0);
+              setButtons(sentence.map((item) => ({
+                text: item.text,
+                type: item.type,
+                drawType: false,
+                state: ButtonState.default
+              })));
+              setIncorrectType(null);;
+            }}
+          />
+        </>
+      }
+
+      <ModalWrapper
+        visible={!!incorrectType}
+        onClose={() => setIncorrectType(null)}
+      >
+        <ThemedText>To není správně. Odpověď pro slovo {incorrectType && incorrectType[1]} je: {incorrectType && incorrectType[2]} a ne {incorrectType && incorrectType[0]}</ThemedText>
+        <PlayfulButton
+          title="Tutoriál"
+          onPress={() => {
+            alert('This will display tutorial sooner or later')
+          }}
         />
-      }
-
-      {
-        incorrectType &&
-        <View>
-          <ThemedText>To není správně. Odpověď je: {incorrectType && incorrectType}</ThemedText>
-          <PlayfulButton
-            title="Tutoriál"
-            onPress={() => {
-              alert('This will display tutorial sooner or later')
-            }}
-          />
-        </View>
-      }
-      {
-        correctType &&
-        <View>
-          <ThemedText>To je správně. Odpověď je: {correctType && correctType}</ThemedText>
-          <PlayfulButton
-            title="Tutoriál"
-            onPress={() => {
-              alert('This will display tutorial sooner or later')
-            }}
-          />
-        </View>
-      }
-
-      <PlayfulButton
-        title="Potřebuju poradit"
-        onPress={() => {
-          alert('This will display tutorial sooner or later')
-        }}
-      />
+      </ModalWrapper>
     </PageWrapper>
   )
 }
