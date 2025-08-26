@@ -3,8 +3,8 @@ import { View, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity, Animated,
 import { useRouter } from 'expo-router';
 import { MaterialIcons } from '@expo/vector-icons';
 import { ThemedText } from '@/components/ThemedText';
-import AndroidSafeArea from '@/components/AndroidSafeArea';
 import { Example, WordTypeExplanation, WordTypes } from '@/constants/WordTypeDefinitions';
+import PageWrapper from '@/components/PageWrapper';
 
 // Enable LayoutAnimation on Android
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
@@ -493,7 +493,7 @@ export default function GrammarDefinitionsPage() {
   }, []);
 
   return (
-    <SafeAreaView style={[styles.safeArea, AndroidSafeArea.AndroidSafeArea]}>
+    <PageWrapper>
       <View style={styles.headerRow}>
         <TouchableOpacity 
           onPress={() => router.back()}
@@ -521,7 +521,7 @@ export default function GrammarDefinitionsPage() {
           />
         ))}
       </ScrollView>
-    </SafeAreaView>
+    </PageWrapper>
   );
 }
 

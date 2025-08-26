@@ -10,6 +10,7 @@ import { useGalaxyContext } from '@/contexts/GalaxyContext';
 import { useMultiplayerGameContext } from '@/contexts/MultiplayerGameContext';
 import { useFocusEffect } from '@react-navigation/native';
 import { ThemedText } from '@/components/ThemedText';
+import PageWrapper from '@/components/PageWrapper';
 const ArenaPlanet: React.FC = () => {
   const { newGameInArena } = useGameContext();
   const { selectedPlanet, selectedGalaxy } = useGalaxyContext();
@@ -37,7 +38,7 @@ const ArenaPlanet: React.FC = () => {
   );
 
   return (
-    <SafeAreaView style={[styles.safeArea]}>
+    <PageWrapper>
       <ArenaHeader />
       <View style={styles.container}>
         <TouchableOpacity
@@ -60,7 +61,7 @@ const ArenaPlanet: React.FC = () => {
           </View>
         </View>
       </View>
-    </SafeAreaView>
+    </PageWrapper>
   );
 };
 

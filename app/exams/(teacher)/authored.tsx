@@ -10,6 +10,7 @@ import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ThemedText } from '@/components/ThemedText';
 import { AuthoredGameCard } from '@/components/AuthoredGameCard';
+import PageWrapper from '@/components/PageWrapper';
 
 export default function AuthoredGamesPage() {
   const { userId, secretKey } = useRocket();
@@ -37,16 +38,16 @@ export default function AuthoredGamesPage() {
 
   if (loading) {
     return (
-      <SafeAreaView style={styles.container}>
+      <PageWrapper>
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#ffffff" />
         </View>
-      </SafeAreaView>
+      </PageWrapper>
     );
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <PageWrapper>
       <ScrollView style={{ padding: 16 }}>
         <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 16 }}>
           <View style={{ flex: 1 }}>
@@ -75,7 +76,7 @@ export default function AuthoredGamesPage() {
           games.map((game) => <AuthoredGameCard key={game.id} game={game} />)
         )}
       </ScrollView>
-    </SafeAreaView>
+    </PageWrapper>
   );
 }
 

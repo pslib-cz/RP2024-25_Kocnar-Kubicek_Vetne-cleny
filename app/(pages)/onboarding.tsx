@@ -15,8 +15,9 @@ import { WordButtonsContainer } from '@/components/ui/games/WordButtonsContainer
 import { ButtonState } from '@/components/ui/games/WordButton';
 import { useLevelContext } from '@/contexts/levelContext';
 import { NamedRocket } from '@/components/NamedRocket';
-import AndroidSafeArea from '@/components/AndroidSafeArea';
+ 
 import { PlayerRocket } from '@/components/PlayerRocket';
+import PageWrapper from '@/components/PageWrapper';
 
 const loadSvgAsset = async (assetModule: any): Promise<string | null> => {
   try {
@@ -100,7 +101,7 @@ export default function OnboardingScreen() {
   const { width } = Dimensions.get('window');
 
   return (
-    <SafeAreaView style={[AndroidSafeArea.AndroidSafeArea, { flex: 1, backgroundColor: '#101223' }]}>
+    <PageWrapper>
       <StatusBar barStyle="light-content" />
       <PagerView
         style={{ flex: 1 }}
@@ -134,7 +135,7 @@ export default function OnboardingScreen() {
         />
         <ExamsInfo />
       </PagerView>
-    </SafeAreaView>
+    </PageWrapper>
   );
 }
 

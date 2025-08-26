@@ -4,13 +4,13 @@ import { useTutorial } from '@/hooks/useTutorial'
 import { StatusBar } from 'expo-status-bar'
 import React from 'react';
 import { SafeAreaView, StyleSheet, Text, View } from 'react-native'
-import AndroidSafeArea from '@/components/AndroidSafeArea';
+import PageWrapper from '@/components/PageWrapper';
 
 export default function Tutorial() {
   const { usedNodes, currentNode, AddNode, reset } = useTutorial();
 
   return (
-    <SafeAreaView style={[styles.container, AndroidSafeArea.AndroidSafeArea]}>
+    <PageWrapper>
       <StatusBar style="light" />
       <View style={styles.verticalLine} />
 
@@ -49,7 +49,7 @@ export default function Tutorial() {
       <View style={styles.resetButtonContainer}>
         <PlayfulButton title="RESET" variant="secondary" style={{ width: '50%', padding: 10 }} onPress={reset} />
       </View>
-    </SafeAreaView>
+    </PageWrapper>
   );
 }
 

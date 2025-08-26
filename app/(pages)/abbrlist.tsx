@@ -5,7 +5,7 @@ import { WordTypes } from '@/constants/WordTypes';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { ThemedText } from '@/components/ThemedText';
-import AndroidSafeArea from '@/components/AndroidSafeArea';
+import PageWrapper from '@/components/PageWrapper';
 // Local type for WordTypeExt
 interface WordTypeExt {
   name: string;
@@ -17,7 +17,7 @@ export default function AbbrListPage() {
   const router = useRouter();
 
   return (
-    <SafeAreaView style={[styles.safeArea, AndroidSafeArea.AndroidSafeArea]}>
+    <PageWrapper>
       <View style={styles.headerRow}>
         <TouchableOpacity
           style={styles.backButton}
@@ -37,7 +37,7 @@ export default function AbbrListPage() {
           </View>
         ))}
       </ScrollView>
-    </SafeAreaView>
+    </PageWrapper>
   );
 }
 

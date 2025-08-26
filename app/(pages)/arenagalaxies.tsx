@@ -1,17 +1,17 @@
 import React from 'react';
-import { View, StyleSheet, SafeAreaView } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import GalaxyView from '@/components/GalaxyView';
 import ArenaHeader from '@/components/ArenaHeader';
 import { useRouter } from 'expo-router';
-import AndroidSafeArea from '@/components/AndroidSafeArea';
 import PlanetDetailModal from '@/components/modals/PlanetDetailModal';
+import PageWrapper from '@/components/PageWrapper';
 
 const ArenaGalaxies: React.FC = () => {
   const router = useRouter();
   const [openedIndex, setOpenedIndex] = React.useState<number | undefined>(undefined);
 
   return (
-    <SafeAreaView style={[styles.safeArea, AndroidSafeArea.AndroidSafeArea]}>
+    <PageWrapper>
       <PlanetDetailModal
         visible={openedIndex !== undefined}
         onClose={() => setOpenedIndex(undefined)}
@@ -25,7 +25,7 @@ const ArenaGalaxies: React.FC = () => {
         />
         <GalaxyView setOpenedIndex={setOpenedIndex} />
       </View>
-    </SafeAreaView>
+    </PageWrapper>
   );
 };
 

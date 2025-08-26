@@ -21,6 +21,7 @@ import { LayoutAnimation, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { WordTypeCard } from "./anotherTutorial";
 import { GetWordTypeByAbbr, WordTypes } from "@/constants/WordTypeDefinitions";
+import PageWrapper from "@/components/PageWrapper";
 
 export default function SentenceExample() {
 
@@ -108,7 +109,7 @@ export default function SentenceExample() {
   }, []);
 
   return (
-    <SafeAreaView>
+    <PageWrapper>
       <ThemedText>{explanations[typeIndex]}</ThemedText>
       <WordButtonsContainer
         buttons={buttons}
@@ -186,6 +187,6 @@ export default function SentenceExample() {
           alert('This will display tutorial sooner or later')
         }}
       />
-    </SafeAreaView>
+    </PageWrapper>
   )
 }

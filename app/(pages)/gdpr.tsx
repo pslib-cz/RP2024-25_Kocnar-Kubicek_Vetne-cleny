@@ -2,8 +2,8 @@ import React from 'react';
 import { View, StyleSheet, SafeAreaView, ScrollView, Linking } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import PlayfulButton from '@/components/ui/PlayfulButton';
-import AndroidSafeArea from '@/components/AndroidSafeArea';
 import { useRouter } from 'expo-router';
+import PageWrapper from '@/components/PageWrapper';
 
 const APP_NAME = 'Větná dráha';
 const CONTACT_EMAIL = 'tomas.kubicek.022@pslib.cz';
@@ -12,7 +12,7 @@ export default function GDPRPage() {
   const router = useRouter();
 
   return (
-    <SafeAreaView style={[styles.safeArea, AndroidSafeArea.AndroidSafeArea]}>
+    <PageWrapper>
       <View style={styles.headerRow}>
         <PlayfulButton
           title="Zpět"
@@ -88,7 +88,7 @@ export default function GDPRPage() {
           />
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </PageWrapper>
   );
 }
 
