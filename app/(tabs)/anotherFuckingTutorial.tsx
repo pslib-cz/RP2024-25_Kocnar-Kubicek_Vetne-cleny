@@ -21,56 +21,55 @@ import { WordTypeCard } from "./anotherTutorial";
 import { GetWordTypeByAbbr } from "@/constants/WordTypeDefinitions";
 import PageWrapper from "@/components/PageWrapper";
 import ModalWrapper from "@/components/modals/ModalWrapper";
+import { WordButtonType } from "@/types/games/WordButtonType";
+
+const tutorialSentence: WordSelectionOption[] = [
+  { text: "Bílá", type: "pks" }, // přívlastek shodný
+  { text: "kočka", type: "po" }, // podmět
+  { text: "s flíčky", type: "pkn" }, // přívlastek neshodný
+  { text: "včera", type: "puč" }, // příslovečné určení času
+  { text: "na zahradě", type: "pum" }, // příslovečné určení místa
+  { text: "z hladu", type: "pu příčiny" }, // příslovečné určení příčiny
+  { text: "velmi", type: "pu míry" }, // příslovečné určení míry
+  { text: "obratně", type: "puz" }, // příslovečné určení způsobu
+  { text: "ulovila", type: "př" }, // přísudek
+  { text: "myš", type: "pt" } // předmět
+]
+
+const tutorialTypesOrder: {type: WordType, explanation: string}[] = [
+  {type: "po", explanation: "Podmět – kdo nebo co vykonává děj ve větě."},
+  {type: "př", explanation: "Přísudek – co podmět dělá nebo co se s ním děje."},
+  {type: "pt", explanation: "Předmět – koho nebo co se děj týká."},
+  {type: "pks", explanation: "Přívlastek shodný – rozvíjí podstatné jméno a shoduje se s ním v pádě, čísle a rodě."},
+  {type: "pkn", explanation: "Přívlastek neshodný – rozvíjí podstatné jméno, ale neshoduje se s ním v pádě, čísle a rodě."},
+  {type: "puč", explanation: "Příslovečné určení času – vyjadřuje, kdy se děj odehrává."},
+  {type: "pum", explanation: "Příslovečné určení místa – vyjadřuje, kde se děj odehrává."},
+  {type: "pu příčiny", explanation: "Příslovečné určení příčiny – vyjadřuje, proč se děj odehrává."},
+  {type: "pu míry", explanation: "Příslovečné určení míry – vyjadřuje, v jaké míře nebo intenzitě se děj odehrává."},
+  {type: "puz", explanation: "Příslovečné určení způsobu – vyjadřuje, jakým způsobem se děj odehrává."}
+];
 
 export default function SentenceExample() {
-
-  const { options, setOptions, targetType, setTargetType, selectedOptions, setSelectedOptions } = useLevelContext();
-
-  const sentence: WordSelectionOption[] = [
-    { text: "Bílá", type: "pks" }, // přívlastek shodný
-    { text: "kočka", type: "po" }, // podmět
-    { text: "s flíčky", type: "pkn" }, // přívlastek neshodný
-    { text: "včera", type: "puč" }, // příslovečné určení času
-    { text: "na zahradě", type: "pum" }, // příslovečné určení místa
-    { text: "z hladu", type: "pu příčiny" }, // příslovečné určení příčiny
-    { text: "velmi", type: "pu míry" }, // příslovečné určení míry
-    { text: "obratně", type: "puz" }, // příslovečné určení způsobu
-    { text: "ulovila", type: "př" }, // přísudek
-    { text: "myš", type: "pt" } // předmět
-  ];
-
-  const typesOrder: WordType[] = [
-    "po",    // podmět
-    "př",    // přísudek
-    "pt",    // předmět
-    "pks",   // přívlastek shodný
-    "pkn",   // přívlastek neshodný
-    "puč",   // příslovečné určení času
-    "pum",   // příslovečné určení místa
-    "pu příčiny", // příslovečné určení příčiny
-    "pu míry",    // příslovečné určení míry
-    "puz"    // příslovečné určení způsobu
-  ];
-  const explanations = ["začneme podmětem", "pokračujeme přísudkem", "a nakonec doplníme předmětem"]
-
+  const { targetType, setTargetType } = useLevelContext();
   const [typeIndex, setTypeIndex] = React.useState(0)
-
   const [incorrectType, setIncorrectType] = React.useState<string[] | null>(null)
+  const [buttons, setButtons] = useState<WordButtonType[]>([]);
 
-  const [buttons, setButtons] = useState<{ text: string; type: WordType; drawType: boolean; state: ButtonState }[]>([]);
-
-  useEffect(() => {
-    const newButtons = sentence.map((item) => ({
+  function buildButtons(sentence: WordSelectionOption[]): WordButtonType[] {
+    return sentence.map((item) => ({
       text: item.text,
       type: item.type,
       drawType: false,
       state: ButtonState.default
     }));
-    setButtons(newButtons);
+  }
+
+  useEffect(() => {
+    setButtons(buildButtons(tutorialSentence));
   }, []);
 
   useEffect(() => {
-    setTargetType(typesOrder[typeIndex])
+    setTargetType(tutorialTypesOrder[typeIndex].type)
   }, [typeIndex])
 
   const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
@@ -107,7 +106,7 @@ export default function SentenceExample() {
 
   return (
     <PageWrapper padding>
-      <ThemedText>{explanations[typeIndex]}</ThemedText>
+      <ThemedText>{tutorialTypesOrder[typeIndex].explanation}</ThemedText>
       <WordButtonsContainer
         buttons={buttons}
         showTooltip={false}
@@ -115,7 +114,7 @@ export default function SentenceExample() {
         onClick={(button, index) => {
           if (button.type === targetType?.type) {
             let newIndex = typeIndex
-            while (newIndex++ < typesOrder.length && sentence.find(item => item.type === typesOrder[newIndex]) === undefined) { }
+            while (newIndex++ < tutorialTypesOrder.length && tutorialSentence.find(item => item.type === tutorialTypesOrder[newIndex].type) === undefined) { }
 
             setTypeIndex(newIndex)
             setIncorrectType(null)
@@ -161,13 +160,8 @@ export default function SentenceExample() {
             title="Zkusit znovu"
             onPress={() => {
               setTypeIndex(0);
-              setButtons(sentence.map((item) => ({
-                text: item.text,
-                type: item.type,
-                drawType: false,
-                state: ButtonState.default
-              })));
-              setIncorrectType(null);;
+              setButtons(buildButtons(tutorialSentence));
+              setIncorrectType(null);
             }}
           />
         </>
@@ -177,7 +171,7 @@ export default function SentenceExample() {
         visible={!!incorrectType}
         onClose={() => setIncorrectType(null)}
       >
-        <ThemedText>To není správně. Odpověď pro slovo {incorrectType && incorrectType[1]} je: {incorrectType && incorrectType[2]} a ne {incorrectType && incorrectType[0]}</ThemedText>
+        <ThemedText>To není správně. Odpověď pro slovo {incorrectType && incorrectType[1]} je: {incorrectType && incorrectType[2]} a ne {targetType && targetType.type }</ThemedText>
         <PlayfulButton
           title="Tutoriál"
           onPress={() => {
