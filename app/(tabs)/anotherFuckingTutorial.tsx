@@ -1,6 +1,3 @@
-
-
-
 // show whole sentence and make player choose what word is what type - eg. sentence and one type is shown
 // if player makes mistake, show correct answer explanation and offer step by step guided tutorial
 // then, move onto the next word
@@ -16,24 +13,25 @@ import { useLevelContext } from "@/contexts/levelContext";
 import { WordSelectionOption } from "@/types/games/SelectionOption";
 import { WordType } from "@/types/WordTypes";
 import React, { useCallback, useEffect, useState } from "react";
-import { LayoutAnimation } from "react-native";
+import { LayoutAnimation, StyleSheet, View, ScrollView } from "react-native";
 import { WordTypeCard } from "./anotherTutorial";
 import { GetWordTypeByAbbr } from "@/constants/WordTypeDefinitions";
 import PageWrapper from "@/components/PageWrapper";
 import ModalWrapper from "@/components/modals/ModalWrapper";
 import { WordButtonType } from "@/types/games/WordButtonType";
+import { MaterialIcons } from '@expo/vector-icons';
 
 const tutorialSentence: WordSelectionOption[] = [
-  { text: "Bílá", type: "pks" }, // přívlastek shodný
-  { text: "kočka", type: "po" }, // podmět
-  { text: "s flíčky", type: "pkn" }, // přívlastek neshodný
-  { text: "včera", type: "puč" }, // příslovečné určení času
-  { text: "na zahradě", type: "pum" }, // příslovečné určení místa
-  { text: "z hladu", type: "pu příčiny" }, // příslovečné určení příčiny
-  { text: "velmi", type: "pu míry" }, // příslovečné určení míry
-  { text: "obratně", type: "puz" }, // příslovečné určení způsobu
-  { text: "ulovila", type: "př" }, // přísudek
-  { text: "myš", type: "pt" } // předmět
+  { text: "Bílá", type: "pks" },
+  { text: "kočka", type: "po" },
+  { text: "s flíčky", type: "pkn" },
+  { text: "včera", type: "puč" },
+  { text: "na zahradě", type: "pum" },
+  { text: "z hladu", type: "pu příčiny" },
+  { text: "velmi", type: "pu míry" },
+  { text: "obratně", type: "puz" },
+  { text: "ulovila", type: "př" },
+  { text: "myš", type: "pt" }
 ]
 
 const tutorialTypesOrder: {type: WordType, explanation: string}[] = [
@@ -70,115 +68,293 @@ export default function SentenceExample() {
 
   useEffect(() => {
     setTargetType(tutorialTypesOrder[typeIndex].type)
+    console.log('Target type set to:', tutorialTypesOrder[typeIndex].type);
   }, [typeIndex])
 
-  const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
+  const getProgressText = () => {
+    const completed = typeIndex;
+    const total = tutorialTypesOrder.length;
+    return `${completed}/${total}`;
+  };
 
-  const toggleExpanded = useCallback((key: string) => {
-    // Configure layout animation for smooth expand/collapse
-    LayoutAnimation.configureNext({
-      duration: 300,
-      create: {
-        type: LayoutAnimation.Types.easeInEaseOut,
-        property: LayoutAnimation.Properties.opacity,
-      },
-      update: {
-        type: LayoutAnimation.Types.easeInEaseOut,
-        property: LayoutAnimation.Properties.scaleY,
-        springDamping: 0.7,
-      },
-      delete: {
-        type: LayoutAnimation.Types.easeInEaseOut,
-        property: LayoutAnimation.Properties.opacity,
-      },
-    });
-
-    setExpandedItems(prev => {
-      const newExpanded = new Set(prev);
-      if (newExpanded.has(key)) {
-        newExpanded.delete(key);
-      } else {
-        newExpanded.add(key);
-      }
-      return newExpanded;
-    });
-  }, []);
 
   return (
-    <PageWrapper padding>
-      <ThemedText>{tutorialTypesOrder[typeIndex].explanation}</ThemedText>
-      <WordButtonsContainer
-        buttons={buttons}
-        showTooltip={false}
-        longPress={() => { }}
-        onClick={(button, index) => {
-          if (button.type === targetType?.type) {
-            let newIndex = typeIndex
-            while (newIndex++ < tutorialTypesOrder.length && tutorialSentence.find(item => item.type === tutorialTypesOrder[newIndex].type) === undefined) { }
+    <PageWrapper>
+      <View style={styles.headerRow}>
+        <ThemedText style={styles.heading}>Výukový příklad</ThemedText>
+        <View style={styles.progressContainer}>
+          <ThemedText style={styles.progressText}>{getProgressText()}</ThemedText>
+        </View>
+      </View>
 
-            setTypeIndex(newIndex)
-            setIncorrectType(null)
+      <ScrollView style={styles.container} contentContainerStyle={styles.content}>
 
-            setButtons(prevButtons => {
-              const newButtons = [...prevButtons];
-              newButtons[index] = {
-                ...newButtons[index],
-                drawType: true,
-                state: ButtonState.correct
-              };
-              return newButtons;
-            });
+        {/* Current Task Section */}
+        {targetType?.type && (
+          <View style={styles.taskSection}>
 
-          } else {
-            setIncorrectType([targetType?.type || "", button.text, button.type || ""])
-          }
-        }}
-      />
-      {
-        targetType?.type &&
-        <>
-          <TargetTypeDisplay text='Vyber' />
-          <WordTypeCard
-            wordType={GetWordTypeByAbbr(targetType?.type)}
-            index={0}
-            expandedItems={expandedItems}
-            onToggleExpanded={toggleExpanded}
+            <TargetTypeDisplay text='Vyber' />
+
+            <View style={styles.explanationContainer}>
+              <ThemedText style={styles.explanationText}>
+                {tutorialTypesOrder[typeIndex].explanation}
+              </ThemedText>
+            </View>
+          </View>
+        )}
+
+        {/* Sentence Container */}
+        <View style={styles.sentenceContainer}>
+          <WordButtonsContainer
+            buttons={buttons}
+            showTooltip={false}
+            longPress={() => { }}
+            onClick={(button, index) => {
+              if (button.type === targetType?.type) {
+                let newIndex = typeIndex + 1;
+                while (newIndex < tutorialTypesOrder.length &&
+                  tutorialSentence.find(item => item.type === tutorialTypesOrder[newIndex].type) === undefined) {
+                  newIndex++;
+                }
+
+                setTypeIndex(newIndex);
+                setIncorrectType(null);
+
+                setButtons(prevButtons => {
+                  const newButtons = [...prevButtons];
+                  newButtons[index] = {
+                    ...newButtons[index],
+                    drawType: true,
+                    state: ButtonState.correct
+                  };
+                  return newButtons;
+                });
+
+              } else {
+                setIncorrectType([targetType?.type || "", button.text, button.type || ""])
+              }
+            }}
           />
+        </View>
+
+        <View style={styles.buttonContainer}>
           <PlayfulButton
             title="Potřebuju poradit"
+            icon={<MaterialIcons name="help-outline" size={22} color="white" />}
             onPress={() => {
               alert('This will display tutorial sooner or later')
             }}
+            variant="secondary"
+            style={styles.helpButton}
           />
-        </>
-      }
-      {
-        !targetType?.type &&
-        <>
-          <ThemedText>Tutoriál dokončen</ThemedText>
-          <PlayfulButton
-            title="Zkusit znovu"
-            onPress={() => {
-              setTypeIndex(0);
-              setButtons(buildButtons(tutorialSentence));
-              setIncorrectType(null);
-            }}
-          />
-        </>
-      }
+        </View>
 
+        {/* Completion Section */}
+        {!targetType?.type && (
+          <View style={styles.completionSection}>
+            <View style={styles.completionContainer}>
+              <MaterialIcons name="check-circle" size={48} color="#4CAF50" style={styles.completionIcon} />
+              <ThemedText style={styles.completionTitle}>Skvěle!</ThemedText>
+              <ThemedText style={styles.completionText}>Tutoriál byl úspěšně dokončen.</ThemedText>
+              
+              <View style={styles.buttonContainer}>
+                <PlayfulButton
+                  title="Zkusit znovu"
+                  icon={<MaterialIcons name="refresh" size={22} color="white" />}
+                  onPress={() => {
+                    setTypeIndex(0);
+                    setButtons(buildButtons(tutorialSentence));
+                    setIncorrectType(null);
+                  }}
+                  style={styles.restartButton}
+                />
+              </View>
+            </View>
+          </View>
+        )}
+      </ScrollView>
+
+      {/* Error Modal */}
       <ModalWrapper
         visible={!!incorrectType}
         onClose={() => setIncorrectType(null)}
       >
-        <ThemedText>To není správně. Odpověď pro slovo {incorrectType && incorrectType[1]} je: {incorrectType && incorrectType[2]} a ne {targetType && targetType.type }</ThemedText>
-        <PlayfulButton
-          title="Tutoriál"
-          onPress={() => {
-            alert('This will display tutorial sooner or later')
-          }}
-        />
+        <View style={styles.modalContent}>
+          <MaterialIcons name="error-outline" size={32} color="#f44336" style={styles.modalIcon} />
+          <ThemedText style={styles.modalTitle}>Nepřesná odpověď</ThemedText>
+          <ThemedText style={styles.modalText}>
+            Slovo "{incorrectType && incorrectType[1]}" je typu "{incorrectType && incorrectType[2]}", 
+            ne "{targetType && targetType.type}".
+          </ThemedText>
+          <View style={styles.modalButtonContainer}>
+            <PlayfulButton
+              title="Tutoriál"
+              icon={<MaterialIcons name="school" size={22} color="white" />}
+              onPress={() => {
+                alert('This will display tutorial sooner or later')
+              }}
+              style={styles.modalButton}
+              variant="secondary"
+            />
+          </View>
+        </View>
       </ModalWrapper>
     </PageWrapper>
   )
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#101223',
+  },
+  content: {
+    padding: 20,
+  },
+  headerRow: {
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingTop: 20,
+    paddingBottom: 10,
+    paddingHorizontal: 20,
+  },
+  heading: {
+    color: '#FFF',
+    fontSize: 24,
+    fontWeight: 'bold',
+    flex: 1,
+  },
+  progressContainer: {
+    backgroundColor: '#1c1f3d',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 12,
+  },
+  progressText: {
+    color: '#aaa',
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  progressBarContainer: {
+    marginBottom: 24,
+  },
+  progressBarBackground: {
+    height: 6,
+    backgroundColor: '#1c1f3d',
+    borderRadius: 3,
+    overflow: 'hidden',
+  },
+  progressBarFill: {
+    height: '100%',
+    backgroundColor: '#4CAF50',
+    borderRadius: 3,
+  },
+  sentenceContainer: {
+    backgroundColor: '#1c1f3d',
+    borderRadius: 16,
+    padding: 20,
+    marginBottom: 16,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 2,
+  },
+  sentenceLabel: {
+    color: '#aaa',
+    fontSize: 16,
+    marginBottom: 16,
+    fontWeight: '600',
+  },
+  taskSection: {
+    marginBottom: 24,
+  },
+  explanationContainer: {
+    backgroundColor: '#1c1f3d',
+    borderRadius: 16,
+    padding: 20,
+    borderLeftWidth: 4,
+    borderLeftColor: '#4CAF50',
+    marginTop: 16,
+  },
+  explanationText: {
+    color: '#FFF',
+    fontSize: 16,
+    lineHeight: 24,
+  },
+  buttonContainer: {
+    alignItems: 'center',
+    marginBottom: 24,
+  },
+  helpButton: {
+    marginVertical: 4,
+  },
+  completionSection: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 40,
+  },
+  completionContainer: {
+    backgroundColor: '#1c1f3d',
+    borderRadius: 16,
+    padding: 32,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 2,
+    width: '100%',
+  },
+  completionIcon: {
+    marginBottom: 16,
+  },
+  completionTitle: {
+    color: '#FFF',
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+  completionText: {
+    color: '#aaa',
+    fontSize: 16,
+    textAlign: 'center',
+    marginBottom: 24,
+    lineHeight: 22,
+  },
+  restartButton: {
+    marginVertical: 4,
+  },
+  modalContent: {
+    alignItems: 'center',
+    padding: 8,
+  },
+  modalIcon: {
+    marginBottom: 16,
+  },
+  modalTitle: {
+    color: '#FFF',
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 12,
+    textAlign: 'center',
+  },
+  modalText: {
+    color: '#aaa',
+    fontSize: 16,
+    textAlign: 'center',
+    lineHeight: 22,
+    marginBottom: 24,
+  },
+  modalButtonContainer: {
+    width: '100%',
+    alignItems: 'center',
+  },
+  modalButton: {
+    marginVertical: 4,
+  },
+});
