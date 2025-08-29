@@ -20,6 +20,8 @@ import PageWrapper from "@/components/PageWrapper";
 import ModalWrapper from "@/components/modals/ModalWrapper";
 import { WordButtonType } from "@/types/games/WordButtonType";
 import { MaterialIcons } from '@expo/vector-icons';
+import { useTutorialContext } from "@/contexts/TutorialContext";
+import { useRouter } from "expo-router";
 
 const tutorialSentence: WordSelectionOption[] = [
   { text: "Bílá", type: "pks" },
@@ -34,17 +36,17 @@ const tutorialSentence: WordSelectionOption[] = [
   { text: "myš", type: "pt" }
 ]
 
-const tutorialTypesOrder: {type: WordType, explanation: string}[] = [
-  {type: "po", explanation: "Podmět – kdo nebo co vykonává děj ve větě."},
-  {type: "př", explanation: "Přísudek – co podmět dělá nebo co se s ním děje."},
-  {type: "pt", explanation: "Předmět – koho nebo co se děj týká."},
-  {type: "pks", explanation: "Přívlastek shodný – rozvíjí podstatné jméno a shoduje se s ním v pádě, čísle a rodě."},
-  {type: "pkn", explanation: "Přívlastek neshodný – rozvíjí podstatné jméno, ale neshoduje se s ním v pádě, čísle a rodě."},
-  {type: "puč", explanation: "Příslovečné určení času – vyjadřuje, kdy se děj odehrává."},
-  {type: "pum", explanation: "Příslovečné určení místa – vyjadřuje, kde se děj odehrává."},
-  {type: "pu příčiny", explanation: "Příslovečné určení příčiny – vyjadřuje, proč se děj odehrává."},
-  {type: "pu míry", explanation: "Příslovečné určení míry – vyjadřuje, v jaké míře nebo intenzitě se děj odehrává."},
-  {type: "puz", explanation: "Příslovečné určení způsobu – vyjadřuje, jakým způsobem se děj odehrává."}
+const tutorialTypesOrder: { type: WordType, explanation: string }[] = [
+  { type: "po", explanation: "Podmět – kdo nebo co vykonává děj ve větě." },
+  { type: "př", explanation: "Přísudek – co podmět dělá nebo co se s ním děje." },
+  { type: "pt", explanation: "Předmět – koho nebo co se děj týká." },
+  { type: "pks", explanation: "Přívlastek shodný – rozvíjí podstatné jméno a shoduje se s ním v pádě, čísle a rodě." },
+  { type: "pkn", explanation: "Přívlastek neshodný – rozvíjí podstatné jméno, ale neshoduje se s ním v pádě, čísle a rodě." },
+  { type: "puč", explanation: "Příslovečné určení času – vyjadřuje, kdy se děj odehrává." },
+  { type: "pum", explanation: "Příslovečné určení místa – vyjadřuje, kde se děj odehrává." },
+  { type: "pu příčiny", explanation: "Příslovečné určení příčiny – vyjadřuje, proč se děj odehrává." },
+  { type: "pu míry", explanation: "Příslovečné určení míry – vyjadřuje, v jaké míře nebo intenzitě se děj odehrává." },
+  { type: "puz", explanation: "Příslovečné určení způsobu – vyjadřuje, jakým způsobem se děj odehrává." }
 ];
 
 export default function SentenceExample() {
@@ -52,6 +54,10 @@ export default function SentenceExample() {
   const [typeIndex, setTypeIndex] = React.useState(0)
   const [incorrectType, setIncorrectType] = React.useState<string[] | null>(null)
   const [buttons, setButtons] = useState<WordButtonType[]>([]);
+
+  const { setSentence, setWordId, reset } = useTutorialContext();
+
+  const router = useRouter();
 
   function buildButtons(sentence: WordSelectionOption[]): WordButtonType[] {
     return sentence.map((item) => ({
@@ -67,8 +73,8 @@ export default function SentenceExample() {
   }, []);
 
   useEffect(() => {
-    setTargetType(tutorialTypesOrder[typeIndex].type)
-    console.log('Target type set to:', tutorialTypesOrder[typeIndex].type);
+    setTargetType(tutorialTypesOrder[typeIndex]?.type)
+    console.log('Target type set to:', tutorialTypesOrder[typeIndex]?.type);
   }, [typeIndex])
 
   const getProgressText = () => {
@@ -77,6 +83,12 @@ export default function SentenceExample() {
     return `${completed}/${total}`;
   };
 
+  const OpenTutorialOnCurrentWord = () => {
+    setSentence(tutorialSentence);
+    setWordId(tutorialSentence.findIndex(item => item.type === targetType?.type));
+    router.push('/tutorial');
+    reset()
+  };
 
   return (
     <PageWrapper>
@@ -89,15 +101,39 @@ export default function SentenceExample() {
 
       <ScrollView style={styles.container} contentContainerStyle={styles.content}>
 
+        {/* Completion Section */}
+        {!targetType?.type && (
+          <View style={styles.completionSection}>
+            <View style={styles.completionContainer}>
+              <MaterialIcons name="check-circle" size={48} color="#4CAF50" style={styles.completionIcon} />
+              <ThemedText style={styles.completionTitle}>Skvěle!</ThemedText>
+              <ThemedText style={styles.completionText}>Tutoriál byl úspěšně dokončen.</ThemedText>
+
+              <View style={styles.buttonContainer}>
+                <PlayfulButton
+                  title="Zkusit znovu"
+                  icon={<MaterialIcons name="refresh" size={22} color="white" />}
+                  onPress={() => {
+                    setTypeIndex(0);
+                    setButtons(buildButtons(tutorialSentence));
+                    setIncorrectType(null);
+                  }}
+                  style={styles.restartButton}
+                />
+              </View>
+            </View>
+          </View>
+        )}
+
         {/* Current Task Section */}
         {targetType?.type && (
           <View style={styles.taskSection}>
 
             <TargetTypeDisplay text='Vyber' />
 
-            <View style={styles.explanationContainer}>
+            <View style={[styles.explanationContainer, { borderColor: GetWordTypeByAbbr(targetType.type)?.color || '#4CAF50' }]}>
               <ThemedText style={styles.explanationText}>
-                {tutorialTypesOrder[typeIndex].explanation}
+                {tutorialTypesOrder[typeIndex]?.explanation}
               </ThemedText>
             </View>
           </View>
@@ -110,6 +146,11 @@ export default function SentenceExample() {
             showTooltip={false}
             longPress={() => { }}
             onClick={(button, index) => {
+
+              if (!targetType?.type) {
+                return
+              }
+
               if (button.type === targetType?.type) {
                 let newIndex = typeIndex + 1;
                 while (newIndex < tutorialTypesOrder.length &&
@@ -137,39 +178,15 @@ export default function SentenceExample() {
           />
         </View>
 
-        <View style={styles.buttonContainer}>
-          <PlayfulButton
-            title="Potřebuju poradit"
-            icon={<MaterialIcons name="help-outline" size={22} color="white" />}
-            onPress={() => {
-              alert('This will display tutorial sooner or later')
-            }}
-            variant="secondary"
-            style={styles.helpButton}
-          />
-        </View>
-
-        {/* Completion Section */}
-        {!targetType?.type && (
-          <View style={styles.completionSection}>
-            <View style={styles.completionContainer}>
-              <MaterialIcons name="check-circle" size={48} color="#4CAF50" style={styles.completionIcon} />
-              <ThemedText style={styles.completionTitle}>Skvěle!</ThemedText>
-              <ThemedText style={styles.completionText}>Tutoriál byl úspěšně dokončen.</ThemedText>
-              
-              <View style={styles.buttonContainer}>
-                <PlayfulButton
-                  title="Zkusit znovu"
-                  icon={<MaterialIcons name="refresh" size={22} color="white" />}
-                  onPress={() => {
-                    setTypeIndex(0);
-                    setButtons(buildButtons(tutorialSentence));
-                    setIncorrectType(null);
-                  }}
-                  style={styles.restartButton}
-                />
-              </View>
-            </View>
+        {targetType?.type && (
+          <View style={styles.buttonContainer}>
+            <PlayfulButton
+              title="Potřebuju poradit"
+              icon={<MaterialIcons name="help-outline" size={22} color="white" />}
+              onPress={OpenTutorialOnCurrentWord}
+              variant="secondary"
+              style={styles.helpButton}
+            />
           </View>
         )}
       </ScrollView>
@@ -183,16 +200,14 @@ export default function SentenceExample() {
           <MaterialIcons name="error-outline" size={32} color="#f44336" style={styles.modalIcon} />
           <ThemedText style={styles.modalTitle}>Nepřesná odpověď</ThemedText>
           <ThemedText style={styles.modalText}>
-            Slovo "{incorrectType && incorrectType[1]}" je typu "{incorrectType && incorrectType[2]}", 
+            Slovo "{incorrectType && incorrectType[1]}" je typu "{incorrectType && incorrectType[2]}",
             ne "{targetType && targetType.type}".
           </ThemedText>
           <View style={styles.modalButtonContainer}>
             <PlayfulButton
               title="Tutoriál"
               icon={<MaterialIcons name="school" size={22} color="white" />}
-              onPress={() => {
-                alert('This will display tutorial sooner or later')
-              }}
+              onPress={OpenTutorialOnCurrentWord}
               style={styles.modalButton}
               variant="secondary"
             />
@@ -276,7 +291,6 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     padding: 20,
     borderLeftWidth: 4,
-    borderLeftColor: '#4CAF50',
     marginTop: 16,
   },
   explanationText: {
@@ -295,7 +309,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 40,
+    marginBottom: 20,
   },
   completionContainer: {
     backgroundColor: '#1c1f3d',

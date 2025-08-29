@@ -15,6 +15,7 @@ import React from 'react';
 import { LevelProvider } from '@/contexts/levelContext';
 import { FileSystemStuffProvider } from '@/contexts/FileSystemStuffContext';
 import { CommonMistakesProvider } from '@/contexts/CommonMistakesContext';
+import { TutorialProvider } from '@/contexts/TutorialContext';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -46,14 +47,16 @@ export default function RootLayout() {
               <MultiplayerGameProvider>
                 <CommonMistakesProvider>
                   <GameProvider>
-                    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-                      <Stack screenOptions={{ headerShown: false }}>
-                        <Stack.Screen name="(tabs)" />
-                        <Stack.Screen name="+not-found" />
-                        <Stack.Screen name="games/game" />
-                      </Stack>
-                      <StatusBar style="light" translucent backgroundColor='transparent' />
-                    </ThemeProvider>
+                    <TutorialProvider>
+                      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+                        <Stack screenOptions={{ headerShown: false }}>
+                          <Stack.Screen name="(tabs)" />
+                          <Stack.Screen name="+not-found" />
+                          <Stack.Screen name="games/game" />
+                        </Stack>
+                        <StatusBar style="light" translucent backgroundColor='transparent' />
+                      </ThemeProvider>
+                    </TutorialProvider>
                   </GameProvider>
                 </CommonMistakesProvider>
               </MultiplayerGameProvider>

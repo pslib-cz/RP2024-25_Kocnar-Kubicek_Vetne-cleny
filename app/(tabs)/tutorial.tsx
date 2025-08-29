@@ -1,18 +1,60 @@
 import QuestionRow from '@/components/ui/tutorial/QuestionRow'
 import PlayfulButton from '@/components/ui/PlayfulButton'
 import { useTutorial } from '@/hooks/useTutorial'
+import { useTutorialContext } from '@/contexts/TutorialContext'
 import { StatusBar } from 'expo-status-bar'
 import React from 'react';
-import { SafeAreaView, StyleSheet, Text, View } from 'react-native'
+import { Alert, SafeAreaView, StyleSheet, Text, View } from 'react-native'
 import PageWrapper from '@/components/PageWrapper';
 
 export default function Tutorial() {
-  const { usedNodes, currentNode, AddNode, reset } = useTutorial();
+
+  const { sentence, wordId, AddNode, reset, pathExists, currentNode, usedNodes } = useTutorialContext();
+
+  const getSelectedWord = (): string => {
+    if (!sentence || wordId === null) return '';
+    return sentence[wordId]?.text || '';
+  };
+
+  const renderSentence = () => {
+    if (!sentence) return null;
+
+    return (
+      <View style={styles.sentenceContainer}>
+        <Text style={styles.sentenceLabel}>Věta:</Text>
+        <View style={styles.sentenceTextContainer}>
+          {sentence.map((word, index) => (
+            <Text
+              key={index}
+              style={[
+                styles.normalWord,
+                index === wordId && styles.highlightedWord
+              ]}
+            >
+              {word.text}{' '}
+            </Text>
+          ))}
+        </View>
+      </View>
+    );
+  };
+
+  const onButtonClicked = (yes: boolean) => {
+    if (sentence && wordId && !pathExists(currentNode, sentence[wordId].type, yes)) {
+      Alert.alert("To nebude správně");
+      return
+    }
+
+    AddNode(currentNode, yes);
+  };
 
   return (
     <PageWrapper>
       <StatusBar style="light" />
       <View style={styles.verticalLine} />
+
+      {/* Display the sentence with highlighted word */}
+      {renderSentence()}
 
       <View style={styles.questionSection}>
         {
@@ -27,7 +69,9 @@ export default function Tutorial() {
       </View>
 
       <View style={styles.mainContent}>
-        <Text style={styles.subHeading}>Odpovídáním přijdeš na větný člen slova.</Text>
+        <Text style={styles.subHeading}>
+          Odpovídáním přijdeš na větný člen slova{getSelectedWord() ? ` "${getSelectedWord()}"` : ''}.
+        </Text>
         <Text style={styles.mainHeading}>{currentNode.node.title}</Text>
       </View>
 
@@ -37,11 +81,11 @@ export default function Tutorial() {
           <>
             {
               currentNode.node.yesNode &&
-              <PlayfulButton title="ANO" variant="success" style={{ width: '50%' }} onPress={() => AddNode(currentNode, true)} />
+              <PlayfulButton title="ANO" variant="success" style={{ width: '50%' }} onPress={() => onButtonClicked(true)} />
             }
             {
               currentNode.node.noNode &&
-              <PlayfulButton title="NE" variant="danger" style={{ width: '50%' }} onPress={() => AddNode(currentNode, false)} />
+              <PlayfulButton title="NE" variant="danger" style={{ width: '50%' }} onPress={() => onButtonClicked(false)} />
             }
           </>
         }
@@ -120,6 +164,36 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     marginBottom: 0,
+  },
+  sentenceContainer: {
+    width: '100%',
+    paddingHorizontal: 20,
+    marginVertical: 15,
+    backgroundColor: '#1c1f3d',
+    borderRadius: 12,
+    padding: 16,
+  },
+  sentenceLabel: {
+    color: '#aaa',
+    fontSize: 14,
+    marginBottom: 8,
+    fontWeight: '600',
+  },
+  sentenceTextContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  normalWord: {
+    color: '#FFF',
+    fontSize: 16,
+    lineHeight: 24,
+  },
+  highlightedWord: {
+    color: '#ffffffff',
+    fontWeight: 'bold',
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    paddingHorizontal: 4,
+    borderRadius: 4,
   },
 });
 

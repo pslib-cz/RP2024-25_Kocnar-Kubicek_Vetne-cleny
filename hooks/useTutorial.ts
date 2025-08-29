@@ -1,8 +1,9 @@
 import React from "react";
 import tutorialStart from '@/data/tutorialTree'
 import { TutorialNode } from "@/types/tutorialNode";
+import { TranslateWordType } from "@/constants/WordTypes";
 
-interface TutorialRuntimeNode{
+export interface TutorialRuntimeNode{
   node: TutorialNode;
   yes: boolean;
 }
@@ -75,5 +76,15 @@ export const useTutorial = () => {
     setCurrentNode(currentNode);
   }
 
-  return {usedNodes, currentNode, AddNode, reset, setPath};
+  function pathExists(currentNode: TutorialRuntimeNode, title: string, yes : boolean): boolean {
+    function dfs(node: TutorialNode | null): boolean {
+      console.log("DFS checking node:", node?.title, "with title:", TranslateWordType(title).toUpperCase());
+      if (!node) return false;
+      if (node.title === TranslateWordType(title).toUpperCase()) return true;
+      return dfs(node.yesNode) || dfs(node.noNode);
+    }
+    return yes ? dfs(currentNode.node.yesNode) : dfs(currentNode.node.noNode);
+  }
+
+  return {usedNodes, currentNode, AddNode, reset, setPath, pathExists};
 }

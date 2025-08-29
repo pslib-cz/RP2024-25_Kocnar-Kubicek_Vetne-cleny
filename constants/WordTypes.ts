@@ -6,6 +6,11 @@ interface WordTypeExt{
   color: string;
 }
 
+export function TranslateWordType(type: String): string {
+  const wordType = WordTypes.find((wordType) => wordType.abbr === type);
+  return wordType ? wordType.name : 'Unknown';
+}
+
 export const WordTypes: WordTypeExt[] = [
   {
     name: 'podmět',
