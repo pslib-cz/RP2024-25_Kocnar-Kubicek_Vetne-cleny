@@ -93,10 +93,6 @@ export default function GDPRPage() {
 }
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: '#101223',
-  },
   container: {
     flex: 1,
     backgroundColor: '#101223',

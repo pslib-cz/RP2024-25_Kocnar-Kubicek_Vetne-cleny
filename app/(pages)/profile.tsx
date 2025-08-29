@@ -237,10 +237,6 @@ export default function ProfileEditScreen(): React.ReactElement {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#101223',
-  },
   header: {
     flexDirection: 'row',
     paddingHorizontal: 16,
