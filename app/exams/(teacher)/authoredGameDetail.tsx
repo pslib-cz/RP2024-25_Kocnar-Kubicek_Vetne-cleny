@@ -14,6 +14,7 @@ import { questionGenerator } from '@/utils/QuestionsGenerator/questionGenerator'
 import { useLoadedData } from '@/hooks/useData';
 import { Question } from '@/types/Question';
 import Constants from 'expo-constants';
+import PageWrapper from '@/components/PageWrapper';
 type RootStackParamList = {
   AuthoredGameDetail: {
     gameId: string;
@@ -141,17 +142,17 @@ export default function AuthoredGameDetail() {
 
   if (loading) {
     return (
-      <SafeAreaView style={styles.container}>
+      <PageWrapper>
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#ffffff" />
         </View>
-      </SafeAreaView>
+      </PageWrapper>
     );
   }
 
   if (!game) {
     return (
-      <SafeAreaView style={styles.container}>
+      <PageWrapper>
         <View style={styles.header}>
           <View style={{ flex: 1 }}>
             <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }} onPress={() => router.back()}>
@@ -165,7 +166,7 @@ export default function AuthoredGameDetail() {
         <View style={styles.errorContainer}>
           <Text style={styles.errorText}>Hra s tímto ID nebyla nalezena</Text>
         </View>
-      </SafeAreaView>
+      </PageWrapper>
     );
   }
 
@@ -178,7 +179,7 @@ export default function AuthoredGameDetail() {
     : 0;
 
   return (
-    <SafeAreaView style={styles.container}>
+    <PageWrapper>
       {/* Header */}
       <View style={styles.header}>
         <View style={{ flex: 1 }}>
@@ -481,7 +482,7 @@ export default function AuthoredGameDetail() {
           </View>
         )}
       </ScrollView>
-    </SafeAreaView>
+    </PageWrapper>
   );
 };
 

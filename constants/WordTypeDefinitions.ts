@@ -25,6 +25,13 @@ export interface Example{
   explanation?: string;
 }
 
+export function GetWordTypeByAbbr(abbr: string): WordTypeExplanation | undefined {
+  return WordTypes.flatMap(wt => [
+    wt,
+    ...(wt.types ?? [])
+  ]).find(wt => wt.abbr === abbr);
+}
+
 export const WordTypes: WordTypeExplanation[] = [
   {
     name: 'podmět',
@@ -164,7 +171,7 @@ export const WordTypes: WordTypeExplanation[] = [
             highlightedSection: "krásná"
           },
           {
-            sentence: "s krásnou ženou,",
+            sentence: "s krásnou ženou",
             highlightedSection: "s krásnou"
           }
         ]

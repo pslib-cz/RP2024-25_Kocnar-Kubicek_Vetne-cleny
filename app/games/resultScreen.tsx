@@ -1,11 +1,13 @@
 import React from 'react';
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
-import { FontAwesome, MaterialIcons } from '@expo/vector-icons';
+import { StyleSheet, View, Text } from 'react-native';
+import { MaterialIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { NEXT_LEVEL_TRESHOLD, useGameContext } from '@/contexts/GameContext';
 import PlanetView from '@/components/PlanetView';
 import { useMultiplayerGameContext } from '@/contexts/MultiplayerGameContext';
 import { GameType } from '@/types/GameType';
+import PlayfulButton from '@/components/ui/PlayfulButton';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const PracticeCompleteScreen = () => {
   const navigation = useRouter();
@@ -46,7 +48,7 @@ const PracticeCompleteScreen = () => {
 
   const resultScreenPractice = () => {
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <PlanetView displayName={false} />
 
         <Text style={styles.title}>{successRate >= NEXT_LEVEL_TRESHOLD ? "Úroveň dokončena!" : "Úroveň nesplněna!"}</Text>
@@ -57,15 +59,21 @@ const PracticeCompleteScreen = () => {
           <ResultStuff text="Úspěšnost" value={`${successRate.toFixed(1)}%`} color={successRateColor} icon="star" />
         </View>
 
-        <Button title={successRate >= NEXT_LEVEL_TRESHOLD ? "Další level" : "Zkusit znovu"} filled={true} onPress={newGameInArena} />
-        <Button title="Domů" filled={false} onPress={() => navigation.replace('/' as never)} />
-      </View>
+        <View style={styles.buttonContainer}>
+          <View style={[styles.buttonWrapper, { flex: 3 }]}>
+            <PlayfulButton variant='custom' title={successRate >= NEXT_LEVEL_TRESHOLD ? "Další mise" : "Zkusit znovu"} onPress={newGameInArena} customColors={[successRateColor, successRateColor]} />
+          </View>
+          <View style={[styles.buttonWrapper, { flex: 2 }]}>
+            <PlayfulButton title="Domů" onPress={() => navigation.replace('/' as never)} />
+          </View>
+        </View>
+      </SafeAreaView>
     )
   }
 
   const resultScreenMultiplayer = () => {
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <Text style={styles.title}>
           Test dokončen!
         </Text>
@@ -75,15 +83,14 @@ const PracticeCompleteScreen = () => {
           <ResultStuff text="Úspěšnost" value={`${successRate.toFixed(2)}%`} color={successRateColor} icon="star" />
         </View>
 
-        {/* <Button title={successRate >= NEXT_LEVEL_TRESHOLD ? "Další level" : "Zkusit znovu"} filled={true} onPress={newGameWithCount} /> */}
-        <Button title="Domů" filled={false} onPress={() => navigation.replace('/' as never)} />
-      </View>
+        <PlayfulButton title="Domů" onPress={() => navigation.replace('/' as never)} />
+      </SafeAreaView>
     )
   }
 
   const commonMistakesScreen = () => {
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <Text style={[styles.title, { textAlign: 'center' }]}>
           Procvičování chyb dokončeno!
         </Text>
@@ -93,9 +100,9 @@ const PracticeCompleteScreen = () => {
           <ResultStuff text="Úspešnost" value={`${successRate.toFixed(2)}%`} color={successRateColor} icon="star" />
         </View>
 
-        <Button title={"Zkusit znovu"} filled={true} onPress={newGameWitMostCommonMistakes} />
-        <Button title="Domů" filled={false} onPress={() => navigation.replace('/' as never)} />
-      </View>
+        <PlayfulButton title={"Zkusit znovu"} onPress={newGameWitMostCommonMistakes} />
+        <PlayfulButton title="Domů" onPress={() => navigation.replace('/' as never)} />
+      </SafeAreaView>
     )
   }
 
@@ -111,27 +118,12 @@ const PracticeCompleteScreen = () => {
   }
 };
 
-function Button({ title, filled, onPress }: { title: string, filled: boolean, onPress: () => void }) {
-  return (
-    <TouchableOpacity
-      style={[
-        styles.continueButton,
-        filled ? styles.buttonFilled : null
-      ]}
-      onPress={onPress}
-    >
-      <Text style={styles.continueButtonText}>{title}</Text>
-    </TouchableOpacity>
-  );
-}
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'space-around',
     alignItems: 'center',
     padding: 20,
-    paddingVertical: 40,
     backgroundColor: '#101223',
   },
   title: {
@@ -188,6 +180,15 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 18,
     fontWeight: 'bold',
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    gap: 10,
+  },
+  buttonWrapper: {
+    flex: 1,
   },
 });
 

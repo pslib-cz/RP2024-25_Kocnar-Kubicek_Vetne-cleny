@@ -10,7 +10,8 @@ import React from 'react';
 import { Pressable, SafeAreaView, ScrollView, View } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { useMultiplayerGameContext } from '@/contexts/MultiplayerGameContext';
-import AndroidSafeArea from '@/components/AndroidSafeArea';
+import PageWrapper from '@/components/PageWrapper';
+
 export default function CommonMistakes() {
   const { newGameWitMostCommonMistakes } = useGameContext()
   const { allMistakes } = useCommonMistakesContext();
@@ -51,7 +52,7 @@ export default function CommonMistakes() {
   }
 
   return (
-    <SafeAreaView style={[AndroidSafeArea.AndroidSafeArea, { flex: 1, paddingHorizontal: 16, gap: 16, justifyContent: 'center', backgroundColor: '#101223' }]}>
+    <PageWrapper>
       <SentenceDetailModal
         visible={displayedSentence !== null}
         onClose={() => { setDisplayedSentence(null) }}
@@ -74,7 +75,7 @@ export default function CommonMistakes() {
           disabled={allMistakes.length === 0}
         />
       </View>
-    </SafeAreaView>
+    </PageWrapper>
   );
 }
 

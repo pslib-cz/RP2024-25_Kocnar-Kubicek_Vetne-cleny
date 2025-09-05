@@ -7,7 +7,7 @@ import PlayfulButton from '@/components/ui/PlayfulButton';
 import Constants from 'expo-constants';
 import datasetVersion from '@/data/sheets/version.json';
 import { useLoadedData } from '@/hooks/useData';
-import AndroidSafeArea from '@/components/AndroidSafeArea';
+import PageWrapper from '@/components/PageWrapper';
 
 export default function AboutPage() {
   const router = useRouter();
@@ -23,7 +23,7 @@ export default function AboutPage() {
   const [devEnabled, setDevEnabled] = React.useState(false);
 
   return (
-    <SafeAreaView style={[styles.safeArea, AndroidSafeArea.AndroidSafeArea]}>
+    <PageWrapper>
       <View style={styles.headerRow}>
         <ThemedText style={styles.heading}>O aplikaci</ThemedText>
       </View>
@@ -75,15 +75,11 @@ export default function AboutPage() {
           }
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </PageWrapper>
   );
 }
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: '#101223',
-  },
   container: {
     flex: 1,
     backgroundColor: '#101223',

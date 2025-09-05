@@ -11,8 +11,8 @@ import { galaxyImages } from '@/data/galaxyImages';
 import { useGameContext } from '@/contexts/GameContext';
 import { ThemedText } from '@/components/ThemedText';
 import { galaxies } from '@/components/ArenaHeader';
-import AndroidSafeArea from '@/components/AndroidSafeArea';
 import { GameType } from '@/types/GameType';
+import PageWrapper from '@/components/PageWrapper';
 
 export default function JoinGameScreen() {
   const [code, setCode] = useState('');
@@ -160,7 +160,7 @@ export default function JoinGameScreen() {
   }
 
   return (
-    <SafeAreaView style={[styles.safeArea, AndroidSafeArea.AndroidSafeArea]}>
+    <PageWrapper>
       <View style={{ flexDirection: 'row', alignItems: 'center', marginHorizontal: 20, marginTop: 20 }}>
         <View style={{ flex: 1 }}>
           <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }} onPress={() => router.back()}>
@@ -211,15 +211,11 @@ export default function JoinGameScreen() {
             <JoinGameDetail />
           )}
       </View>
-    </SafeAreaView>
+    </PageWrapper>
   );
 }
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: '#101223',
-  },
   container: {
     flex: 1,
     backgroundColor: '#101223',

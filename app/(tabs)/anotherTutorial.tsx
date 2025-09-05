@@ -3,8 +3,8 @@ import { View, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity, Animated,
 import { useRouter } from 'expo-router';
 import { MaterialIcons } from '@expo/vector-icons';
 import { ThemedText } from '@/components/ThemedText';
-import AndroidSafeArea from '@/components/AndroidSafeArea';
 import { Example, WordTypeExplanation, WordTypes } from '@/constants/WordTypeDefinitions';
+import PageWrapper from '@/components/PageWrapper';
 
 // Enable LayoutAnimation on Android
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
@@ -123,7 +123,7 @@ const AnimatedBulletPoint = React.memo(({ text, delay = 0, isVisible }: { text: 
 });
 
 // Separate component for word type cards
-const WordTypeCard = React.memo(({ wordType, index, expandedItems, onToggleExpanded }: { 
+export const WordTypeCard = React.memo(({ wordType, index, expandedItems, onToggleExpanded }: { 
   wordType: any, 
   index: number, 
   expandedItems: Set<string>, 
@@ -493,7 +493,7 @@ export default function GrammarDefinitionsPage() {
   }, []);
 
   return (
-    <SafeAreaView style={[styles.safeArea, AndroidSafeArea.AndroidSafeArea]}>
+    <PageWrapper>
       <View style={styles.headerRow}>
         <TouchableOpacity 
           onPress={() => router.back()}
@@ -521,15 +521,11 @@ export default function GrammarDefinitionsPage() {
           />
         ))}
       </ScrollView>
-    </SafeAreaView>
+    </PageWrapper>
   );
 }
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: '#101223',
-  },
   container: {
     flex: 1,
     backgroundColor: '#101223',

@@ -1,6 +1,7 @@
 import { useWordTooltip, WordTooltip } from "@/hooks/useWordTooltip";
 import { WordSelectionOption } from "@/types/games/SelectionOption";
 import { WordButtonType } from "@/types/games/WordButtonType";
+import { WordType } from "@/types/WordTypes";
 import React, { createContext, useContext, useState } from "react";
 
 interface LevelContextData {
@@ -24,7 +25,7 @@ interface LevelContextData {
   options : WordSelectionOption[] | undefined,
   selectedOptions : WordSelectionOption[],
   setSelectedOptions : (options : WordSelectionOption[]) => void,
-  setTargetType : (type : string) => void,
+  setTargetType : (type : WordType) => void,
   setOptions : (options : WordSelectionOption[] | undefined) => void,
 }
 
@@ -39,7 +40,7 @@ export const LevelProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [bottomButtons, setBottomButtons] = useState<WordButtonType[] | undefined>();
 
   // game 2 data
-  const setTargetType = (type: string) => {
+  const setTargetType = (type: WordType) => {
     setTargetTypeInternal({
       text: type,
       type: type,
