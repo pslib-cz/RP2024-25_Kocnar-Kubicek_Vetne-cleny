@@ -52,18 +52,29 @@ export default function JoinGameScreen() {
   };
 
   const handleStartExam = async () => {
+    console.log('Starting exam...');
+    console.log('Config:', config);
     if (config.difficulty && config.galaxy >= 0) {
       try {
         if (isNaN(config.questionCount) || config.questionCount < 1 || config.questionCount > 100) {
           alert('Prosím zadejte platný počet otázek (1-100)');
           return;
-        }; +
-          newGame({
-            galaxy: config.galaxy,
-            difficulty: config.difficulty / 100,
-            count: config.questionCount,
-            questionTypesBitfield: config.questiontypes,
-          }, GameType.TEST);
+        };
+        
+        // Convert seed to number if it's a string
+        const seedNumber = config.seed ? 
+          (typeof config.seed === 'string' ? parseInt(config.seed, 16) : config.seed) : 
+          Math.floor(Math.random() * 1000000);
+        
+        console.log('Using seed:', seedNumber, 'Type:', typeof seedNumber);
+        
+        newGame({
+          galaxy: config.galaxy,
+          difficulty: config.difficulty / 100,
+          count: config.questionCount,
+          questionTypesBitfield: config.questiontypes,
+          seed: seedNumber,
+        }, GameType.TEST);
       } catch (error) {
         alert('Nepodařilo se spustit cvičení. Zkuste to znovu.');
         console.warn('Error starting exam:', error);

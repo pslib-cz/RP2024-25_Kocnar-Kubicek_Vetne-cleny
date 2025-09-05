@@ -91,7 +91,7 @@ export default function AuthoredGameDetail() {
     setQuestionsLoading(true);
     try {
       // Ensure seed is a number
-      const seedNumber = typeof game.seed === 'string' ? parseInt(game.seed, 10) : game.seed;
+      const seedNumber = typeof game.seed === 'string' ? parseInt(game.seed, 16) : game.seed;
       
       if (isNaN(seedNumber)) {
         console.error('Invalid seed value:', game.seed);

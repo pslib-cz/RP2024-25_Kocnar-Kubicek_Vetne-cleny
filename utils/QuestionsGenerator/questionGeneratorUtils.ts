@@ -5,10 +5,11 @@ export function isTypeAllowed(bitfield: number, type: number) {
 }
 
 // Utility: Deterministic shuffle
-export function seededShuffle<T>(array: T[], seed: number): T[] {
-  console.log(`seededShuffle called with seed: ${seed}, array length: ${array.length}`);
-  const result = [...array];
-  let s = seed;
+export function seededShuffle<T>(array: T[], seed: number | string): T[] {
+
+    const result = [...array];
+    let s = parseInt(seed.toString(16).slice(-12), 16);
+    console.log(`seededShuffle called with seed: ${s}, array length: ${array.length}`);
   for (let i = result.length - 1; i > 0; i--) {
     s = (s * 9301 + 49297) % 233280;
     const j = Math.floor((s / 233280) * (i + 1));
