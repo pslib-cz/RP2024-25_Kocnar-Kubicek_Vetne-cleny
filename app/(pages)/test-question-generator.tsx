@@ -1,14 +1,17 @@
 import React, { useState } from "react";
 import { Galaxy, QuestionType } from "@/constants/questionGeneratorParams";
-import { View, Text, ScrollView, TextInput, Switch } from "react-native";
+import { View, Text, ScrollView, TextInput, Switch, TouchableOpacity } from "react-native";
 import Slider from "@react-native-community/slider";
 import { Picker } from "@react-native-picker/picker";
 import { questionGenerator } from "@/utils/QuestionsGenerator/questionGenerator";
+import { useLoadedData } from "@/hooks/useData";
+import { GeneratorParam } from "@/constants/questionGeneratorParams";
 
 const galaxyOptions = Object.entries(Galaxy).filter(([k, v]) => typeof v === 'number');
 const questionTypeOptions = Object.entries(QuestionType).filter(([k, v]) => typeof v === 'number');
 
 export default function TestQuestionGenerator() {
+  const { loadedSets, loadedTypeSets } = useLoadedData();
   const [galaxy, setGalaxy] = useState<Galaxy>(Galaxy.ALL);
   const [difficulty, setDifficulty] = useState(0.5);
   const [seed, setSeed] = useState(42);
@@ -16,6 +19,7 @@ export default function TestQuestionGenerator() {
   const [questionTypesBitfield, setQuestionTypesBitfield] = useState(
     (1 << questionTypeOptions.length) - 1
   );
+  const [testResults, setTestResults] = useState<string[]>([]);
 
   const questions = questionGenerator({
     galaxy,
@@ -23,7 +27,34 @@ export default function TestQuestionGenerator() {
     seed,
     count,
     questionTypesBitfield,
+    loadedSets,
+    loadedTypeSets
   });
+
+  const testSeedConsistency = () => {
+    console.log('Testing seed consistency...');
+    const results: string[] = [];
+    
+    // Generate questions multiple times with the same seed
+    for (let i = 0; i < 3; i++) {
+      const testQuestions = questionGenerator({
+        galaxy,
+        difficulty,
+        seed,
+        count,
+        questionTypesBitfield,
+        loadedSets,
+        loadedTypeSets
+      });
+      
+      const questionTypes = testQuestions.map(q => q.TEMPLATE[GeneratorParam.QUESTION_TYPE]);
+      const result = `Run ${i + 1}: Question types: [${questionTypes.join(', ')}]`;
+      results.push(result);
+      console.log(result);
+    }
+    
+    setTestResults(results);
+  };
 
   console.log(questions);
 
@@ -81,6 +112,25 @@ export default function TestQuestionGenerator() {
           </View>
         ))}
       </View>
+      
+      <View style={{ marginBottom: 16 }}>
+        <Text style={{ fontWeight: "bold", marginBottom: 8 }}>Seed Consistency Test</Text>
+        <TouchableOpacity 
+          style={{ backgroundColor: '#007AFF', padding: 12, borderRadius: 8, alignItems: 'center' }}
+          onPress={testSeedConsistency}
+        >
+          <Text style={{ color: 'white', fontWeight: 'bold' }}>Test Seed Consistency</Text>
+        </TouchableOpacity>
+        {testResults.length > 0 && (
+          <View style={{ marginTop: 8 }}>
+            <Text style={{ fontWeight: "bold", marginBottom: 4 }}>Test Results:</Text>
+            {testResults.map((result, index) => (
+              <Text key={index} style={{ marginBottom: 2, fontSize: 12 }}>{result}</Text>
+            ))}
+          </View>
+        )}
+      </View>
+      
       <View>
         <Text style={{ fontWeight: "bold", fontSize: 18, marginBottom: 8 }}>Output</Text>
         <ScrollView style={{ backgroundColor: "#f4f4f4", padding: 16, borderRadius: 8, maxHeight: 400 }}>

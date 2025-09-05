@@ -11,6 +11,7 @@ import { Galaxy, QuestionType } from '@/constants/questionGeneratorParams';
 import { questionGenerator } from '@/utils/QuestionsGenerator/questionGenerator';
 import { Question } from '@/types/Question';
 import { GameType } from '@/types/GameType';
+import { useLoadedData } from '@/hooks/useData';
 
 const GameContext = createContext<GameContextData | undefined>(undefined);
 
@@ -24,6 +25,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const { updateMistakes, allMistakes } = useCommonMistakesContext();
   const { levelUp } = useGalaxyContext();
   const { selectedGalaxy } = useGalaxyContext();
+  const { loadedSets, loadedTypeSets } = useLoadedData();
 
   const [gameType, setGameType] = useState<GameType>(GameType.PRACTICE);
 
@@ -69,7 +71,11 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setGameConfig(config);
     setCorrectAnswersCount(0);
 
-    newGameWithQuestions(questionGenerator(config), gameType);
+    newGameWithQuestions(questionGenerator({
+      ...config,
+      loadedSets,
+      loadedTypeSets
+    }), gameType);
   }
 
   const newGameWitMostCommonMistakes = () => {

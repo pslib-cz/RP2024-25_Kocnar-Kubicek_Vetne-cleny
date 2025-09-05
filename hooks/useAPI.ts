@@ -48,12 +48,11 @@ export interface AuthoredGame {
   galaxy: number;
   questiontypes: number;
   version: string;
-  seed: string;
+  seed: number | null;
   active: boolean;
   expirationTime: string;
   createdAt: string;
   questionCount: number;
-  seeded: boolean;
   sessions: Array<{
     id: string;
     playerId: string;

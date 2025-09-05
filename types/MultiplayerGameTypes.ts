@@ -14,9 +14,9 @@ export interface GameConfig {
   galaxy: number; // (0-4) galaxy index - Hlavní, Přísl, Přívlastek a Doplňek
   questiontypes: number;
   expirationTime: Date; // Game expiration time
-  seeded: boolean; // Whether to generate a seed for the game
+  seeded: boolean; // Whether to generate a seed for the game (only used during creation)
   questionCount: number; // Number of questions in the game
-  seed?: number; // Optional seed for the game
+  seed?: number; // Server-generated seed (undefined if game is not seeded)
 }
 
 export interface MultiplayerGameContextData {

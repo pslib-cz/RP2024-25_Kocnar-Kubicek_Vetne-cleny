@@ -1,23 +1,22 @@
 import { questionGeneratorParams, QuestionType, Galaxy, GeneratorParam, DataSource, DataSourceModifier, QuestionModifier } from "@/constants/questionGeneratorParams";
-import { useLoadedData } from "@/hooks/useData";
 import { WordSelectionOption } from "@/types/games/SelectionOption";
-import { useMemo } from "react";
-import { applyDataSourceModifiers, applyOnlyTypeModifiers, getWantedTypesFromModifiers, isTypeAllowed, isValidTemplate, seededShuffle } from "./questionGeneratorUtils";
-import { WordType } from "@/types/WordTypes";
 import { Question } from "@/types/Question";
+import { applyDataSourceModifiers, applyOnlyTypeModifiers, getWantedTypesFromModifiers, isTypeAllowed, isValidTemplate, seededShuffle } from "./questionGeneratorUtils";
 
 // Utility: Map QuestionType enum to bit positions
 const QUESTION_TYPE_VALUES = Object.values(QuestionType).filter(v => typeof v === 'number') as number[];
 
 /**
- * Question Generator Hook
+ * Question Generator Function
  * 
- * This hook generates questions based on provided parameters:
+ * This function generates questions based on provided parameters:
  * - galaxy: The galaxy to generate questions for (ALL, PAP, PK, PU, D)
  * - difficulty: A number between 0-1 indicating question difficulty
  * - seed: Random seed for deterministic generation
  * - count: Number of questions to generate
  * - questionTypesBitfield: Bitfield indicating allowed question types
+ * - loadedSets: The loaded sentence data sets
+ * - loadedTypeSets: The loaded word type data sets
  * 
  * Questions are generated deterministically based on the seed, allowing
  * for reproducible question sets while maintaining randomness.
@@ -30,31 +29,48 @@ export function questionGenerator({
   difficulty,
   seed,
   count,
-  questionTypesBitfield
+  questionTypesBitfield,
+  loadedSets,
+  loadedTypeSets
 }: {
   galaxy: Galaxy,
   difficulty: number,
   seed: number,
   count: number,
-  questionTypesBitfield: number
+  questionTypesBitfield: number,
+  loadedSets: string[][][],
+  loadedTypeSets: Record<string, string[]>
 }) {
-  const { loadedSets, loadedTypeSets } = useLoadedData();
+  console.log(`questionGenerator called with:`, { galaxy, difficulty, seed, count, questionTypesBitfield });
+  console.log(`loadedSets keys:`, Object.keys(loadedSets));
+  console.log(`loadedTypeSets keys:`, Object.keys(loadedTypeSets));
+  
   // Get templates for the selected galaxy
   const templates = questionGeneratorParams[galaxy];
+  console.log(`Templates for galaxy ${galaxy}:`, templates.length);
 
   // Filter templates by allowed question types
   const allowedTemplates = templates.filter(tpl => {
     if (!isValidTemplate(tpl)) return false;
     return isTypeAllowed(questionTypesBitfield, tpl[GeneratorParam.QUESTION_TYPE] as number);
   });
+  console.log(`Allowed templates after filtering:`, allowedTemplates.length);
+  console.log(`Question types in allowed templates:`, allowedTemplates.map(t => t[GeneratorParam.QUESTION_TYPE]));
 
   // Shuffle and pick templates
   const pickedTemplates = () => {
     if (allowedTemplates.length === 0) return [];
     // For each question, pick a pseudo-random template from allowedTemplates
-    return Array.from({ length: count }, (_, i) => {
-      return seededShuffle(allowedTemplates, seed + i)[0];
+    const templates = Array.from({ length: count }, (_, i) => {
+      const questionSeed = seed + i;
+      console.log(`Picking template for question ${i}, using seed: ${questionSeed}`);
+      const shuffled = seededShuffle(allowedTemplates, questionSeed);
+      const picked = shuffled[0];
+      console.log(`Question ${i} picked template:`, picked);
+      return picked;
     });
+    console.log(`All picked templates:`, templates.map((t, i) => `Q${i}: ${t[GeneratorParam.QUESTION_TYPE]}`));
+    return templates;
   };
 
   // Generate questions
@@ -65,6 +81,9 @@ export function questionGenerator({
     if(templates == undefined) throw new Error("No templates available for the selected parameters");
 
     return templates.map((template, idx) => {
+      const questionSeed = seed + idx;
+      console.log(`Generating question ${idx} with template:`, template, `using seed: ${questionSeed}`);
+      
       const dataSource = template[GeneratorParam.DATA_SOURCE] as DataSource;
       const questionType = template[GeneratorParam.QUESTION_TYPE] as QuestionType;
       const dataSourceModifiers = template[GeneratorParam.DATA_SOURCE_MODIFIER] as DataSourceModifier[] | undefined;
@@ -117,7 +136,9 @@ export function questionGenerator({
 
       // Shuffle sentences pseudo-randomly by seed, then pick idx-th sentence
       const shuffledSentences = seededShuffle(resultSet, seed);
+      console.log(`Shuffled sentences for question ${idx} with seed ${seed}, result set length: ${resultSet.length}`);
       const sentence = shuffledSentences[idx % shuffledSentences.length] || [];
+      console.log(`Selected sentence for question ${idx}:`, sentence.slice(0, 3), `...`);
 
       // Convert to [word, type][] only if both exist
       const source = sentence

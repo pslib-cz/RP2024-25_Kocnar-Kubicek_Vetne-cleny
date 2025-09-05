@@ -46,19 +46,20 @@ const appVersion =
 (Constants.manifest2 && typeof Constants.manifest2 === 'object' && 'version' in Constants.manifest2 && (Constants.manifest2 as any).version) ||
 'neuvedeno';
 
-const AuthoredGameDetail = () => {
-    const route = useRoute<AuthoredGameDetailRouteProp>();
-    const router = useRouter();
-    const { userId, secretKey } = useRocket();
-    const api = useAPI({ userId, secretKey });
-    const { gameId } = route.params;
-    const { loadedVersion } = useLoadedData();
-    const getClientVersion = () => `${appVersion}-${loadedVersion || 'v0' }`;
-
+export default function AuthoredGameDetail() {
+  const route = useRoute<AuthoredGameDetailRouteProp>();
+  const router = useRouter();
+  const { userId, secretKey } = useRocket();
+  const api = useAPI({ userId, secretKey });
+  const { loadedSets, loadedTypeSets, loadedVersion } = useLoadedData();
+  
+  const gameId = route.params?.gameId;
   const [game, setGame] = useState<AuthoredGame | null>(null);
   const [loading, setLoading] = useState(true);
   const [questions, setQuestions] = useState<Question[]>([]);
   const [questionsLoading, setQuestionsLoading] = useState(false);
+
+  const getClientVersion = () => `${appVersion}-${loadedVersion || 'v0' }`;
 
   const fetchGame = async () => {
     setLoading(true);
@@ -84,20 +85,32 @@ const AuthoredGameDetail = () => {
     if (game.version !== getClientVersion()) return;
     
     console.log('Generating questions for game:', game.id);
+    console.log('Game seed:', game.seed, 'Type:', typeof game.seed);
     
     setQuestionsLoading(true);
     try {
-      // Convert string seed to number for the question generator
-      const seedNumber = parseInt(game.seed) || 0;
+      // Ensure seed is a number
+      const seedNumber = typeof game.seed === 'string' ? parseInt(game.seed, 10) : game.seed;
+      
+      if (isNaN(seedNumber)) {
+        console.error('Invalid seed value:', game.seed);
+        setQuestions([]);
+        return;
+      }
+      
+      console.log('Using seed number:', seedNumber);
       
       const generatedQuestions = questionGenerator({
         galaxy: game.galaxy,
         difficulty: game.difficulty / 100, // Convert from percentage to 0-1 range
         seed: seedNumber,
         count: game.questionCount,
-        questionTypesBitfield: game.questiontypes
+        questionTypesBitfield: game.questiontypes,
+        loadedSets,
+        loadedTypeSets
       });
       
+      console.log('Generated questions count:', generatedQuestions.length);
       setQuestions(generatedQuestions);
     } catch (error) {
       console.warn('Failed to generate questions:', error);
@@ -105,7 +118,7 @@ const AuthoredGameDetail = () => {
     } finally {
       setQuestionsLoading(false);
     }
-  }, [game]);
+  }, [game, loadedSets, loadedTypeSets]);
 
   useEffect(() => {
     fetchGame();
@@ -768,5 +781,3 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
   },
 });
-
-export default AuthoredGameDetail;

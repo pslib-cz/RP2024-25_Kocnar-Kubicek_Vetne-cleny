@@ -40,7 +40,7 @@ export interface GameCreateRequest {
   questiontypes: number;
   version: string;
   expirationTime: string;
-  seeded: boolean;
+  seeded: boolean; // Only used during creation - server generates seed when true
   questionCount: number;
 }
 
@@ -71,7 +71,7 @@ export interface GameData {
   difficulty: number;
   galaxy: number;
   questiontypes: number;
-  seed: number;
+  seed: number | null; // Server-generated seed (null if game is not seeded)
   version: string;
   expirationTime: string;
   questionCount: number;

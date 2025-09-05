@@ -6,6 +6,7 @@ export function isTypeAllowed(bitfield: number, type: number) {
 
 // Utility: Deterministic shuffle
 export function seededShuffle<T>(array: T[], seed: number): T[] {
+  console.log(`seededShuffle called with seed: ${seed}, array length: ${array.length}`);
   const result = [...array];
   let s = seed;
   for (let i = result.length - 1; i > 0; i--) {
@@ -13,6 +14,7 @@ export function seededShuffle<T>(array: T[], seed: number): T[] {
     const j = Math.floor((s / 233280) * (i + 1));
     [result[i], result[j]] = [result[j], result[i]];
   }
+  console.log(`seededShuffle result first 3 items:`, result.slice(0, 3));
   return result;
 }
 
