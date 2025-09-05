@@ -60,12 +60,12 @@ const AnimatedExample = React.memo(({ example, index, delay = 0, type, parentTyp
       <ThemedText style={styles.exampleSentence}>
         {beforeHighlight}
         {highlightedSection && (
-            <ThemedText style={[styles.highlightedText, {
-            color: textColor, 
-            backgroundColor: `${textColor}4D` // 4D is hex for 0.3 alpha
-            }]}>
-            {highlightedSection}
-            </ThemedText>
+          <ThemedText style={[styles.highlightedText, {
+          color: textColor, 
+          backgroundColor: `${textColor}4D` // 4D is hex for 0.3 alpha
+          }]}>
+          {highlightedSection}
+          </ThemedText>
         )}
         {afterHighlight}
       </ThemedText>

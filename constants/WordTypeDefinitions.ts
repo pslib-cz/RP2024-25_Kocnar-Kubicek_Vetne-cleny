@@ -151,6 +151,7 @@ export const WordTypes: WordTypeExplanation[] = [
   {
     name: 'Přívlastek',
     type: 'Rozvíjející větný člen',
+    color: '#e67a15ff',
     explanation: [
       "Ptáme se Jaký? Který? Čí?",
       "Vždy rozvíjí podstatné jméno a stojí před, nebo za ním",
@@ -233,6 +234,7 @@ export const WordTypes: WordTypeExplanation[] = [
   {
     name: 'příslovečné určení',
     type: 'Rozvíjející větný člen',
+    color: '#00B894',
     explanation: [
       "Doplňuje děj a jsou to jeho okolnosti",
       "Nejčastěji příslovce, ale i podstatné jméno s předložkou",

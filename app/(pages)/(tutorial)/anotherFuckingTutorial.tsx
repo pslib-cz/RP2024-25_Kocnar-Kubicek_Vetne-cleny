@@ -12,9 +12,8 @@ import PlayfulButton from "@/components/ui/PlayfulButton";
 import { useLevelContext } from "@/contexts/levelContext";
 import { WordSelectionOption } from "@/types/games/SelectionOption";
 import { WordType } from "@/types/WordTypes";
-import React, { useCallback, useEffect, useState } from "react";
-import { LayoutAnimation, StyleSheet, View, ScrollView } from "react-native";
-import { WordTypeCard } from "./anotherTutorial";
+import React, { useEffect, useState } from "react";
+import { StyleSheet, View, ScrollView } from "react-native";
 import { GetWordTypeByAbbr } from "@/constants/WordTypeDefinitions";
 import PageWrapper from "@/components/PageWrapper";
 import ModalWrapper from "@/components/modals/ModalWrapper";
@@ -22,19 +21,6 @@ import { WordButtonType } from "@/types/games/WordButtonType";
 import { MaterialIcons } from '@expo/vector-icons';
 import { useTutorialContext } from "@/contexts/TutorialContext";
 import { useRouter } from "expo-router";
-
-const tutorialSentence: WordSelectionOption[] = [
-  { text: "Bílá", type: "pks" },
-  { text: "kočka", type: "po" },
-  { text: "s flíčky", type: "pkn" },
-  { text: "včera", type: "puč" },
-  { text: "na zahradě", type: "pum" },
-  { text: "z hladu", type: "pu příčiny" },
-  { text: "velmi", type: "pu míry" },
-  { text: "obratně", type: "puz" },
-  { text: "ulovila", type: "př" },
-  { text: "myš", type: "pt" }
-]
 
 const tutorialTypesOrder: { type: WordType, explanation: string }[] = [
   { type: "po", explanation: "Podmět – kdo nebo co vykonává děj ve větě." },
@@ -55,7 +41,7 @@ export default function SentenceExample() {
   const [incorrectType, setIncorrectType] = React.useState<string[] | null>(null)
   const [buttons, setButtons] = useState<WordButtonType[]>([]);
 
-  const { setSentence, setWordId, reset } = useTutorialContext();
+  const { setSentence, setWordId, reset, sentence } = useTutorialContext();
 
   const router = useRouter();
 
@@ -69,8 +55,8 @@ export default function SentenceExample() {
   }
 
   useEffect(() => {
-    setButtons(buildButtons(tutorialSentence));
-  }, []);
+    setButtons(buildButtons(sentence || []));
+  }, [sentence]);
 
   useEffect(() => {
     setTargetType(tutorialTypesOrder[typeIndex]?.type)
@@ -84,9 +70,10 @@ export default function SentenceExample() {
   };
 
   const OpenTutorialOnCurrentWord = () => {
-    setSentence(tutorialSentence);
-    setWordId(tutorialSentence.findIndex(item => item.type === targetType?.type));
-    router.push('/tutorial');
+    if (sentence) {
+      setWordId(sentence.findIndex(item => item.type === targetType?.type));
+    }
+    router.navigate('/tutorial'); // TODO: this does not work properly for some reason
     reset()
   };
 
@@ -109,13 +96,13 @@ export default function SentenceExample() {
               <ThemedText style={styles.completionTitle}>Skvěle!</ThemedText>
               <ThemedText style={styles.completionText}>Tutoriál byl úspěšně dokončen.</ThemedText>
 
-              <View style={styles.buttonContainer}>
+              <View>
                 <PlayfulButton
                   title="Zkusit znovu"
                   icon={<MaterialIcons name="refresh" size={22} color="white" />}
                   onPress={() => {
                     setTypeIndex(0);
-                    setButtons(buildButtons(tutorialSentence));
+                    setButtons(buildButtons(sentence || []));
                     setIncorrectType(null);
                   }}
                   style={styles.restartButton}
@@ -154,7 +141,7 @@ export default function SentenceExample() {
               if (button.type === targetType?.type) {
                 let newIndex = typeIndex + 1;
                 while (newIndex < tutorialTypesOrder.length &&
-                  tutorialSentence.find(item => item.type === tutorialTypesOrder[newIndex].type) === undefined) {
+                  sentence?.find(item => item.type === tutorialTypesOrder[newIndex].type) === undefined) {
                   newIndex++;
                 }
 
@@ -179,7 +166,7 @@ export default function SentenceExample() {
         </View>
 
         {targetType?.type && (
-          <View style={styles.buttonContainer}>
+          <View>
             <PlayfulButton
               title="Potřebuju poradit"
               icon={<MaterialIcons name="help-outline" size={22} color="white" />}
@@ -297,10 +284,6 @@ const styles = StyleSheet.create({
     color: '#FFF',
     fontSize: 16,
     lineHeight: 24,
-  },
-  buttonContainer: {
-    alignItems: 'center',
-    marginBottom: 24,
   },
   helpButton: {
     marginVertical: 4,
