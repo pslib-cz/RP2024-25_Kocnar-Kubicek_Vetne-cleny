@@ -6,16 +6,22 @@ export function isTypeAllowed(bitfield: number, type: number) {
 
 // Utility: Deterministic shuffle
 export function seededShuffle<T>(array: T[], seed: number | string): T[] {
+  const result = [...array];
+  let s = typeof seed === 'number' ? seed : 
+    Array.from(seed.toString()).reduce((acc, char) => 
+      acc * 31 + char.charCodeAt(0), 0);
 
-    const result = [...array];
-    let s = parseInt(seed.toString(16).slice(-12), 16);
-    console.log(`seededShuffle called with seed: ${s}, array length: ${array.length}`);
+  if (isNaN(s)){
+    console.warn(`Invalid seed provided to seededShuffle: ${seed}. Falling back to default seed.`);
+    s = 123;
+  }
+
   for (let i = result.length - 1; i > 0; i--) {
     s = (s * 9301 + 49297) % 233280;
     const j = Math.floor((s / 233280) * (i + 1));
     [result[i], result[j]] = [result[j], result[i]];
   }
-  console.log(`seededShuffle result first 3 items:`, result.slice(0, 3));
+  console.log(` seededShuffle called with seed: ${s}, array length: ${array.length}, result first 3 items:`, result.slice(0, 3));
   return result;
 }
 
