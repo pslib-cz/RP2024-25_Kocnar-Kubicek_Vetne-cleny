@@ -5,7 +5,7 @@ import React, { createContext, useContext, ReactNode, useState } from 'react';
 interface TutorialContextValue {
   sentence: WordSelectionOption[] | null;
   wordId: number | null;
-  setSentence: (sentence: WordSelectionOption[]) => void;
+  setSentence: (sentence: WordSelectionOption[] | null) => void;
   setWordId: (wordId: number) => void;
   clearTutorialData: () => void;
   usedNodes: TutorialRuntimeNode[];

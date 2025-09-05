@@ -1,40 +1,54 @@
 import QuestionRow from '@/components/ui/tutorial/QuestionRow'
 import PlayfulButton from '@/components/ui/PlayfulButton'
-import { useTutorial } from '@/hooks/useTutorial'
 import { useTutorialContext } from '@/contexts/TutorialContext'
 import { StatusBar } from 'expo-status-bar'
 import React from 'react';
-import { Alert, SafeAreaView, StyleSheet, Text, View } from 'react-native'
+import { Alert, SafeAreaView, StyleSheet, Text, View, TouchableOpacity } from 'react-native'
 import PageWrapper from '@/components/PageWrapper';
+import { Ionicons } from '@expo/vector-icons'
+import { ThemedText } from '@/components/ThemedText'
+import { router } from 'expo-router';
 
 export default function Tutorial() {
 
-  const { sentence, wordId, AddNode, reset, pathExists, currentNode, usedNodes } = useTutorialContext();
+  const { sentence, wordId, AddNode, reset, pathExists, currentNode, usedNodes, setSentence } = useTutorialContext();
 
   const getSelectedWord = (): string => {
     if (!sentence || wordId === null) return '';
     return sentence[wordId]?.text || '';
   };
 
-  const renderSentence = () => {
-    if (!sentence) return null;
-
+  const renderHeader = () => {
     return (
-      <View style={styles.sentenceContainer}>
-        <Text style={styles.sentenceLabel}>Věta:</Text>
-        <View style={styles.sentenceTextContainer}>
-          {sentence.map((word, index) => (
-            <Text
-              key={index}
-              style={[
-                styles.normalWord,
-                index === wordId && styles.highlightedWord
-              ]}
-            >
-              {word.text}{' '}
-            </Text>
-          ))}
-        </View>
+      <View style={[{ marginLeft: 20 }]}>
+        <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+          <Ionicons name="chevron-back" size={24} color="white" />
+          <ThemedText style={styles.backText}>Zpět</ThemedText>
+        </TouchableOpacity>
+        {
+          sentence &&
+          <View style={styles.sentenceContainer}>
+            <View style={styles.sentenceHeader}>
+              <Text style={styles.sentenceLabel}>Věta:</Text>
+              <TouchableOpacity style={styles.dismissButton} onPress={() => setSentence(null)}>
+                <Text style={styles.dismissButtonText}>Zrušit</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.sentenceTextContainer}>
+              {sentence.map((word, index) => (
+                <Text
+                  key={index}
+                  style={[
+                    styles.normalWord,
+                    index === wordId && styles.highlightedWord
+                  ]}
+                >
+                  {word.text}{' '}
+                </Text>
+              ))}
+            </View>
+          </View>
+        }
       </View>
     );
   };
@@ -53,8 +67,7 @@ export default function Tutorial() {
       <StatusBar style="light" />
       <View style={styles.verticalLine} />
 
-      {/* Display the sentence with highlighted word */}
-      {renderSentence()}
+      {renderHeader()}
 
       <View style={styles.questionSection}>
         {
@@ -153,7 +166,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 10,
     alignSelf: 'flex-start',
-    marginTop: 50,
   },
   backText: {
     color: 'white',
@@ -171,12 +183,28 @@ const styles = StyleSheet.create({
     backgroundColor: '#1c1f3d',
     borderRadius: 12,
     padding: 16,
-    marginHorizontal: 20,
+  },
+  sentenceHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 8,
   },
   sentenceLabel: {
     color: '#aaa',
     fontSize: 14,
-    marginBottom: 8,
+    fontWeight: '600',
+  },
+  dismissButton: {
+    paddingHorizontal: 12,
+    marginRight: 16,
+    paddingVertical: 4,
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    borderRadius: 6,
+  },
+  dismissButtonText: {
+    color: '#fff',
+    fontSize: 12,
     fontWeight: '600',
   },
   sentenceTextContainer: {
