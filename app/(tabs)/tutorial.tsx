@@ -167,11 +167,11 @@ const styles = StyleSheet.create({
   },
   sentenceContainer: {
     width: '100%',
-    paddingHorizontal: 20,
     marginVertical: 15,
     backgroundColor: '#1c1f3d',
     borderRadius: 12,
     padding: 16,
+    marginHorizontal: 20,
   },
   sentenceLabel: {
     color: '#aaa',
