@@ -1,7 +1,7 @@
 import { questionGeneratorParams, QuestionType, Galaxy, GeneratorParam, DataSource, DataSourceModifier, QuestionModifier } from "@/constants/questionGeneratorParams";
 import { WordSelectionOption } from "@/types/games/SelectionOption";
 import { Question } from "@/types/Question";
-import { applyDataSourceModifiers, applyOnlyTypeModifiers, getWantedTypesFromModifiers, isTypeAllowed, isValidTemplate, seededShuffle } from "./questionGeneratorUtils";
+import { applyDataSourceModifiers, applyOnlyTypeModifiers, getWantedTypesFromModifiers, isTypeAllowed, isValidTemplate, processSeed, seededShuffle } from "./questionGeneratorUtils";
 
 // Utility: Map QuestionType enum to bit positions
 const QUESTION_TYPE_VALUES = Object.values(QuestionType).filter(v => typeof v === 'number') as number[];
@@ -62,7 +62,7 @@ export function questionGenerator({
     if (allowedTemplates.length === 0) return [];
     // For each question, pick a pseudo-random template from allowedTemplates
     const templates = Array.from({ length: count }, (_, i) => {
-      const questionSeed = seed + i;
+      const questionSeed = i + (seed % 100000000);
       console.log(`Picking template for question ${i}, using seed: ${questionSeed}`);
       const shuffled = seededShuffle(allowedTemplates, questionSeed);
       const picked = shuffled[0];

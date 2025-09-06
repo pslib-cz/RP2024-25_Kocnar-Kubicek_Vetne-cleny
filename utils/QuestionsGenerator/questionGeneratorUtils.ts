@@ -4,17 +4,30 @@ export function isTypeAllowed(bitfield: number, type: number) {
   return (bitfield & (1 << type)) !== 0;
 }
 
-// Utility: Deterministic shuffle
-export function seededShuffle<T>(array: T[], seed: number | string): T[] {
-  const result = [...array];
+// Utility: Process seed to numeric value
+export function processSeed(seed: number | string): number {
+  // Handle invalid inputs first
+  if (seed === null || seed === undefined || (typeof seed === 'number' && isNaN(seed))) {
+    console.warn(`Invalid seed provided to processSeed: ${seed}. Falling back to default seed.`);
+    return 123;
+  }
+
   let s = typeof seed === 'number' ? seed : 
     Array.from(seed.toString()).reduce((acc, char) => 
       acc * 31 + char.charCodeAt(0), 0);
 
   if (isNaN(s)){
-    console.warn(`Invalid seed provided to seededShuffle: ${seed}. Falling back to default seed.`);
+    console.warn(`Invalid seed provided to processSeed: ${seed}. Falling back to default seed.`);
     s = 123;
   }
+  
+  return s;
+}
+
+// Utility: Deterministic shuffle
+export function seededShuffle<T>(array: T[], seed: number | string): T[] {
+  const result = [...array];
+  let s = processSeed(seed);
 
   for (let i = result.length - 1; i > 0; i--) {
     s = (s * 9301 + 49297) % 233280;
