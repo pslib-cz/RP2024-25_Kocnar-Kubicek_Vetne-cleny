@@ -66,18 +66,28 @@ export const MultiplayerGameProvider: React.FC<{ children: React.ReactNode }> = 
   }
 
   const tryUpdateSession = async (data : SessionUpdateRequest) => {
+    console.log("=== MULTIPLAYER CONTEXT: tryUpdateSession called ===");
+    console.log("Session ID:", sessionId);
+    console.log("Game code:", code);
+    console.log("Update data:", data);
+    
     if(!sessionId) {
-      console.log('No session ID provided');
+      console.warn('MULTIPLAYER CONTEXT: No session ID provided');
       return;
     }
 
     if(!code){
-      console.log('No game code provided');
+      console.warn('MULTIPLAYER CONTEXT: No game code provided');
       return;
     }
 
-    console.log('Updating session...');
-    API.updateSession(sessionId, data)
+    console.log('MULTIPLAYER CONTEXT: Calling API.updateSession...');
+    try {
+      const result = await API.updateSession(sessionId, data);
+      console.log('MULTIPLAYER CONTEXT: Session update successful:', result);
+    } catch (error) {
+      console.error('MULTIPLAYER CONTEXT: Session update failed:', error);
+    }
   }
 
   const joinGame = async (code: string) => {

@@ -59,8 +59,44 @@ export default function AuthoredGameDetail() {
   const [loading, setLoading] = useState(true);
   const [questions, setQuestions] = useState<Question[]>([]);
   const [questionsLoading, setQuestionsLoading] = useState(false);
+  const [expandedSessions, setExpandedSessions] = useState<Set<string>>(new Set());
 
   const getClientVersion = () => `${appVersion}-${loadedVersion || 'v0' }`;
+
+  const toggleSessionExpansion = (sessionId: string) => {
+    setExpandedSessions(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(sessionId)) {
+        newSet.delete(sessionId);
+      } else {
+        newSet.add(sessionId);
+      }
+      return newSet;
+    });
+  };
+
+  const parseSessionAnswers = (answersJson?: string) => {
+    console.log("=== AUTHORED GAME DETAIL: parseSessionAnswers called ===");
+    console.log("Answers JSON:", answersJson);
+    console.log("Answers JSON type:", typeof answersJson);
+    console.log("Answers JSON length:", answersJson?.length || 0);
+    
+    if (!answersJson) {
+      console.log("AUTHORED GAME DETAIL: No answers JSON provided");
+      return [];
+    }
+    
+    try {
+      const parsed = JSON.parse(answersJson);
+      console.log("AUTHORED GAME DETAIL: Successfully parsed answers:", parsed);
+      console.log("AUTHORED GAME DETAIL: Number of answers:", parsed.length);
+      return parsed;
+    } catch (error) {
+      console.error('AUTHORED GAME DETAIL: Failed to parse session answers:', error);
+      console.error('AUTHORED GAME DETAIL: Raw answers JSON:', answersJson);
+      return [];
+    }
+  };
 
   const fetchGame = async () => {
     setLoading(true);
@@ -364,53 +400,180 @@ export default function AuthoredGameDetail() {
               <Text style={styles.subsectionTitle}>Dokončené hry ({completedSessions.length})</Text>
               {completedSessions
                 .sort((a, b) => b.correctAnswers - a.correctAnswers)
-                .map((session, index) => (
-                  <View key={session.id} style={styles.playerCard}>
-                    <View style={styles.playerHeader}>
-                      <View style={styles.playerInfo}>
-                        <View
-                          style={[
-                            styles.playerColor
-                          ]}
+                .map((session, index) => {
+                  const isExpanded = expandedSessions.has(session.id);
+                  const answers = parseSessionAnswers(session.answers);
+                  
+                  return (
+                    <View key={session.id} style={styles.playerCard}>
+                      <View style={styles.playerHeader}>
+                        <View style={styles.playerInfo}>
+                          <View
+                            style={[
+                              styles.playerColor
+                            ]}
+                          >
+                            <PlayerRocket
+                              player={session.player}
+                              width={32}
+                              height={32}
+                              showText={false}
+                              containerStyle={{
+                                backgroundColor: "transparent",
+                                borderRadius: 16,
+                                padding: 4
+                              }}
+                            />
+                          </View>
+                          <View>
+                            <Text style={styles.playerName}>
+                              {index < 3 && ['🥇', '🥈', '🥉'][index]} {session.player.name}
+                            </Text>
+                            <Text style={styles.playerMeta}>
+                              Dokončeno: {session.endedAt ? new Date(session.endedAt).toLocaleString('cs-CZ', {
+                                dateStyle: 'short',
+                                timeStyle: 'short'
+                              }) : 'Neznámo'}
+                            </Text>
+                          </View>
+                        </View>
+                        <View style={styles.scoreInfo}>
+                          <Text style={styles.score}>
+                            {session.correctAnswers}/{game.questionCount}
+                          </Text>
+                          <Text style={styles.percentage}>
+                            {Math.round((session.correctAnswers / game.questionCount) * 100)}%
+                          </Text>
+                        </View>
+                      </View>
+                      <Text style={styles.playDuration}>
+                        Doba hry: {formatDuration(session.startedAt, session.endedAt)}
+                      </Text>
+                      
+                      {/* Answers toggle button */}
+                      {answers.length > 0 && (
+                        <TouchableOpacity 
+                          style={styles.answersToggleButton}
+                          onPress={() => toggleSessionExpansion(session.id)}
                         >
-                          <PlayerRocket
-                            player={session.player}
-                            width={32}
-                            height={32}
-                            showText={false}
-                            containerStyle={{
-                              backgroundColor: "transparent",
-                              borderRadius: 16,
-                              padding: 4
-                            }}
+                          <Text style={styles.answersToggleText}>
+                            {isExpanded ? 'Skrýt odpovědi' : 'Zobrazit odpovědi'} ({answers.length})
+                          </Text>
+                          <Ionicons 
+                            name={isExpanded ? 'chevron-up' : 'chevron-down'} 
+                            size={16} 
+                            color="#42A5F5" 
                           />
+                        </TouchableOpacity>
+                      )}
+                      
+                      {/* Answers display */}
+                      {isExpanded && answers.length > 0 && (
+                        <View style={styles.answersContainer}>
+                          <Text style={styles.answersTitle}>Odpovědi studenta:</Text>
+                          {answers.map((answer: any, answerIndex: number) => (
+                            <View key={answerIndex} style={styles.answerItem}>
+                              <View style={styles.answerHeader}>
+                                <Text style={styles.answerNumber}>Otázka {answerIndex + 1}</Text>
+                                <View style={[
+                                  styles.answerStatus,
+                                  answer.correct ? styles.correctAnswer : styles.incorrectAnswer
+                                ]}>
+                                  <Text style={styles.answerStatusText}>
+                                    {answer.correct ? '✓ Správně' : '✗ Špatně'}
+                                  </Text>
+                                </View>
+                              </View>
+                              
+                              {/* Display question content */}
+                              <View style={styles.questionContent}>
+                                {answer.question?.SOURCE?.map((word: any, wordIndex: number) => (
+                                  <View key={wordIndex} style={styles.wordItem}>
+                                    <Text style={styles.wordText}>{word.text}</Text>
+                                    <Text style={styles.wordType}>{word.type}</Text>
+                                  </View>
+                                ))}
+                              </View>
+                              
+                              {/* Show additional question info */}
+                              {answer.question?.WANTED && (
+                                <Text style={styles.questionInfo}>
+                                  Hledaný typ: <Text style={styles.highlightedText}>{answer.question.WANTED}</Text>
+                                </Text>
+                              )}
+                              {answer.question?.INDEX !== undefined && (
+                                <Text style={styles.questionInfo}>
+                                  Index slova: <Text style={styles.highlightedText}>{answer.question.INDEX + 1}</Text>
+                                </Text>
+                              )}
+                              
+                              {/* Display user selections */}
+                              {answer.userSelections && (
+                                <View style={styles.userSelectionsContainer}>
+                                  <Text style={styles.userSelectionsTitle}>Odpovědi studenta:</Text>
+                                  
+                                  {/* Game1 selections */}
+                                  {answer.userSelections.selectedWords && (
+                                    <View style={styles.selectionsList}>
+                                      {answer.userSelections.selectedWords.map((selection: any, selectionIndex: number) => (
+                                        <View key={selectionIndex} style={styles.selectionItem}>
+                                          <Text style={styles.selectionWord}>
+                                            "{selection.word}" → {selection.selectedType}
+                                          </Text>
+                                          <View style={[
+                                            styles.selectionStatus,
+                                            selection.selectedType === selection.correctType ? styles.correctSelection : styles.incorrectSelection
+                                          ]}>
+                                            <Text style={styles.selectionStatusText}>
+                                              {selection.selectedType === selection.correctType ? '✓' : '✗'}
+                                            </Text>
+                                          </View>
+                                        </View>
+                                      ))}
+                                    </View>
+                                  )}
+                                  
+                                  {/* Game2 selections */}
+                                  {answer.userSelections.selectedOptions && (
+                                    <View style={styles.selectionsList}>
+                                      <Text style={styles.selectionTarget}>
+                                        Hledaný typ: {answer.userSelections.targetType}
+                                      </Text>
+                                      {answer.userSelections.selectedOptions.map((option: any, optionIndex: number) => (
+                                        <View key={optionIndex} style={[
+                                          styles.selectionItem,
+                                          option.selected ? styles.selectedOption : styles.unselectedOption
+                                        ]}>
+                                          <Text style={styles.selectionWord}>
+                                            "{option.text}" ({option.type})
+                                          </Text>
+                                          <View style={[
+                                            styles.selectionStatus,
+                                            option.correct ? styles.correctSelection : styles.incorrectSelection
+                                          ]}>
+                                            <Text style={styles.selectionStatusText}>
+                                              {option.correct ? '✓' : '✗'}
+                                            </Text>
+                                          </View>
+                                        </View>
+                                      ))}
+                                    </View>
+                                  )}
+                                </View>
+                              )}
+                              
+                              <Text style={styles.answerTime}>
+                                Odpovězeno: {new Date(answer.time).toLocaleString('cs-CZ', {
+                                  timeStyle: 'medium'
+                                })}
+                              </Text>
+                            </View>
+                          ))}
                         </View>
-                        <View>
-                          <Text style={styles.playerName}>
-                            {index < 3 && ['🥇', '🥈', '🥉'][index]} {session.player.name}
-                          </Text>
-                          <Text style={styles.playerMeta}>
-                            Dokončeno: {session.endedAt ? new Date(session.endedAt).toLocaleString('cs-CZ', {
-                              dateStyle: 'short',
-                              timeStyle: 'short'
-                            }) : 'Neznámo'}
-                          </Text>
-                        </View>
-                      </View>
-                      <View style={styles.scoreInfo}>
-                        <Text style={styles.score}>
-                          {session.correctAnswers}/{game.questionCount}
-                        </Text>
-                        <Text style={styles.percentage}>
-                          {Math.round((session.correctAnswers / game.questionCount) * 100)}%
-                        </Text>
-                      </View>
+                      )}
                     </View>
-                    <Text style={styles.playDuration}>
-                      Doba hry: {formatDuration(session.startedAt, session.endedAt)}
-                    </Text>
-                  </View>
-                ))}
+                  );
+                })}
             </>
           )}
         </View>
@@ -780,5 +943,131 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 14,
     fontStyle: 'italic',
+  },
+  // Answer display styles
+  answersToggleButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: '#2A3049',
+    padding: 12,
+    borderRadius: 8,
+    marginTop: 8,
+  },
+  answersToggleText: {
+    color: '#42A5F5',
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  answersContainer: {
+    backgroundColor: '#1E2235',
+    padding: 12,
+    borderRadius: 8,
+    marginTop: 8,
+  },
+  answersTitle: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
+    marginBottom: 12,
+  },
+  answerItem: {
+    backgroundColor: '#2A3049',
+    padding: 12,
+    borderRadius: 8,
+    marginBottom: 8,
+  },
+  answerHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  answerNumber: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  answerStatus: {
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 4,
+  },
+  correctAnswer: {
+    backgroundColor: '#1b4332',
+  },
+  incorrectAnswer: {
+    backgroundColor: '#7f1d1d',
+  },
+  answerStatusText: {
+    color: '#fff',
+    fontSize: 12,
+    fontWeight: '600',
+  },
+  answerTime: {
+    color: '#aaa',
+    fontSize: 12,
+    marginTop: 8,
+    fontStyle: 'italic',
+  },
+  // User selections styles
+  userSelectionsContainer: {
+    backgroundColor: '#1E2235',
+    padding: 12,
+    borderRadius: 8,
+    marginTop: 8,
+  },
+  userSelectionsTitle: {
+    color: '#42A5F5',
+    fontSize: 14,
+    fontWeight: '600',
+    marginBottom: 8,
+  },
+  selectionsList: {
+    gap: 6,
+  },
+  selectionItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 8,
+    borderRadius: 6,
+    backgroundColor: '#2A3049',
+  },
+  selectedOption: {
+    backgroundColor: '#1b4332',
+  },
+  unselectedOption: {
+    backgroundColor: '#2A3049',
+  },
+  selectionWord: {
+    color: '#fff',
+    fontSize: 13,
+    flex: 1,
+  },
+  selectionTarget: {
+    color: '#42A5F5',
+    fontSize: 12,
+    fontWeight: '600',
+    marginBottom: 6,
+  },
+  selectionStatus: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: 8,
+  },
+  correctSelection: {
+    backgroundColor: '#1b4332',
+  },
+  incorrectSelection: {
+    backgroundColor: '#7f1d1d',
+  },
+  selectionStatusText: {
+    color: '#fff',
+    fontSize: 12,
+    fontWeight: 'bold',
   },
 });

@@ -234,7 +234,8 @@ Request Body:
 {
   "score": 0,                 // Optional
   "correctAnswers": 0,        // Optional
-  "completed": false          // Optional
+  "completed": false,         // Optional
+  "answers": "string"         // Optional - JSON string of all answers
 }
 ```
 
@@ -248,7 +249,8 @@ Response:
   "correctAnswers": 0,
   "completed": false,
   "startedAt": "datetime",
-  "endedAt": "datetime"
+  "endedAt": "datetime",
+  "answers": "string"
 }
 ```
 

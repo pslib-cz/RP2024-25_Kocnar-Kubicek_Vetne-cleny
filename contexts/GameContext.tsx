@@ -134,10 +134,11 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }
 
   /// on level finished, not limited to the whole game
-  const onFinished = (correctPercentage : number) => {
+  const onFinished = (correctPercentage : number, userSelections?: any) => {
     const isCorrect = correctPercentage >= 1;
 
     console.log("Question finished: ", isCorrect, activeQuestion);
+    console.log("User selections: ", userSelections);
 
     if (!activeQuestion) return;
     updateMistakes(activeQuestion, isCorrect);
@@ -145,10 +146,24 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     setCorrectAnswersCount((prev) => prev + (isCorrect ? 1 : 0));
 
+    // Add answer to gameInfo.answers array
+    const newAnswer = {
+      question: activeQuestion,
+      correct: isCorrect,
+      time: Date.now(),
+      userSelections: userSelections,
+    };
+
+    setGameInfo((prev) => ({
+      ...prev,
+      answers: [...prev.answers, newAnswer]
+    }));
+
     const dataUpdate = {
       score: isCorrect ? 1 : 0,
       correctAnswers: correctAnswersCount + (isCorrect ? 1 : 0),
       completed: gameInfo.activeQuestionIndex >= questions.length - 1,
+      answers: JSON.stringify([...gameInfo.answers, newAnswer]), // Include all answers as JSON string
     };
 
     tryUpdateSession(dataUpdate);

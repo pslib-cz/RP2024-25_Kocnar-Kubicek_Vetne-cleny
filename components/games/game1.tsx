@@ -152,7 +152,29 @@ export function GameOneUI(type: Game1Type, oneWord_INDEX: number = 1) {
     const updatedPhraseButtons = [...phraseButtons];
 
     if (oneWord) {
-      onFinished(data[gameIndex].type === bottomButton.type ? 1 : 0);
+      console.log("=== GAME1: oneWord mode ===");
+      console.log("Data:", data);
+      console.log("Game index:", gameIndex);
+      console.log("Bottom button:", bottomButton);
+      
+      const isCorrect = data[gameIndex].type === bottomButton.type;
+      console.log("GAME1: Is correct:", isCorrect);
+      
+      // Capture user selections for Game1 oneWord mode
+      const userSelections = {
+        gameType: 'Game1_oneWord',
+        selectedWords: [{
+          word: data[gameIndex].text || '',
+          wordIndex: gameIndex,
+          selectedType: bottomButton.type,
+          correctType: data[gameIndex].type || ''
+        }]
+      };
+      
+      console.log("GAME1: User selections captured:", userSelections);
+      console.log("GAME1: Calling onFinished with:", isCorrect ? 1 : 0, userSelections);
+      
+      onFinished(isCorrect ? 1 : 0, userSelections);
       return;
     }
 
@@ -177,13 +199,55 @@ export function GameOneUI(type: Game1Type, oneWord_INDEX: number = 1) {
       if (updatedPhraseButtons[nextIndex])
         updatedPhraseButtons[nextIndex].state = ButtonState.highlighted;
 
-      if (updatedPhraseButtons.every(button => button.state === ButtonState.correct || button.state === ButtonState.disabled))
-        onFinished(1)
+      if (updatedPhraseButtons.every(button => button.state === ButtonState.correct || button.state === ButtonState.disabled)) {
+        console.log("=== GAME1: Complete mode - all buttons correct ===");
+        console.log("Updated phrase buttons:", updatedPhraseButtons);
+        console.log("Data:", data);
+        
+        // Capture user selections for Game1 completion
+        const userSelections = {
+          gameType: 'Game1_complete',
+          selectedWords: updatedPhraseButtons.map((button, index) => ({
+            word: button.text || '',
+            wordIndex: index,
+            selectedType: button.type || '',
+            correctType: data?.[index]?.type || ''
+          }))
+        };
+        
+        console.log("GAME1: User selections captured:", userSelections);
+        console.log("GAME1: Calling onFinished with:", 1, userSelections);
+        
+        onFinished(1, userSelections);
+      }
 
       setGameIndex(nextIndex);
     }
-    else
-      onFinished(updatedPhraseButtons.filter(button => button.state === ButtonState.correct).length / updatedPhraseButtons.length);
+    else {
+      console.log("=== GAME1: Partial mode - incorrect answer ===");
+      console.log("Updated phrase buttons:", updatedPhraseButtons);
+      console.log("Data:", data);
+      
+      const correctCount = updatedPhraseButtons.filter(button => button.state === ButtonState.correct).length;
+      console.log("GAME1: Correct count:", correctCount, "out of", updatedPhraseButtons.length);
+      
+      // Capture user selections for Game1 partial completion
+      const userSelections = {
+        gameType: 'Game1_partial',
+        selectedWords: updatedPhraseButtons.map((button, index) => ({
+          word: button.text || '',
+          wordIndex: index,
+          selectedType: button.type || '',
+          correctType: data?.[index]?.type || ''
+        }))
+      };
+      
+      const percentage = correctCount / updatedPhraseButtons.length;
+      console.log("GAME1: User selections captured:", userSelections);
+      console.log("GAME1: Calling onFinished with:", percentage, userSelections);
+      
+      onFinished(percentage, userSelections);
+    }
 
     setBottomButtons([...bottomButtons]);
     setPhraseButtons(updatedPhraseButtons);

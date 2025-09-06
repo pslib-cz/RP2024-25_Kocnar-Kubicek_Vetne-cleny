@@ -12,13 +12,31 @@ export interface ActiveGameInfo {
     mistakeIndex?: number,
     correct: boolean,
     time: number,
+    userSelections?: {
+      // For Game1: which words were selected and what types were assigned
+      selectedWords?: Array<{
+        word: string;
+        wordIndex: number;
+        selectedType: string;
+        correctType: string;
+      }>;
+      // For Game2: which options were selected
+      selectedOptions?: Array<{
+        text: string;
+        type: string;
+        selected: boolean;
+        correct: boolean;
+      }>;
+      // Game type to understand the selection format
+      gameType?: string;
+    }
   }[]
 }
 
 export interface GameContextData {
   newGame: (config: any, gameType : GameType) => void;
   newGameInArena: () => void;
-  onFinished: (correctPercentage : number) => void;
+  onFinished: (correctPercentage : number, userSelections?: any) => void;
   getDuration: () => number;
   getSuccessRate: () => number;
   gameState: GameState;

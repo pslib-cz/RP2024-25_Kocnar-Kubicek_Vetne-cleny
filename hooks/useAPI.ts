@@ -61,6 +61,7 @@ export interface AuthoredGame {
     completed: boolean;
     startedAt: string;
     endedAt: string;
+    answers?: string; // JSON string of all answers
     player: {
       id: string;
       name: string;
@@ -268,7 +269,20 @@ export const useAPI = (userData?: Partial<APIUserData>) => {
     sessionId: string,
     update: SessionUpdateRequest
   ): Promise<SessionInfo> => {
-    return patch<SessionInfo>(`/sessions/${sessionId}`, update);
+    console.log("=== API: updateSession called ===");
+    console.log("Session ID:", sessionId);
+    console.log("Update data:", update);
+    console.log("Answers field type:", typeof update.answers);
+    console.log("Answers field length:", update.answers?.length || 0);
+    
+    try {
+      const result = await patch<SessionInfo>(`/sessions/${sessionId}`, update);
+      console.log("API: updateSession successful:", result);
+      return result;
+    } catch (error) {
+      console.error("API: updateSession failed:", error);
+      throw error;
+    }
   };
 
   // System Functions

@@ -97,6 +97,7 @@ export interface SessionUpdateRequest {
   score?: number;
   correctAnswers?: number;
   completed?: boolean;
+  answers?: string; // JSON string of all answers
 }
 
 export interface SessionInfo {
@@ -108,6 +109,7 @@ export interface SessionInfo {
   completed: boolean;
   startedAt: string;
   endedAt: string;
+  answers?: string; // JSON string of all answers
 }
 
 // System Types
