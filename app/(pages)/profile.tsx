@@ -4,12 +4,13 @@ import { Ionicons } from '@expo/vector-icons';
 import { Asset } from 'expo-asset';
 import * as FileSystem from 'expo-file-system';
 import React, { useEffect, useState } from 'react';
-import { Modal, SafeAreaView, StatusBar, StyleSheet, TextInput, TouchableOpacity, View, Switch } from 'react-native';
+import { Modal, StatusBar, StyleSheet, TextInput, TouchableOpacity, View, Switch } from 'react-native';
 import { SvgXml } from 'react-native-svg';
-import ColorPicker from 'react-native-wheel-color-picker';
 import { rocket1, rocket2, rocket3, rocket4, rocket5 } from '@/data/rocketsImages';
 import { router } from 'expo-router';
 import PageWrapper from '@/components/PageWrapper';
+import { ColorPickerModal } from '@/components/modals/ColorPickerModal';
+import { RocketPickerModal } from '@/components/modals/RocketPickerModal';
 
 export const loadSvgAsset = async (assetModule: any): Promise<string | null> => {
   try {
@@ -161,103 +162,19 @@ export default function ProfileEditScreen(): React.ReactElement {
       <ColorPickerModal
         isVisible={colorPickerVisible}
         onClose={() => setColorPickerVisible(false)}
-        onColorChanged={() => setColorPickerVisible(false)}
         subtitle={currentPickingFor === 'body' ? 'Vyberte barvu rakety' : 'Vyberte barvu stopy'}
         currentColor={currentPickingFor === 'body' ? bodyColor : trailColor}
         onColorChangeComplete={onColorChangeComplete}
       />
 
-      {/* Rocket Picker Modal */}
-      <Modal
-        visible={rocketPickerVisible}
-        transparent={true}
-        animationType="fade"
-        onRequestClose={() => setRocketPickerVisible(false)}
-      >
-        <View style={styles.modalOverlay}>
-          <View style={styles.rocketPickerContainer}>
-            <ThemedText type="subtitle" style={styles.colorPickerTitle}>Vyberte raketu</ThemedText>
-
-            <View style={styles.rocketGrid}>
-              {modifiedRocketSvgs.map((svg, index) => (
-                <TouchableOpacity
-                  key={index}
-                  style={[
-                    styles.rocketOption,
-                    selectedRocketIndex === index && styles.selectedRocketOption
-                  ]}
-                  onPress={() => {
-                    setSelectedRocketIndex(index);
-                    setRocketPickerVisible(false);
-                  }}
-                >
-                  <SvgXml xml={svg} width={50} height={50} />
-                </TouchableOpacity>
-              ))}
-            </View>
-          </View>
-        </View>
-      </Modal>
+      <RocketPickerModal
+        isVisible={rocketPickerVisible}
+        onClose={() => setRocketPickerVisible(false)}
+        rocketSvgs={modifiedRocketSvgs}
+        selectedRocketIndex={selectedRocketIndex}
+        onRocketSelect={setSelectedRocketIndex}
+      />
     </PageWrapper>
-  );
-}
-
-const ColorPickerModal = ({isVisible, onClose, onColorChanged, subtitle, currentColor, onColorChangeComplete} : {
-  isVisible: boolean;
-  onClose: () => void;
-  onColorChanged: () => void;
-  subtitle: string;
-  currentColor: string;
-  onColorChangeComplete: (color: string) => void;
-}) => {
-
-  const [pickerColor, setPickerColor] = useState<string>(currentColor);
-
-  return (
-    <Modal
-      visible={isVisible}
-      transparent={true}
-      animationType="fade"
-      onRequestClose={onClose}
-    >
-      <View style={styles.modalOverlay}>
-        <View style={styles.colorPickerContainer}>
-          <ThemedText type="subtitle" style={styles.colorPickerTitle}>
-            {subtitle}
-          </ThemedText>
-
-          <View style={styles.colorPickerWrapper}>
-            <ColorPicker
-              color={pickerColor}
-              onColorChangeComplete={setPickerColor}
-              thumbSize={30}
-              sliderSize={20}
-              noSnap={true}
-              row={false}
-            />
-          </View>
-
-          <View style={styles.buttonRow}>
-            <TouchableOpacity
-              style={styles.cancelButton}
-              onPress={onClose}
-            >
-              <ThemedText type="defaultSemiBold" style={styles.colorpickerButtonText}>Zrušit</ThemedText>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.confirmButton}
-              onPress={() => {
-                onColorChangeComplete(pickerColor);
-                onClose();
-              }}
-            >
-              <ThemedText type="defaultSemiBold" style={styles.colorpickerButtonText}>Potvrdit</ThemedText>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </View>
-    </Modal>
   );
 }
 
@@ -345,84 +262,5 @@ const styles = StyleSheet.create({
   teacherModeLabel: {
     color: 'white',
     fontSize: 16,
-  },
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  colorPickerContainer: {
-    width: '80%',
-    backgroundColor: '#1c1f3d',
-    borderRadius: 12,
-    padding: 16,
-    alignItems: 'center',
-  },
-  rocketPickerContainer: {
-    width: '80%',
-    backgroundColor: '#1c1f3d',
-    borderRadius: 12,
-    padding: 16,
-    alignItems: 'center',
-  },
-  colorPickerTitle: {
-    color: 'white',
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 16,
-  },
-  colorPickerWrapper: {
-    width: '100%',
-    height: 300,
-  },
-  buttonRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%',
-    marginTop: 20,
-  },
-  cancelButton: {
-    flex: 1,
-    borderWidth: 1,
-    borderColor: '#4A5BD2',
-    padding: 12,
-    borderRadius: 6,
-    marginRight: 8,
-    alignItems: 'center',
-    boxSizing: 'border-box',
-  },
-  confirmButton: {
-    flex: 1,
-    backgroundColor: '#4A5BD2',
-    padding: 12,
-    borderRadius: 6,
-    marginLeft: 8,
-    alignItems: 'center',
-  },
-  colorpickerButtonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  rocketGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-around',
-    width: '100%',
-  },
-  rocketOption: {
-    width: 80,
-    height: 80,
-    margin: 8,
-    borderRadius: 12,
-    backgroundColor: '#101223',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 2,
-    borderColor: 'transparent',
-  },
-  selectedRocketOption: {
-    borderColor: '#4A5BD2',
   },
 });

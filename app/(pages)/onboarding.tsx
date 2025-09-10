@@ -8,7 +8,6 @@ import { rocket1, rocket2, rocket3, rocket4, rocket5 } from '@/data/rocketsImage
 import { Asset } from 'expo-asset';
 import * as FileSystem from 'expo-file-system';
 import { useRouter } from 'expo-router';
-import ColorPicker from 'react-native-wheel-color-picker';
 import PlayfulButton from '@/components/ui/PlayfulButton';
 import { MaterialIcons } from '@expo/vector-icons';
 import { WordButtonsContainer } from '@/components/ui/games/WordButtonsContainer';
@@ -18,6 +17,8 @@ import { NamedRocket } from '@/components/NamedRocket';
  
 import { PlayerRocket } from '@/components/PlayerRocket';
 import PageWrapper from '@/components/PageWrapper';
+import { ColorPickerModal } from '@/components/modals/ColorPickerModal';
+import { RocketPickerModal } from '@/components/modals/RocketPickerModal';
 
 const loadSvgAsset = async (assetModule: any): Promise<string | null> => {
   try {
@@ -252,75 +253,24 @@ const ProfileSetup = ({
           disabled={!localName.trim()}
         />
       </View>
-      {/* Color Picker Modal */}
-      <Modal
-        visible={colorPickerVisible}
-        transparent={true}
-        animationType="fade"
-        onRequestClose={() => setColorPickerVisible(false)}
-      >
-        <View style={styles.modalOverlay}>
-          <View style={styles.colorPickerContainer}>
-            <ThemedText type="subtitle" style={[styles.colorPickerTitle, { paddingHorizontal: 16 }]}>
-              {currentPickingFor === 'body' ? 'Vyberte barvu rakety' : 'Vyberte barvu trysek'}
-            </ThemedText>
-            <View style={styles.colorPickerWrapper}>
-              <ColorPicker
-                color={currentPickingFor === 'body' ? bodyColor : trailColor}
-                onColorChangeComplete={onColorChangeComplete}
-                thumbSize={30}
-                sliderSize={20}
-                noSnap={true}
-                row={false}
-              />
-            </View>
-            <View style={styles.buttonRow}>
-              <TouchableOpacity
-                style={styles.cancelButton}
-                onPress={() => setColorPickerVisible(false)}
-              >
-                <ThemedText type="defaultSemiBold" style={[styles.colorpickerButtonText, { paddingHorizontal: 16 }]}>Zrušit</ThemedText>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.confirmButton}
-                onPress={() => setColorPickerVisible(false)}
-              >
-                <ThemedText type="defaultSemiBold" style={[styles.colorpickerButtonText, { paddingHorizontal: 16 }]}>Potvrdit</ThemedText>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </Modal>
-      {/* Rocket Picker Modal */}
-      <Modal
-        visible={rocketPickerVisible}
-        transparent={true}
-        animationType="fade"
-        onRequestClose={() => setRocketPickerVisible(false)}
-      >
-        <View style={styles.modalOverlay}>
-          <View style={styles.rocketPickerContainer}>
-            <ThemedText type="subtitle" style={[styles.colorPickerTitle, { paddingHorizontal: 16 }]}>Vyberte raketu</ThemedText>
-            <View style={styles.rocketGrid}>
-              {modifiedRocketSvgs.map((svg, index) => (
-                <TouchableOpacity
-                  key={index}
-                  style={[
-                    styles.rocketOption,
-                    selectedRocketIndex === index && styles.selectedRocketOption
-                  ]}
-                  onPress={() => {
-                    setSelectedRocketIndex(index);
-                    setRocketPickerVisible(false);
-                  }}
-                >
-                  <SvgXml xml={svg} width={50} height={50} />
-                </TouchableOpacity>
-              ))}
-            </View>
-          </View>
-        </View>
-      </Modal>
+
+      <ColorPickerModal
+        isVisible={colorPickerVisible}
+        onClose={() => setColorPickerVisible(false)}
+        subtitle={currentPickingFor === 'body' ? 'Vyberte barvu rakety' : 'Vyberte barvu trysek'}
+        currentColor={currentPickingFor === 'body' ? bodyColor : trailColor}
+        onColorChangeComplete={onColorChangeComplete}
+      />
+      <RocketPickerModal
+        isVisible={rocketPickerVisible}
+        onClose={() => setRocketPickerVisible(false)}
+        selectedRocketIndex={selectedRocketIndex}
+        onRocketSelect={index => {
+          setSelectedRocketIndex(index);
+          setRocketPickerVisible(false);
+        }}
+        rocketSvgs={modifiedRocketSvgs}
+      />
     </RNScrollView>
   )
 }
@@ -520,13 +470,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  colorPickerContainer: {
-    width: '80%',
-    backgroundColor: '#1c1f3d',
-    borderRadius: 12,
-    padding: 16,
-    alignItems: 'center',
-  },
   rocketPickerContainer: {
     width: '80%',
     backgroundColor: '#1c1f3d',
@@ -539,10 +482,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 16,
-  },
-  colorPickerWrapper: {
-    width: '100%',
-    height: 300,
   },
   buttonRow: {
     flexDirection: 'row',
@@ -567,11 +506,6 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     marginLeft: 8,
     alignItems: 'center',
-  },
-  colorpickerButtonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold',
   },
   rocketGrid: {
     flexDirection: 'row',
