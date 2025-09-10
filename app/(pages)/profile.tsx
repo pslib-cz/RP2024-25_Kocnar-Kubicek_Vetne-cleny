@@ -158,48 +158,14 @@ export default function ProfileEditScreen(): React.ReactElement {
         </View>
       </View>
 
-      {/* Color Picker Modal */}
-      <Modal
-        visible={colorPickerVisible}
-        transparent={true}
-        animationType="fade"
-        onRequestClose={() => setColorPickerVisible(false)}
-      >
-        <View style={styles.modalOverlay}>
-          <View style={styles.colorPickerContainer}>
-            <ThemedText type="subtitle" style={styles.colorPickerTitle}>
-              {currentPickingFor === 'body' ? 'Vyberte barvu rakety' : 'Vyberte barvu stopy'}
-            </ThemedText>
-
-            <View style={styles.colorPickerWrapper}>
-              <ColorPicker
-                color={currentPickingFor === 'body' ? bodyColor : trailColor}
-                onColorChangeComplete={onColorChangeComplete}
-                thumbSize={30}
-                sliderSize={20}
-                noSnap={true}
-                row={false}
-              />
-            </View>
-
-            <View style={styles.buttonRow}>
-              <TouchableOpacity
-                style={styles.cancelButton}
-                onPress={() => setColorPickerVisible(false)}
-              >
-                <ThemedText type="defaultSemiBold" style={styles.colorpickerButtonText}>Zrušit</ThemedText>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={styles.confirmButton}
-                onPress={() => setColorPickerVisible(false)}
-              >
-                <ThemedText type="defaultSemiBold" style={styles.colorpickerButtonText}>Potvrdit</ThemedText>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </Modal>
+      <ColorPickerModal
+        isVisible={colorPickerVisible}
+        onClose={() => setColorPickerVisible(false)}
+        onColorChanged={() => setColorPickerVisible(false)}
+        subtitle={currentPickingFor === 'body' ? 'Vyberte barvu rakety' : 'Vyberte barvu stopy'}
+        currentColor={currentPickingFor === 'body' ? bodyColor : trailColor}
+        onColorChangeComplete={onColorChangeComplete}
+      />
 
       {/* Rocket Picker Modal */}
       <Modal
@@ -233,6 +199,65 @@ export default function ProfileEditScreen(): React.ReactElement {
         </View>
       </Modal>
     </PageWrapper>
+  );
+}
+
+const ColorPickerModal = ({isVisible, onClose, onColorChanged, subtitle, currentColor, onColorChangeComplete} : {
+  isVisible: boolean;
+  onClose: () => void;
+  onColorChanged: () => void;
+  subtitle: string;
+  currentColor: string;
+  onColorChangeComplete: (color: string) => void;
+}) => {
+
+  const [pickerColor, setPickerColor] = useState<string>(currentColor);
+
+  return (
+    <Modal
+      visible={isVisible}
+      transparent={true}
+      animationType="fade"
+      onRequestClose={onClose}
+    >
+      <View style={styles.modalOverlay}>
+        <View style={styles.colorPickerContainer}>
+          <ThemedText type="subtitle" style={styles.colorPickerTitle}>
+            {subtitle}
+          </ThemedText>
+
+          <View style={styles.colorPickerWrapper}>
+            <ColorPicker
+              color={pickerColor}
+              onColorChangeComplete={setPickerColor}
+              thumbSize={30}
+              sliderSize={20}
+              noSnap={true}
+              row={false}
+            />
+          </View>
+
+          <View style={styles.buttonRow}>
+            <TouchableOpacity
+              style={styles.cancelButton}
+              onPress={onClose}
+            >
+              <ThemedText type="defaultSemiBold" style={styles.colorpickerButtonText}>Zrušit</ThemedText>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.confirmButton}
+              onPress={() => {
+                onColorChangeComplete(pickerColor);
+                onClose();
+              }}
+            >
+              <ThemedText type="defaultSemiBold" style={styles.colorpickerButtonText}>Potvrdit</ThemedText>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+    </Modal>
   );
 }
 
