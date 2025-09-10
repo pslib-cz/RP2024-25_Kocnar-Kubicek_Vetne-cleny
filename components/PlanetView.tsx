@@ -88,7 +88,7 @@ const PlanetView: React.FC<{displayName? : boolean}> = ({displayName = true}) =>
   if (!planetList) {
     return (
       <View style={styles.planetContentContainer}>
-        <Text style={{ color: 'red', fontSize: 18 }}>Data for this galaxy is missing.</Text>
+        <Text style={{ color: 'red', fontSize: 18 }}>Data pro tuto galaxii chybí.</Text>
       </View>
     );
   }

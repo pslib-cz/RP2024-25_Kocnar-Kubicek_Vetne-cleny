@@ -22,7 +22,7 @@ export const WordButtonsContainer = (
   if (!buttons) {
     return (
       <View style={styles.phraseContainer}>
-        <ThemedText>Loading...</ThemedText>
+        <ThemedText>Načítání...</ThemedText>
       </View>
     )
   }

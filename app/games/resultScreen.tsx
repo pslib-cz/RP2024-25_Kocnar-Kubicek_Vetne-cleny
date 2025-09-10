@@ -97,7 +97,7 @@ const PracticeCompleteScreen = () => {
 
         <View style={styles.statsContainer}>
           <ResultStuff text="Čas" value={`${getDuration()}s`} color="#6272A4" icon="timer" />
-          <ResultStuff text="Úspešnost" value={`${successRate.toFixed(2)}%`} color={successRateColor} icon="star" />
+          <ResultStuff text="Úspěšnost" value={`${successRate.toFixed(2)}%`} color={successRateColor} icon="star" />
         </View>
 
         <PlayfulButton title={"Zkusit znovu"} onPress={newGameWitMostCommonMistakes} />
