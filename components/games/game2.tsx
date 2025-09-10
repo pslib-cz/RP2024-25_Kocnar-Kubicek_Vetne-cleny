@@ -32,13 +32,7 @@ export function Game2UI(wantedType: WordType | null = null) {
   };
 
   const handleContinue = () => {
-    console.log("=== GAME2: handleContinue called ===");
-    console.log("Options available:", options);
-    console.log("Selected options:", selectedOptions);
-    console.log("Target type:", targetType);
-    
     const correctCount = IsValid();
-    console.log("GAME2: Correct count calculated:", correctCount);
     
     // Capture user selections for Game2
     const userSelections = {
@@ -51,9 +45,6 @@ export function Game2UI(wantedType: WordType | null = null) {
       })) || [],
       targetType: targetType?.type
     };
-    
-    console.log("GAME2: User selections captured:", userSelections);
-    console.log("GAME2: Calling onFinished with:", correctCount, userSelections);
     
     onFinished(correctCount, userSelections)
   }
