@@ -1,6 +1,6 @@
 import { WordSelectionOption } from '@/types/games/SelectionOption';
 import React, { createContext, useContext, ReactNode, useEffect, useState } from 'react';
-import * as FileSystem from 'expo-file-system';
+import * as FileSystem from 'expo-file-system/legacy';
 import { CommonMistake } from '@/types/CommonMistake';
 import { Question } from '@/types/Question';
 

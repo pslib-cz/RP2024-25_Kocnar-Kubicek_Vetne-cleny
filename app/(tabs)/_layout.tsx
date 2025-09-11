@@ -52,7 +52,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="tutorial"
+        name="learningPlatform"
         options={{
           title: 'Určování',
           tabBarActiveTintColor: '#63b9ff',

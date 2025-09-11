@@ -6,7 +6,7 @@ import { useRocket } from '@/contexts/RocketContext';
 import { SvgXml } from 'react-native-svg';
 import { rocket1, rocket2, rocket3, rocket4, rocket5 } from '@/data/rocketsImages';
 import { Asset } from 'expo-asset';
-import * as FileSystem from 'expo-file-system';
+import * as FileSystem from 'expo-file-system/legacy';
 import { useRouter } from 'expo-router';
 import PlayfulButton from '@/components/ui/PlayfulButton';
 import { MaterialIcons } from '@expo/vector-icons';

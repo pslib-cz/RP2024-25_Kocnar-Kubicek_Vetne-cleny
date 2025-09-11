@@ -1,7 +1,7 @@
 import React, { createContext, useContext, ReactNode, useEffect } from 'react';
 import { useAPI } from '@/hooks/useAPI';
 import { loadedVersion, loadLatestData_Local, updateLoadedSets } from '@/hooks/useData';
-import * as FileSystem from 'expo-file-system';
+import * as FileSystem from 'expo-file-system/legacy';
 import { useNetworkState } from 'expo-network';
 
 interface FileSystemStuffContextValue {

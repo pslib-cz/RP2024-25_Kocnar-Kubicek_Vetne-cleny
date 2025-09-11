@@ -2,7 +2,7 @@ import { useGalaxyContext } from "@/contexts/GalaxyContext";
 import { WordSelectionOption } from "@/types/games/SelectionOption";
 import { WordType } from "@/types/WordTypes";
 import { useEffect, useMemo } from "react";
-import * as FileSystem from 'expo-file-system';
+import * as FileSystem from 'expo-file-system/legacy';
 
 const version = "latest"
 

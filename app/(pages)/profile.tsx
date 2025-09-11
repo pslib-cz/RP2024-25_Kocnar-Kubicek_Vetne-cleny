@@ -2,7 +2,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { useRocket } from '@/contexts/RocketContext';
 import { Ionicons } from '@expo/vector-icons';
 import { Asset } from 'expo-asset';
-import * as FileSystem from 'expo-file-system';
+import * as FileSystem from 'expo-file-system/legacy';
 import React, { useEffect, useState } from 'react';
 import { Modal, StatusBar, StyleSheet, TextInput, TouchableOpacity, View, Switch } from 'react-native';
 import { SvgXml } from 'react-native-svg';
