@@ -294,6 +294,10 @@ export const useAPI = (userData?: Partial<APIUserData>) => {
     return get<AuthoredGame[]>('/players/me/authored-games');
   };
 
+  const getAuthoredGame = async (gameId: string): Promise<AuthoredGame> => {
+    return get<AuthoredGame>(`/players/me/authored-games/${gameId}`);
+  };
+
   return { 
     post, 
     get, 
@@ -309,5 +313,6 @@ export const useAPI = (userData?: Partial<APIUserData>) => {
     updateSession,
     checkHealth,
     getAuthoredGames,
+    getAuthoredGame,
   };
 };
