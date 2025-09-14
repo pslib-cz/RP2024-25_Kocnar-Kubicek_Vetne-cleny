@@ -101,15 +101,13 @@ export default function AuthoredGameDetail() {
   const fetchGame = async () => {
     setLoading(true);
     try {
-      const games = await api.getAuthoredGames();
-
-      console.log('Fetched games:', games.length);
-      console.log('Looking for game with ID:', gameId);
-
-      const currentGame = games.find(g => g.id === gameId);
-      setGame(currentGame || null);
+      console.log('Fetching game with ID:', gameId);
+      const currentGame = await api.getAuthoredGame(gameId);
+      console.log('Fetched game:', currentGame);
+      setGame(currentGame);
     } catch (error) {
       console.warn('Failed to fetch game details:', error);
+      setGame(null);
     } finally {
       setLoading(false);
     }
@@ -401,6 +399,7 @@ export default function AuthoredGameDetail() {
               {completedSessions
                 .sort((a, b) => b.correctAnswers - a.correctAnswers)
                 .map((session, index) => {
+                    console.log(session);
                   const isExpanded = expandedSessions.has(session.id);
                   const answers = parseSessionAnswers(session.answers);
                   
