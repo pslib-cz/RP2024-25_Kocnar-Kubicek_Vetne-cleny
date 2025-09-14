@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { View, StyleSheet, TextInput, TouchableOpacity, Image, Dimensions, SafeAreaView, StatusBar, Modal, ScrollView as RNScrollView } from 'react-native';
+import { View, StyleSheet, TextInput, TouchableOpacity, Image, Dimensions, SafeAreaView, StatusBar, Modal, ScrollView as RNScrollView, ScrollView } from 'react-native';
 import PagerView from 'react-native-pager-view';
 import { ThemedText } from '@/components/ThemedText';
 import { useRocket } from '@/contexts/RocketContext';
@@ -14,7 +14,7 @@ import { WordButtonsContainer } from '@/components/ui/games/WordButtonsContainer
 import { ButtonState } from '@/components/ui/games/WordButton';
 import { useLevelContext } from '@/contexts/levelContext';
 import { NamedRocket } from '@/components/NamedRocket';
- 
+
 import { PlayerRocket } from '@/components/PlayerRocket';
 import PageWrapper from '@/components/PageWrapper';
 import { ColorPickerModal } from '@/components/modals/ColorPickerModal';
@@ -147,27 +147,30 @@ const Introductions = ({
 
   return (
     <View key="1" style={styles.slide}>
-      <Image
-        source={require('../../assets/images/icons/splash-icon-light.png')}
-        style={{ width: 120, height: 120, marginBottom: 16, alignSelf: 'center', borderRadius: 16 }}
-        resizeMode="contain"
-      />
-      <View style={styles.paddedContainer}>
-        <ThemedText type="title" style={{ marginBottom: 12, textAlign: 'center' }}>Vítej v aplikaci</ThemedText>
-        <ThemedText type="title" style={{ marginBottom: 24, textAlign: 'center' }}>Větná dráha</ThemedText>
-        <ThemedText type="default" style={{ marginBottom: 16, textAlign: 'center', fontSize: 18 }}>
-          Procvičuj větné členy, sbírej body a zlepšuj se! Čekají tě mise vesmírem a zkoušky znalostí.
-        </ThemedText>
-        <ThemedText type="default" style={{ marginBottom: 16, textAlign: 'center', fontSize: 18 }}>
-          Před tím, než začneš, musíš si nastavit svůj profil a naučit se používat aplikaci.
-        </ThemedText>
-        <ThemedText type="default" style={{ marginBottom: 16, textAlign: 'center', fontSize: 18 }}>
-          Stisknutím tlačítka "Pokračovat" souhlasíš s <ThemedText type="defaultSemiBold" style={{ color: '#4A5BD2' }} onPress={() => router.push('/(pages)/gdpr')}>Zásadami ochrany osobních údajů</ThemedText>. Údaje jsou použity pro zobrazení výsledků hry a vašeho profilu v rámci sdílených her.
-        </ThemedText>
-      </View>
+      <ScrollView>
+        <Image
+          source={require('../../assets/images/icons/splash-icon-light.png')}
+          style={{ width: 120, height: 120, marginBottom: 16, alignSelf: 'center', borderRadius: 16 }}
+          resizeMode="contain"
+        />
+        <View style={styles.paddedContainer}>
+          <ThemedText type="title" style={{ marginBottom: 12, textAlign: 'center' }}>Vítej v aplikaci</ThemedText>
+          <ThemedText type="title" style={{ marginBottom: 24, textAlign: 'center' }}>Větná dráha</ThemedText>
+          <ThemedText type="default" style={{ marginBottom: 16, textAlign: 'center', fontSize: 18 }}>
+            Procvičuj větné členy, sbírej body a zlepšuj se! Čekají tě mise vesmírem a zkoušky znalostí.
+          </ThemedText>
+          <ThemedText type="default" style={{ marginBottom: 16, textAlign: 'center', fontSize: 18 }}>
+            Před tím, než začneš, musíš si nastavit svůj profil a naučit se používat aplikaci.
+          </ThemedText>
+          <ThemedText type="default" style={{ marginBottom: 16, textAlign: 'center', fontSize: 18 }}>
+            Stisknutím tlačítka "Pokračovat" souhlasíš s <ThemedText type="defaultSemiBold" style={{ color: '#4A5BD2' }} onPress={() => router.push('/(pages)/gdpr')}>Zásadami ochrany osobních údajů</ThemedText>. Údaje jsou použity pro zobrazení výsledků hry a vašeho profilu v rámci sdílených her.
+          </ThemedText>
+        </View>
+      </ScrollView>
       <View style={styles.bottomButtonContainer}>
         <PlayfulButton title="Pokračovat" icon={<MaterialIcons name="arrow-forward" size={24} color="white" />} onPress={() => goToPage(1)} />
       </View>
+
     </View>
   )
 }
@@ -195,56 +198,58 @@ const ProfileSetup = ({
   };
 
   return (
-    <RNScrollView key="2" contentContainerStyle={[styles.slide, { alignItems: 'center', justifyContent: 'flex-start' }]}
+    <RNScrollView key="2" contentContainerStyle={styles.slide}
       keyboardShouldPersistTaps="handled"
     >
-      <View style={styles.paddedContainer}>
-        <ThemedText type="title" style={{ marginBottom: 12, textAlign: 'center' }}>Váš profil</ThemedText>
-        <ThemedText style={{ color: '#aaa', marginBottom: 16, textAlign: 'center' }}>Zadejte své jméno a vyberte si raketu</ThemedText>
-      </View>
-      <View style={styles.avatarOptions}>
-        {/* Body Color */}
-        <View style={styles.optionContainer}>
-          <TouchableOpacity
-            style={[styles.colorOption, { backgroundColor: bodyColor }]}
-            onPress={() => openColorPicker('body')}
-          />
-          <ThemedText style={styles.optionLabel}>Barva rakety</ThemedText>
+      <ScrollView>
+        <View style={styles.paddedContainer}>
+          <ThemedText type="title" style={{ marginBottom: 12, textAlign: 'center' }}>Váš profil</ThemedText>
+          <ThemedText style={{ color: '#aaa', marginBottom: 16, textAlign: 'center' }}>Zadejte své jméno a vyberte si raketu</ThemedText>
+          <View style={styles.avatarOptions}>
+            {/* Body Color */}
+            <View style={styles.optionContainer}>
+              <TouchableOpacity
+                style={[styles.colorOption, { backgroundColor: bodyColor }]}
+                onPress={() => openColorPicker('body')}
+              />
+              <ThemedText style={styles.optionLabel}>Barva rakety</ThemedText>
+            </View>
+            {/* Rocket Shape */}
+            <View style={styles.optionContainer}>
+              <TouchableOpacity
+                style={styles.shapeOption}
+                onPress={() => setRocketPickerVisible(true)}
+              >
+                {modifiedRocketSvgs.length > 0 && selectedRocketIndex < modifiedRocketSvgs.length && (
+                  <SvgXml xml={modifiedRocketSvgs[selectedRocketIndex]} width={70} height={70} />
+                )}
+              </TouchableOpacity>
+              <ThemedText style={styles.optionLabel}>Tvar rakety</ThemedText>
+            </View>
+            {/* Trail Color */}
+            <View style={styles.optionContainer}>
+              <TouchableOpacity
+                style={[styles.colorOption, { backgroundColor: trailColor }]}
+                onPress={() => openColorPicker('trail')}
+              />
+              <ThemedText style={styles.optionLabel}>Barva trysek</ThemedText>
+            </View>
+          </View>
+          {/* Name Input */}
+          <View style={styles.nameContainer}>
+            <ThemedText style={styles.nameLabel}>Jméno</ThemedText>
+            <TextInput
+              style={styles.nameInput}
+              value={localName}
+              onChangeText={text => { setLocalName(text); }}
+              placeholder="Zadejte své jméno"
+              placeholderTextColor="#666"
+              autoCapitalize="words"
+              autoFocus={false}
+            />
+          </View>
         </View>
-        {/* Rocket Shape */}
-        <View style={styles.optionContainer}>
-          <TouchableOpacity
-            style={styles.shapeOption}
-            onPress={() => setRocketPickerVisible(true)}
-          >
-            {modifiedRocketSvgs.length > 0 && selectedRocketIndex < modifiedRocketSvgs.length && (
-              <SvgXml xml={modifiedRocketSvgs[selectedRocketIndex]} width={70} height={70} />
-            )}
-          </TouchableOpacity>
-          <ThemedText style={styles.optionLabel}>Tvar rakety</ThemedText>
-        </View>
-        {/* Trail Color */}
-        <View style={styles.optionContainer}>
-          <TouchableOpacity
-            style={[styles.colorOption, { backgroundColor: trailColor }]}
-            onPress={() => openColorPicker('trail')}
-          />
-          <ThemedText style={styles.optionLabel}>Barva trysek</ThemedText>
-        </View>
-      </View>
-      {/* Name Input */}
-      <View style={styles.nameContainer}>
-        <ThemedText style={styles.nameLabel}>Jméno</ThemedText>
-        <TextInput
-          style={styles.nameInput}
-          value={localName}
-          onChangeText={text => { setLocalName(text); }}
-          placeholder="Zadejte své jméno"
-          placeholderTextColor="#666"
-          autoCapitalize="words"
-          autoFocus={false}
-        />
-      </View>
+      </ScrollView>
       <View style={styles.bottomButtonContainer}>
         <PlayfulButton
           title="Pokračovat"
@@ -281,7 +286,7 @@ const ArenaInfo = ({
 }) => {
   return (
     <View key="3" style={styles.slide}>
-      <View style={styles.paddedContainer}>
+      <View>
         <ThemedText type="title" style={{ marginBottom: 16, textAlign: 'center' }}>Seznam se s Arénou!</ThemedText>
         <ThemedText style={{ marginBottom: 16, textAlign: 'center' }}>
           Aréna je prostor, ve kterém můžeš cestovat po galaxiích. V galaxiích můžeš procvičovat větné členy v různých úlohách a sbírat body za správné odpovědi.
@@ -297,7 +302,7 @@ const ArenaInfo = ({
         style={{ height: width * 0.6, borderRadius: 16, marginBottom: 24, transform: [{ translateX: width * 0.2 }, { translateY: -width * 0.3 }] }}
         resizeMode="contain"
       />
-      <View style={styles.bottomButtonContainer}>
+      <View style={[styles.bottomButtonContainer, { position: 'absolute', bottom: 24 }]}>
         <PlayfulButton title="Pokračovat" icon={<MaterialIcons name="arrow-forward" size={24} color="white" />} onPress={() => goToPage(3)} />
       </View>
     </View>
@@ -325,23 +330,25 @@ const GamesInfo = ({
 
   return (
     <View key="4" style={styles.slide}>
-      <View style={styles.paddedContainer}>
-        <ThemedText type="title" style={{ marginBottom: 16, textAlign: 'center' }}>Herní režimy</ThemedText>
-        <ThemedText style={{ marginBottom: 16, textAlign: 'center' }}>
-          V aplikaci najdeš různé typy her, každý ti pomůže procvičit jiné dovednosti.
-        </ThemedText>
-        <ThemedText style={{ marginBottom: 16, textAlign: 'center' }}>
-          Zde můžeš vidět příklad hry, ve které budeš klikat na barevné zkratky větných členů dole, a tím postupně označovat větu.
-        </ThemedText>
-        <ThemedText style={{ marginBottom: 16, textAlign: 'center' }}>
-          Na každé zkratce můžeš podržet prst pro zobrazení nápovědy.
-        </ThemedText>
-      </View>
-      <View style={{ width: '100%', alignItems: 'center' }}>
-        <WordButtonsContainer buttons={staticWordButtons1} showTooltip={false} longPress={() => { }} onClick={() => { }} />
-        <WordButtonsContainer buttons={staticWordButtons2} showTooltip={true} longPress={(a, b) => handleShowTooltip(a.text, b)} onClick={() => { }} />
-      </View>
-      <View style={styles.bottomButtonContainer}>
+      <ScrollView>
+        <View style={styles.paddedContainer}>
+          <ThemedText type="title" style={{ marginBottom: 16, textAlign: 'center' }}>Herní režimy</ThemedText>
+          <ThemedText style={{ marginBottom: 16, textAlign: 'center' }}>
+            V aplikaci najdeš různé typy her, každý ti pomůže procvičit jiné dovednosti.
+          </ThemedText>
+          <ThemedText style={{ marginBottom: 16, textAlign: 'center' }}>
+            Zde můžeš vidět příklad hry, ve které budeš klikat na barevné zkratky větných členů dole, a tím postupně označovat větu.
+          </ThemedText>
+          <ThemedText style={{ marginBottom: 16, textAlign: 'center' }}>
+            Na každé zkratce můžeš podržet prst pro zobrazení nápovědy.
+          </ThemedText>
+        </View>
+        <View style={{ width: '100%', alignItems: 'center' }}>
+          <WordButtonsContainer buttons={staticWordButtons1} showTooltip={false} longPress={() => { }} onClick={() => { }} />
+          <WordButtonsContainer buttons={staticWordButtons2} showTooltip={true} longPress={(a, b) => handleShowTooltip(a.text, b)} onClick={() => { }} />
+        </View>
+      </ScrollView>
+      <View style={[styles.bottomButtonContainer]}>
         <PlayfulButton title="Seznam zkratek" icon={<MaterialIcons name="info" size={24} color="white" />} onPress={() => router.push('/(pages)/abbrlist')} variant="secondary" style={{ height: 44 }} />
         <PlayfulButton title="Pokračovat" icon={<MaterialIcons name="sports-esports" size={24} color="white" />} onPress={() => goToPage(4)} />
       </View>
@@ -353,49 +360,51 @@ const ExamsInfo = () => {
   const router = useRouter();
   return (
     <View key="5" style={styles.slide}>
-      <View style={styles.paddedContainer}>
-        <ThemedText type="title" style={{ marginBottom: 16, textAlign: 'center' }}>Testy a zkoušky</ThemedText>
-        <ThemedText style={{ marginBottom: 16, textAlign: 'center' }}>
-          Vyzkoušej si testy nanečisto nebo se připoj ke zkoušce sdílené tvým učitelem!
-        </ThemedText>
-        <ThemedText style={{ marginBottom: 16, textAlign: 'center' }}>
-          Sleduj svůj pokrok a porovnej výsledky s ostatními!
-        </ThemedText>
-        {/* User info section */}
-        <View style={styles.playerInfoContainer}>
-          <NamedRocket
-            containerStyle={styles.namedRocketContainer}
-            textStyle={styles.playerName}
-          />
+      <ScrollView>
+        <View style={styles.paddedContainer}>
+          <ThemedText type="title" style={{ marginBottom: 16, textAlign: 'center' }}>Testy a zkoušky</ThemedText>
+          <ThemedText style={{ marginBottom: 16, textAlign: 'center' }}>
+            Vyzkoušej si testy nanečisto nebo se připoj ke zkoušce sdílené tvým učitelem!
+          </ThemedText>
+          <ThemedText style={{ marginBottom: 16, textAlign: 'center' }}>
+            Sleduj svůj pokrok a porovnej výsledky s ostatními!
+          </ThemedText>
+          {/* User info section */}
+          <View style={styles.playerInfoContainer}>
+            <NamedRocket
+              containerStyle={styles.namedRocketContainer}
+              textStyle={styles.playerName}
+            />
 
-          <PlayerRocket
-            player={
-              {
-                id: "a",
-                name: 'Karel',
-                bodyColor: "#cfc",
-                trailColor: "#8f2",
-                selectedRocketIndex: 3,
+            <PlayerRocket
+              player={
+                {
+                  id: "a",
+                  name: 'Karel',
+                  bodyColor: "#cfc",
+                  trailColor: "#8f2",
+                  selectedRocketIndex: 3,
+                }
               }
-            }
-            containerStyle={styles.namedRocketContainer}
-            textStyle={styles.playerName}
-          />
-          <PlayerRocket
-            player={
-              {
-                id: "b",
-                name: 'Paní Kovářová',
-                bodyColor: "#f8c",
-                trailColor: "#fff",
-                selectedRocketIndex: 2,
+              containerStyle={styles.namedRocketContainer}
+              textStyle={styles.playerName}
+            />
+            <PlayerRocket
+              player={
+                {
+                  id: "b",
+                  name: 'Paní Kovářová',
+                  bodyColor: "#f8c",
+                  trailColor: "#fff",
+                  selectedRocketIndex: 2,
+                }
               }
-            }
-            containerStyle={styles.namedRocketContainer}
-            textStyle={styles.playerName}
-          />
+              containerStyle={styles.namedRocketContainer}
+              textStyle={styles.playerName}
+            />
+          </View>
         </View>
-      </View>
+      </ScrollView>
       <View style={styles.bottomButtonContainer}>
         <PlayfulButton title="Začít" icon={<MaterialIcons name="rocket-launch" size={24} color="white" />} onPress={() => router.replace('/')} />
       </View>
@@ -406,13 +415,14 @@ const ExamsInfo = () => {
 const styles = StyleSheet.create({
   slide: {
     flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'space-between',
     alignItems: 'center',
     padding: 24,
     backgroundColor: '#101223',
   },
   paddedContainer: {
     width: '100%',
-    padding: 16,
   },
   avatarOptions: {
     flexDirection: 'row',
@@ -528,15 +538,9 @@ const styles = StyleSheet.create({
     borderColor: '#4A5BD2',
   },
   bottomButtonContainer: {
-    position: 'absolute',
-    bottom: 24,
-    left: 0,
-    right: 0,
-    alignItems: 'center',
-    display: 'flex',
-    justifyContent: 'center',
-    paddingHorizontal: 16,
-    marginBottom: 24,
+    marginTop: 'auto',
+    marginBottom: 16,
+    width: '100%',
   },
   playerInfoContainer: {
     marginBottom: 24,
