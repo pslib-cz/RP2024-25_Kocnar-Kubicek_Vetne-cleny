@@ -3,7 +3,7 @@ import PlayfulButton from '@/components/ui/PlayfulButton'
 import { useTutorialContext } from '@/contexts/TutorialContext'
 import { StatusBar } from 'expo-status-bar'
 import React from 'react';
-import { Alert, SafeAreaView, StyleSheet, Text, View, TouchableOpacity } from 'react-native'
+import { Alert, SafeAreaView, StyleSheet, Text, View, TouchableOpacity, ScrollView } from 'react-native'
 import PageWrapper from '@/components/PageWrapper';
 import { Ionicons } from '@expo/vector-icons'
 import { ThemedText } from '@/components/ThemedText'
@@ -69,7 +69,7 @@ export default function Tutorial() {
 
       {renderHeader()}
 
-      <View style={styles.questionSection}>
+      <ScrollView style={styles.questionSection}>
         {
           usedNodes.map((node, index) => (
             <QuestionRow
@@ -79,7 +79,7 @@ export default function Tutorial() {
             />
           ))
         }
-      </View>
+      </ScrollView>
 
       <View style={styles.mainContent}>
         <Text style={styles.subHeading}>
