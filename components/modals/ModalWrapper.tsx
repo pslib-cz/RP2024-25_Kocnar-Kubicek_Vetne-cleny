@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Dimensions, Animated} from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Animated, ScrollView} from 'react-native';
 
 interface ModalWrapperProps {
   visible: boolean;
@@ -91,8 +91,15 @@ const ModalWrapper: React.FC<ModalWrapperProps> = ({
           <Text style={styles.title}>{cachedTitle}</Text>
         </View>
         
-        <View style={styles.content}>
-          {cachedChildren}
+        <View style={styles.contentWrapper}>
+          <ScrollView 
+            style={styles.contentScrollView}
+            contentContainerStyle={styles.content}
+            showsVerticalScrollIndicator={true}
+            nestedScrollEnabled={true}
+          >
+            {cachedChildren}
+          </ScrollView>
         </View>
         
         <View style={styles.footer}>
@@ -126,7 +133,7 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     width: '85%',
-    height: '45%',
+    maxHeight: '85%',
     backgroundColor: '#1c1f3d',
     borderRadius: 12,
     overflow: 'hidden',
@@ -152,15 +159,18 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '600',
   },
+  contentWrapper: {
+    maxHeight: '70%',
+  },
+  contentScrollView: {
+    flexGrow: 0,
+  },
   content: {
-    flex: 1,
     padding: 20,
-    justifyContent: 'center',
   },
   footer: {
     padding: 12,
     alignItems: 'center',
-
   },
   closeButton: {
     backgroundColor: '#007AFF',
