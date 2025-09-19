@@ -1,16 +1,11 @@
 import React from 'react';
-import { SafeAreaView, StyleSheet, ViewStyle } from 'react-native';
-import { Platform, StatusBar } from "react-native";
+import { StyleSheet, ViewStyle, Platform, StatusBar } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#fff',
-  },
-  AndroidSafeArea: {
-    flex: 1,
     backgroundColor: "#101223",
-    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0
   }
 });
 
@@ -21,7 +16,7 @@ type PageWrapperProps = {
 };
 
 const PageWrapper: React.FC<PageWrapperProps> = ({ children, style, padding }) => (
-  <SafeAreaView style={[styles.safeArea, styles.AndroidSafeArea, style, padding && { padding: 16 }]}>
+  <SafeAreaView style={[styles.safeArea, style, padding && { padding: 16 }]}>
     {children}
   </SafeAreaView>
 );
