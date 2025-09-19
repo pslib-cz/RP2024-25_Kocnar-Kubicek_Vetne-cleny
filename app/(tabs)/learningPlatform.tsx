@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { View, StyleSheet, ScrollView, TouchableOpacity, Animated } from 'react-native';
+import { View, StyleSheet, ScrollView, TouchableOpacity, Animated, Dimensions } from 'react-native';
 import { useRouter } from 'expo-router';
 import { MaterialIcons } from '@expo/vector-icons';
 import { ThemedText } from '@/components/ThemedText';
@@ -7,9 +7,10 @@ import PageWrapper from '@/components/PageWrapper';
 import { WordSelectionOption } from '@/types/games/SelectionOption';
 import { useTutorialContext } from '@/contexts/TutorialContext';
 
+const { width } = Dimensions.get('window');
 const AnimatedTouchableOpacity = Animated.createAnimatedComponent(TouchableOpacity);
 
-// Tutorial card component with animations
+// Enhanced tutorial card with better gradients and hover effects
 const TutorialCard = React.memo(({ 
   title, 
   description, 
@@ -28,35 +29,53 @@ const TutorialCard = React.memo(({
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(30)).current;
   const scaleAnim = useRef(new Animated.Value(1)).current;
+  const shimmerAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
+    // Entrance animation
     Animated.sequence([
       Animated.delay(delay),
       Animated.parallel([
         Animated.timing(fadeAnim, {
           toValue: 1,
-          duration: 500,
+          duration: 600,
           useNativeDriver: true,
         }),
         Animated.timing(slideAnim, {
           toValue: 0,
-          duration: 500,
+          duration: 600,
           useNativeDriver: true,
         })
       ])
     ]).start();
-  }, [delay, fadeAnim, slideAnim]);
+
+    // Subtle shimmer effect
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(shimmerAnim, {
+          toValue: 1,
+          duration: 2000,
+          useNativeDriver: true,
+        }),
+        Animated.timing(shimmerAnim, {
+          toValue: 0,
+          duration: 2000,
+          useNativeDriver: true,
+        })
+      ])
+    ).start();
+  }, [delay, fadeAnim, slideAnim, shimmerAnim]);
 
   const handlePress = useCallback(() => {
     Animated.sequence([
       Animated.timing(scaleAnim, {
-        toValue: 0.96,
-        duration: 100,
+        toValue: 0.95,
+        duration: 150,
         useNativeDriver: true,
       }),
       Animated.timing(scaleAnim, {
         toValue: 1,
-        duration: 100,
+        duration: 150,
         useNativeDriver: true,
       })
     ]).start();
@@ -73,6 +92,11 @@ const TutorialCard = React.memo(({
         return styles.tutorialCardPrimary;
     }
   };
+
+  const shimmerTranslate = shimmerAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: [-width, width]
+  });
 
   return (
     <Animated.View
@@ -91,28 +115,45 @@ const TutorialCard = React.memo(({
         onPress={handlePress}
         activeOpacity={0.8}
       >
-        <View style={styles.cardIcon}>
-          <MaterialIcons name={icon as any} size={32} color="white" />
+        {/* Shimmer overlay */}
+        <Animated.View 
+          style={[
+            styles.shimmerOverlay,
+            {
+              transform: [{ translateX: shimmerTranslate }]
+            }
+          ]} 
+        />
+        
+        <View style={styles.cardIconContainer}>
+          <View style={styles.cardIcon}>
+            <MaterialIcons name={icon as any} size={28} color="white" />
+          </View>
         </View>
+        
         <View style={styles.cardContent}>
           <ThemedText style={styles.cardTitle}>{title}</ThemedText>
           <ThemedText style={styles.cardDescription}>{description}</ThemedText>
+          <View style={styles.cardProgress}>
+            <View style={styles.progressDot} />
+            <View style={styles.progressDot} />
+            <View style={[styles.progressDot, styles.progressDotInactive]} />
+          </View>
         </View>
-        <MaterialIcons name="arrow-forward-ios" size={20} color="rgba(255,255,255,0.6)" />
+        
+        <View style={styles.cardArrow}>
+          <MaterialIcons name="arrow-forward-ios" size={18} color="rgba(255,255,255,0.7)" />
+        </View>
       </AnimatedTouchableOpacity>
     </Animated.View>
   );
 });
 
-// Expandable section for Tutorial 3 variations
+// Enhanced tutorial section with glow effects (always expanded)
 const Tutorial3Section = React.memo(({ onNavigate }: { onNavigate: (route: string) => void }) => {
-
   const { setSentence } = useTutorialContext();
-
-  const [isExpanded, setIsExpanded] = useState(true);
-  const expandAnim = useRef(new Animated.Value(0)).current;
-  const rotationAnim = useRef(new Animated.Value(0)).current;
   const scaleAnim = useRef(new Animated.Value(1)).current;
+  const glowAnim = useRef(new Animated.Value(0)).current;
 
   const tutorialSentence1: WordSelectionOption[] = [
     { text: "Bílá", type: "pks" },
@@ -120,7 +161,7 @@ const Tutorial3Section = React.memo(({ onNavigate }: { onNavigate: (route: strin
     { text: "s flíčky", type: "pkn" },
     { text: "ulovila", type: "př" },
     { text: "myš", type: "pt" }
-  ]
+  ];
 
   const tutorialSentence2: WordSelectionOption[] = [
     { text: "Bílá", type: "pks" },
@@ -133,125 +174,115 @@ const Tutorial3Section = React.memo(({ onNavigate }: { onNavigate: (route: strin
     { text: "obratně", type: "puz" },
     { text: "ulovila", type: "př" },
     { text: "myš", type: "pt" }
-  ]
+  ];
 
-  // Sample tutorial 3 variations - you can modify these based on your needs
   const tutorial3Variations = [
-    { sentence: tutorialSentence1, title: 'Základní cvičení', description: 'Jednoduchá cvičení pro začátečníky' },
-    { sentence: tutorialSentence2, title: 'Pokročilá cvičení', description: 'Složitější úkoly pro pokročilé' },
+    { sentence: tutorialSentence1, title: 'Základní cvičení', description: 'Jednoduchá cvičení pro začátečníky', difficulty: 'Lehké', color: '#4CAF50' },
+    { sentence: tutorialSentence2, title: 'Pokročilá cvičení', description: 'Složitější úkoly pro pokročilé', difficulty: 'Střední', color: '#FF9800' },
   ];
 
   useEffect(() => {
-    Animated.parallel([
-      Animated.timing(expandAnim, {
-        toValue: isExpanded ? 1 : 0,
-        duration: 300,
-        useNativeDriver: false,
-      }),
-      Animated.timing(rotationAnim, {
-        toValue: isExpanded ? 1 : 0,
-        duration: 200,
-        useNativeDriver: true,
-      })
-    ]).start();
-  }, [isExpanded, expandAnim, rotationAnim]);
+    // Subtle glow effect
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(glowAnim, {
+          toValue: 1,
+          duration: 3000,
+          useNativeDriver: true,
+        }),
+        Animated.timing(glowAnim, {
+          toValue: 0,
+          duration: 3000,
+          useNativeDriver: true,
+        })
+      ])
+    ).start();
+  }, [glowAnim]);
 
-  const handleToggle = useCallback(() => {
-    Animated.sequence([
-      Animated.timing(scaleAnim, {
-        toValue: 0.98,
-        duration: 100,
-        useNativeDriver: true,
-      }),
-      Animated.timing(scaleAnim, {
-        toValue: 1,
-        duration: 100,
-        useNativeDriver: true,
-      })
-    ]).start();
-    
-    setIsExpanded(!isExpanded);
-  }, [isExpanded, scaleAnim]);
-
-  const rotateInterpolate = rotationAnim.interpolate({
+  const glowOpacity = glowAnim.interpolate({
     inputRange: [0, 1],
-    outputRange: ['0deg', '180deg'],
+    outputRange: [0.3, 0.7]
   });
 
   return (
     <Animated.View style={[styles.tutorial3Section, { transform: [{ scale: scaleAnim }] }]}>
-      <AnimatedTouchableOpacity
+      {/* Glow effect */}
+      <Animated.View 
+        style={[
+          styles.sectionGlow,
+          { opacity: glowOpacity }
+        ]} 
+      />
+      
+      <View
         style={styles.tutorial3Header}
-        onPress={handleToggle}
-        activeOpacity={0.8}
       >
         <View style={styles.tutorial3HeaderContent}>
-          <View style={styles.tutorial3Icon}>
-            <MaterialIcons name="psychology" size={32} color="white" />
+          <View style={styles.tutorial3IconContainer}>
+            <View style={styles.tutorial3Icon}>
+              <MaterialIcons name="psychology" size={28} color="white" />
+            </View>
           </View>
           <View style={styles.tutorial3TextContent}>
             <ThemedText style={styles.tutorial3Title}>Ukázkové věty</ThemedText>
+            <ThemedText style={styles.tutorial3Subtitle}>
+              {tutorial3Variations.length} cvičení k dispozici
+            </ThemedText>
           </View>
         </View>
-        <Animated.View style={{ transform: [{ rotate: rotateInterpolate }] }}>
-          <MaterialIcons name="expand-more" size={24} color="white" />
-        </Animated.View>
-      </AnimatedTouchableOpacity>
+      </View>
 
-      {isExpanded && (
-        <Animated.View
-          style={[
-            styles.variationsContainer,
-            {
-              opacity: expandAnim,
-              transform: [{
-                scaleY: expandAnim.interpolate({
-                  inputRange: [0, 1],
-                  outputRange: [0.3, 1],
-                })
-              }]
-            }
-          ]}
-        >
-          {tutorial3Variations.map((variation, index) => (
-            <Animated.View
-              key={index}
-              style={[
-                {
-                  opacity: expandAnim,
-                  transform: [{
-                    translateX: expandAnim.interpolate({
-                      inputRange: [0, 1],
-                      outputRange: [20, 0],
-                    })
-                  }]
-                }
-              ]}
+      <View
+        style={styles.variationsContainer}
+      >
+        {tutorial3Variations.map((variation, index) => (
+          <View
+            key={index}
+          >
+            <TouchableOpacity
+              style={styles.variationItem}
+              onPress={() => {
+                setSentence(variation.sentence);
+                onNavigate(`/(pages)/anotherFuckingTutorial`)
+              }}
+              activeOpacity={0.7}
             >
-              <TouchableOpacity
-                style={styles.variationItem}
-                onPress={() => {
-                  setSentence(variation.sentence);
-                  onNavigate(`/(pages)/anotherFuckingTutorial`)
-                }}
-                activeOpacity={0.7}
-              >
-                <View style={styles.variationContent}>
+              <View style={styles.variationIconContainer}>
+                <View style={[styles.difficultyIndicator, { backgroundColor: variation.color }]} />
+              </View>
+              <View style={styles.variationContent}>
+                <View style={styles.variationHeader}>
                   <ThemedText style={styles.variationTitle}>{variation.title}</ThemedText>
-                  <ThemedText style={styles.variationDescription}>{variation.description}</ThemedText>
+                  <View style={[styles.difficultyBadge, { backgroundColor: `${variation.color}20` }]}>
+                    <ThemedText style={[styles.difficultyText, { color: variation.color }]}>
+                      {variation.difficulty}
+                    </ThemedText>
+                  </View>
                 </View>
-                <MaterialIcons name="play-arrow" size={20} color="#4A90E2" />
-              </TouchableOpacity>
-            </Animated.View>
-          ))}
-        </Animated.View>
-      )}
+                <ThemedText style={styles.variationDescription}>{variation.description}</ThemedText>
+              </View>
+              <View style={styles.variationArrow}>
+                <MaterialIcons name="play-circle-outline" size={24} color="#4A90E2" />
+              </View>
+            </TouchableOpacity>
+          </View>
+        ))}
+      </View>
     </Animated.View>
   );
 });
 
 export default function TutorialNavigationPage() {
   const router = useRouter();
+  const headerAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.timing(headerAnim, {
+      toValue: 1,
+      duration: 500,
+      useNativeDriver: true,
+    }).start();
+  }, [headerAnim]);
 
   const handleNavigate = useCallback((route: string) => {
     router.push(route as any);
@@ -259,7 +290,20 @@ export default function TutorialNavigationPage() {
 
   return (
     <PageWrapper>
-      <View style={styles.headerRow}>
+      <Animated.View 
+        style={[
+          styles.headerRow,
+          {
+            opacity: headerAnim,
+            transform: [{
+              translateY: headerAnim.interpolate({
+                inputRange: [0, 1],
+                outputRange: [-20, 0]
+              })
+            }]
+          }
+        ]}
+      >
         <TouchableOpacity 
           onPress={() => router.back()}
           style={styles.backButton}
@@ -267,35 +311,34 @@ export default function TutorialNavigationPage() {
           <MaterialIcons name="arrow-back" size={24} color="#FFF" />
         </TouchableOpacity>
         <ThemedText style={styles.heading}>Tutoriály</ThemedText>
-      </View>
+        <View style={styles.headerAccent} />
+      </Animated.View>
 
-      <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-        <View style={styles.introSection}>
-          <ThemedText style={styles.introText}>
-            Vyberte si tutorial, který vás zajímá. Každý tutorial vás provede různými aspekty aplikace.
-          </ThemedText>
-        </View>
-
+      <ScrollView 
+        style={styles.container} 
+        contentContainerStyle={styles.content}
+        showsVerticalScrollIndicator={false}
+      >
         <View style={styles.tutorialsContainer}>
+          <Tutorial3Section onNavigate={handleNavigate} />
+
           <TutorialCard
             title="Tutorial 1"
-            description=""
-            icon="start"
+            description="Základy aplikace a první kroky"
+            icon="play-circle-outline"
             onPress={() => handleNavigate('/(tutorial)/tutorial')}
-            delay={100}
+            delay={200}
             variant="primary"
           />
 
           <TutorialCard
             title="Tutorial 2"
-            description=""
+            description="Pokročilé funkce a nastavení"
             icon="settings"
             onPress={() => handleNavigate('/(tutorial)/anotherTutorial')}
-            delay={200}
+            delay={300}
             variant="secondary"
           />
-
-          <Tutorial3Section onNavigate={handleNavigate} />
         </View>
       </ScrollView>
     </PageWrapper>
@@ -305,10 +348,10 @@ export default function TutorialNavigationPage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#101223',
+    backgroundColor: '#0A0D1F',
   },
   content: {
-    padding: 16,
+    padding: 20,
     paddingBottom: 40,
   },
   headerRow: {
@@ -316,63 +359,142 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingTop: 20,
-    paddingBottom: 10,
-    paddingHorizontal: 10,
-    gap: 16,
+    paddingBottom: 15,
+    paddingHorizontal: 20,
+    backgroundColor: 'rgba(16, 18, 35, 0.95)',
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(74, 144, 226, 0.1)',
   },
   backButton: {
-    padding: 8,
-    marginLeft: 8,
+    padding: 12,
+    borderRadius: 12,
+    backgroundColor: 'rgba(74, 144, 226, 0.15)',
+    marginRight: 16,
   },
   heading: {
     color: '#FFF',
-    fontSize: 24,
-    fontWeight: 'bold',
+    fontSize: 28,
+    fontWeight: '700',
     flex: 1,
+    letterSpacing: -0.5,
+  },
+  headerAccent: {
+    width: 4,
+    height: 24,
+    backgroundColor: '#4A90E2',
+    borderRadius: 2,
   },
   introSection: {
-    backgroundColor: '#1c1f3d',
-    borderRadius: 16,
-    padding: 20,
-    marginBottom: 24,
-    shadowColor: '#000',
+    backgroundColor: 'linear-gradient(135deg, #1E2347 0%, #252B5C 100%)',
+    borderRadius: 20,
+    padding: 24,
+    marginBottom: 32,
+    shadowColor: '#4A90E2',
     shadowOpacity: 0.1,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 2 },
-    elevation: 2,
+    shadowRadius: 20,
+    shadowOffset: { width: 0, height: 10 },
+    elevation: 8,
+    borderWidth: 1,
+    borderColor: 'rgba(74, 144, 226, 0.1)',
+  },
+  introIconContainer: {
+    alignSelf: 'center',
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    backgroundColor: 'rgba(74, 144, 226, 0.15)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  introTitle: {
+    color: '#FFF',
+    fontSize: 22,
+    fontWeight: '600',
+    textAlign: 'center',
+    marginBottom: 12,
+    letterSpacing: -0.3,
   },
   introText: {
-    color: '#aaa',
+    color: '#B8C1EC',
     fontSize: 16,
-    lineHeight: 22,
+    lineHeight: 24,
     textAlign: 'center',
+    marginBottom: 24,
+  },
+  introStats: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  statItem: {
+    alignItems: 'center',
+    flex: 1,
+  },
+  statNumber: {
+    color: '#4A90E2',
+    fontSize: 24,
+    fontWeight: '700',
+  },
+  statLabel: {
+    color: '#8892B0',
+    fontSize: 12,
+    marginTop: 4,
+  },
+  statDivider: {
+    width: 1,
+    height: 32,
+    backgroundColor: 'rgba(74, 144, 226, 0.2)',
+    marginHorizontal: 20,
   },
   tutorialsContainer: {
-    gap: 16,
+    gap: 20,
     marginBottom: 32,
   },
   tutorialCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderRadius: 16,
+    borderRadius: 18,
     padding: 20,
     shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 2 },
-    elevation: 3,
+    shadowOpacity: 0.2,
+    shadowRadius: 15,
+    shadowOffset: { width: 0, height: 8 },
+    elevation: 8,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.1)',
+    position: 'relative',
+    overflow: 'hidden',
   },
   tutorialCardPrimary: {
-    backgroundColor: '#4A90E2',
+    backgroundColor: 'linear-gradient(135deg, #4A90E2 0%, #357ABD 100%)',
   },
   tutorialCardSecondary: {
-    backgroundColor: '#7B68EE',
+    backgroundColor: 'linear-gradient(135deg, #7B68EE 0%, #6A5ACD 100%)',
   },
   tutorialCardAccent: {
-    backgroundColor: '#FF6B6B',
+    backgroundColor: 'linear-gradient(135deg, #FF6B6B 0%, #EE5A52 100%)',
+  },
+  shimmerOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    width: 50,
+    transform: [{ skewX: '-20deg' }],
+  },
+  cardIconContainer: {
+    marginRight: 16,
   },
   cardIcon: {
-    marginRight: 16,
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   cardContent: {
     flex: 1,
@@ -380,26 +502,58 @@ const styles = StyleSheet.create({
   cardTitle: {
     color: 'white',
     fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 4,
+    fontWeight: '700',
+    marginBottom: 6,
+    letterSpacing: -0.3,
   },
   cardDescription: {
-    color: 'rgba(255,255,255,0.8)',
+    color: 'rgba(255,255,255,0.85)',
     fontSize: 14,
-    lineHeight: 18,
+    lineHeight: 20,
+    marginBottom: 12,
+  },
+  cardProgress: {
+    flexDirection: 'row',
+    gap: 6,
+  },
+  progressDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+  },
+  progressDotInactive: {
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+  },
+  cardArrow: {
+    marginLeft: 12,
+    padding: 8,
   },
   tutorial3Section: {
-    backgroundColor: '#1c1f3d',
-    borderRadius: 16,
+    backgroundColor: '#1E2347',
+    borderRadius: 20,
     overflow: 'hidden',
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 2 },
-    elevation: 3,
+    shadowColor: '#FF6B6B',
+    shadowOpacity: 0.15,
+    shadowRadius: 20,
+    shadowOffset: { width: 0, height: 10 },
+    elevation: 8,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 107, 107, 0.2)',
+    position: 'relative',
+  },
+  sectionGlow: {
+    position: 'absolute',
+    top: -2,
+    left: -2,
+    right: -2,
+    bottom: -2,
+    backgroundColor: 'rgba(255, 107, 107, 0.1)',
+    borderRadius: 22,
+    zIndex: -1,
   },
   tutorial3Header: {
-    backgroundColor: '#FF6B6B',
+    backgroundColor: 'linear-gradient(135deg, #FF6B6B 0%, #EE5A52 100%)',
     flexDirection: 'row',
     alignItems: 'center',
     padding: 20,
@@ -410,8 +564,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flex: 1,
   },
-  tutorial3Icon: {
+  tutorial3IconContainer: {
     marginRight: 16,
+  },
+  tutorial3Icon: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   tutorial3TextContent: {
     flex: 1,
@@ -419,60 +581,84 @@ const styles = StyleSheet.create({
   tutorial3Title: {
     color: 'white',
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: '700',
     marginBottom: 4,
+    letterSpacing: -0.3,
   },
   tutorial3Subtitle: {
     color: 'rgba(255,255,255,0.8)',
-    fontSize: 14,
+    fontSize: 13,
   },
   variationsContainer: {
-    padding: 16,
-    backgroundColor: '#1c1f3d',
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+    backgroundColor: '#1E2347',
+    overflow: 'hidden',
   },
   variationItem: {
-    backgroundColor: 'rgba(74, 144, 226, 0.1)',
-    borderRadius: 12,
+    backgroundColor: 'rgba(74, 144, 226, 0.08)',
+    borderRadius: 16,
     padding: 16,
     marginBottom: 12,
     flexDirection: 'row',
     alignItems: 'center',
-    borderLeftWidth: 4,
-    borderLeftColor: '#4A90E2',
+    borderWidth: 1,
+    borderColor: 'rgba(74, 144, 226, 0.15)',
+  },
+  variationIconContainer: {
+    marginRight: 12,
+  },
+  difficultyIndicator: {
+    width: 4,
+    height: 40,
+    borderRadius: 2,
   },
   variationContent: {
     flex: 1,
+  },
+  variationHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 4,
   },
   variationTitle: {
     color: '#FFF',
     fontSize: 16,
     fontWeight: '600',
-    marginBottom: 4,
+    marginRight: 12,
+    letterSpacing: -0.2,
+  },
+  difficultyBadge: {
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 8,
+  },
+  difficultyText: {
+    fontSize: 11,
+    fontWeight: '500',
   },
   variationDescription: {
-    color: '#aaa',
+    color: '#B8C1EC',
     fontSize: 14,
     lineHeight: 18,
   },
-  bottomSection: {
+  variationArrow: {
+    marginLeft: 12,
+  },
+  footerSection: {
+    flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#1c1f3d',
+    backgroundColor: 'rgba(74, 144, 226, 0.05)',
     borderRadius: 16,
-    padding: 20,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 2 },
-    elevation: 2,
+    padding: 16,
+    gap: 12,
+    borderWidth: 1,
+    borderColor: 'rgba(74, 144, 226, 0.1)',
   },
-  bottomText: {
-    color: '#aaa',
+  footerText: {
+    color: '#B8C1EC',
     fontSize: 14,
-    textAlign: 'center',
-    marginBottom: 16,
+    flex: 1,
     lineHeight: 20,
-  },
-  homeButton: {
-    marginVertical: 4,
   },
 });

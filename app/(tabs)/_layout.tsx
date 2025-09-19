@@ -54,7 +54,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="learningPlatform"
         options={{
-          title: 'Určování',
+          title: 'Výuka',
           tabBarActiveTintColor: '#63b9ff',
           tabBarIcon: ({ color }) => <IconSymbol size={32} name="book" color={color} />,
         }}
