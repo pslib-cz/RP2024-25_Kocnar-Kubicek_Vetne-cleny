@@ -305,8 +305,7 @@ export default function TutorialNavigationPage() {
         >
           <MaterialIcons name="arrow-back" size={24} color="#FFF" />
         </TouchableOpacity>
-        <ThemedText style={styles.heading}>Tutoriály</ThemedText>
-        <View style={styles.headerAccent} />
+        <ThemedText style={styles.heading}>Výuka</ThemedText>
       </Animated.View>
 
       <ScrollView 
@@ -375,12 +374,6 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     flex: 1,
     letterSpacing: -0.5,
-  },
-  headerAccent: {
-    width: 4,
-    height: 24,
-    backgroundColor: '#4A90E2',
-    borderRadius: 2,
   },
   introSection: {
     backgroundColor: 'linear-gradient(135deg, #1E2347 0%, #252B5C 100%)',
