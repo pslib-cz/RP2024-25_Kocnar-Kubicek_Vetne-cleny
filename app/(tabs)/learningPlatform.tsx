@@ -177,8 +177,8 @@ const Tutorial3Section = React.memo(({ onNavigate }: { onNavigate: (route: strin
   ];
 
   const tutorial3Variations = [
-    { sentence: tutorialSentence1, title: 'Základní cvičení', description: 'Jednoduchá cvičení pro začátečníky', difficulty: 'Lehké', color: '#4CAF50' },
-    { sentence: tutorialSentence2, title: 'Pokročilá cvičení', description: 'Složitější úkoly pro pokročilé', difficulty: 'Střední', color: '#FF9800' },
+    { sentence: tutorialSentence1, title: 'Jednoduchá věta', description: 'Obsahuje pouze základní větné členy', color: '#4CAF50' },
+    { sentence: tutorialSentence2, title: 'Pokročilá věta', description: 'Obsahuje všechny větné členy', color: '#FF9800' },
   ];
 
   useEffect(() => {
@@ -206,7 +206,6 @@ const Tutorial3Section = React.memo(({ onNavigate }: { onNavigate: (route: strin
 
   return (
     <Animated.View style={[styles.tutorial3Section, { transform: [{ scale: scaleAnim }] }]}>
-      {/* Glow effect */}
       <Animated.View 
         style={[
           styles.sectionGlow,
@@ -226,7 +225,7 @@ const Tutorial3Section = React.memo(({ onNavigate }: { onNavigate: (route: strin
           <View style={styles.tutorial3TextContent}>
             <ThemedText style={styles.tutorial3Title}>Ukázkové věty</ThemedText>
             <ThemedText style={styles.tutorial3Subtitle}>
-              {tutorial3Variations.length} cvičení k dispozici
+              určování větných členů, krok za krokem
             </ThemedText>
           </View>
         </View>
@@ -253,11 +252,6 @@ const Tutorial3Section = React.memo(({ onNavigate }: { onNavigate: (route: strin
               <View style={styles.variationContent}>
                 <View style={styles.variationHeader}>
                   <ThemedText style={styles.variationTitle}>{variation.title}</ThemedText>
-                  <View style={[styles.difficultyBadge, { backgroundColor: `${variation.color}20` }]}>
-                    <ThemedText style={[styles.difficultyText, { color: variation.color }]}>
-                      {variation.difficulty}
-                    </ThemedText>
-                  </View>
                 </View>
                 <ThemedText style={styles.variationDescription}>{variation.description}</ThemedText>
               </View>
@@ -275,6 +269,7 @@ const Tutorial3Section = React.memo(({ onNavigate }: { onNavigate: (route: strin
 export default function TutorialNavigationPage() {
   const router = useRouter();
   const headerAnim = useRef(new Animated.Value(0)).current;
+  const { setSentence } = useTutorialContext();
 
   useEffect(() => {
     Animated.timing(headerAnim, {
@@ -323,17 +318,20 @@ export default function TutorialNavigationPage() {
           <Tutorial3Section onNavigate={handleNavigate} />
 
           <TutorialCard
-            title="Tutorial 1"
-            description="Základy aplikace a první kroky"
+            title="Asistováné určování"
+            description="určování pomocí ano/nebo otázek"
             icon="play-circle-outline"
-            onPress={() => handleNavigate('/(tutorial)/tutorial')}
+            onPress={() => {
+              handleNavigate('/(tutorial)/tutorial')
+              setSentence(null);
+            }}
             delay={200}
             variant="primary"
           />
 
           <TutorialCard
-            title="Tutorial 2"
-            description="Pokročilé funkce a nastavení"
+            title="Seznam větných členů"
+            description="Kompletní přehled všech větných členů"
             icon="settings"
             onPress={() => handleNavigate('/(tutorial)/anotherTutorial')}
             delay={300}
