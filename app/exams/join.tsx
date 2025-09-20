@@ -13,9 +13,12 @@ import { ThemedText } from '@/components/ThemedText';
 import { galaxies } from '@/components/ArenaHeader';
 import { GameType } from '@/types/GameType';
 import PageWrapper from '@/components/PageWrapper';
+import { generateRandomPlanet } from '@/utils/randomPlanetGenerator';
+import { OrbitingPlayers } from '@/components/OrbitingPlayers';
 
 export default function JoinGameScreen() {
   const [code, setCode] = useState('');
+  const [randomPlanet, setRandomPlanet] = useState<any>(null);
   const { joinGame, code: contextCode, config, leaveGame, author, players } = useMultiplayerGameContext();
   const { newGame } = useGameContext();
   const router = useRouter();
@@ -34,6 +37,11 @@ export default function JoinGameScreen() {
       const codeToUse = gameCode || code;
       if (!codeToUse) return;
       await joinGame(codeToUse);
+      
+      // Generate random planet based on the game code as seed
+      const seed = parseInt(codeToUse, 10) || Math.floor(Math.random() * 1000000);
+      const planet = generateRandomPlanet(seed);
+      setRandomPlanet(planet);
     } catch (error) {
       alert('Nepodařilo se připojit ke hře. Zkontrolujte prosím kód a zkuste to znovu.');
       console.warn('Error joining game:', error);
@@ -44,6 +52,7 @@ export default function JoinGameScreen() {
     try {
       await leaveGame();
       setCode('');
+      setRandomPlanet(null);
       router.replace('/exams');
     } catch (error) {
       console.warn('Error leaving game:', error);
@@ -90,21 +99,35 @@ export default function JoinGameScreen() {
 
   const JoinGameDetail = () => {
     return (
-      <ScrollView contentContainerStyle={[styles.scrollContent, { alignItems: 'center', justifyContent: 'center', gap: 30, paddingVertical: 20, }]}>
-        {/* <View style={styles.gameInfoContainer}> */}
-        <ThemedText style={styles.title} type="title">Detaily hry</ThemedText>
+      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+        <ThemedText style={styles.title} type="title">Sdílený test</ThemedText>
 
-        {/* User info section */}
-        <View style={styles.playerInfoCard}>
-          <ThemedText style={styles.playerInfoTitle}>Tvoje raketa</ThemedText>
-          <NamedRocket
-            width={70}
-            height={70}
-            containerStyle={styles.namedRocketContainer}
-            textStyle={styles.playerName}
-          />
-        </View>
+        {/* Planet with orbiting players */}
+        {randomPlanet && (
+          <View style={styles.planetSection}>
+            <View style={styles.planetContainer}>
+              <Image
+                source={randomPlanet.imageSource}
+                style={[
+                  styles.planetImage,
+                  {
+                    width: 250,
+                    height: 250,
+                  }
+                ]}
+                resizeMode="contain"
+              />
+            </View>
+            <OrbitingPlayers
+                planetSize={200}
+                players={players.concat(author ? [author] : [])}
+                containerWidth={350}
+                code={parseInt(contextCode || '0', 10)}
+              />
+          </View>
+        )}
 
+        {/* Compact game info */}
         <View style={styles.infoCard}>
           <View style={styles.infoRow}>
             <ThemedText style={styles.infoLabel}>Kód hry:</ThemedText>
@@ -116,56 +139,44 @@ export default function JoinGameScreen() {
           </View>
           <View style={styles.infoRow}>
             <ThemedText style={styles.infoLabel}>Galaxie:</ThemedText>
-            <View style={styles.galaxyInfo}>
+            <View style={styles.galaxyInfo}> 
+              <View style={{ flex: 1 }} />
               <Image source={galaxyImages[config.galaxy]} style={styles.galaxyIcon} />
-              <ThemedText style={styles.infoValue}>{galaxies[config.galaxy].name}</ThemedText>
+              <ThemedText style={[styles.infoValue, { flex: 0 }]}>{galaxies[config.galaxy].name}</ThemedText>
             </View>
           </View>
+          {/* autor hry */}
+          {author && (
+          <View style={styles.infoRow}>
+            <ThemedText style={styles.infoLabel}>Autor testu:</ThemedText>
+            <PlayerRocket
+            player={author}
+            width={30}
+            height={30}
+            containerStyle={styles.compactRocketContainer}
+            textStyle={styles.compactPlayerName}
+          />
+          </View>
+          )}
         </View>
+
+        {/* Action buttons */}
         <View style={styles.buttonContainer}>
           <PlayfulButton
             title="Opustit hru"
-            icon={<Ionicons name="exit-outline" size={24} color="white" />}
+            icon={<Ionicons name="exit-outline" size={20} color="white" />}
             onPress={handleCancel}
             variant="danger"
+            style={{ width: 'auto', flex: 1 }}
           />
           <PlayfulButton
             title="Začít hru"
-            icon={<Ionicons name="rocket" size={24} color="white" />}
+            icon={<Ionicons name="rocket" size={20} color="white" />}
             onPress={handleStartExam}
             variant="success"
+            style={{ width: 'auto', flex: 1 }}
           />
         </View>
-        {/* </View> */}
-        
-        {/* Game author section */}
-        {author && (
-          <View style={styles.playerInfoCard}>
-            <ThemedText style={styles.playerInfoTitle}>Autor hry</ThemedText>
-            <PlayerRocket
-              player={author}
-              width={70}
-              height={70}
-            />
-          </View>
-        )}
-        {/* Players section */}
-        {players && players.length > 0 && (
-          <View style={styles.playerInfoCard}>
-            <ThemedText style={styles.playerInfoTitle}>Účastníci ({players.length})</ThemedText>
-            <View style={styles.playersList}>
-              {players.map(player => (
-                <PlayerRocket
-                  key={player.id}
-                  player={player}
-                  width={60}
-                  height={60}
-                  containerStyle={styles.playerItem}
-                />
-              ))}
-            </View>
-          </View>
-        )}
       </ScrollView>
     )
   }
@@ -234,7 +245,8 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     flexGrow: 1,
-    justifyContent: 'center',
+    paddingTop: 10,
+    paddingBottom: 20,
   },
   joinContainer: {
     flex: 1,
@@ -243,10 +255,10 @@ const styles = StyleSheet.create({
     gap: 30,
   },
   title: {
-    fontSize: 32,
+    fontSize: 28,
     fontWeight: 'bold',
     color: 'white',
-    marginBottom: 20,
+    marginBottom: 15,
     textAlign: 'center',
   },
   inputContainer: {
@@ -271,48 +283,54 @@ const styles = StyleSheet.create({
   //   paddingVertical: 20,
   // },
   infoCard: {
-    width: '90%',
-    backgroundColor: 'rgba(74, 91, 210, 0.1)',
-    borderRadius: 16,
-    padding: 20,
+    width: '100%',
+    backgroundColor: '#040a38cc',
+    borderRadius: 12,
+    padding: 15,
     borderWidth: 2,
     borderColor: '#4A5BD2',
-    marginBottom: 20,
+    marginBottom: 15,
+    zIndex: 2,
+    position: 'relative',
   },
   infoRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 12,
+    paddingVertical: 8,
     borderBottomWidth: 1,
     borderBottomColor: 'rgba(255, 255, 255, 0.1)',
   },
   infoLabel: {
     color: '#888',
-    fontSize: 16,
+    fontSize: 14,
     flex: 1,
   },
   infoValue: {
     color: 'white',
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: 'bold',
     flex: 2,
     textAlign: 'right',
   },
   buttonContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 20,
     width: '100%',
-    gap: 15,
   },
   galaxyInfo: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
     flex: 2,
-    justifyContent: 'flex-end',
+    gap: 10,
   },
   galaxyIcon: {
-    width: 64,
-    height: 40,
-    marginRight: 10,
+    width: 48,
+    height: 30,
   },
   playerInfoContainer: {
     backgroundColor: 'rgba(74, 91, 210, 0.1)',
@@ -357,5 +375,71 @@ const styles = StyleSheet.create({
   playerItem: {
     width: '100%',
     marginBottom: 8,
-  }
+  },
+  // Compact player card styles
+  compactPlayerCard: {
+    width: '100%',
+    backgroundColor: 'rgba(74, 91, 210, 0.1)',
+    borderRadius: 12,
+    padding: 12,
+    borderWidth: 2,
+    borderColor: '#4A5BD2',
+    marginBottom: 12,
+    alignItems: 'center',
+  },
+  compactPlayerTitle: {
+    color: '#888',
+    fontSize: 14,
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+  compactRocketContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 0,
+    backgroundColor: 'transparent',
+    paddingVertical: 0,
+    paddingHorizontal: 0,
+  },
+  compactPlayerName: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginLeft: 10,
+  },
+  compactPlayersList: {
+    width: '100%',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    gap: 8,
+  },
+  compactPlayerItem: {
+    marginBottom: 4,
+  },
+  planetSection: {
+    width: '100%',
+    alignItems: 'center',
+    marginBottom: -25, // Negative margin to hide bottom half behind info card
+    zIndex: 1,
+    position: 'relative',
+  },
+  planetTitle: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 15,
+    textAlign: 'center',
+  },
+  planetContainer: {
+    position: 'relative',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 250,
+    height: 250,
+  },
+  planetImage: {
+    borderRadius: 50,
+    marginTop: 50,
+  },
 });
