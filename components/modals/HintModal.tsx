@@ -1,5 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Dimensions, Animated, Modal } from 'react-native';
+import { useRouter } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
 import ModalWrapper from './ModalWrapper';
 
 interface HintModalProps {
@@ -17,6 +19,13 @@ const HintModal: React.FC<HintModalProps> = ({
   message = [],
   closeButtonText = "Chápu",
 }) => {
+  const router = useRouter();
+
+  const handleAbbreviationsPress = () => {
+    onClose(); // Close the hint modal first
+    router.push('/(pages)/abbrlist');
+  };
+
   return (
     <ModalWrapper visible={visible} onClose={onClose} title={title} closeButtonText={closeButtonText}>
       {message.map((paragraph, index) => (
@@ -24,6 +33,12 @@ const HintModal: React.FC<HintModalProps> = ({
           {paragraph}
         </Text>
       ))}
+      
+      {/* Abbreviations button */}
+      <TouchableOpacity style={styles.abbreviationsButton} onPress={handleAbbreviationsPress}>
+        <Ionicons name="list" size={20} color="white" />
+        <Text style={styles.abbreviationsButtonText}>Seznam zkratek</Text>
+      </TouchableOpacity>
     </ModalWrapper>
   );
 };
@@ -37,7 +52,25 @@ const styles = StyleSheet.create({
   },
   messageSpacing: {
     marginTop: 16,
-  }
+  },
+  abbreviationsButton: {
+    backgroundColor: '#189dc5',
+    paddingVertical: 12,
+    paddingHorizontal: 30,
+    borderRadius: 8,
+    minWidth: 100,
+    marginTop: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+  },
+  abbreviationsButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '500',
+    textAlign: 'center',
+  },
 });
 
 export default HintModal;

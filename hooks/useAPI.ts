@@ -124,8 +124,9 @@ export const useAPI = (userData?: Partial<APIUserData>) => {
       }
       return await response.json();
     } catch (primaryError) {
-      console.warn('Primary API failed, trying backup API:', primaryError);
+      console.warn(`Primary API failed, trying backup API (URL: ${API_URL}${path}):`, primaryError);
       try {
+        console.log(`Trying backup API (URL: ${API_BACKUP_URL}${path}):`);
         const backupResponse = await fetch(`${API_BACKUP_URL}${path}`, { ...options, headers });
         if (!backupResponse.ok) {
           return handleAPIError(backupResponse);

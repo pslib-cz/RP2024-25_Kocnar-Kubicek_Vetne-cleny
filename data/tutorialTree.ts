@@ -88,15 +88,6 @@ const prisudek: TutorialNode = {
   noNode: null
 };
 
-// decition nodes
-const ptameSePodmetDela: TutorialNode = {
-  isResult: false,
-  title: "PTÁME SE - CO PODMĚT DĚLÁ?",
-  description: "",
-  yesNode: prisudek,
-  noNode: null
-};
-
 const doplnujeDejProcZJakePriciny: TutorialNode = {
   isResult: false,
   title: "DOPLŇUJE DĚJ A PTÁME SE PROČ? Z JAKÉ PŘÍČINY?",
@@ -161,6 +152,15 @@ const urcujeSlovoVlastnost: TutorialNode = {
   noNode: zavisiSlovoNaPrisudku
 };
 
+// decition nodes
+const ptameSePodmetDela: TutorialNode = {
+    isResult: false,
+    title: "PTÁME SE - CO PODMĚT DĚLÁ?",
+    description: "",
+    yesNode: prisudek,
+    noNode: urcujeSlovoVlastnost
+  };
+
 const jeSlovoVPrvnimPade: TutorialNode = {
   isResult: false,
   title: "JE SLOVO V 1. PÁDĚ ?",
@@ -168,14 +168,4 @@ const jeSlovoVPrvnimPade: TutorialNode = {
   yesNode: podmet,
   noNode: ptameSePodmetDela
 };
-
-// base node
-const jeSlovoZavisle: TutorialNode = {
-  isResult: false,
-  title: "JE SLOVO ZÁVISLÉ?",
-  description: "VĚTNÉ ČLENY",
-  yesNode: urcujeSlovoVlastnost,
-  noNode: jeSlovoVPrvnimPade
-};
-
-export default jeSlovoZavisle;
+export default jeSlovoVPrvnimPade;

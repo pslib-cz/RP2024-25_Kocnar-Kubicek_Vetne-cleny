@@ -57,6 +57,7 @@ export default function CommonMistakes() {
         visible={displayedSentence !== null}
         onClose={() => { setDisplayedSentence(null) }}
         sentence={displayedSentence}
+        title="Detail chyby"
       />
       <View style={{ marginBottom: 16, marginHorizontal: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', flexGrow: 1 }}>
         <ThemedText type="title" style={{ marginBottom: 16, marginTop: 16, textAlign: 'center' }}>Nejčastější chyby</ThemedText>

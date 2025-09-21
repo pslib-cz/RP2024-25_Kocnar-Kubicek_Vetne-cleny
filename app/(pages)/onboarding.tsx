@@ -74,7 +74,7 @@ export default function OnboardingScreen() {
 
   // Sync local name to context
   useEffect(() => {
-    setName(localName.trim().slice(0, 32));
+    setName(localName.trim().slice(0, 24));
   }, [localName, setName]);
 
 
@@ -246,6 +246,7 @@ const ProfileSetup = ({
               placeholderTextColor="#666"
               autoCapitalize="words"
               autoFocus={false}
+              maxLength={24}
             />
           </View>
         </View>

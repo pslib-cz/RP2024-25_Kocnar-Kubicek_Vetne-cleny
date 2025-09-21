@@ -31,6 +31,15 @@ export default function JoinGameScreen() {
     }
   }, [params.code]);
 
+  // Generate planet when contextCode is available
+  useEffect(() => {
+    if (contextCode && !randomPlanet) {
+      const seed = parseInt(contextCode, 10) || Math.floor(Math.random() * 1000000);
+      const planet = generateRandomPlanet(seed);
+      setRandomPlanet(planet);
+    }
+  }, [contextCode, randomPlanet]);
+
   const handleJoinGame = async (gameCode?: string) => {
     try {
       Keyboard.dismiss(); // Dismiss keyboard when joining game

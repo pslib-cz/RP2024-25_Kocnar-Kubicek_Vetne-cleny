@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Animated, ScrollView} from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Animated, ScrollView, ViewStyle} from 'react-native';
 
 interface ModalWrapperProps {
   visible: boolean;
@@ -7,6 +7,7 @@ interface ModalWrapperProps {
   title?: string;
   closeButtonText?: string;
   children: React.ReactNode;
+  contentWrapperStyle?: ViewStyle;
 }
 
 const ModalWrapper: React.FC<ModalWrapperProps> = ({
@@ -14,7 +15,8 @@ const ModalWrapper: React.FC<ModalWrapperProps> = ({
   onClose,
   title = "Nápověda",
   closeButtonText = "Zavřít",
-  children
+  children,
+  contentWrapperStyle,
 }) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const scaleAnim = useRef(new Animated.Value(0.8)).current;
@@ -94,7 +96,7 @@ const ModalWrapper: React.FC<ModalWrapperProps> = ({
         <View style={styles.contentWrapper}>
           <ScrollView 
             style={styles.contentScrollView}
-            contentContainerStyle={styles.content}
+            contentContainerStyle={[styles.content, contentWrapperStyle]}
             showsVerticalScrollIndicator={true}
             nestedScrollEnabled={true}
           >
@@ -169,15 +171,16 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   footer: {
-    padding: 12,
+    paddingBottom: 12,
+    paddingTop: 6,
     alignItems: 'center',
+    paddingHorizontal: 20,
   },
   closeButton: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#5662e6',
     paddingVertical: 12,
-    paddingHorizontal: 30,
     borderRadius: 8,
-    minWidth: 100,
+    width: '100%',
   },
   closeButtonText: {
     color: '#fff',

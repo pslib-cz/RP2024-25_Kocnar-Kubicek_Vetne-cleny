@@ -41,7 +41,7 @@ const SentenceDetailModal: React.FC<SentenceDetailModalProps> = ({
     <ModalWrapper visible={visible} onClose={() => {
       onClose();
       handleHideTooltip();
-    }} title={title} closeButtonText={closeButtonText}>
+    }} title={title} closeButtonText={closeButtonText} contentWrapperStyle={{ paddingTop: 56, paddingBottom: 12 }}>
       <WordButtonsContainer
         buttons={buttons}
         showTooltip={true}
