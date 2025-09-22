@@ -88,13 +88,8 @@ export const useAPI = (userData?: Partial<APIUserData>) => {
   const data = { ...DEFAULT_USER_DATA, ...userData };
   const { secretKey, userId, name, bodyColor, trailColor, selectedRocketIndex } = data;
 
-  const handleAPIError = async (response: Response): Promise<never> => {
-    const errorData = await response.json() as APIErrorResponse;
-    throw new APIError(
-      response.status as APIErrorCode,
-      errorData.error || 'An error occurred',
-      errorData.details
-    );
+  const handleAPIError = async (response: Response) => {
+    console.log("failed response", response.text());
   };
 
   const checkNetworkConnection = async (): Promise<void> => {
@@ -119,8 +114,10 @@ export const useAPI = (userData?: Partial<APIUserData>) => {
     }
     try {
       const response = await fetch(`${API_URL}${path}`, { ...options, headers });
+      console.log(`API: fetchWithFallback`, await response.clone().text(), API_URL, path);
       if (!response.ok) {
-        return handleAPIError(response);
+        handleAPIError(response);
+        throw new Error(await response.text());
       }
       return await response.json();
     } catch (primaryError) {
@@ -129,7 +126,8 @@ export const useAPI = (userData?: Partial<APIUserData>) => {
         console.log(`Trying backup API (URL: ${API_BACKUP_URL}${path}):`);
         const backupResponse = await fetch(`${API_BACKUP_URL}${path}`, { ...options, headers });
         if (!backupResponse.ok) {
-          return handleAPIError(backupResponse);
+          handleAPIError(backupResponse);
+          throw new Error(await backupResponse.text());
         }
         return await backupResponse.json();
       } catch (backupError) {
