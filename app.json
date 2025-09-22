@@ -22,7 +22,7 @@
       "buildNumber": "37"
     },
     "android": {
-      "versionCode": 10,
+      "versionCode": 11,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/icons/adaptive-icon.png",
         "backgroundColor": "#101223"
@@ -58,8 +58,8 @@
     "extra": {
       "router": {},
       "eas": {
-        "_commentedProjectId__Honzo_Prosim_Nechavej_Tady_Ten_Druhej_Kod_Dekuju": "2f64e818-76b7-4947-9100-4287fa3f8501",
-        "projectId": "564c7e57-4a83-470f-bf71-cac24e431bf4"
+        "_commentedProjectId__fr": "564c7e57-4a83-470f-bf71-cac24e431bf4",
+        "projectId": "2f64e818-76b7-4947-9100-4287fa3f8501"
       }
     }
   }
