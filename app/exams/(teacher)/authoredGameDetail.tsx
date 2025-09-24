@@ -212,6 +212,112 @@ export default function AuthoredGameDetail() {
     ? Math.round(completedSessions.reduce((sum, session) => sum + session.correctAnswers, 0) / completedSessions.length / game.questionCount * 100)
     : 0;
 
+  const StudentAnswers = ({ answers }: { answers: any[] }) => {
+    return (
+      <View style={styles.answersContainer}>
+        <Text style={styles.answersTitle}>Odpovědi studenta:</Text>
+        {answers.map((answer: any, answerIndex: number) => (
+          <View key={answerIndex} style={styles.answerItem}>
+            <View style={styles.answerHeader}>
+              <Text style={styles.answerNumber}>Otázka {answerIndex + 1}</Text>
+              <View style={[
+                styles.answerStatus,
+                answer.correct ? styles.correctAnswer : styles.incorrectAnswer
+              ]}>
+                <Text style={styles.answerStatusText}>
+                  {answer.correct ? '✓ Správně' : '✗ Špatně'}
+                </Text>
+              </View>
+            </View>
+            
+            {/* Display question content */}
+            <View style={styles.questionContent}>
+              {answer.question?.SOURCE?.map((word: any, wordIndex: number) => (
+                <View key={wordIndex} style={styles.wordItem}>
+                  <Text style={styles.wordText}>{word.text}</Text>
+                  <Text style={styles.wordType}>{word.type}</Text>
+                </View>
+              ))}
+            </View>
+            
+            {/* Show additional question info */}
+            {answer.question?.WANTED && (
+              <Text style={styles.questionInfo}>
+                Hledaný typ: <Text style={styles.highlightedText}>{answer.question.WANTED}</Text>
+              </Text>
+            )}
+            {answer.question?.INDEX !== undefined && (
+              <Text style={styles.questionInfo}>
+                Index slova: <Text style={styles.highlightedText}>{answer.question.INDEX + 1}</Text>
+              </Text>
+            )}
+            
+            {/* Display user selections */}
+            {answer.userSelections && (
+              <View style={styles.userSelectionsContainer}>
+                <Text style={styles.userSelectionsTitle}>Odpovědi studenta:</Text>
+                
+                {/* Game1 selections */}
+                {answer.userSelections.selectedWords && (
+                  <View style={styles.selectionsList}>
+                    {answer.userSelections.selectedWords.map((selection: any, selectionIndex: number) => (
+                      <View key={selectionIndex} style={styles.selectionItem}>
+                        <Text style={styles.selectionWord}>
+                          "{selection.word}" → {selection.selectedType}
+                        </Text>
+                        <View style={[
+                          styles.selectionStatus,
+                          selection.selectedType === selection.correctType ? styles.correctSelection : styles.incorrectSelection
+                        ]}>
+                          <Text style={styles.selectionStatusText}>
+                            {selection.selectedType === selection.correctType ? '✓' : '✗'}
+                          </Text>
+                        </View>
+                      </View>
+                    ))}
+                  </View>
+                )}
+                
+                {/* Game2 selections */}
+                {answer.userSelections.selectedOptions && (
+                  <View style={styles.selectionsList}>
+                    <Text style={styles.selectionTarget}>
+                      Hledaný typ: {answer.userSelections.targetType}
+                    </Text>
+                    {answer.userSelections.selectedOptions.map((option: any, optionIndex: number) => (
+                      <View key={optionIndex} style={[
+                        styles.selectionItem,
+                        option.selected ? styles.selectedOption : styles.unselectedOption
+                      ]}>
+                        <Text style={styles.selectionWord}>
+                          "{option.text}" ({option.type})
+                        </Text>
+                        <View style={[
+                          styles.selectionStatus,
+                          option.correct ? styles.correctSelection : styles.incorrectSelection
+                        ]}>
+                          <Text style={styles.selectionStatusText}>
+                            {option.correct ? '✓' : '✗'}
+                          </Text>
+                        </View>
+                      </View>
+                    ))}
+                  </View>
+                )}
+              </View>
+            )}
+            
+            <Text style={styles.answerTime}>
+              Odpovězeno: {new Date(answer.time).toLocaleString('cs-CZ', {
+                timeStyle: 'medium'
+              })}
+            </Text>
+          </View>
+        ))}
+      </View>
+    )
+  }
+
   return (
     <PageWrapper>
       {/* Header */}
@@ -354,23 +460,19 @@ export default function AuthoredGameDetail() {
                 <View key={session.id} style={styles.playerCard}>
                   <View style={styles.playerHeader}>
                     <View style={styles.playerInfo}>
-                    <View
-                          style={[
-                            styles.playerColor
-                          ]}
-                        >
-                          <PlayerRocket
-                            player={session.player}
-                            width={32}
-                            height={32}
-                            showText={false}
-                            containerStyle={{
-                              backgroundColor: "transparent",
-                              borderRadius: 16,
-                              padding: 4
-                            }}
-                          />
-                        </View>
+                    <View style={[styles.playerColor]}>
+                      <PlayerRocket
+                        player={session.player}
+                        width={32}
+                        height={32}
+                        showText={false}
+                        containerStyle={{
+                          backgroundColor: "transparent",
+                          borderRadius: 16,
+                          padding: 4
+                        }}
+                      />
+                      </View>
                       <View>
                         <Text style={styles.playerName}>{session.player.name}</Text>
                         <Text style={styles.playerMeta}>
@@ -407,11 +509,7 @@ export default function AuthoredGameDetail() {
                     <View key={session.id} style={styles.playerCard}>
                       <View style={styles.playerHeader}>
                         <View style={styles.playerInfo}>
-                          <View
-                            style={[
-                              styles.playerColor
-                            ]}
-                          >
+                          <View style={[styles.playerColor]}>
                             <PlayerRocket
                               player={session.player}
                               width={32}
@@ -467,108 +565,8 @@ export default function AuthoredGameDetail() {
                       )}
                       
                       {/* Answers display */}
-                      {isExpanded && answers.length > 0 && (
-                        <View style={styles.answersContainer}>
-                          <Text style={styles.answersTitle}>Odpovědi studenta:</Text>
-                          {answers.map((answer: any, answerIndex: number) => (
-                            <View key={answerIndex} style={styles.answerItem}>
-                              <View style={styles.answerHeader}>
-                                <Text style={styles.answerNumber}>Otázka {answerIndex + 1}</Text>
-                                <View style={[
-                                  styles.answerStatus,
-                                  answer.correct ? styles.correctAnswer : styles.incorrectAnswer
-                                ]}>
-                                  <Text style={styles.answerStatusText}>
-                                    {answer.correct ? '✓ Správně' : '✗ Špatně'}
-                                  </Text>
-                                </View>
-                              </View>
-                              
-                              {/* Display question content */}
-                              <View style={styles.questionContent}>
-                                {answer.question?.SOURCE?.map((word: any, wordIndex: number) => (
-                                  <View key={wordIndex} style={styles.wordItem}>
-                                    <Text style={styles.wordText}>{word.text}</Text>
-                                    <Text style={styles.wordType}>{word.type}</Text>
-                                  </View>
-                                ))}
-                              </View>
-                              
-                              {/* Show additional question info */}
-                              {answer.question?.WANTED && (
-                                <Text style={styles.questionInfo}>
-                                  Hledaný typ: <Text style={styles.highlightedText}>{answer.question.WANTED}</Text>
-                                </Text>
-                              )}
-                              {answer.question?.INDEX !== undefined && (
-                                <Text style={styles.questionInfo}>
-                                  Index slova: <Text style={styles.highlightedText}>{answer.question.INDEX + 1}</Text>
-                                </Text>
-                              )}
-                              
-                              {/* Display user selections */}
-                              {answer.userSelections && (
-                                <View style={styles.userSelectionsContainer}>
-                                  <Text style={styles.userSelectionsTitle}>Odpovědi studenta:</Text>
-                                  
-                                  {/* Game1 selections */}
-                                  {answer.userSelections.selectedWords && (
-                                    <View style={styles.selectionsList}>
-                                      {answer.userSelections.selectedWords.map((selection: any, selectionIndex: number) => (
-                                        <View key={selectionIndex} style={styles.selectionItem}>
-                                          <Text style={styles.selectionWord}>
-                                            "{selection.word}" → {selection.selectedType}
-                                          </Text>
-                                          <View style={[
-                                            styles.selectionStatus,
-                                            selection.selectedType === selection.correctType ? styles.correctSelection : styles.incorrectSelection
-                                          ]}>
-                                            <Text style={styles.selectionStatusText}>
-                                              {selection.selectedType === selection.correctType ? '✓' : '✗'}
-                                            </Text>
-                                          </View>
-                                        </View>
-                                      ))}
-                                    </View>
-                                  )}
-                                  
-                                  {/* Game2 selections */}
-                                  {answer.userSelections.selectedOptions && (
-                                    <View style={styles.selectionsList}>
-                                      <Text style={styles.selectionTarget}>
-                                        Hledaný typ: {answer.userSelections.targetType}
-                                      </Text>
-                                      {answer.userSelections.selectedOptions.map((option: any, optionIndex: number) => (
-                                        <View key={optionIndex} style={[
-                                          styles.selectionItem,
-                                          option.selected ? styles.selectedOption : styles.unselectedOption
-                                        ]}>
-                                          <Text style={styles.selectionWord}>
-                                            "{option.text}" ({option.type})
-                                          </Text>
-                                          <View style={[
-                                            styles.selectionStatus,
-                                            option.correct ? styles.correctSelection : styles.incorrectSelection
-                                          ]}>
-                                            <Text style={styles.selectionStatusText}>
-                                              {option.correct ? '✓' : '✗'}
-                                            </Text>
-                                          </View>
-                                        </View>
-                                      ))}
-                                    </View>
-                                  )}
-                                </View>
-                              )}
-                              
-                              <Text style={styles.answerTime}>
-                                Odpovězeno: {new Date(answer.time).toLocaleString('cs-CZ', {
-                                  timeStyle: 'medium'
-                                })}
-                              </Text>
-                            </View>
-                          ))}
-                        </View>
+                      {isExpanded && answers && answers.length > 0 && (
+                        <StudentAnswers answers={answers} />
                       )}
                     </View>
                   );
