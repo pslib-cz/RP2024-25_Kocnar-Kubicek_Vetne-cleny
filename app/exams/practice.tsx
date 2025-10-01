@@ -152,7 +152,7 @@ export default function CreateGameScreen() {
           <ThemedText style={styles.label}>Sady členů:</ThemedText>
           <View style={styles.scrollableContainer}>
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-              {['Všechny', 'Hlavní', 'Přísl. určení', 'Přivlastek', 'Doplňek'].map((galaxyOption, index) => (
+              {['Všechny', 'Hlavní', 'Přivlastek', 'Přísl. určení', 'Doplňek'].map((galaxyOption, index) => (
                 <TouchableOpacity
                   key={galaxyOption}
                   style={[

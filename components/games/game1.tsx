@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { WordButtonType } from '@/types/games/WordButtonType';
 import { useGameContext } from '@/contexts/GameContext';
@@ -50,6 +50,9 @@ export function GameOneUI(type: Game1Type, oneWord_INDEX: number = 1) {
 
   const { onFinished, data, activeQuestion, gameState } = useGameContext();
   const { gameIndex, setGameIndex, phraseButtons, setPhraseButtons, bottomButtons, setBottomButtons, handleHideTooltip, handleShowTooltip } = useLevelContext();
+  
+  // Track user selections for each word
+  const [userSelections, setUserSelections] = useState<{[wordIndex: number]: string}>({});
 
   const modifiers: QuestionModifier[] = activeQuestion?.TEMPLATE[GeneratorParam.QUESTION_MODIFIER] as QuestionModifier[] ?? [];
 
@@ -107,6 +110,9 @@ export function GameOneUI(type: Game1Type, oneWord_INDEX: number = 1) {
     if (oneWord) {
       setGameIndex(oneWord_INDEX);
     }
+
+    // Reset user selections when new data comes in
+    setUserSelections({});
 
     if (data) {
       if (inverted) {
@@ -178,6 +184,13 @@ export function GameOneUI(type: Game1Type, oneWord_INDEX: number = 1) {
       return;
     }
 
+    // Track user's selection
+    const updatedUserSelections = {
+      ...userSelections,
+      [gameIndex]: bottomButton.type || ''
+    };
+    setUserSelections(updatedUserSelections);
+
     if (phraseButtons[gameIndex].type === bottomButton.type) {
       if (!allTypes && bottomButton)
         bottomButton.state = ButtonState.disabled;
@@ -205,20 +218,20 @@ export function GameOneUI(type: Game1Type, oneWord_INDEX: number = 1) {
         console.log("Data:", data);
         
         // Capture user selections for Game1 completion
-        const userSelections = {
+        const userSelectionsData = {
           gameType: 'Game1_complete',
           selectedWords: updatedPhraseButtons.map((button, index) => ({
             word: button.text || '',
             wordIndex: index,
-            selectedType: button.type || '',
+            selectedType: updatedUserSelections[index] || '', // User's actual selection
             correctType: data?.[index]?.type || ''
           }))
         };
         
-        console.log("GAME1: User selections captured:", userSelections);
-        console.log("GAME1: Calling onFinished with:", 1, userSelections);
+        console.log("GAME1: User selections captured:", userSelectionsData);
+        console.log("GAME1: Calling onFinished with:", 1, userSelectionsData);
         
-        onFinished(1, userSelections);
+        onFinished(1, userSelectionsData);
       }
 
       setGameIndex(nextIndex);
@@ -232,21 +245,21 @@ export function GameOneUI(type: Game1Type, oneWord_INDEX: number = 1) {
       console.log("GAME1: Correct count:", correctCount, "out of", updatedPhraseButtons.length);
       
       // Capture user selections for Game1 partial completion
-      const userSelections = {
+      const userSelectionsData = {
         gameType: 'Game1_partial',
         selectedWords: updatedPhraseButtons.map((button, index) => ({
           word: button.text || '',
           wordIndex: index,
-          selectedType: button.type || '',
+          selectedType: updatedUserSelections[index] || '', // User's actual selection
           correctType: data?.[index]?.type || ''
         }))
       };
       
       const percentage = correctCount / updatedPhraseButtons.length;
-      console.log("GAME1: User selections captured:", userSelections);
-      console.log("GAME1: Calling onFinished with:", percentage, userSelections);
+      console.log("GAME1: User selections captured:", userSelectionsData);
+      console.log("GAME1: Calling onFinished with:", percentage, userSelectionsData);
       
-      onFinished(percentage, userSelections);
+      onFinished(percentage, userSelectionsData);
     }
 
     setBottomButtons([...bottomButtons]);

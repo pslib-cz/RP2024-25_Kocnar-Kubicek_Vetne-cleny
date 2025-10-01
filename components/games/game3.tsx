@@ -15,10 +15,13 @@ export function Game3UI(wantedType: WordType | null = null) {
 
   // ! this is the only allowed useEffect in the games and can only contain the data as dependency
   useEffect(() => {
-    if (data) {
-      setOptions(data);
-      setTargetType(wantedType ?? data[Math.floor(Math.random() * data.length)].type);
+    if (!data) {
+      console.log("Data not initialized yet");
+      return;
     }
+
+    setOptions(data);
+    setTargetType(wantedType ?? data[Math.floor(Math.random() * data.length)].type);
   }, [data]);
 
   const handleSelect = (id: WordSelectionOption) => {
@@ -30,7 +33,23 @@ export function Game3UI(wantedType: WordType | null = null) {
   };
 
   const handleContinue = () => {
-    onFinished(IsValid())
+    const correctCount = IsValid();
+    
+    // Capture user selections for Game3
+    const userSelections = {
+      gameType: 'Game3',
+      selectedOptions: options?.map(option => ({
+        text: option.text,
+        type: option.type,
+        selected: selectedOptions.includes(option),
+        correct: option.type === targetType?.type
+      })) || [],
+      targetType: targetType?.type
+    };
+
+    console.log("User selections g3: ", userSelections);
+    
+    onFinished(correctCount, userSelections);
   }
 
   function IsValid(): number {

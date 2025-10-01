@@ -45,6 +45,8 @@ export function Game2UI(wantedType: WordType | null = null) {
       })) || [],
       targetType: targetType?.type
     };
+
+    console.log("User selections g2: ", userSelections);
     
     onFinished(correctCount, userSelections)
   }
