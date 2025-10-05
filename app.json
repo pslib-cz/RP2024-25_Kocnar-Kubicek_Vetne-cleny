@@ -2,7 +2,7 @@
   "expo": {
     "name": "Větná dráha",
     "slug": "vetnecleny",
-    "version": "1.1.0",
+    "version": "1.1.1",
     "orientation": "portrait",
     "icon": "./assets/images/icons/ios-dark.png",
     "scheme": "vetnecleny",
@@ -19,7 +19,7 @@
         "light": "./assets/images/icons/ios-light.png",
         "tinted": "./assets/images/icons/ios-tinted.png"
       },
-      "buildNumber": "37"
+      "buildNumber": "41"
     },
     "android": {
       "versionCode": 11,
@@ -58,8 +58,8 @@
     "extra": {
       "router": {},
       "eas": {
-        "_commentedProjectId__fr": "564c7e57-4a83-470f-bf71-cac24e431bf4",
-        "projectId": "2f64e818-76b7-4947-9100-4287fa3f8501"
+        "_commentedProjectId__fr": "2f64e818-76b7-4947-9100-4287fa3f8501",
+        "projectId": "564c7e57-4a83-470f-bf71-cac24e431bf4"
       }
     }
   }
