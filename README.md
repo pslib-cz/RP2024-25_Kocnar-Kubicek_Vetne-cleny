@@ -61,11 +61,11 @@ data/             # Data files (e.g., planet names)
 | 3.4.         | ✅ Finalize design in Figma       |
 | 4.4.         | ✅ Start app development          |
 | 9.4.         | ✅ Complete technical foundation  |
-| 14.5.        | 🔜 Finalize app features          |
+| 14.5.        | ✅ Finalize app features          |
 | 14.5.        | ✅ Begin testing                  |
-| 20.5.        | 🔜 Upload the app to the stores   |
-| 20.5.        | Beta testing                      |
-| 23.5.        | Finalization                      |
+| 20.5.        | ✅ Upload the app to the stores   |
+| 20.5.        | ✅ Beta testing                   |
+| 23.5.        | ✅ Finalization                   |
 ---
 
 **This project is a "school-year-final" project (ročníková práce).**
