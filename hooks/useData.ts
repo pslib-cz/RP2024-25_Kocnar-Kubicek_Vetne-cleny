@@ -1,14 +1,32 @@
 import { useGalaxyContext } from "@/contexts/GalaxyContext";
 import { WordSelectionOption } from "@/types/games/SelectionOption";
 import { WordType } from "@/types/WordTypes";
+import { normalizeWordType } from "@/constants/WordTypes";
 import { useEffect, useMemo } from "react";
 import * as FileSystem from 'expo-file-system/legacy';
 
 const version = "latest"
+type LoadedSetItem = [string, string, ...string[]];
+type LoadedSets = LoadedSetItem[][][];
+
+const normalizeLoadedSets = (sets: LoadedSets): LoadedSets =>
+  sets.map((set) =>
+    set.map((group) =>
+      group.map((item) => [item[0], normalizeWordType(item[1]), ...item.slice(2)])
+    )
+  );
+
+const normalizeLoadedTypeSets = (typeSets: Record<string, string[]>): Record<string, string[]> => {
+  return Object.entries(typeSets).reduce<Record<string, string[]>>((normalized, [type, words]) => {
+    const normalizedType = normalizeWordType(type);
+    normalized[normalizedType] = [...(normalized[normalizedType] ?? []), ...words];
+    return normalized;
+  }, {});
+};
 
 // just in case
-let loadedSets: string[][][] = require(`../data/sheets/${version}/sets.json`);
-let loadedTypeSets: Record<string, string[]> = require(`../data/sheets/${version}/types.json`);
+let loadedSets: LoadedSets = normalizeLoadedSets(require(`../data/sheets/${version}/sets.json`));
+let loadedTypeSets: Record<string, string[]> = normalizeLoadedTypeSets(require(`../data/sheets/${version}/types.json`));
 export let loadedVersion : string = require(`../data/sheets/version.json`).version;
 
 export const loadLatestData_Local = async () => {
@@ -33,8 +51,8 @@ export const loadLatestData_Local = async () => {
 }
 
 export const updateLoadedSets = (ls : any, lts:any, lv:any) => {
-  loadedSets = ls;
-  loadedTypeSets = lts;
+  loadedSets = normalizeLoadedSets(ls);
+  loadedTypeSets = normalizeLoadedTypeSets(lts);
   loadedVersion = lv;
 }
 
@@ -49,12 +67,12 @@ export const useWordsByType = (
   seed: number = Math.random()
 ): WordSelectionOption[] => {
   return useMemo(() => {
-    const typeArray = Array.isArray(types) ? types : [types];
+    const typeArray = (Array.isArray(types) ? types : [types]).map(normalizeWordType);
     
     // Get all words from requested types
     let allWords: WordSelectionOption[] = [];
     typeArray.forEach(type => {
-      const typeWords = loadedTypeSets[type.toLowerCase()] || [];
+      const typeWords = loadedTypeSets[type] || [];
       allWords = [...allWords, ...typeWords.map((word: string) => ({ type, text: word }))];
     });
 
@@ -72,7 +90,7 @@ export const useWordsByType = (
 
 export const useData: (difficulty?: number, range?: number) => WordSelectionOption[][] = (difficulty, range = 0.2) => {
   const { selectedGalaxy, activePlanets } = useGalaxyContext();
-  const set: string[][] = loadedSets[selectedGalaxy];
+  const set: LoadedSetItem[][] = loadedSets[selectedGalaxy];
 
   const memoizedData : WordSelectionOption[][]  = useMemo(() => {
     const effectiveDifficulty = difficulty ?? (activePlanets[selectedGalaxy] / (selectedGalaxy === 0 ? 24 : 7)); // 0 - 1

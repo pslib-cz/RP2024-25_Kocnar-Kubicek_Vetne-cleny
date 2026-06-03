@@ -1,4 +1,4 @@
-import { getWordTypeColor } from '@/constants/WordTypes';
+import { getWordTypeColor, isWordTypeAbbr, normalizeWordType } from '@/constants/WordTypes';
 import React, { useEffect, useRef } from 'react';
 import { Text, StyleSheet, TouchableOpacity, Animated, Easing } from 'react-native';
 
@@ -19,6 +19,9 @@ export enum ButtonState {
 }
 
 const WordButton: React.FC<WordButtonProps> = ({ text, state, onClick, onLongPress, type, drawType }) => {
+  const isTypeLabel = !!type && isWordTypeAbbr(type) && normalizeWordType(text) === normalizeWordType(type);
+  const displayText = isTypeLabel ? normalizeWordType(text) : text;
+
   const stateStyles = {
     [ButtonState.default]: null,
     [ButtonState.highlighted]: styles.highlightedButton,
@@ -80,7 +83,7 @@ const WordButton: React.FC<WordButtonProps> = ({ text, state, onClick, onLongPre
             styles.buttonText,
           ]}
           >
-            {text}
+            {displayText}
           </Text>
         </TouchableOpacity>
       </Animated.View>
@@ -103,7 +106,7 @@ const WordButton: React.FC<WordButtonProps> = ({ text, state, onClick, onLongPre
         state === ButtonState.disabled ? styles.disabledButtonText : null,
       ]}
       >
-        {text}
+        {displayText}
       </Text>
     </TouchableOpacity>
   );
