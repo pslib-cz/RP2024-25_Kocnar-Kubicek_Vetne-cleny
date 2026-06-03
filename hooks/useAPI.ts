@@ -78,12 +78,11 @@ export const useAPI = (userData?: Partial<APIUserData>) => {
   const { config } = useConfigContext();
   const { loadedVersion } = useLoadedData();
   const API_URL = config.API_URL;
-  const API_BACKUP_URL = config.API_BACKUP_URL;
   const appVersion =
-  (Constants.expoConfig && typeof Constants.expoConfig === 'object' && 'version' in Constants.expoConfig && (Constants.expoConfig as any).version) ||
-  (Constants.manifest2 && typeof Constants.manifest2 === 'object' && 'version' in Constants.manifest2 && (Constants.manifest2 as any).version) ||
-  'neuvedeno';
-  const getClientVersion = () => `${appVersion}-${loadedVersion || 'v0' }`;
+    (Constants.expoConfig && typeof Constants.expoConfig === 'object' && 'version' in Constants.expoConfig && (Constants.expoConfig as any).version) ||
+    (Constants.manifest2 && typeof Constants.manifest2 === 'object' && 'version' in Constants.manifest2 && (Constants.manifest2 as any).version) ||
+    'neuvedeno';
+  const getClientVersion = () => `${appVersion}-${loadedVersion || 'v0'}`;
 
   const data = { ...DEFAULT_USER_DATA, ...userData };
   const { secretKey, userId, name, bodyColor, trailColor, selectedRocketIndex } = data;
@@ -120,24 +119,13 @@ export const useAPI = (userData?: Partial<APIUserData>) => {
         throw new Error(await response.text());
       }
       return await response.json();
-    } catch (primaryError) {
-      console.warn(`Primary API failed, trying backup API (URL: ${API_URL}${path}):`, primaryError);
-      try {
-        console.log(`Trying backup API (URL: ${API_BACKUP_URL}${path}):`);
-        const backupResponse = await fetch(`${API_BACKUP_URL}${path}`, { ...options, headers });
-        if (!backupResponse.ok) {
-          handleAPIError(backupResponse);
-          throw new Error(await backupResponse.text());
-        }
-        return await backupResponse.json();
-      } catch (backupError) {
-        console.warn('Backup API failed:', backupError);
-        throw new APIError(
-          APIErrorCode.SERVER_ERROR,
-          'Both primary and backup APIs failed',
-          { primaryError, backupError }
-        );
-      }
+    } catch (error) {
+      console.warn(`API request failed (URL: ${API_URL}${path}):`, error);
+      throw new APIError(
+        APIErrorCode.SERVER_ERROR,
+        'API request failed',
+        { error }
+      );
     }
   };
 
@@ -187,7 +175,7 @@ export const useAPI = (userData?: Partial<APIUserData>) => {
     return post<PlayerCreateResponse>('/players/create', payload);
   };
 
-  const upsertPlayer = async (levels: number[] = [0,0,0,0,0]): Promise<PlayerInfo> => {
+  const upsertPlayer = async (levels: number[] = [0, 0, 0, 0, 0]): Promise<PlayerInfo> => {
     const payload = {
       name,
       bodyColor,
@@ -273,7 +261,7 @@ export const useAPI = (userData?: Partial<APIUserData>) => {
     console.log("Update data:", update);
     console.log("Answers field type:", typeof update.answers);
     console.log("Answers field length:", update.answers?.length || 0);
-    
+
     try {
       const result = await patch<SessionInfo>(`/sessions/${sessionId}`, update);
       console.log("API: updateSession successful:", result);
@@ -297,9 +285,9 @@ export const useAPI = (userData?: Partial<APIUserData>) => {
     return get<AuthoredGame>(`/players/me/authored-games/${gameId}`);
   };
 
-  return { 
-    post, 
-    get, 
+  return {
+    post,
+    get,
     patch,
     createPlayer,
     upsertPlayer,
