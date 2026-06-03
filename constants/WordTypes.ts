@@ -6,8 +6,18 @@ interface WordTypeExt{
   color: string;
 }
 
-export function TranslateWordType(type: String): string {
-  const wordType = WordTypes.find((wordType) => wordType.abbr === type);
+export function normalizeWordType(type: string): string {
+  return type.toLocaleLowerCase('cs-CZ');
+}
+
+export function isWordTypeAbbr(type: string): boolean {
+  const normalizedType = normalizeWordType(type);
+  return WordTypes.some((wordType) => normalizeWordType(wordType.abbr) === normalizedType);
+}
+
+export function TranslateWordType(type: string): string {
+  const normalizedType = normalizeWordType(type);
+  const wordType = WordTypes.find((wordType) => normalizeWordType(wordType.abbr) === normalizedType);
   return wordType ? wordType.name : 'Unknown';
 }
 
@@ -85,10 +95,12 @@ export const WordTypes: WordTypeExt[] = [
 ]
 
 export function getWordTypeColor(type: string): string {
-  const wordType = WordTypes.find((wordType) => wordType.abbr === type);
+  const normalizedType = normalizeWordType(type);
+  const wordType = WordTypes.find((wordType) => normalizeWordType(wordType.abbr) === normalizedType);
   return wordType ? wordType.color : '#000'; // Default color if not found
 }
 
 export function getWordTypesByType(types: WordType[]): WordTypeExt[] {
-  return WordTypes.filter((wordType) => types.includes(wordType.abbr));
+  const normalizedTypes = types.map(normalizeWordType);
+  return WordTypes.filter((wordType) => normalizedTypes.includes(normalizeWordType(wordType.abbr)));
 }
