@@ -18,15 +18,15 @@ import HintModal from "@/components/modals/HintModal";
 export const Game: React.FC = () => {
   const { activeQuestion, questions, gameInfo } = useGameContext();
 
-  const router = useRouter(); 
+  const router = useRouter();
   const [hintActive, setHintActive] = React.useState(false);
 
-  function leaveAlert(){
+  function leaveAlert() {
     Alert.alert(
       'Opravdu chcete opustit hru?',
       'Pokud opustíte hru, ztratíte veškerý pokrok.',
       [
-        { text: 'Zrušit', style: 'cancel', onPress: () => {} },
+        { text: 'Zrušit', style: 'cancel', onPress: () => { } },
         {
           text: 'Opustit hru',
           style: 'destructive',
@@ -45,21 +45,21 @@ export const Game: React.FC = () => {
   const gameContent = () => {
     switch (activeQuestion?.TEMPLATE[GeneratorParam.QUESTION_TYPE]) {
       case QuestionType.MARK_WORDS:
-        return GameOneUI(Game1Type.normal)
+        return <GameOneUI type={Game1Type.normal} />
       case QuestionType.MARK_TYPES:
-        return GameOneUI(Game1Type.inverted)
+        return <GameOneUI type={Game1Type.inverted} />
       case QuestionType.MARK_WORDS_ALL_TYPES:
-        return GameOneUI(Game1Type.allTypes)
+        return <GameOneUI type={Game1Type.allTypes} />
       case QuestionType.MARK_TYPE_ONE_WORD:
-        return GameOneUI(Game1Type.oneWord, activeQuestion?.INDEX)
+        return <GameOneUI type={Game1Type.oneWord} oneWord_INDEX={activeQuestion?.INDEX} />
       case QuestionType.SELECT_MULTIPLE:
-        return Game2UI(activeQuestion.WANTED)
+        return <Game2UI wantedType={activeQuestion.WANTED} />
       case QuestionType.SELECT_MULTIPLE_W_SENTENCE:
-        return Game3UI(activeQuestion.WANTED)
+        return <Game3UI wantedType={activeQuestion.WANTED} />
       case QuestionType.SELECT_ONE_W_SENTENCE:
-        return Game3UI(activeQuestion.WANTED)
+        return <Game3UI wantedType={activeQuestion.WANTED} />
       // case QuestionType.SELECT_TYPE:
-      //   return Game2UI(true)
+      //   return <Game2UI wantedType={true as any} />
       default:
         throw new Error(`Unsupported question type: ${activeQuestion?.TEMPLATE[GeneratorParam.QUESTION_TYPE]}`);
     }
@@ -68,10 +68,10 @@ export const Game: React.FC = () => {
   const HelpButton = () => {
     return (
       <TouchableOpacity
-        style={[styles.button]} 
-        onPress={() => {setHintActive(true)}}
+        style={[styles.button]}
+        onPress={() => { setHintActive(true) }}
       >
-        <ThemedText type="defaultSemiBold" style={{fontWeight: 900}}>?</ThemedText>
+        <ThemedText type="defaultSemiBold" style={{ fontWeight: 900 }}>?</ThemedText>
       </TouchableOpacity>
     )
   }
@@ -79,10 +79,10 @@ export const Game: React.FC = () => {
   const CloseButton = () => {
     return (
       <TouchableOpacity
-        style={[styles.button]} 
+        style={[styles.button]}
         onPress={leaveAlert}
       >
-        <ThemedText type="defaultSemiBold" style={{fontWeight: 900}}>X</ThemedText>
+        <ThemedText type="defaultSemiBold" style={{ fontWeight: 900 }}>X</ThemedText>
       </TouchableOpacity>
     )
   }
@@ -90,22 +90,22 @@ export const Game: React.FC = () => {
   return (
     <SafeAreaView style={[styles.container]}>
       <HintModal
-        visible={hintActive} 
-        onClose={() => {setHintActive(false)}}
+        visible={hintActive}
+        onClose={() => { setHintActive(false) }}
         message={
-          hints[activeQuestion?.TEMPLATE[GeneratorParam.QUESTION_TYPE] as keyof typeof hints] || 
+          hints[activeQuestion?.TEMPLATE[GeneratorParam.QUESTION_TYPE] as keyof typeof hints] ||
           "No hints available for this question."
         }
       />
-      <FeedbackOverlay/>
+      <FeedbackOverlay />
       <View style={[styles.headerWrapper]}>
-        <View style={{ flexShrink: 1}}>
+        <View style={{ flexShrink: 1 }}>
           <HelpButton />
-        </View>        
-        <View style={{ flexShrink: 1, flexGrow: 999 }}>
-          <RocketProgressBar progress={(gameInfo.activeQuestionIndex - 1) / questions.length}/>
         </View>
-        <View style={{ flexShrink: 1}}>
+        <View style={{ flexShrink: 1, flexGrow: 999 }}>
+          <RocketProgressBar progress={(gameInfo.activeQuestionIndex - 1) / questions.length} />
+        </View>
+        <View style={{ flexShrink: 1 }}>
           <CloseButton />
         </View>
       </View>
@@ -113,9 +113,9 @@ export const Game: React.FC = () => {
         key={gameInfo.activeQuestionIndex} // Force remount -> animation
         entering={SlideInRight.duration(500)}
         exiting={SlideOutLeft.duration(500)}
-        style={ styles.container1 }
+        style={styles.container1}
       >
-          {gameContent()}
+        {gameContent()}
       </Animated.View>
     </SafeAreaView>
   );

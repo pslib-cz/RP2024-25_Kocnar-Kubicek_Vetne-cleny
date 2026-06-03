@@ -43,7 +43,7 @@ const filterData = (data: WordButtonType[], modifiers: QuestionModifier[]) => {
   });
 }
 
-export function GameOneUI(type: Game1Type, oneWord_INDEX: number = 1) {
+export function GameOneUI({ type, oneWord_INDEX = 1 }: { type: Game1Type, oneWord_INDEX?: number }) {
   const inverted = type === Game1Type.inverted;
   const allTypes = type === Game1Type.allTypes || type === Game1Type.oneWord;
   const oneWord = type === Game1Type.oneWord;

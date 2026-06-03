@@ -8,7 +8,7 @@ import { LargeGameButtonsGrid } from '../ui/games/LargeGameButtonsGrid';
 import { WordType } from '@/types/WordTypes';
 import { GameState } from '@/types/gameState';
 
-export function Game2UI(wantedType: WordType | null = null) {
+export function Game2UI({ wantedType = null }: { wantedType?: WordType | null }) {
   const { data, onFinished, gameState } = useGameContext();
   const { options, setOptions, targetType, setTargetType, selectedOptions, setSelectedOptions } = useLevelContext();
 
