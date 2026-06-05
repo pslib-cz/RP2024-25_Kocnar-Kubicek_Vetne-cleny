@@ -16,7 +16,7 @@ const ArenaGalaxies: React.FC = () => {
         visible={openedIndex !== undefined}
         onClose={() => setOpenedIndex(undefined)}
         id={openedIndex}
-        closeButtonText="cool"
+        closeButtonText="Rozumím"
       />
 
       <View style={styles.container}>

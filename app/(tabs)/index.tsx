@@ -1,8 +1,7 @@
 import ArenaHeader from '@/components/ArenaHeader';
 import PlanetView from '@/components/PlanetView';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import React from 'react';
-import { StyleSheet, View, TouchableOpacity, Text } from 'react-native';
+import { StyleSheet, View, TouchableOpacity } from 'react-native';
 import { router } from 'expo-router';
 import { useGameContext } from '@/contexts/GameContext';
 import PlayfulButton from '@/components/ui/PlayfulButton';
@@ -11,25 +10,13 @@ import { useMultiplayerGameContext } from '@/contexts/MultiplayerGameContext';
 import { useFocusEffect } from '@react-navigation/native';
 import { ThemedText } from '@/components/ThemedText';
 import PageWrapper from '@/components/PageWrapper';
+import { getCelestialObjectCopy } from '@/utils/celestialObjectCopy';
+
 const ArenaPlanet: React.FC = () => {
   const { newGameInArena } = useGameContext();
   const { selectedPlanet, selectedGalaxy } = useGalaxyContext();
   const { leaveGame } = useMultiplayerGameContext();
-
-  const translatePlanetType = (planetType: string) => {
-    switch (planetType) {
-      case 'ring':
-        return 'Plynný obr';
-      case 'sun':
-        return 'Hvězda';
-      case 'hole':
-        return 'Černá díra';
-      case 'normal':
-        return 'Planeta';
-      default:
-        return planetType;
-    }
-  }
+  const celestialObjectCopy = getCelestialObjectCopy(selectedPlanet.planetType);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -49,8 +36,9 @@ const ArenaPlanet: React.FC = () => {
         </TouchableOpacity>
         <View style={styles.card}>
           <View style={{ marginBottom: 12, flexDirection: 'column', alignItems: 'center', width: '100%', gap: 4 }}>
-            <ThemedText type="subtitle" style={{ fontSize: 16, color: '#888' }}>{translatePlanetType(selectedPlanet.planetType)} • {selectedPlanet.planetIndex+1}/{selectedGalaxy==0?25:8}</ThemedText>
+            <ThemedText type="subtitle" style={{ fontSize: 16, color: '#888' }}>{celestialObjectCopy.label} • {selectedPlanet.planetIndex+1}/{selectedGalaxy==0?25:8}</ThemedText>
             <ThemedText type="title">{selectedPlanet.name}</ThemedText>
+            <ThemedText style={styles.description}>{celestialObjectCopy.description}</ThemedText>
           </View>
           <View style={styles.buttonContainer}>
             <PlayfulButton
@@ -98,6 +86,13 @@ const styles = StyleSheet.create({
     width: '90%',
     alignItems: 'center',
     marginBottom: 16
+  },
+  description: {
+    color: '#C8CADF',
+    fontSize: 15,
+    lineHeight: 21,
+    textAlign: 'center',
+    marginTop: 8,
   },
 });
 

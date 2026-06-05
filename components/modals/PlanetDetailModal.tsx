@@ -1,8 +1,9 @@
-import React, { useEffect, useRef } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Dimensions, Animated, Modal } from 'react-native';
+import React from 'react';
+import { Text, StyleSheet } from 'react-native';
 import ModalWrapper from './ModalWrapper';
 import { useGalaxyContext } from '@/contexts/GalaxyContext';
 import Planet from '../Planet';
+import { getCelestialObjectCopy } from '@/utils/celestialObjectCopy';
 
 interface PlanetDetailModal {
   visible: boolean;
@@ -20,12 +21,14 @@ const PlanetDetailModal: React.FC<PlanetDetailModal> = ({
   const { getSelectedGalaxyPlanetData, activeLevelIndex, selectedGalaxy, planetsInGalaxy } = useGalaxyContext();
 
   const planetData = getSelectedGalaxyPlanetData(id);
+  const celestialObjectCopy = getCelestialObjectCopy(planetData.planetType);
 
   const missingLevels = id * 4 - activeLevelIndex[selectedGalaxy];
 
   return (
     <ModalWrapper visible={visible} onClose={onClose} title={planetData.name} closeButtonText={closeButtonText}>
-      <Text style={styles.message}>{planetData.planetType}</Text>
+      <Text style={styles.typeLabel}>{celestialObjectCopy.label}</Text>
+      <Text style={styles.message}>{celestialObjectCopy.description}</Text>
       <Planet revIndex={planetsInGalaxy - id - 1} showText={false} height={125} width={125} />
       <Text style={styles.message}>K odemčení této planety ti chybí ještě {missingLevels} {missingLevels == 1 ? "úroveň" : (missingLevels >= 2 && missingLevels <= 4) ? "úrovně" : "úrovní"}</Text>
     </ModalWrapper>
@@ -33,6 +36,13 @@ const PlanetDetailModal: React.FC<PlanetDetailModal> = ({
 };
 
 const styles = StyleSheet.create({
+  typeLabel: {
+    fontSize: 18,
+    lineHeight: 24,
+    color: '#FFFFFF',
+    textAlign: 'center',
+    fontWeight: '700',
+  },
   message: {
     fontSize: 16,
     lineHeight: 24,

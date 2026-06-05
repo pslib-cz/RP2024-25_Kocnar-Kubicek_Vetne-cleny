@@ -21,6 +21,7 @@ import { WordButtonType } from "@/types/games/WordButtonType";
 import { MaterialIcons } from '@expo/vector-icons';
 import { useTutorialContext } from "@/contexts/TutorialContext";
 import { useRouter } from "expo-router";
+import { findNextTutorialTypeIndex, getTutorialProgressText } from "@/utils/tutorialProgress";
 
 const tutorialTypesOrder: { type: WordType, explanation: string }[] = [
   { type: "po", explanation: "Podmět – kdo nebo co vykonává děj ve větě." },
@@ -56,17 +57,24 @@ export default function SentenceExample() {
 
   useEffect(() => {
     setButtons(buildButtons(sentence || []));
+    setTypeIndex(findNextTutorialTypeIndex(sentence || [], 0, tutorialTypesOrder));
+    setIncorrectType(null);
   }, [sentence]);
 
   useEffect(() => {
-    setTargetType(tutorialTypesOrder[typeIndex]?.type)
+    const nextTypeIndex = findNextTutorialTypeIndex(sentence || [], typeIndex, tutorialTypesOrder);
+
+    if (nextTypeIndex !== typeIndex) {
+      setTypeIndex(nextTypeIndex);
+      return;
+    }
+
+    setTargetType(tutorialTypesOrder[typeIndex]?.type as WordType)
     console.log('Target type set to:', tutorialTypesOrder[typeIndex]?.type);
-  }, [typeIndex])
+  }, [typeIndex, sentence])
 
   const getProgressText = () => {
-    const completed = typeIndex;
-    const total = tutorialTypesOrder.length;
-    return `${completed}/${total}`;
+    return getTutorialProgressText(sentence || [], typeIndex, tutorialTypesOrder);
   };
 
   const OpenTutorialOnCurrentWord = () => {
@@ -101,7 +109,7 @@ export default function SentenceExample() {
                   title="Zkusit znovu"
                   icon={<MaterialIcons name="refresh" size={22} color="white" />}
                   onPress={() => {
-                    setTypeIndex(0);
+                    setTypeIndex(findNextTutorialTypeIndex(sentence || [], 0, tutorialTypesOrder));
                     setButtons(buildButtons(sentence || []));
                     setIncorrectType(null);
                   }}
@@ -139,11 +147,7 @@ export default function SentenceExample() {
               }
 
               if (button.type === targetType?.type) {
-                let newIndex = typeIndex + 1;
-                while (newIndex < tutorialTypesOrder.length &&
-                  sentence?.find(item => item.type === tutorialTypesOrder[newIndex].type) === undefined) {
-                  newIndex++;
-                }
+                const newIndex = findNextTutorialTypeIndex(sentence || [], typeIndex + 1, tutorialTypesOrder);
 
                 setTypeIndex(newIndex);
                 setIncorrectType(null);
