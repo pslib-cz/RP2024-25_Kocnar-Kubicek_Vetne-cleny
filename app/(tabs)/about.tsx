@@ -58,6 +58,13 @@ export default function AboutPage() {
             style={styles.button}
           />
           <PlayfulButton
+            title="Nahlásit problém"
+            icon={<MaterialIcons name="bug-report" size={22} color="white" />}
+            onPress={() => router.push('/(pages)/reportIssue')}
+            style={styles.button}
+            variant="secondary"
+          />
+          <PlayfulButton
             title="Zásady ochrany osobních údajů"
             icon={<MaterialIcons name="privacy-tip" size={22} color="white" />}
             onPress={() => router.push('/(pages)/gdpr')}

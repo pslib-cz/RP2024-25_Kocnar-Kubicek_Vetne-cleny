@@ -1,8 +1,6 @@
 import { ThemedText } from '@/components/ThemedText';
 import { useRocket } from '@/contexts/RocketContext';
 import { Ionicons } from '@expo/vector-icons';
-import { Asset } from 'expo-asset';
-import * as FileSystem from 'expo-file-system/legacy';
 import React, { useEffect, useState } from 'react';
 import { Modal, StatusBar, StyleSheet, TextInput, TouchableOpacity, View, Switch } from 'react-native';
 import { SvgXml } from 'react-native-svg';
@@ -11,18 +9,7 @@ import { router } from 'expo-router';
 import PageWrapper from '@/components/PageWrapper';
 import { ColorPickerModal } from '@/components/modals/ColorPickerModal';
 import { RocketPickerModal } from '@/components/modals/RocketPickerModal';
-
-export const loadSvgAsset = async (assetModule: any): Promise<string | null> => {
-  try {
-    const asset = Asset.fromModule(assetModule);
-    await asset.downloadAsync();
-    const fileContent = await FileSystem.readAsStringAsync(asset.localUri!);
-    return fileContent;
-  } catch (error) {
-    console.warn('Error loading SVG:', error);
-    return null;
-  }
-};
+import { loadSvgAsset } from '@/utils/loadSvgAsset';
 
 export default function ProfileEditScreen(): React.ReactElement {
   const {

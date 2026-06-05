@@ -8,8 +8,8 @@ import * as Crypto from 'expo-crypto';
 import { useAPI } from '@/hooks/useAPI';
 import { useGalaxyContext } from './GalaxyContext';
 import { router } from 'expo-router';
-import { loadSvgAsset } from '@/app/(pages)/profile';
 import { rocket1, rocket2, rocket3, rocket4, rocket5 } from '@/data/rocketsImages';
+import { loadSvgAsset } from '@/utils/loadSvgAsset';
 
 interface RocketContextType {
   bodyColor: string;
