@@ -19,7 +19,7 @@
         "light": "./assets/images/icons/ios-light.png",
         "tinted": "./assets/images/icons/ios-tinted.png"
       },
-      "buildNumber": "42"
+      "buildNumber": "44"
     },
     "android": {
       "versionCode": 11,
