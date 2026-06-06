@@ -6,13 +6,15 @@ import { useEffect, useMemo } from "react";
 import * as FileSystem from 'expo-file-system/legacy';
 
 const version = "latest"
-type LoadedSetItem = [string, string, ...string[]];
-type LoadedSets = LoadedSetItem[][][];
+export type LoadedSetItem = [string, WordType, ...string[]];
+export type LoadedSets = LoadedSetItem[][][];
+type RawLoadedSetItem = [string, string, ...string[]];
+type RawLoadedSets = RawLoadedSetItem[][][];
 
-const normalizeLoadedSets = (sets: LoadedSets): LoadedSets =>
+const normalizeLoadedSets = (sets: RawLoadedSets): LoadedSets =>
   sets.map((set) =>
     set.map((group) =>
-      group.map((item) => [item[0], normalizeWordType(item[1]), ...item.slice(2)])
+      group.map((item) => [item[0], normalizeWordType(item[1]) as WordType, ...item.slice(2)])
     )
   );
 
@@ -67,7 +69,7 @@ export const useWordsByType = (
   seed: number = Math.random()
 ): WordSelectionOption[] => {
   return useMemo(() => {
-    const typeArray = (Array.isArray(types) ? types : [types]).map(normalizeWordType);
+    const typeArray = (Array.isArray(types) ? types : [types]).map((type) => normalizeWordType(type) as WordType);
     
     // Get all words from requested types
     let allWords: WordSelectionOption[] = [];

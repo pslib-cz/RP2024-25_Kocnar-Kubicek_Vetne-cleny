@@ -1,5 +1,8 @@
 import { DataSourceModifier, GeneratorParam, QuestionModifier } from "@/constants/questionGeneratorParams";
 
+type SentenceWord = [string, string, ...string[]];
+type SentenceData = SentenceWord[];
+
 export function isTypeAllowed(bitfield: number, type: number) {
   return (bitfield & (1 << type)) !== 0;
 }
@@ -49,7 +52,7 @@ export function isValidTemplate(template: any[]): boolean {
 }
 
 // DataSourceModifier filter logic
-export function applyDataSourceModifiers(sentences: string[][], modifiers: DataSourceModifier[] | undefined): string[][] {
+export function applyDataSourceModifiers<T extends SentenceData>(sentences: T[], modifiers: DataSourceModifier[] | undefined): T[] {
   if (!modifiers || !Array.isArray(modifiers) || modifiers.length === 0) return sentences;
   return sentences.filter(sentence => {
     // Each modifier must be satisfied (AND logic)
@@ -72,7 +75,7 @@ export function applyDataSourceModifiers(sentences: string[][], modifiers: DataS
 }
 
 // QuestionModifier filter logic for ONLY_<type>
-export function applyOnlyTypeModifiers(sentences: string[][], modifiers: QuestionModifier[] | undefined): string[][] {
+export function applyOnlyTypeModifiers<T extends SentenceData>(sentences: T[], modifiers: QuestionModifier[] | undefined): T[] {
   if (!modifiers || !Array.isArray(modifiers) || modifiers.length === 0) return sentences;
   // Find all ONLY_... modifiers
   const onlyTypes = modifiers

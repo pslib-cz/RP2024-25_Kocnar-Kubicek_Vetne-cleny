@@ -11,12 +11,17 @@ import { useFocusEffect } from '@react-navigation/native';
 import { ThemedText } from '@/components/ThemedText';
 import PageWrapper from '@/components/PageWrapper';
 import { getCelestialObjectCopy } from '@/utils/celestialObjectCopy';
+import CosmicBackground from '@/components/CosmicBackground';
 
 const ArenaPlanet: React.FC = () => {
   const { newGameInArena } = useGameContext();
   const { selectedPlanet, selectedGalaxy } = useGalaxyContext();
   const { leaveGame } = useMultiplayerGameContext();
-  const celestialObjectCopy = getCelestialObjectCopy(selectedPlanet.planetType);
+  const celestialObjectCopy = getCelestialObjectCopy(
+    selectedPlanet.planetType,
+    selectedGalaxy,
+    selectedPlanet.planetIndex,
+  );
 
   useFocusEffect(
     React.useCallback(() => {
@@ -28,6 +33,7 @@ const ArenaPlanet: React.FC = () => {
     <PageWrapper>
       <ArenaHeader />
       <View style={styles.container}>
+        <CosmicBackground />
         <TouchableOpacity
           style={styles.planetContainer}
           onPress={() => router.push('/arenagalaxies')}
@@ -58,6 +64,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#101223',
     alignItems: 'center',
+    position: 'relative',
   },
   planetContainer: {
     flex: 1,
@@ -65,6 +72,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 0,
+    zIndex: 1,
   },
   buttonContainer: {
     width: '100%',
@@ -85,14 +93,15 @@ const styles = StyleSheet.create({
     maxWidth: 380,
     width: '90%',
     alignItems: 'center',
-    marginBottom: 16
+    marginBottom: 16,
+    zIndex: 1,
   },
   description: {
     color: '#C8CADF',
-    fontSize: 15,
-    lineHeight: 21,
+    fontSize: 13,
+    lineHeight: 18,
     textAlign: 'center',
-    marginTop: 8,
+    marginTop: 6,
   },
 });
 

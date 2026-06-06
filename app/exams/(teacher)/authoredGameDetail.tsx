@@ -15,6 +15,14 @@ import { useLoadedData } from '@/hooks/useData';
 import { Question } from '@/types/Question';
 import Constants from 'expo-constants';
 import PageWrapper from '@/components/PageWrapper';
+import ModalWrapper from '@/components/modals/ModalWrapper';
+import {
+  buildQuestionAnalysis,
+  countEnabledQuestionTypes,
+  getQuestionSuccessColor,
+  getQuestionTypeLabel,
+  getQuestionTypeOptions,
+} from '@/utils/teacherGameDetailStats';
 type RootStackParamList = {
   AuthoredGameDetail: {
     gameId: string;
@@ -60,6 +68,8 @@ export default function AuthoredGameDetail() {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [questionsLoading, setQuestionsLoading] = useState(false);
   const [expandedSessions, setExpandedSessions] = useState<Set<string>>(new Set());
+  const [questionTypesModalVisible, setQuestionTypesModalVisible] = useState(false);
+  const [selectedQuestionAnalysisIndex, setSelectedQuestionAnalysisIndex] = useState<number | null>(null);
 
   const getClientVersion = () => `${appVersion}-${loadedVersion || 'v0' }`;
 
@@ -207,6 +217,12 @@ export default function AuthoredGameDetail() {
   const active = isGameActive(game.expirationTime, game.active);
   const completedSessions = game.sessions.filter(session => session.completed);
   const activeSessions = game.sessions.filter(session => !session.completed);
+  const questionTypeOptions = getQuestionTypeOptions(game.questiontypes);
+  const enabledQuestionTypesCount = countEnabledQuestionTypes(game.questiontypes);
+  const questionAnalyses = questions.map((_, index) => buildQuestionAnalysis(index, completedSessions));
+  const selectedQuestionAnalysis = selectedQuestionAnalysisIndex !== null
+    ? questionAnalyses[selectedQuestionAnalysisIndex]
+    : null;
 
   const averageScore = completedSessions.length > 0
     ? Math.round(completedSessions.reduce((sum, session) => sum + session.correctAnswers, 0) / completedSessions.length / game.questionCount * 100)
@@ -214,10 +230,15 @@ export default function AuthoredGameDetail() {
 
   const StudentAnswers = ({ answers }: { answers: any[] }) => {
     return (
-      <View style={styles.answersContainer}>
-        <Text style={styles.answersTitle}>Odpovědi studenta:</Text>
+      <View style={styles.answersList}>
         {answers.map((answer: any, answerIndex: number) => (
-          <View key={answerIndex} style={styles.answerItem}>
+          <View
+            key={answerIndex}
+            style={[
+              styles.answerItem,
+              answer.correct ? styles.answerItemCorrect : styles.answerItemIncorrect,
+            ]}
+          >
             <View style={styles.answerHeader}>
               <Text style={styles.answerNumber}>Otázka {answerIndex + 1}</Text>
               <View style={[
@@ -255,8 +276,6 @@ export default function AuthoredGameDetail() {
             {/* Display user selections */}
             {answer.userSelections && (
               <View style={styles.userSelectionsContainer}>
-                <Text style={styles.userSelectionsTitle}>Odpovědi studenta:</Text>
-                
                 {/* Game1 selections */}
                 {answer.userSelections.selectedWords && (
                   <View style={styles.selectionsList}>
@@ -281,9 +300,6 @@ export default function AuthoredGameDetail() {
                 {/* Game2 selections */}
                 {answer.userSelections.selectedOptions && (
                   <View style={styles.selectionsList}>
-                    <Text style={styles.selectionTarget}>
-                      Hledaný typ: {answer.userSelections.targetType}
-                    </Text>
                     {answer.userSelections.selectedOptions.map((option: any, optionIndex: number) => (
                       <View key={optionIndex} style={[
                         styles.selectionItem,
@@ -320,6 +336,125 @@ export default function AuthoredGameDetail() {
 
   return (
     <PageWrapper>
+      <ModalWrapper
+        visible={questionTypesModalVisible}
+        onClose={() => setQuestionTypesModalVisible(false)}
+        title="Typy otázek"
+        closeButtonText="Zavřít"
+      >
+        <View style={styles.modalSummary}>
+          <Text style={styles.modalSummaryText}>
+            {enabledQuestionTypesCount} z {questionTypeOptions.length} typů je povoleno.
+          </Text>
+        </View>
+        <View style={styles.typeOptionsList}>
+          {questionTypeOptions.map((option) => (
+            <View
+              key={option.index}
+              style={[
+                styles.typeOptionRow,
+                option.enabled ? styles.typeOptionRowEnabled : styles.typeOptionRowDisabled,
+              ]}
+            >
+              <Text style={styles.typeOptionLabel}>{option.label}</Text>
+              <View
+                style={[
+                  styles.typeOptionBadge,
+                  option.enabled ? styles.typeOptionBadgeEnabled : styles.typeOptionBadgeDisabled,
+                ]}
+              >
+                <Text style={styles.typeOptionBadgeText}>
+                  {option.enabled ? 'Zapnuto' : 'Vypnuto'}
+                </Text>
+              </View>
+            </View>
+          ))}
+        </View>
+      </ModalWrapper>
+
+      <ModalWrapper
+        visible={selectedQuestionAnalysisIndex !== null}
+        onClose={() => setSelectedQuestionAnalysisIndex(null)}
+        title={selectedQuestionAnalysisIndex !== null ? `Analýza otázky ${selectedQuestionAnalysisIndex + 1}` : 'Analýza otázky'}
+        closeButtonText="Zavřít"
+      >
+        {selectedQuestionAnalysis && (
+          <View style={styles.analysisModalContent}>
+            <View style={styles.analysisOverview}>
+              <View>
+                <Text
+                  style={[
+                    styles.analysisRate,
+                    { color: getQuestionSuccessColor(selectedQuestionAnalysis.successRate) },
+                  ]}
+                >
+                  {selectedQuestionAnalysis.successRate === null ? 'Bez dat' : `${selectedQuestionAnalysis.successRate}%`}
+                </Text>
+                <Text style={styles.analysisMeta}>
+                  {selectedQuestionAnalysis.attempts > 0
+                    ? `${selectedQuestionAnalysis.correct}/${selectedQuestionAnalysis.attempts} správně`
+                    : 'Zatím bez odpovědí'}
+                </Text>
+              </View>
+              <View style={styles.analysisWrongBadge}>
+                <Text style={styles.analysisWrongNumber}>{selectedQuestionAnalysis.wrong}</Text>
+                <Text style={styles.analysisWrongLabel}>špatně</Text>
+              </View>
+            </View>
+
+            <View style={styles.analysisBarTrack}>
+              <View
+                style={[
+                  styles.analysisBarFill,
+                  {
+                    width: `${selectedQuestionAnalysis.successRate ?? 0}%`,
+                    backgroundColor: getQuestionSuccessColor(selectedQuestionAnalysis.successRate),
+                  },
+                ]}
+              />
+            </View>
+
+            <View style={styles.analysisInfoBlock}>
+              <Text style={styles.analysisInfoLabel}>Nejčastější chyba</Text>
+              <Text style={styles.analysisInfoValue}>
+                {selectedQuestionAnalysis.mostCommonMistake
+                  ? `${selectedQuestionAnalysis.mostCommonMistake.text} (${selectedQuestionAnalysis.mostCommonMistake.count}x)`
+                  : 'Žádná chyba'}
+              </Text>
+            </View>
+
+            <View style={styles.analysisInfoBlock}>
+              <Text style={styles.analysisInfoLabel}>Nejčastější odpověď</Text>
+              <Text style={styles.analysisInfoValue}>
+                {selectedQuestionAnalysis.mostCommonAnswer
+                  ? `${selectedQuestionAnalysis.mostCommonAnswer.text} (${selectedQuestionAnalysis.mostCommonAnswer.count}x)`
+                  : 'Bez odpovědí'}
+              </Text>
+            </View>
+
+            <View style={styles.analysisInfoBlock}>
+              <Text style={styles.analysisInfoLabel}>Chybovali</Text>
+              <Text style={styles.analysisInfoValue}>
+                {selectedQuestionAnalysis.wrongPlayers.length > 0
+                  ? selectedQuestionAnalysis.wrongPlayers.slice(0, 6).join(', ')
+                  : 'Nikdo'}
+              </Text>
+            </View>
+
+            {selectedQuestionAnalysis.wrongDetails.length > 0 && (
+              <View style={styles.wrongDetailsList}>
+                {selectedQuestionAnalysis.wrongDetails.map((detail) => (
+                  <View key={`${detail.playerName}-${detail.answer}`} style={styles.wrongDetailItem}>
+                    <Text style={styles.wrongDetailName}>{detail.playerName}</Text>
+                    <Text style={styles.wrongDetailAnswer}>{detail.answer}</Text>
+                  </View>
+                ))}
+              </View>
+            )}
+          </View>
+        )}
+      </ModalWrapper>
+
       {/* Header */}
       <View style={styles.header}>
         <View style={{ flex: 1 }}>
@@ -382,15 +517,20 @@ export default function AuthoredGameDetail() {
               <Text style={styles.detailValue}>{game.questionCount}</Text>
             </View>
 
-            <View style={styles.detailItem}>
+            <TouchableOpacity
+              style={[styles.detailItem, styles.clickableDetailItem]}
+              onPress={() => setQuestionTypesModalVisible(true)}
+              activeOpacity={0.85}
+            >
               <MaterialIcons name="category" size={20} color="#66BB6A" />
               <Text style={styles.detailLabel}>Typy otázek</Text>
-              <Text style={styles.detailValue}>{game.questiontypes}</Text>
-            </View>
+              <Text style={styles.detailValue}>{enabledQuestionTypesCount} povoleno</Text>
+              <Ionicons name="chevron-forward" size={14} color="#aaa" style={styles.detailHintIcon} />
+            </TouchableOpacity>
 
             <View style={styles.detailItem}>
-              <MaterialIcons name="casino" size={20} color="#26A69A" />
-              <Text style={styles.detailLabel}>Seed</Text>
+              <MaterialIcons name="sync" size={20} color="#26A69A" />
+              <Text style={styles.detailLabel}>Stejné otázky</Text>
               <Text style={styles.detailValue}>{game.seed ? 'Ano' : 'Ne'}</Text>
             </View>
 
@@ -579,7 +719,7 @@ export default function AuthoredGameDetail() {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Technické detaily</Text>
           <View style={styles.techDetails}>
-            <Text style={styles.techItem}>Seed: {game.seed || 'Není nastaven'}</Text>
+            <Text style={styles.techItem}>Stejné otázky: {game.seed ? 'Ano' : 'Ne'}</Text>
             <Text style={styles.techItem}>Game ID: {game.id}</Text>
             <Text style={styles.techItem}>Verze: {game.version}</Text>
           </View>
@@ -596,45 +736,77 @@ export default function AuthoredGameDetail() {
               </View>
             ) : questions.length > 0 ? (
               <View style={styles.questionsContainer}>
-                {questions.map((question, index) => (
-                  <View key={index} style={styles.questionCard}>
-                    <View style={styles.questionHeader}>
-                      <Text style={styles.questionNumber}>Otázka {index + 1}</Text>
-                      <Text style={styles.questionType}>
-                        {question.TEMPLATE[2] === 0 ? 'Označ slova' :
-                         question.TEMPLATE[2] === 1 ? 'Označ typy' :
-                         question.TEMPLATE[2] === 2 ? 'Označ typ slova' :
-                         question.TEMPLATE[2] === 3 ? 'Označ slova (všechny typy)' :
-                         question.TEMPLATE[2] === 4 ? 'Výběr více slov' :
-                         question.TEMPLATE[2] === 5 ? 'Výběr více slov ve větě' :
-                         question.TEMPLATE[2] === 6 ? 'Výběr jednoho slova' :
-                         question.TEMPLATE[2] === 7 ? 'Výběr typu' : 'Neznámý typ'}
-                      </Text>
-                    </View>
-                    
-                    {/* Display the sentence/words */}
-                    <View style={styles.questionContent}>
-                      {question.SOURCE.map((word, wordIndex) => (
-                        <View key={wordIndex} style={styles.wordItem}>
-                          <Text style={styles.wordText}>{word.text}</Text>
-                          <Text style={styles.wordType}>{word.type}</Text>
+                {questions.map((question, index) => {
+                  const analysis = questionAnalyses[index];
+                  const successColor = getQuestionSuccessColor(analysis?.successRate ?? null);
+
+                  return (
+                    <View key={index} style={[styles.questionCard, { borderLeftColor: successColor }]}>
+                      <View style={styles.questionHeader}>
+                        <Text style={styles.questionNumber}>Otázka {index + 1}</Text>
+                        <Text style={styles.questionType}>
+                          {getQuestionTypeLabel(question.TEMPLATE[2] as number)}
+                        </Text>
+                      </View>
+
+                      {/* Display the sentence/words */}
+                      <View style={styles.questionContent}>
+                        {question.SOURCE.map((word, wordIndex) => (
+                          <View key={wordIndex} style={styles.wordItem}>
+                            <Text style={styles.wordText}>{word.text}</Text>
+                            <Text style={styles.wordType}>{word.type}</Text>
+                          </View>
+                        ))}
+                      </View>
+
+                      {/* Show additional info if available */}
+                      {question.WANTED && (
+                        <Text style={styles.questionInfo}>
+                          Hledaný typ: <Text style={styles.highlightedText}>{question.WANTED}</Text>
+                        </Text>
+                      )}
+                      {question.INDEX !== undefined && (
+                        <Text style={styles.questionInfo}>
+                          Index slova: <Text style={styles.highlightedText}>{question.INDEX + 1}</Text>
+                        </Text>
+                      )}
+
+                      <TouchableOpacity
+                        style={styles.questionSuccessButton}
+                        onPress={() => setSelectedQuestionAnalysisIndex(index)}
+                        activeOpacity={0.85}
+                      >
+                        <View style={styles.questionSuccessHeader}>
+                          <View style={styles.questionSuccessTitleRow}>
+                            <MaterialIcons name="bar-chart" size={16} color="#aaa" />
+                            <Text style={styles.questionSuccessLabel}>Úspěšnost otázky</Text>
+                          </View>
+                          <Text style={[styles.questionSuccessRate, { color: successColor }]}>
+                            {analysis?.successRate === null || analysis?.successRate === undefined
+                              ? 'Bez dat'
+                              : `${analysis.successRate}%`}
+                          </Text>
                         </View>
-                      ))}
+                        <View style={styles.questionSuccessBarTrack}>
+                          <View
+                            style={[
+                              styles.questionSuccessBarFill,
+                              {
+                                width: `${analysis?.successRate ?? 0}%`,
+                                backgroundColor: successColor,
+                              },
+                            ]}
+                          />
+                        </View>
+                        <Text style={styles.questionSuccessMeta}>
+                          {analysis?.attempts
+                            ? `${analysis.correct}/${analysis.attempts} správně`
+                            : 'Zatím bez odpovědí'}
+                        </Text>
+                      </TouchableOpacity>
                     </View>
-                    
-                    {/* Show additional info if available */}
-                    {question.WANTED && (
-                      <Text style={styles.questionInfo}>
-                        Hledaný typ: <Text style={styles.highlightedText}>{question.WANTED}</Text>
-                      </Text>
-                    )}
-                    {question.INDEX !== undefined && (
-                      <Text style={styles.questionInfo}>
-                        Index slova: <Text style={styles.highlightedText}>{question.INDEX + 1}</Text>
-                      </Text>
-                    )}
-                  </View>
-                ))}
+                  );
+                })}
               </View>
             ) : (
               <Text style={styles.noQuestionsText}>Nepodařilo se vygenerovat otázky</Text>
@@ -744,6 +916,13 @@ const styles = StyleSheet.create({
     padding: 12,
     borderRadius: 8,
     alignItems: 'center',
+  },
+  clickableDetailItem: {
+    borderWidth: 1,
+    borderColor: '#3A4264',
+  },
+  detailHintIcon: {
+    marginTop: 4,
   },
   detailLabel: {
     fontSize: 12,
@@ -935,44 +1114,220 @@ const styles = StyleSheet.create({
     color: '#42A5F5',
     fontWeight: '600',
   },
+  questionSuccessButton: {
+    marginTop: 12,
+    paddingTop: 10,
+    borderTopWidth: 1,
+    borderTopColor: '#3A4264',
+  },
+  questionSuccessHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    gap: 10,
+    marginBottom: 6,
+  },
+  questionSuccessTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    flex: 1,
+  },
+  questionSuccessLabel: {
+    color: '#aaa',
+    fontSize: 12,
+    fontWeight: '600',
+  },
+  questionSuccessRate: {
+    fontSize: 14,
+    fontWeight: '700',
+  },
+  questionSuccessBarTrack: {
+    height: 7,
+    borderRadius: 4,
+    backgroundColor: '#1E2235',
+    overflow: 'hidden',
+  },
+  questionSuccessBarFill: {
+    height: '100%',
+    borderRadius: 4,
+  },
+  questionSuccessMeta: {
+    color: '#888',
+    fontSize: 11,
+    marginTop: 5,
+  },
   noQuestionsText: {
     color: '#888',
     textAlign: 'center',
     fontSize: 14,
     fontStyle: 'italic',
   },
+  modalSummary: {
+    backgroundColor: '#2A3049',
+    padding: 12,
+    borderRadius: 8,
+    marginBottom: 12,
+  },
+  modalSummaryText: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: '600',
+    textAlign: 'center',
+  },
+  typeOptionsList: {
+    gap: 8,
+  },
+  typeOptionRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 10,
+    padding: 10,
+    borderRadius: 8,
+    borderWidth: 1,
+  },
+  typeOptionRowEnabled: {
+    backgroundColor: '#22384A',
+    borderColor: '#2F6E49',
+  },
+  typeOptionRowDisabled: {
+    backgroundColor: '#24283D',
+    borderColor: '#3A4264',
+  },
+  typeOptionLabel: {
+    color: '#fff',
+    fontSize: 13,
+    flex: 1,
+  },
+  typeOptionBadge: {
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 4,
+  },
+  typeOptionBadgeEnabled: {
+    backgroundColor: '#1b4332',
+  },
+  typeOptionBadgeDisabled: {
+    backgroundColor: '#35363a',
+  },
+  typeOptionBadgeText: {
+    color: '#fff',
+    fontSize: 11,
+    fontWeight: '700',
+  },
+  analysisModalContent: {
+    gap: 12,
+  },
+  analysisOverview: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    gap: 12,
+  },
+  analysisRate: {
+    fontSize: 26,
+    fontWeight: '800',
+  },
+  analysisMeta: {
+    color: '#aaa',
+    fontSize: 12,
+    marginTop: 2,
+  },
+  analysisWrongBadge: {
+    backgroundColor: '#2A3049',
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    alignItems: 'center',
+    minWidth: 74,
+  },
+  analysisWrongNumber: {
+    color: '#EF5350',
+    fontSize: 18,
+    fontWeight: '800',
+  },
+  analysisWrongLabel: {
+    color: '#aaa',
+    fontSize: 11,
+  },
+  analysisBarTrack: {
+    height: 9,
+    borderRadius: 5,
+    backgroundColor: '#2A3049',
+    overflow: 'hidden',
+  },
+  analysisBarFill: {
+    height: '100%',
+    borderRadius: 5,
+  },
+  analysisInfoBlock: {
+    backgroundColor: '#2A3049',
+    borderRadius: 8,
+    padding: 10,
+  },
+  analysisInfoLabel: {
+    color: '#42A5F5',
+    fontSize: 12,
+    fontWeight: '700',
+    marginBottom: 4,
+  },
+  analysisInfoValue: {
+    color: '#fff',
+    fontSize: 13,
+    lineHeight: 18,
+  },
+  wrongDetailsList: {
+    gap: 6,
+  },
+  wrongDetailItem: {
+    backgroundColor: '#22283F',
+    borderRadius: 6,
+    padding: 8,
+    borderLeftWidth: 3,
+    borderLeftColor: '#EF5350',
+  },
+  wrongDetailName: {
+    color: '#fff',
+    fontSize: 12,
+    fontWeight: '700',
+    marginBottom: 2,
+  },
+  wrongDetailAnswer: {
+    color: '#aaa',
+    fontSize: 12,
+    lineHeight: 16,
+  },
   // Answer display styles
   answersToggleButton: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#2A3049',
-    padding: 12,
-    borderRadius: 8,
-    marginTop: 8,
+    paddingVertical: 10,
+    marginTop: 10,
+    borderTopWidth: 1,
+    borderTopColor: '#3A4264',
   },
   answersToggleText: {
     color: '#42A5F5',
     fontSize: 14,
     fontWeight: '600',
   },
-  answersContainer: {
-    backgroundColor: '#1E2235',
-    padding: 12,
-    borderRadius: 8,
-    marginTop: 8,
-  },
-  answersTitle: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
-    marginBottom: 12,
+  answersList: {
+    marginTop: 4,
+    gap: 10,
   },
   answerItem: {
-    backgroundColor: '#2A3049',
+    backgroundColor: '#22283F',
     padding: 12,
     borderRadius: 8,
-    marginBottom: 8,
+    borderLeftWidth: 3,
+  },
+  answerItemCorrect: {
+    borderLeftColor: '#4CAF50',
+  },
+  answerItemIncorrect: {
+    borderLeftColor: '#EF5350',
   },
   answerHeader: {
     flexDirection: 'row',
@@ -1009,16 +1364,10 @@ const styles = StyleSheet.create({
   },
   // User selections styles
   userSelectionsContainer: {
-    backgroundColor: '#1E2235',
-    padding: 12,
-    borderRadius: 8,
-    marginTop: 8,
-  },
-  userSelectionsTitle: {
-    color: '#42A5F5',
-    fontSize: 14,
-    fontWeight: '600',
-    marginBottom: 8,
+    marginTop: 10,
+    paddingTop: 10,
+    borderTopWidth: 1,
+    borderTopColor: '#3A4264',
   },
   selectionsList: {
     gap: 6,
@@ -1029,24 +1378,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 8,
     borderRadius: 6,
-    backgroundColor: '#2A3049',
+    backgroundColor: '#2B3150',
   },
   selectedOption: {
-    backgroundColor: '#1b4332',
+    backgroundColor: '#16482F',
   },
   unselectedOption: {
-    backgroundColor: '#2A3049',
+    backgroundColor: '#2B3150',
   },
   selectionWord: {
     color: '#fff',
     fontSize: 13,
     flex: 1,
-  },
-  selectionTarget: {
-    color: '#42A5F5',
-    fontSize: 12,
-    fontWeight: '600',
-    marginBottom: 6,
   },
   selectionStatus: {
     width: 20,

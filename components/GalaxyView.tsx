@@ -61,6 +61,7 @@ const GalaxyView: React.FC<{ setOpenedIndex: React.Dispatch<React.SetStateAction
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    zIndex: 1,
   },
   planetScroll: {
     flex: 1,

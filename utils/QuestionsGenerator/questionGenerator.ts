@@ -1,6 +1,7 @@
 import { questionGeneratorParams, QuestionType, Galaxy, GeneratorParam, DataSource, DataSourceModifier, QuestionModifier } from "@/constants/questionGeneratorParams";
 import { WordSelectionOption } from "@/types/games/SelectionOption";
 import { Question } from "@/types/Question";
+import type { LoadedSetItem, LoadedSets } from "@/hooks/useData";
 import { applyDataSourceModifiers, applyOnlyTypeModifiers, getWantedTypesFromModifiers, isTypeAllowed, isValidTemplate, processSeed, seededShuffle } from "./questionGeneratorUtils";
 
 // Utility: Map QuestionType enum to bit positions
@@ -38,7 +39,7 @@ export function questionGenerator({
   seed: number,
   count: number,
   questionTypesBitfield: number,
-  loadedSets: string[][][],
+  loadedSets: LoadedSets,
   loadedTypeSets: Record<string, string[]>
 }) {
   console.log(`questionGenerator called with:`, { galaxy, difficulty, seed, count, questionTypesBitfield });
@@ -120,7 +121,7 @@ export function questionGenerator({
       // Standard logic for other types
       const raw = loadedSets[dataSource];
       // Flatten and filter as before
-      let set: string[][] = raw
+      let set: LoadedSetItem[][] = raw
         .filter((sentence: any) => Array.isArray(sentence) && sentence.every((item: any) => Array.isArray(item) && item.length >= 2 && typeof item[0] === 'string' && typeof item[1] === 'string'));
       // Apply DataSourceModifiers
       set = applyDataSourceModifiers(set, dataSourceModifiers);
@@ -204,6 +205,5 @@ export function questionGenerator({
 
   return questionsad;
 }
-
 
 

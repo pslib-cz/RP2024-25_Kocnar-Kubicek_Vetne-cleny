@@ -21,7 +21,7 @@ const PlanetDetailModal: React.FC<PlanetDetailModal> = ({
   const { getSelectedGalaxyPlanetData, activeLevelIndex, selectedGalaxy, planetsInGalaxy } = useGalaxyContext();
 
   const planetData = getSelectedGalaxyPlanetData(id);
-  const celestialObjectCopy = getCelestialObjectCopy(planetData.planetType);
+  const celestialObjectCopy = getCelestialObjectCopy(planetData.planetType, selectedGalaxy, id);
 
   const missingLevels = id * 4 - activeLevelIndex[selectedGalaxy];
 
