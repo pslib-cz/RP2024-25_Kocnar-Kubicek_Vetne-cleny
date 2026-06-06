@@ -2,7 +2,7 @@
   "expo": {
     "name": "Větná dráha",
     "slug": "vetnecleny",
-    "version": "1.1.1",
+    "version": "1.2.0",
     "orientation": "portrait",
     "icon": "./assets/images/icons/ios-dark.png",
     "scheme": "vetnecleny",
@@ -19,7 +19,7 @@
         "light": "./assets/images/icons/ios-light.png",
         "tinted": "./assets/images/icons/ios-tinted.png"
       },
-      "buildNumber": "41"
+      "buildNumber": "42"
     },
     "android": {
       "versionCode": 11,
