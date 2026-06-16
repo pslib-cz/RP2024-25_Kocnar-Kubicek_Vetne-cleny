@@ -11,7 +11,8 @@
     "web": "expo start --web",
     "test": "jest --watchAll",
     "lint": "expo lint",
-    "formatcsv": "node ./scripts/formatcsv.js"
+    "formatcsv": "node ./scripts/formatcsv.js",
+    "eas-ba": "eas build -p android --profile production"
   },
   "jest": {
     "preset": "jest-expo"

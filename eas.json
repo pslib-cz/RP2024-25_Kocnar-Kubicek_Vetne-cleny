@@ -1,11 +1,13 @@
 {
   "build": {
     "development": {
+      "environment": "production",
       "ios": {
         "simulator": true
       }
     },
     "production": {
+      "environment": "production",
       "ios": {
         "distribution": "store",
         "autoIncrement": true
