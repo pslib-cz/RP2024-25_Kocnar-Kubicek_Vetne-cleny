@@ -1,7 +1,7 @@
 {
   "name": "vetnecleny",
   "main": "expo-router/entry",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "scripts": {
     "start": "expo start --go",
     "tunnel": "expo start --tunnel --go",
@@ -12,7 +12,8 @@
     "test": "jest --watchAll",
     "lint": "expo lint",
     "formatcsv": "node ./scripts/formatcsv.js",
-    "eas-ba": "eas build -p android --profile production"
+    "eas-ba": "eas build -p android --profile production",
+    "eas-is": "eas build -p ios --profile production --auto-submit"
   },
   "jest": {
     "preset": "jest-expo"
