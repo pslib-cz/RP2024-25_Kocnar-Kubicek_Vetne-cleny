@@ -12,8 +12,8 @@
     "test": "jest --watchAll",
     "lint": "expo lint",
     "formatcsv": "node ./scripts/formatcsv.js",
-    "eas-ba": "eas build -p android --profile production",
-    "eas-is": "eas build -p ios --profile production --auto-submit"
+    "build:android": "node ./scripts/build.js android",
+    "build:ios": "node ./scripts/build.js ios"
   },
   "jest": {
     "preset": "jest-expo"
