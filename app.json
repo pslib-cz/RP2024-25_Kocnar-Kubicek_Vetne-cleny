@@ -19,10 +19,10 @@
         "light": "./assets/images/icons/ios-light.png",
         "tinted": "./assets/images/icons/ios-tinted.png"
       },
-      "buildNumber": "47"
+      "buildNumber": "48"
     },
     "android": {
-      "versionCode": 14,
+      "versionCode": 15,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/icons/adaptive-icon.png",
         "backgroundColor": "#101223"
@@ -59,7 +59,7 @@
       "router": {},
       "eas": {
         "_commentedProjectId__fr": "2f64e818-76b7-4947-9100-4287fa3f8501",
-        "projectId": "564c7e57-4a83-470f-bf71-cac24e431bf4"
+        "projectId": "2f64e818-76b7-4947-9100-4287fa3f8501"
       }
     }
   }
